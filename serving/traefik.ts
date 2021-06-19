@@ -3,10 +3,11 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from '#src/crds';
+import { BaseCluster, BackendCertificate } from "#src/base-cluster";
 import { NamespaceProbe, setAndRegisterOutputs } from "#src/utils";
-import { BackendCertificate } from "./certs";
 
 interface TraefikArgs {
+    base: BaseCluster,
     externalIPs: string[],
     httpPort: number,
     httpsPort: number,
@@ -24,9 +25,8 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
 
         const namespace = new NamespaceProbe(`${name}-probe`, { parent: this }).namespace;
 
-        this.certificate = new BackendCertificate(name, {
+        this.certificate = args.base.createBackendCertificate(name, {
             namespace,
-            issuer: args.backendIssuer,
         }, { parent: this });
 
         this.chart = new k8s.helm.v3.Chart(name, {

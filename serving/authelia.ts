@@ -10,17 +10,16 @@ import * as kx from "@pulumi/kubernetesx";
 import * as crds from "#src/crds";
 import { SealedSecret } from "#src/crds/bitnami/v1alpha1";
 
+import { BaseCluster, BackendCertificate } from '#src/base-cluster';
 import { setAndRegisterOutputs } from "#src/utils";
 import { Middleware } from './traefik';
 import { FrontendService } from "./service";
-import { BackendCertificate } from "./certs";
 
 interface AutheliaArgs {
+    base: BaseCluster,
+
     domain: string,
     subdomain: string,
-    localStorageClassName: pulumi.Input<string>,
-
-    backendIssuer?: crds.certmanager.v1.ClusterIssuer | crds.certmanager.v1.Issuer,
 }
 
 export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
@@ -34,15 +33,14 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         const service_account = new k8s.core.v1.ServiceAccount(name, {}, { parent: this });
         const namespace = service_account.metadata.namespace;
 
-        this.certificate = new BackendCertificate(name, {
+        this.certificate = args.base.createBackendCertificate(name, {
             namespace,
-            issuer: args.backendIssuer
         }, { parent: this });
 
         // deployment and service
         this.service = this.setupDeploymentService(name, args, service_account);
 
-        // frontend service
+        // frontend service for the login page
         const middlewareAuthelia = new Middleware('authelia', {
             headers: {
                 browserXssFilter: true,
@@ -57,7 +55,6 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             host: `${args.subdomain}.${args.domain}`,
             targetService: this.service,
             middlewares: [middlewareAuthelia],
-            backendCertificate: this.certificate,
         }, { parent: this });
 
         // auth middleware
@@ -109,7 +106,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                 }
             },
             spec: {
-                storageClassName: args.localStorageClassName,
+                storageClassName: args.base.localStorageClass.metadata.name,
                 accessModes: [
                     'ReadWriteOnce',
                 ],

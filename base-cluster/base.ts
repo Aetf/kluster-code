@@ -1,22 +1,23 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
-import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from "#src/crds";
-import { NamespaceProbe } from "./utils";
-import LocalPathProvisioner from "./local-path";
+import { NamespaceProbe } from "#src/utils";
+import LocalPathProvisioner from "#src/local-path";
+import { FrontendCertificate, FrontendCertificateArgs, BackendCertificate, BackendCertificateArgs } from "./certs";
 
 export const CertificateCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::certificates.cert-manager.io";
 export const ClusterIssuerCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::clusterissuers.cert-manager.io";
 export const SealedSecretCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::sealedsecrets.bitnami.com";
 
-interface BaseClusterArgs {
+export interface BaseClusterArgs {
     isSetupSecrets: boolean,
 }
 
 /**
  * The base cluster with PVs and PKI infrastructure
  */
+
 export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     private readonly sealedSecret: k8s.helm.v3.Chart;
     private readonly certManager!: k8s.helm.v3.Chart;
@@ -166,67 +167,24 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
             }
         }, { parent: this, dependsOn: [this.certManager.resources[ClusterIssuerCRD]], deleteBeforeReplace: true }));
     }
-}
 
-interface NodePVArgs {
-    path: string,
-    node: string,
-    capacity: string,
-    accessModes?: string[],
-}
-
-/**
- * A static PV with matching PVC that is bond to a specific node host path
- */
-export class NodePV extends pulumi.ComponentResource<NodePVArgs> {
-    private pvc: kx.PersistentVolumeClaim;
-
-    constructor(name: string, args: NodePVArgs, opts?: pulumi.CustomResourceOptions) {
-        super("kluster:BaseCluster:NodePV", name, args, opts);
-
-        const pv = new k8s.core.v1.PersistentVolume(name, {
-            spec: {
-                capacity: {
-                    storage: args.capacity,
-                },
-                accessModes: args.accessModes ?? ['ReadOnlyMany', 'ReadWriteOnce', 'ReadWriteMany'],
-                persistentVolumeReclaimPolicy: 'Retain',
-                storageClassName: "",
-                local: {
-                    path: args.path,
-                },
-                nodeAffinity: {
-                    required: {
-                        nodeSelectorTerms: [{
-                            matchExpressions: [{
-                                key: 'kubernetes.io/hostname',
-                                operator: 'In',
-                                values: [args.node],
-                            }]
-                        }]
-                    }
-                }
-            }
-        }, { parent: this });
-        this.pvc = new kx.PersistentVolumeClaim(name, {
-            spec: {
-                accessModes: args.accessModes ?? ["ReadWriteOnce"],
-                resources: {
-                    requests: {
-                        storage: args.capacity,
-                    }
-                },
-                storageClassName: "",
-                volumeName: pv.metadata.name,
-            }
-        }, { parent: this });
+    public createFrontendCertificate(main: string, args: FrontendCertificateArgs, opts?: pulumi.CustomResourceOptions): FrontendCertificate {
+        return new FrontendCertificate(main, {
+            base: this,
+            ...args,
+        }, {
+            parent: this,
+            ...opts,
+        });
     }
 
-    protected async initialize(args: pulumi.Inputs): Promise<NodePVArgs> {
-        return args as NodePVArgs;
-    }
-
-    public mount(destPath: pulumi.Input<string>, srcPath?: pulumi.Input<string>): pulumi.Output<kx.types.VolumeMount> {
-        return this.pvc.mount(destPath, srcPath);
+    public createBackendCertificate(certName: string, args: BackendCertificateArgs, opts?: pulumi.CustomResourceOptions): BackendCertificate {
+        return new BackendCertificate(certName, {
+            base: this,
+            ...args,
+        }, {
+            parent: this,
+            ...opts,
+        });
     }
 }

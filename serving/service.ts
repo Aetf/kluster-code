@@ -7,7 +7,6 @@ import * as kx from "@pulumi/kubernetesx";
 import * as crds from '#src/crds';
 import { setAndRegisterOutputs } from "#src/utils";
 
-import { BackendCertificate } from "./certs";
 import { Middleware } from "./traefik";
 
 interface FrontendServiceArgs {
@@ -17,34 +16,20 @@ interface FrontendServiceArgs {
     frontendCertName?: string,
     middlewares?: pulumi.Input<Middleware[]>,
     ingressRules?: pulumi.Input<pulumi.Input<k8s.types.input.networking.v1.IngressRule>[]>,
-
-    backendIssuer?: crds.certmanager.v1.ClusterIssuer | crds.certmanager.v1.Issuer,
-    backendCertificate?: BackendCertificate,
 }
 
 /**
  * A frontend service. For each service, the following will be installed:
  * <name>-dns: Service of type ExternalName, targeting the corresponding backend Service
- * <name>-cert: Certificate for internal communication
  * <name>-ingress: Ingress rule
  */
 export class FrontendService extends pulumi.ComponentResource<FrontendServiceArgs> {
-    public readonly certificate: BackendCertificate;
     public readonly service: kx.Service;
 
     public readonly host!: pulumi.Output<string>;
 
     constructor(name: string, args: FrontendServiceArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:FrontendService', name, args, opts);
-
-        if (_.isUndefined(args.backendCertificate)) {
-            this.certificate = new BackendCertificate(name, {
-                namespace: args.targetService.metadata.namespace,
-                issuer: args.backendIssuer!,
-            }, { parent: this });
-        } else {
-            this.certificate = args.backendCertificate;
-        }
 
         this.service = new kx.Service(`${name}-dns`, {
             metadata: {
