@@ -83,7 +83,7 @@ access_control:
 
   rules:
   - domain:
-    - "k8s.<%= domain %>"
+    - "*.<%= domain %>"
     subject: "group:admins"
     policy: one_factor
   # rules:

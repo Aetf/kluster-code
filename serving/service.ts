@@ -9,9 +9,10 @@ import { setAndRegisterOutputs } from "#src/utils";
 
 import { Middleware } from "./traefik";
 
-interface FrontendServiceArgs {
+export interface FrontendServiceArgs {
     host: pulumi.Input<string>,
     targetService: pulumi.Input<k8s.core.v1.Service>,
+    targetPort?: string,
 
     middlewares?: pulumi.Input<Middleware[]>,
     frontendCertName?: string,

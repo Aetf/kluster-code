@@ -61,7 +61,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         this.middlewareAuth = new Middleware('auth', {
             // TODO: authelia currently can't see client real IP
             forwardAuth: {
-                address: pulumi.interpolate`https://${this.service.metadata.name}.${this.service.metadata.namespace}/api/verify?rd=${front.host}`,
+                address: pulumi.interpolate`https://${this.service.metadata.name}.${this.service.metadata.namespace}/api/verify?rd=https://${front.host}/`,
                 trustForwardHeader: true,
                 authResponseHeaders: [
                     "Remote-User",

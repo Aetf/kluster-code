@@ -1,3 +1,5 @@
+import * as _ from "lodash";
+
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
@@ -5,9 +7,9 @@ import { BaseCluster, FrontendCertificate } from "#src/base-cluster";
 
 import { Traefik, Middleware } from "./traefik";
 import { Authelia } from "./authelia";
+import { FrontendService, FrontendServiceArgs } from "./service";
 
 export { Middleware } from "./traefik";
-export { FrontendService } from './service';
 
 interface ServingArgs {
     base: BaseCluster,
@@ -75,5 +77,21 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
 
     protected async initialize(args: pulumi.Inputs): Promise<ServingArgs> {
         return args as ServingArgs;
+    }
+
+    public createFrontendService(name: string, args: FrontendServiceArgs & { enableAuth?: boolean }, opts?: pulumi.ComponentResourceOptions): FrontendService {
+        const enableAuth = args.enableAuth ?? false;
+        _.unset(args, 'enableAuth');
+        return new FrontendService(name, {
+            ...args,
+            middlewares: pulumi.output(args.middlewares)
+                .apply(ms => [
+                    ...(enableAuth ?? false) ? [this.middlewareAuth] : [],
+                    ...ms ?? [],
+                ])
+        }, {
+            ...opts ?? {},
+            parent: this,
+        })
     }
 }

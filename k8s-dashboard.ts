@@ -5,7 +5,7 @@ import * as k8s from "@pulumi/kubernetes";
 
 import { BackendCertificate } from '#src/base-cluster';
 import { NamespaceProbe, HelmChart } from "#src/utils";
-import { Serving, FrontendService } from "#src/serving";
+import { Serving } from "#src/serving";
 
 interface K8sDashboardArgs {
     serving: Serving,
@@ -71,12 +71,10 @@ export class K8sDashboard extends pulumi.ComponentResource<K8sDashboardArgs> {
             }
         }, { parent: this });
 
-        new FrontendService(name, {
+        args.serving.createFrontendService(name, {
             host: 'k8s.unlimited-code.works',
             targetService: this.chart.service.apply(s => s!),
-            middlewares: [
-                args.serving.middlewareAuth
-            ]
+            enableAuth: true,
         }, { parent: this });
     }
 }
