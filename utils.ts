@@ -17,6 +17,19 @@ export function removeHelmTestAnnotation(obj: any, opts: pulumi.CustomResourceOp
     _.unset(obj, 'metadata.annotations["helm.sh/hook"]')
 }
 
+export function urlFromService(service: k8s.core.v1.Service, schema: string): pulumi.Output<string> {
+    return pulumi.all([service.metadata, service.spec])
+        .apply(([metadata, spec]) => {
+            const port = _.find(spec.ports, v => v.name === schema || v.name.startsWith(schema) || v.name.endsWith(schema));
+            const portNumber = port?.port;
+            if (_.isUndefined(portNumber)) {
+                return `${schema}://${metadata.name}.${metadata.namespace}`;
+            } else {
+                return `${schema}://${metadata.name}.${metadata.namespace}:${portNumber}`;
+            }
+        });
+}
+
 export class NamespaceProbe extends pulumi.ComponentResource {
     public readonly namespace!: pulumi.Output<string>;
 

@@ -11,7 +11,7 @@ import * as crds from "#src/crds";
 import { SealedSecret } from "#src/crds/bitnami/v1alpha1";
 
 import { BaseCluster, BackendCertificate } from '#src/base-cluster';
-import { setAndRegisterOutputs } from "#src/utils";
+import { setAndRegisterOutputs, urlFromService } from "#src/utils";
 import { Middleware } from './traefik';
 import { FrontendService } from "./service";
 
@@ -58,10 +58,16 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         }, { parent: this });
 
         // auth middleware
+        const url = pulumi.all([urlFromService(this.service, 'https'), front.url]).apply(([url, loginUrl]) => {
+            const fullUrl = new URL(url);
+            fullUrl.pathname = '/api/verify';
+            fullUrl.searchParams.append('rd', loginUrl);
+            return fullUrl.href;
+        });
         this.middlewareAuth = new Middleware('auth', {
             // TODO: authelia currently can't see client real IP
             forwardAuth: {
-                address: pulumi.interpolate`https://${this.service.metadata.name}.${this.service.metadata.namespace}/api/verify?rd=https://${front.host}/`,
+                address: url,
                 trustForwardHeader: true,
                 authResponseHeaders: [
                     "Remote-User",

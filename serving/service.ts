@@ -5,7 +5,7 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from '#src/crds';
-import { setAndRegisterOutputs } from "#src/utils";
+import { setAndRegisterOutputs, urlFromService } from "#src/utils";
 
 import { Middleware } from "./traefik";
 
@@ -27,7 +27,7 @@ export interface FrontendServiceArgs {
 export class FrontendService extends pulumi.ComponentResource<FrontendServiceArgs> {
     public readonly service: kx.Service;
 
-    public readonly host!: pulumi.Output<string>;
+    public readonly url!: pulumi.Output<string>;
 
     constructor(name: string, args: FrontendServiceArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:FrontendService', name, args, opts);
@@ -87,8 +87,14 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
             }
         }, { parent: this });
 
+        const url = pulumi.all([args.host, urlFromService(this.service, 'https')])
+            .apply(([host, url]) => {
+                const newUrl = new URL(url);
+                newUrl.hostname = host;
+                return newUrl.href;
+            });
         setAndRegisterOutputs(this, {
-            host: args.host
+            url
         });
     }
 

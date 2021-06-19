@@ -16,7 +16,6 @@ function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     }, { deleteBeforeReplace: true }).metadata.name;
     return new k8s.Provider(`${ns}-provider`, {
         ...args,
-        enableDryRun: true,
         suppressDeprecationWarnings: true,
         namespace: ns,
     });
@@ -29,7 +28,6 @@ function setup() {
     // base cluster
     const cluster = new BaseCluster("kluster", { isSetupSecrets }, {
         provider: new k8s.Provider('k8s-provider', {
-            enableDryRun: true,
             suppressDeprecationWarnings: true,
             namespace: 'kube-system'
         })
