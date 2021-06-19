@@ -57,6 +57,21 @@ function setup() {
     }, {
         provider: namespaced("dashboard"),
     });
+
+    // admin user
+    const admin = new k8s.core.v1.ServiceAccount("admin-user", {});
+    new k8s.rbac.v1.ClusterRoleBinding("admin-user", {
+        roleRef: {
+            apiGroup: "rbac.authorization.k8s.io",
+            kind: "ClusterRole",
+            name: "cluster-admin",
+        },
+        subjects: [{
+            kind: admin.kind,
+            name: admin.metadata.name,
+            namespace: admin.metadata.namespace,
+        }],
+    });
 }
 
 setup();
