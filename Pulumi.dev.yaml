@@ -1,0 +1,6 @@
+encryptionsalt: v1:7ue0/6v2seo=:v1:YUhKoJxDUT1ec/U/:7Nt1iK/T4QM6EHyull1fk9JfhfmAOA==
+config:
+  kluster-code:setupSecrets: "false"
+  kluster-code:smtpPassword:
+    secure: v1:+V43BCWXufREi2V+:4GWjNe3g5XS7GsqamNdMQd4TxgkmzLoVajn4bUbUKy4=
+  kluster-code:staging: "true"

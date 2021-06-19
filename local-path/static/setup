@@ -1,0 +1,16 @@
+#!/bin/sh
+while getopts "m:s:p:" opt
+do
+    case $opt in
+        p)
+        absolutePath=$OPTARG
+        ;;
+        s)
+        sizeInBytes=$OPTARG
+        ;;
+        m)
+        volMode=$OPTARG
+        ;;
+    esac
+done
+mkdir -m 0777 -p ${absolutePath}
