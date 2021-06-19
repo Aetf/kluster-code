@@ -87,12 +87,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
             }
         }, { parent: this });
 
-        const url = pulumi.all([args.host, urlFromService(this.service, 'https')])
-            .apply(([host, url]) => {
-                const newUrl = new URL(url);
-                newUrl.hostname = host;
-                return newUrl.href;
-            });
+        const url = pulumi.output(args.host).apply(h => 'https://' + h);
         setAndRegisterOutputs(this, {
             url
         });
