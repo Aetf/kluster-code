@@ -8,6 +8,10 @@ export function setAndRegisterOutputs(obj: any, outputs: pulumi.Inputs) {
     obj.registerOutputs(outputs);
 }
 
+export function chartNamingWorkaround(obj: any, opts: pulumi.CustomResourceOptions) {
+    opts.deleteBeforeReplace = true;
+}
+
 export class NamespaceProbe extends pulumi.ComponentResource {
     public readonly namespace!: pulumi.Output<string>;
 
@@ -23,5 +27,18 @@ export class NamespaceProbe extends pulumi.ComponentResource {
         setAndRegisterOutputs(this, {
             namespace: cm.metadata.namespace
         });
+    }
+}
+
+export class HelmChart extends k8s.helm.v3.Chart {
+    constructor(releaseName: string, config: k8s.helm.v3.ChartOpts | k8s.helm.v3.LocalChartOpts, opts?: pulumi.ComponentResourceOptions) {
+        const transformations = [
+            chartNamingWorkaround,
+            ...config.transformations ?? []
+        ];
+        super(releaseName, {
+            ...config,
+            transformations,
+        }, opts);
     }
 }

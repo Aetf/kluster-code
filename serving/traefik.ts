@@ -4,7 +4,7 @@ import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from '#src/crds';
 import { BaseCluster, BackendCertificate } from "#src/base-cluster";
-import { NamespaceProbe, setAndRegisterOutputs } from "#src/utils";
+import { HelmChart, NamespaceProbe, setAndRegisterOutputs } from "#src/utils";
 
 interface TraefikArgs {
     base: BaseCluster,
@@ -20,6 +20,8 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
     public readonly certificate: BackendCertificate;
     public readonly internalService: kx.Service;
 
+    public readonly ready!: pulumi.Output<pulumi.CustomResource[]>;
+
     constructor(name: string, args: TraefikArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:Traefik', name, args, opts);
 
@@ -29,7 +31,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
             namespace,
         }, { parent: this });
 
-        this.chart = new k8s.helm.v3.Chart(name, {
+        this.chart = new HelmChart(name, {
             namespace,
             chart: "traefik",
             version: "9.19.2",
@@ -103,8 +105,10 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                 },
                 // disable traefik data collection
                 globalArguments: null
-            }
-        }, { parent: this });
+            },
+        }, {
+            parent: this,
+        });
 
         // This service should never be exposed
         this.internalService = new kx.Service(`${name}-internal`, {
@@ -125,7 +129,9 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
             }
         }, { parent: this, deleteBeforeReplace: true });
 
-        setAndRegisterOutputs(this, {});
+        setAndRegisterOutputs(this, {
+            ready: this.chart.ready,
+        });
     }
 
     protected async initialize(args: pulumi.Inputs): Promise<TraefikArgs> {

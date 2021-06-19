@@ -6,11 +6,29 @@ import * as k8s from "@pulumi/kubernetes";
 
 import { BaseCluster } from "./base-cluster";
 import { Serving } from "./serving";
+import { K8sDashboard } from "./k8s-dashboard";
+
+function namespaced(ns: string, create?: boolean): k8s.Provider {
+    let namespace: pulumi.Output<string>;
+    if (create ?? true) {
+        namespace = new k8s.core.v1.Namespace(ns, {
+            metadata: {
+                name: ns,
+            }
+        }, { deleteBeforeReplace: true }).metadata.name;
+    } else {
+        namespace = pulumi.output(ns);
+    }
+    return new k8s.Provider(`${ns}-provider`, {
+        namespace: ns,
+    });
+}
 
 function setup() {
     const config = new pulumi.Config();
     const isSetupSecrets = config.requireBoolean("setupSecrets");
 
+    // base cluster
     const cluster = new BaseCluster("kluster", { isSetupSecrets }, {
         provider: new k8s.Provider('k8s-provider', {
             namespace: 'kube-system'
@@ -21,12 +39,7 @@ function setup() {
         return;
     }
 
-    const serving_system = new k8s.core.v1.Namespace("serving-system", {
-        metadata: {
-            name: "serving-system",
-        }
-    }, { deleteBeforeReplace: true });
-
+    // serving
     const serving = new Serving("kluster-serving", {
         base: cluster,
         domain: 'unlimited-code.works',
@@ -37,11 +50,17 @@ function setup() {
         httpPort: 10000,
         httpsPort: 10443,
     }, {
-        provider: new k8s.Provider('serving-provider', {
-            namespace: serving_system.metadata.name,
-        })
-    })
+        provider: namespaced('serving-system')
+    });
 
+    /*
+    // dashboard
+    const k8sDashboard = new K8sDashboard("dashboard", {
+        serving,
+    }, {
+        provider: namespaced("dashboard"),
+    });
+    */
 }
 
 setup();

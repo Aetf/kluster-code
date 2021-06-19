@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
 import * as crds from "#src/crds";
-import { NamespaceProbe } from "#src/utils";
+import { NamespaceProbe, HelmChart } from "#src/utils";
 import LocalPathProvisioner from "#src/local-path";
 import { FrontendCertificate, FrontendCertificateArgs, BackendCertificate, BackendCertificateArgs } from "./certs";
 
@@ -33,7 +33,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
 
         const namespace = new NamespaceProbe(`${name}-probe`, { parent: this }).namespace;
 
-        this.sealedSecret = new k8s.helm.v3.Chart("sealed-secrets-controller", {
+        this.sealedSecret = new HelmChart("sealed-secrets-controller", {
             namespace,
             chart: "sealed-secrets",
             version: "1.16.1",
@@ -46,7 +46,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
             return;
         }
 
-        this.certManager = new k8s.helm.v3.Chart("cert-manager", {
+        this.certManager = new HelmChart("cert-manager", {
             namespace,
             chart: "cert-manager",
             version: "1.4.0",

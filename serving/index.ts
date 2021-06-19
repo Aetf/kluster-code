@@ -2,9 +2,8 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
 import { BaseCluster, FrontendCertificate } from "#src/base-cluster";
-import { setAndRegisterOutputs } from "#src/utils";
 
-import { Traefik } from "./traefik";
+import { Traefik, Middleware } from "./traefik";
 import { Authelia } from "./authelia";
 
 export { Middleware } from "./traefik";
@@ -22,7 +21,10 @@ interface ServingArgs {
 
 export class Serving extends pulumi.ComponentResource<ServingArgs> {
     public readonly certificates: FrontendCertificate[];
-    private base: BaseCluster;
+    public readonly base: BaseCluster;
+
+    public readonly ready: pulumi.Output<pulumi.CustomResource[]>;
+    public readonly middlewareAuth: Middleware;
 
     constructor(name: string, args: ServingArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:Serving', name, args, opts);
@@ -34,12 +36,14 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
             httpPort: args.httpPort ?? 80,
             httpsPort: args.httpsPort ?? 443,
         }, { parent: this });
+        this.ready = traefik.ready;
 
         const authelia = new Authelia('authelia', {
             base: args.base,
             domain: args.domain,
             subdomain: 'auth',
         }, { parent: this, dependsOn: traefik.chart.ready });
+        this.middlewareAuth = authelia.middlewareAuth;
 
         this.certificates = [
             args.base.createFrontendCertificate('unlimited-code.works', {
@@ -64,7 +68,9 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
             }, { parent: this }),
         ];
 
-        setAndRegisterOutputs(this, {});
+        this.registerOutputs({
+            ready: this.ready
+        });
     }
 
     protected async initialize(args: pulumi.Inputs): Promise<ServingArgs> {

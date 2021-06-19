@@ -11,10 +11,10 @@ import { Middleware } from "./traefik";
 
 interface FrontendServiceArgs {
     host: pulumi.Input<string>,
-    targetService: k8s.core.v1.Service,
+    targetService: pulumi.Input<k8s.core.v1.Service>,
 
-    frontendCertName?: string,
     middlewares?: pulumi.Input<Middleware[]>,
+    frontendCertName?: string,
     ingressRules?: pulumi.Input<pulumi.Input<k8s.types.input.networking.v1.IngressRule>[]>,
 }
 
@@ -31,18 +31,21 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
     constructor(name: string, args: FrontendServiceArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:FrontendService', name, args, opts);
 
+        const serviceSpec = pulumi.output(args.targetService)
+            .apply(service => ({
+                type: 'ExternalName',
+                externalName: pulumi.interpolate`${service.metadata.name}.${service.metadata.namespace}`,
+                ports: service.spec.ports.apply(ports => ports.map(port => ({
+                    name: port.name,
+                    port: port.port,
+                })))
+            }));
+
         this.service = new kx.Service(`${name}-dns`, {
             metadata: {
                 name: `${name}-dns`
             },
-            spec: {
-                type: 'ExternalName',
-                externalName: pulumi.interpolate`${args.targetService.metadata.name}.${args.targetService.metadata.namespace}`,
-                ports: args.targetService.spec.ports.apply(ports => ports.map(port => ({
-                    name: port.name,
-                    port: port.port,
-                })))
-            }
+            spec: serviceSpec
         }, { parent: this, deleteBeforeReplace: true });
 
         const middlewareList = pulumi.output(args.middlewares)
