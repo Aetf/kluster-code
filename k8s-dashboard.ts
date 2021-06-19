@@ -1,6 +1,7 @@
+import * as _ from 'lodash';
+
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
-
 
 import { BackendCertificate } from '#src/base-cluster';
 import { NamespaceProbe, HelmChart } from "#src/utils";
@@ -11,7 +12,7 @@ interface K8sDashboardArgs {
 }
 
 export class K8sDashboard extends pulumi.ComponentResource<K8sDashboardArgs> {
-    public readonly chart: k8s.helm.v3.Chart;
+    public readonly chart: HelmChart;
     public readonly certificate: BackendCertificate;
 
     constructor(name: string, args: K8sDashboardArgs, opts?: pulumi.ComponentResourceOptions) {
@@ -72,7 +73,7 @@ export class K8sDashboard extends pulumi.ComponentResource<K8sDashboardArgs> {
 
         new FrontendService(name, {
             host: 'k8s.unlimited-code.works',
-            targetService: this.chart.getResource('v1/Service', name),
+            targetService: this.chart.service.apply(s => s!),
             middlewares: [
                 args.serving.middlewareAuth
             ]

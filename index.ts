@@ -8,18 +8,16 @@ import { BaseCluster } from "./base-cluster";
 import { Serving } from "./serving";
 import { K8sDashboard } from "./k8s-dashboard";
 
-function namespaced(ns: string, create?: boolean): k8s.Provider {
-    let namespace: pulumi.Output<string>;
-    if (create ?? true) {
-        namespace = new k8s.core.v1.Namespace(ns, {
-            metadata: {
-                name: ns,
-            }
-        }, { deleteBeforeReplace: true }).metadata.name;
-    } else {
-        namespace = pulumi.output(ns);
-    }
+function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
+    const namespace = new k8s.core.v1.Namespace(ns, {
+        metadata: {
+            name: ns,
+        }
+    }, { deleteBeforeReplace: true }).metadata.name;
     return new k8s.Provider(`${ns}-provider`, {
+        ...args,
+        enableDryRun: true,
+        suppressDeprecationWarnings: true,
         namespace: ns,
     });
 }
@@ -31,6 +29,8 @@ function setup() {
     // base cluster
     const cluster = new BaseCluster("kluster", { isSetupSecrets }, {
         provider: new k8s.Provider('k8s-provider', {
+            enableDryRun: true,
+            suppressDeprecationWarnings: true,
             namespace: 'kube-system'
         })
     });
@@ -53,14 +53,12 @@ function setup() {
         provider: namespaced('serving-system')
     });
 
-    /*
     // dashboard
     const k8sDashboard = new K8sDashboard("dashboard", {
         serving,
     }, {
         provider: namespaced("dashboard"),
     });
-    */
 }
 
 setup();

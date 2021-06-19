@@ -4,7 +4,7 @@ import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from '#src/crds';
 import { BaseCluster, BackendCertificate } from "#src/base-cluster";
-import { HelmChart, NamespaceProbe, setAndRegisterOutputs } from "#src/utils";
+import { HelmChart, NamespaceProbe, removeHelmTestAnnotation, setAndRegisterOutputs } from "#src/utils";
 
 interface TraefikArgs {
     base: BaseCluster,
@@ -16,7 +16,7 @@ interface TraefikArgs {
 }
 
 export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
-    public readonly chart: k8s.helm.v3.Chart;
+    public readonly chart: HelmChart;
     public readonly certificate: BackendCertificate;
     public readonly internalService: kx.Service;
 
@@ -106,6 +106,9 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                 // disable traefik data collection
                 globalArguments: null
             },
+            transformations: [
+                removeHelmTestAnnotation
+            ]
         }, {
             parent: this,
         });

@@ -1,5 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
+import _ = require("lodash");
 
 export function setAndRegisterOutputs(obj: any, outputs: pulumi.Inputs) {
     for (const key in outputs) {
@@ -10,6 +11,10 @@ export function setAndRegisterOutputs(obj: any, outputs: pulumi.Inputs) {
 
 export function chartNamingWorkaround(obj: any, opts: pulumi.CustomResourceOptions) {
     opts.deleteBeforeReplace = true;
+}
+
+export function removeHelmTestAnnotation(obj: any, opts: pulumi.CustomResourceOptions) {
+    _.unset(obj, 'metadata.annotations["helm.sh/hook"]')
 }
 
 export class NamespaceProbe extends pulumi.ComponentResource {
@@ -40,5 +45,18 @@ export class HelmChart extends k8s.helm.v3.Chart {
             ...config,
             transformations,
         }, opts);
+    }
+
+    /**
+     * Returns the first service
+     */
+    public get service(): pulumi.Output<k8s.core.v1.Service | undefined> {
+        return this.resources.apply(res => {
+            const key = _.keys(res).find(k => k.startsWith('v1/Service::'));
+            if (!_.isUndefined(key)) {
+                return res[key] as k8s.core.v1.Service;
+            }
+            return undefined;
+        });
     }
 }

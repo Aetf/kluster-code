@@ -19,8 +19,8 @@ export interface BaseClusterArgs {
  */
 
 export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
-    private readonly sealedSecret: k8s.helm.v3.Chart;
-    private readonly certManager!: k8s.helm.v3.Chart;
+    private readonly sealedSecret: HelmChart;
+    private readonly certManager!: HelmChart;
 
     public readonly rootIssuer!: crds.certmanager.v1.ClusterIssuer;
     public readonly letsencryptIssuer!: crds.certmanager.v1.ClusterIssuer;
