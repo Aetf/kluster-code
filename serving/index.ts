@@ -8,14 +8,17 @@ import { BaseCluster, FrontendCertificate } from "#src/base-cluster";
 import { Traefik, Middleware } from "./traefik";
 import { Authelia } from "./authelia";
 import { FrontendService, FrontendServiceArgs } from "./service";
+import { FrontendCertificateArgs } from "#src/base-cluster/certs";
 
 export { Middleware } from "./traefik";
 
 interface ServingArgs {
     base: BaseCluster,
 
-    domain: string,
+    authDomain: string,
     externalIPs: string[],
+
+    certificates: ({ main: string } & FrontendCertificateArgs)[],
 
     httpPort?: number,
     httpsPort?: number,
@@ -42,33 +45,14 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
 
         const authelia = new Authelia('authelia', {
             base: args.base,
-            domain: args.domain,
+            domain: args.authDomain,
             subdomain: 'auth',
         }, { parent: this, dependsOn: traefik.chart.ready });
         this.middlewareAuth = authelia.middlewareAuth;
 
-        this.certificates = [
-            args.base.createFrontendCertificate('unlimited-code.works', {
-                sans: [
-                    "*.unlimited-code.works",
-                    "*.hosts.unlimited-code.works",
-                    "*.stats.unlimited-code.works",
-                ],
-            }, { parent: this }),
-            args.base.createFrontendCertificate('unlimitedcodeworks.xyz', {
-                sans: [
-                    "*.unlimitedcodeworks.xyz",
-                    "*.archvps.unlimitedcodeworks.xyz",
-                ],
-            }, { parent: this }),
-            args.base.createFrontendCertificate('jiahui.id', {
-            }, { parent: this }),
-            args.base.createFrontendCertificate('jiahui.love', {
-                sans: [
-                    "*.jiahui.love",
-                ],
-            }, { parent: this }),
-        ];
+        this.certificates = args.certificates.map(cert => {
+            return args.base.createFrontendCertificate(cert.main, cert, { parent: this });
+        });
 
         this.registerOutputs({
             ready: this.ready
@@ -79,7 +63,11 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
         return args as ServingArgs;
     }
 
-    public createFrontendService(name: string, args: FrontendServiceArgs & { enableAuth?: boolean }, opts?: pulumi.ComponentResourceOptions): FrontendService {
+    public createFrontendService(
+        name: string,
+        args: FrontendServiceArgs & { enableAuth?: boolean },
+        opts?: Omit<pulumi.ComponentResourceOptions, 'parent'>
+    ): FrontendService {
         const enableAuth = args.enableAuth ?? false;
         _.unset(args, 'enableAuth');
         return new FrontendService(name, {

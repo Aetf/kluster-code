@@ -10,13 +10,12 @@ import { setAndRegisterOutputs, urlFromService } from "#src/utils";
 import { Middleware } from "./traefik";
 
 export interface FrontendServiceArgs {
-    host: pulumi.Input<string>,
+    host: pulumi.Input<string | pulumi.Input<string>[]>,
     targetService: pulumi.Input<k8s.core.v1.Service>,
     targetPort?: string,
 
     middlewares?: pulumi.Input<Middleware[]>,
-    frontendCertName?: string,
-    ingressRules?: pulumi.Input<pulumi.Input<k8s.types.input.networking.v1.IngressRule>[]>,
+    frontendCertSecretNames?: pulumi.Input<pulumi.Input<string>[]>,
 }
 
 /**
@@ -34,7 +33,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
 
         const serviceSpec = pulumi.output(args.targetService)
             .apply(service => ({
-                type: 'ExternalName',
+                type: k8s.types.enums.core.v1.ServiceSpecType.ExternalName,
                 externalName: pulumi.interpolate`${service.metadata.name}.${service.metadata.namespace}`,
                 ports: service.spec.ports.apply(ports => ports.map(port => ({
                     name: port.name,
@@ -53,6 +52,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
             .apply(ms => ms?.map(m => m.fullname))
             .apply(names => pulumi.all(names ?? []))
             .apply(names => names.join(','));
+
         new k8s.networking.v1.Ingress(name, {
             metadata: {
                 annotations: {
@@ -60,31 +60,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                     "traefik.ingress.kubernetes.io/router.middlewares": middlewareList,
                 }
             },
-            spec: {
-                tls: [{
-                    secretName: args.frontendCertName ?? this.frontendCertNameFromHost(args.host)
-                }],
-                rules: pulumi.output(args.ingressRules ?? []).apply(rules => [
-                    ...rules,
-                    {
-                        host: args.host,
-                        http: {
-                            paths: [{
-                                path: '/',
-                                pathType: 'Prefix',
-                                backend: {
-                                    service:{
-                                        name: this.service.metadata.name,
-                                        port: {
-                                            name: 'https'
-                                        }
-                                    }
-                                }
-                            }]
-                        }
-                    },
-                ])
-            }
+            spec: this.ingressSpecFromHosts(args.host),
         }, { parent: this });
 
         const url = pulumi.output(args.host).apply(h => 'https://' + h);
@@ -93,12 +69,32 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
         });
     }
 
-    private frontendCertNameFromHost(host: pulumi.Input<string>): pulumi.Output<string> {
+    private ingressSpecFromHosts(host: pulumi.Input<string | pulumi.Input<string>[]>): pulumi.Output<k8s.types.input.networking.v1.IngressSpec> {
         return pulumi.output(host).apply(host => {
-            // NOTE: keep in sync with naming logic in certs.ts
-            // take the TLD
-            const tld = host.split('.').slice(-2).join('.');
-            return `cert-${tld}`;
+            const hosts = _.isString(host) ? [host] : host;
+            const tls = _.chain(hosts)
+                .map(this.tlsFromHost)
+                .uniqBy('secretName')
+                .value();
+            return {
+                tls,
+                rules: hosts.map(this.ruleFromHost.bind(this)),
+            };
         });
+    }
+
+    private tlsFromHost(host: string): k8s.types.input.networking.v1.IngressTLS {
+        const tld = host.split('.').slice(-2).join('.');
+        // NOTE: keep in sync with naming logic in certs.ts
+        return { secretName: `cert-${tld}` };
+    }
+
+    private ruleFromHost(host: string): k8s.types.input.networking.v1.IngressRule {
+        const rule = { host };
+        _.set(rule, 'http.paths[0].path', '/');
+        _.set(rule, 'http.paths[0].pathType', 'Prefix');
+        _.set(rule, 'http.paths[0].backend.service.name', this.service.metadata.name);
+        _.set(rule, 'http.paths[0].backend.service.port.name', 'https');
+        return rule;
     }
 }

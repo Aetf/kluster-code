@@ -6,10 +6,10 @@ export { BaseCluster } from "./base";
 export { FrontendCertificate, BackendCertificate } from "./certs";
 
 interface NodePVArgs {
-    path: string,
-    node: string,
-    capacity: string,
-    accessModes?: string[],
+    path: pulumi.Input<string>,
+    node: pulumi.Input<string>,
+    capacity: pulumi.Input<string>,
+    accessModes?: pulumi.Input<pulumi.Input<string>[]>,
 }
 
 /**

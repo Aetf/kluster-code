@@ -1,5 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
+import * as kx from "@pulumi/kubernetesx";
 import _ = require("lodash");
 
 export function setAndRegisterOutputs(obj: any, outputs: pulumi.Inputs) {
@@ -28,6 +29,48 @@ export function urlFromService(service: k8s.core.v1.Service, schema: string): pu
                 return `${schema}://${metadata.name}.${metadata.namespace}:${portNumber}`;
             }
         });
+}
+
+/**
+ * Workaround until deployment.createService allows set physical name
+ * See https://github.com/pulumi/pulumi-kubernetesx/issues/52
+ */
+export function serviceFromDeployment(
+    name: string,
+    d: kx.Deployment,
+    args?: Omit<kx.types.Service, 'spec'> & { spec?: kx.types.ServiceSpec }
+): kx.Service {
+    const serviceSpec = pulumi
+        .all([d.spec.template.spec.containers, args?.spec ?? {}])
+        .apply(([containers, spec]) => {
+            const ports: Record<string, number> = {};
+            containers.forEach(container => {
+                if (container.ports) {
+                    container.ports.forEach(port => {
+                        ports[port.name] = port.containerPort;
+                    });
+                }
+            });
+            return {
+                ...spec,
+                ports: spec.ports ?? ports,
+                selector: d.spec.selector.matchLabels,
+            };
+        });
+
+    const metadata: k8s.types.input.meta.v1.ObjectMeta = {
+        namespace: d.metadata.namespace,
+        ...args?.metadata ?? {},
+    };
+    const deleteBeforeReplace = !_.isUndefined(metadata.name);
+    console.log('Service', name, 'deleteBefore', deleteBeforeReplace);
+    return new kx.Service(name, {
+        metadata,
+        spec: serviceSpec,
+    }, {
+        parent: d,
+        deleteBeforeReplace,
+    });
 }
 
 export class NamespaceProbe extends pulumi.ComponentResource {

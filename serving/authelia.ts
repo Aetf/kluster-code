@@ -11,7 +11,7 @@ import * as crds from "#src/crds";
 import { SealedSecret } from "#src/crds/bitnami/v1alpha1";
 
 import { BaseCluster, BackendCertificate } from '#src/base-cluster';
-import { setAndRegisterOutputs, urlFromService } from "#src/utils";
+import { setAndRegisterOutputs, urlFromService, serviceFromDeployment } from "#src/utils";
 import { Middleware } from './traefik';
 import { FrontendService } from "./service";
 
@@ -177,50 +177,14 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         const deployment = new kx.Deployment(name, {
             spec: pb.asDeploymentSpec(),
         }, { parent: this });
-        return this.createService(name, deployment, {
+        return serviceFromDeployment(name, deployment, {
             metadata: {
                 name,
-            },
-            spec: {}
+            }
         });
     }
 
-    /**
-     * Workaround until deployment.createService allows set physical name
-     * See https://github.com/pulumi/pulumi-kubernetesx/issues/52
-     */
-    private createService(name: string, d: kx.Deployment, args: kx.types.Service): kx.Service {
-        const serviceSpec = pulumi
-            .all([d.spec.template.spec.containers, args])
-            .apply(([containers, args]) => {
-                // TODO: handle merging ports from args
-                const ports: Record<string, number> = {};
-                containers.forEach(container => {
-                    if (container.ports) {
-                        container.ports.forEach(port => {
-                            ports[port.name] = port.containerPort;
-                        });
-                    }
-                });
-                return {
-                    ...args,
-                    ports: args.spec.ports || ports,
-                    selector: d.spec.selector.matchLabels,
-                    // TODO: probably need to unwrap args.type in case it's a computed value
-                    type: args && args.spec.type as string,
-                };
-            });
-
-        return new kx.Service(name, {
-            metadata: {
-                namespace: d.metadata.namespace,
-                ...args.metadata,
-            },
-            spec: serviceSpec,
-        }, {parent: this});
-    }
-
-    private configureProbe(override?: { [key: string]: any }): k8s.types.input.core.v1.Probe {
+    private configureProbe(override?: k8s.types.input.core.v1.Probe): k8s.types.input.core.v1.Probe {
         return {
             failureThreshold: 5,
             httpGet: {

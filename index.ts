@@ -7,6 +7,7 @@ import * as k8s from "@pulumi/kubernetes";
 import { BaseCluster } from "./base-cluster";
 import { Serving } from "./serving";
 import { K8sDashboard } from "./k8s-dashboard";
+import { Nginx } from "./nginx";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -40,11 +41,32 @@ function setup() {
     // serving
     const serving = new Serving("kluster-serving", {
         base: cluster,
-        domain: 'unlimited-code.works',
+        authDomain: 'unlimited-code.works',
         externalIPs: [
             "45.77.144.92",
             // TODO: add zerotier-one IP
         ],
+        certificates: [{
+            main: 'unlimited-code.works',
+            sans: [
+                "*.unlimited-code.works",
+                "*.hosts.unlimited-code.works",
+                "*.stats.unlimited-code.works",
+            ],
+        }, {
+            main: 'unlimitedcodeworks.xyz',
+            sans: [
+                "*.unlimitedcodeworks.xyz",
+                "*.archvps.unlimitedcodeworks.xyz",
+            ],
+        }, {
+            main: 'jiahui.id',
+        }, {
+            main: 'jiahui.love',
+            sans: [
+                "*.jiahui.love",
+            ],
+        }],
         httpPort: 10000,
         httpsPort: 10443,
     }, {
@@ -71,6 +93,42 @@ function setup() {
             name: admin.metadata.name,
             namespace: admin.metadata.namespace,
         }],
+    });
+
+    // static serving
+    const nginx = new Nginx("nginx", {
+        serving,
+        staticSites: [{
+            root: "blog",
+            hostNames: [
+                "unlimited-code.works",
+                "www.unlimited-code.works",
+            ],
+            extraConfig: `error_page 404 /404.html;`
+        }, {
+            root: "door-jiahui",
+            hostNames: ["jiahui.love"]
+        }, {
+            root: "door-shiyu",
+            hostNames: [
+                "games.unlimited-code.works",
+                "games.unlimitedcodeworks.xyz",
+            ]
+        }, {
+            root: "door",
+            hostNames: [
+                "game.unlimited-code.works",
+                "game.unlimitedcodeworks.xyz"
+            ]
+        }, {
+            root: 'files',
+            hostNames: [
+                "static.unlimited-code.works",
+                "static.unlimitedcodeworks.xyz"
+            ]
+        }]
+    }, {
+        provider: namespaced("nginx"),
     });
 }
 

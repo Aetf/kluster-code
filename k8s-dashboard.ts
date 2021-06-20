@@ -75,6 +75,6 @@ export class K8sDashboard extends pulumi.ComponentResource<K8sDashboardArgs> {
             host: 'k8s.unlimited-code.works',
             targetService: this.chart.service.apply(s => s!),
             enableAuth: true,
-        }, { parent: this });
+        });
     }
 }
