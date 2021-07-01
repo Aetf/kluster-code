@@ -52,7 +52,7 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
         const pb = new kx.PodBuilder({
             containers: [{
                 name,
-                image: 'docker.io/bitnami/nginx:1.21.0-debian-10-r0',
+                image: 'docker.io/bitnami/nginx:1.21.0-debian-10-r20',
                 ports: {
                     https: 8443,
                 },
