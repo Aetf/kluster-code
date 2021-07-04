@@ -32,7 +32,7 @@ notifier:
     port: 587
     ## HELO/EHLO Identifier. Identifies the mail client
     identifier: "<%= subdomain %>.<%= domain %>"
-    sender: "auth@<%= domain %>"
+    sender: "master@<%= domain %>"
     subject: "[Authelia] {title}"
 server:
   # the default value is too small, and will cause 431 error

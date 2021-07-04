@@ -10,6 +10,11 @@ export const CertificateCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition:
 export const ClusterIssuerCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::clusterissuers.cert-manager.io";
 export const SealedSecretCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::sealedsecrets.bitnami.com";
 
+const NODE_NAMES = [
+    "AetfArchVPS"
+] as const;
+export type Nodes = Record<typeof NODE_NAMES[number], k8s.core.v1.Node>;
+
 export interface BaseClusterArgs {
     isSetupSecrets: boolean,
 }
@@ -22,6 +27,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     private readonly sealedSecret: HelmChart;
     private readonly certManager!: HelmChart;
 
+    public readonly nodes: Nodes;
     public readonly rootIssuer!: crds.certmanager.v1.ClusterIssuer;
     public readonly letsencryptIssuer!: crds.certmanager.v1.ClusterIssuer;
     public readonly letsencryptStagingIssuer!: crds.certmanager.v1.ClusterIssuer;
@@ -30,6 +36,14 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
 
     constructor(name: string, args: BaseClusterArgs, opts?: pulumi.ComponentResourceOptions) {
         super("kluster:BaseCluster", name, args, opts);
+
+        // known cluster nodes
+        const nodes: Partial<Nodes> = {};
+        for (const node of NODE_NAMES) {
+            const hostname = node.split(/(?<=[a-z])(?=[A-Z])/).map(s => s.toLowerCase()).join('-');
+            nodes[node] = k8s.core.v1.Node.get(hostname, hostname);
+        }
+        this.nodes = nodes as Nodes;
 
         const namespace = new NamespaceProbe(`${name}-probe`, { parent: this }).namespace;
 

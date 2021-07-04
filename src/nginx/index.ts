@@ -41,10 +41,9 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
             namespace: cm.metadata.namespace,
         }, { parent: this });
 
-        const siteHostname = 'aetf-arch-vps';
         const nodepv = new NodePV(`${name}-sites`, {
             path: "/mnt/storage/webroot",
-            node: k8s.core.v1.Node.get(siteHostname, siteHostname).metadata.name,
+            node: args.serving.base.nodes.AetfArchVPS,
             capacity: "10Gi",
             accessModes: [ "ReadOnlyMany" ]
         }, { parent: this });

@@ -9,6 +9,7 @@ import { Serving } from "#src/serving";
 
 interface K8sDashboardArgs {
     serving: Serving,
+    host: string,
 }
 
 export class K8sDashboard extends pulumi.ComponentResource<K8sDashboardArgs> {
@@ -72,7 +73,7 @@ export class K8sDashboard extends pulumi.ComponentResource<K8sDashboardArgs> {
         }, { parent: this });
 
         args.serving.createFrontendService(name, {
-            host: 'k8s.unlimited-code.works',
+            host: args.host,
             targetService: this.chart.service.apply(s => s!),
             enableAuth: true,
         });

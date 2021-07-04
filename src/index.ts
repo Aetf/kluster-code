@@ -8,6 +8,7 @@ import { BaseCluster } from "./base-cluster";
 import { Serving } from "./serving";
 import { K8sDashboard } from "./k8s-dashboard";
 import { Nginx } from "./nginx";
+import { Nextcloud } from "./nextcloud";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -76,6 +77,7 @@ function setup() {
     // dashboard
     const k8sDashboard = new K8sDashboard("dashboard", {
         serving,
+        host: 'k8s.unlimited-code.works',
     }, {
         provider: namespaced("dashboard"),
     });
@@ -129,6 +131,14 @@ function setup() {
         }]
     }, {
         provider: namespaced("nginx"),
+    });
+
+    // nextcloud
+    const nextcloud = new Nextcloud("nextcloud", {
+        serving,
+        host: 'files.unlimited-code.works',
+    }, {
+        provider: namespaced("nextcloud"),
     });
 }
 
