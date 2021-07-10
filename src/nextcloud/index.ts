@@ -75,6 +75,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         }, { parent: this });
 
         const cm = this.setupCM(name, args);
+        const phpCm = this.setupPhpCM(name, args);
 
         const smtpSecret = this.setupSecret(name);
 
@@ -86,25 +87,31 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     SQLITE_DATABASE: 'nextcloud',
                     NEXTCLOUD_ADMIN_USER: 'admin',
                     NEXTCLOUD_ADMIN_PASSWORD: 'admin',
-                    NEXTCLOUD_TRUSTED_DOMAINS: args.host,
+                    NEXTCLOUD_TRUSTED_DOMAINS: [args.host, `${name}.${pvc.metadata.namespace}`].join(' '),
+
+                    // nginx reverse proxy
+                    TRUSTED_PROXIES: 'localhost',
+
+                    // smtp settings
                     MAIL_FROM_ADDRESS: 'master@unlimited-code.works',
                     MAIL_DOMAIN: 'unlimited-code.works',
                     SMTP_HOST: 'smtp.gmail.com',
                     SMTP_SECURE: 'tls',
                     SMTP_NAME: {
                         secretKeyRef: {
-                            name,
+                            name: smtpSecret.metadata.name,
                             key: 'smtp_user'
                         }
                     },
                     SMTP_PASSWORD: {
                         secretKeyRef: {
-                            name,
+                            name: smtpSecret.metadata.name,
                             key: 'smtp_pass',
                         }
                     }
                 },
                 volumeMounts: [
+                    phpCm.mount('/usr/local/etc/php-fpm.d'),
                     homePV.mount(this.homeMountPath),
                     webdavPV.mount(this.webdavMountPath),
                     // pvc.mount will be used in the nginx container
@@ -139,8 +146,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                 ],
                 livenessProbe: this.configureProbe(args),
                 readinessProbe: this.configureProbe(args),
-            }
-            ],
+            }],
             securityContext: {
                 // www-data
                 fsGroup: 82,
@@ -168,10 +174,17 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
             restartPolicy: 'Never',
             containers: [{
                 image: args.image,
-                command: ["curl"],
+                command: ["sh"],
                 args: [
-                    '--cacert', '/tls/ca.crt',
-                    urlFromService(service, 'https').apply(base => new URL('/cron.php', base).href),
+                    '-c',
+                    [
+                        'curl',
+                        '--cacert', '/tls/ca.crt',
+                        '--verbose',
+                        '--fail-with-body',
+                        urlFromService(service, 'https').apply(base => new URL('/cron.php', base).href),
+                        '|', 'tee', '/dev/fd/2', '|', 'grep', '-q', 'success'
+                    ].join(' '),
                 ],
                 volumeMounts: [
                     this.certificate.mount(this.tlsMountPath),
@@ -221,6 +234,18 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     tlsMountPath: this.tlsMountPath,
                     args,
                 })
+            }
+        }, { parent: this });
+        return cm;
+    }
+
+    private setupPhpCM(name: string, args: NextcloudArgs): kx.ConfigMap {
+        const confFile = 'max_children.ini';
+        const tpl = _.template(fs.readFileSync(pathFn.join(__dirname, 'static', confFile), 'utf-8'));
+
+        const cm = new kx.ConfigMap(`${name}-php`, {
+            data: {
+                [confFile]: tpl({})
             }
         }, { parent: this });
         return cm;
