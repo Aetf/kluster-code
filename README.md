@@ -45,13 +45,21 @@ images in the cluster.
 - - [x] Consider flux? (example: https://github.com/fluxcd/flux2-kustomize-helm-example)
     * need to disable k3s packaged helm-controller
     * no too much benefit than directly managing
+- - [x] nextcloud
+- - [ ] use glob to build config map for all files in a directory
+    * - [ ] rewrite resource to use initialize, which is async
+- - [ ] use sendmail to consolidate email sending
+- - [ ] properly retain authelia user database. Currently it gets reset whenever it is redeployed
+    * move mariadb in nextcloud to a shared service using statefulset
+        + how does statefulset's pvc template works?
+    * make authelia connect to mariadb instead of sqlite
+
+## Futures
+
+- - [ ] tcp forwarding for btsync
+    * maybe not possible? maybe just deploy syncthing and etc as NodeIP Service
 - - [ ] traefik websocket for jupyter
     * should be supported out of box
     * need testing
 - - [ ] CRD and shell-operator: https://github.com/flant/shell-operator
     * could be used to monitor and implement cert reloading
-- - [ ] tcp forwarding for btsync
-    * maybe not possible? maybe just deploy syncthing and etc as NodeIP Service
-- - [ ] nextcloud
-- - [ ] use sendmail to consolidate email sending
-- - [ ] properly retain authelia user database. Currently it gets reset whenever it is redeployed

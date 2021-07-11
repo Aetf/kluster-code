@@ -63,7 +63,6 @@ export function serviceFromDeployment(
         ...args?.metadata ?? {},
     };
     const deleteBeforeReplace = !_.isUndefined(metadata.name);
-    console.log('Service', name, 'deleteBefore', deleteBeforeReplace);
     return new kx.Service(name, {
         metadata,
         spec: serviceSpec,
