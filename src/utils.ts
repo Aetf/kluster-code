@@ -8,6 +8,8 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
+import * as crds from "#src/crds";
+
 export function setAndRegisterOutputs(obj: any, outputs: pulumi.Inputs) {
     for (const key in outputs) {
         obj[key] = outputs[key];
@@ -183,4 +185,67 @@ function pathStripComponents(path: string, count: number): string {
     }
 
     return pathFn.join(...parts.slice(count));
+}
+
+export type SealedSecretArgs = Omit<crds.bitnami.v1alpha1.SealedSecretArgs, 'spec'> & {
+    readonly spec?: SealedSecretSpecArgs
+}
+
+export interface SealedSecretSpecArgs {
+    encryptedData: pulumi.Inputs,
+}
+
+export class SealedSecret extends crds.bitnami.v1alpha1.SealedSecret {
+    constructor(name: string, args: SealedSecretArgs, opts?: pulumi.CustomResourceOptions) {
+        // add namespace-wide annotation by default,
+        // but also provide a stable name
+        const metadata = _.merge({
+            name,
+            annotations: {
+                "sealedsecrets.bitnami.com/namespace-wide": "true",
+            },
+        }, args.metadata);
+        const spec = _.merge({
+            template: {
+                metadata: {
+                    annotations: {
+                        "sealedsecrets.bitnami.com/namespace-wide": "true",
+                    }
+                }
+            }
+        }, args.spec);
+        // only need delete before replce if the name is a stable name
+        const deleteBeforeReplace = metadata.name === name;
+
+        super(name, {
+            ...args,
+            metadata,
+            spec,
+        }, {
+            deleteBeforeReplace,
+            ...opts ?? {}
+        });
+    }
+
+    public mount(destPath: pulumi.Input<string>, srcPath?: pulumi.Input<string>): pulumi.Output<kx.types.VolumeMount> {
+        return pulumi.output({
+            volume: {
+                name: this.metadata.name,
+                secret: {
+                    secretName: this.metadata.name,
+                },
+            },
+            destPath,
+            srcPath,
+        });
+    }
+
+    public asEnvValue(key: pulumi.Input<string>): pulumi.Output<k8s.types.input.core.v1.EnvVarSource> {
+        return pulumi.output({
+            secretKeyRef: {
+                name: this.metadata.name,
+                key,
+            },
+        });
+    }
 }

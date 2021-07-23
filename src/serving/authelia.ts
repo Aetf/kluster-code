@@ -4,10 +4,8 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import { SealedSecret } from "#src/crds/bitnami/v1alpha1";
-
 import { BaseCluster, BackendCertificate } from '#src/base-cluster';
-import { setAndRegisterOutputs, urlFromService, serviceFromDeployment, ConfigMap } from "#src/utils";
+import { setAndRegisterOutputs, urlFromService, serviceFromDeployment, ConfigMap, SealedSecret } from "#src/utils";
 import { Middleware } from './traefik';
 import { FrontendService } from "./service";
 
@@ -130,7 +128,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             NOTIFIER_SMTP_PASSWORD: "AgAE76D9ZnYsUSG/o2m72R0KN8UPXGRI9OrWHqE3Khq2ynatwueWstycQgz6QqVAv7HKvWkhNW/juTXsFjGrI24a4X8wY6Gc0dS5g5IbAujbqAqm4lX34zOOtyQTK1PEf9txvVTV3AUqCHIXYdDhC05M2QsAf8PL6L7Hh9FBadXEt1Vhn6SCFWVOEyrqYFwn6RddYB/ge4zWm5qCz/2MiZKyc3cF52h9BJ5Of0bz7FFu8CaP+fBq+K3aoYf0b6G2+a154KlKIftdfpgslDcr2Y3s+bUorxyPzmHAlzEJe8X6+BpNSKO74knTA8CeYrrRyzCZo8IutqadCXO5uSVrCK/DzbWUlFLobv8uvJfOO2E6H3aSsporEa2f+0CTlfP1Beyj9jIoVOXBXKe4gkgqbZpJp+CwBZ42+qsCqW4AYr6FAUbFyzMUSkkVoRsw7CJognny5hWT0ywiK3dt1g+9iOL3KB2dlr7sw9gnTlhult6bVuml2COQUFMMZ5n9pVbDLOdT9iO3EGl95BEpRUceIxZCi7QApPZtjfr2bHgaQz2tNbjcapTPNpf7CQOcs7FuibbEKbS6fmGL3eHrUNnj1loSry2cKZyr5+571nBRZUViRvt5j6oo0FMVg1DGWNgm8iPwnz6mlM8/LGaknhI6iMwXxvXJe4jTC/LcDqkrejiPkNRLKpUnqB/eXrFZDn3mh1CQdRGSzsqrZ4IVH/w8+hYL",
             SESSION_SECRET: "AgBHzPFXYd3WJezPRBsfa9iiQ4FFsq1XOpQRisPXF/DEtIivrHltMmrrt5XyU4LP2jjRBUIvk3dVdadpNoceDnVGld6JJOEjYk0GSSi5HVXcfg0cxwUhGm6tU8oFysFXAG0q2Y3dnElq35+gAWXdU7LheZLan36KUIrf767eDaZWgxPfyDAW1qB2gaGq2sWW2JH+UAD6DS/vL5ywdoMyLGFUdF/s73y/6qx06Oh0BwzrsCOzxB1+Rl0BKV7I4yVAuWhy2m7Iv/6+DoStL3QlQeM590KXLzgcEclvRfM0SxO3bzJ5f/BSPohdap5pB1jxD4qu4PWc7lDE1/ik0yDsfftyfdUAuXdlyihgQRq0O7UvQPpT/gqSY3waT3QsE89uWVd3EvN+noMPC4FugS4AeqAQOWX7cj6qFUkX61dzhcPHUz0CPmdCgRm7TDWCTnw9LbLp9fRIofHtukaHrzHSthvyFRQ8mw9KIear9Kj/89eUzDKisMr3RKSv8T8SReHD3yydvkKLXMOtMVF5nka5Z8RFLnf5IBZ3Zkq51SSCvlJNqZKjF8suw+XahKxq+DUi3wb/vqQ8M7Rqv0ME1AGsE8pVMmRXadmJ8icu4hhkH3L3+7sq9HWoxJDtQ04nFEk72mvsOopyt2CbXejVTGUAX/JwQnr5JGVe/RV0lrGgpvOFPbG4fUYzWnyCjdD1UsDsZmP3+z3ATOWevoEtEeSnz0W04xaYmTLi4CuUYcpxnwq6vVfyeE41wAg+xwvrD3WZ9UVG6nqeJB+JTbUBxtTtkdsoDa/QrDeqhgJItI/tbAeUhGkGvisZiHhvWbjHpzDdEZMBRSXMitiWzsOCnHbGbYFJ02T5g5yCUJp1pCffNzp/6w=="
         }, { parent: this });
-        const [mountedSecret, secretEnvs] = secret.mount('/secrets');
+        const [mountedSecret, secretEnvs] = secret.mountBoth('/secrets');
 
         const pb = new kx.PodBuilder({
             serviceAccountName: service_account.metadata.name,
@@ -204,47 +202,22 @@ class AutheliaSecret extends SealedSecret {
 
     constructor(name: string, encryptedData: Record<string, string>, opts?: pulumi.CustomResourceOptions) {
         super(name, {
-            metadata: {
-                // make sure the name is stable, because kubeseal may use the secret name to decrypt
-                name,
-                annotations: {
-                    "sealedsecrets.bitnami.com/namespace-wide": "true",
-                }
-            },
             spec: {
                 encryptedData,
-                template: {
-                    metadata: {
-                        annotations: {
-                            "sealedsecrets.bitnami.com/namespace-wide": "true",
-                        }
-                    }
-                }
             }
-        }, {
-            deleteBeforeReplace: true,
-            ...opts ?? {}
-        });
+        }, opts);
     }
 
     /**
      * mount the secret and provide the path for each key in env vars
      */
-    public mount(destPath: string): [kx.types.VolumeMount, pulumi.Output<kx.types.EnvMap>] {
+    public mountBoth(destPath: string): [pulumi.Output<kx.types.VolumeMount>, pulumi.Output<kx.types.EnvMap>] {
         const secretEnvs = this.spec.apply(spec =>
             _.chain(spec.encryptedData)
                 .mapValues((_, k) => `${destPath}/${k}`)
                 .mapKeys((_, k) => `AUTHELIA_${k}_FILE`)
                 .value()
         );
-        return [{
-            destPath,
-            volume: {
-                name: this.metadata.name,
-                secret: {
-                    secretName: this.metadata.name
-                }
-            }
-        }, secretEnvs];
+        return [this.mount(destPath), secretEnvs];
     }
 }

@@ -4,10 +4,8 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import { SealedSecret } from '#src/crds/bitnami/v1alpha1';
-
 import { BackendCertificate, NodePV } from '#src/base-cluster';
-import { serviceFromDeployment, urlFromService, ConfigMap } from "#src/utils";
+import { serviceFromDeployment, urlFromService, ConfigMap, SealedSecret } from "#src/utils";
 import { Serving } from "#src/serving";
 
 interface NextcloudArgs {
@@ -113,12 +111,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     MYSQL_HOST: 'localhost',
                     MYSQL_DATABASE: name,
                     MYSQL_USER: name,
-                    MYSQL_PASSWORD: {
-                        secretKeyRef: {
-                            name: secret.metadata.name,
-                            key: 'db_pass',
-                        }
-                    },
+                    MYSQL_PASSWORD: secret.asEnvValue('db_pass'),
 
                     // nginx reverse proxy
                     TRUSTED_PROXIES: 'localhost',
@@ -129,18 +122,8 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     SMTP_HOST: 'smtp.gmail.com',
                     SMTP_PORT: '587',
                     SMTP_SECURE: 'tls',
-                    SMTP_NAME: {
-                        secretKeyRef: {
-                            name: secret.metadata.name,
-                            key: 'smtp_user'
-                        }
-                    },
-                    SMTP_PASSWORD: {
-                        secretKeyRef: {
-                            name: secret.metadata.name,
-                            key: 'smtp_pass',
-                        }
-                    },
+                    SMTP_NAME: secret.asEnvValue('smtp_user'),
+                    SMTP_PASSWORD: secret.asEnvValue('smtp_pass'),
 
                     // force values
                     NC_default_phone_region: 'US',
@@ -195,20 +178,10 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                 ],
                 env: {
                     BITNAMI_DEBUG: 'true',
-                    MARIADB_ROOT_PASSWORD: {
-                        secretKeyRef: {
-                            name: secret.metadata.name,
-                            key: 'db_root_pass',
-                        }
-                    },
+                    MARIADB_ROOT_PASSWORD: secret.asEnvValue('db_root_pass'),
                     MARIADB_DATABASE: name,
                     MARIADB_USER: name,
-                    MARIADB_PASSWORD: {
-                        secretKeyRef: {
-                            name: secret.metadata.name,
-                            key: 'db_pass',
-                        }
-                    }
+                    MARIADB_PASSWORD: secret.asEnvValue('db_pass'),
                 },
                 volumeMounts: [{
                     name: pvc.metadata.name,
@@ -305,13 +278,6 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
 
     private setupSecret(name: string): SealedSecret {
         return new SealedSecret(name, {
-            metadata: {
-                // make sure the name is stable, because kubeseal may use the secret name to decrypt
-                name,
-                annotations: {
-                    "sealedsecrets.bitnami.com/namespace-wide": "true",
-                }
-            },
             spec: {
                 encryptedData: {
                     smtp_pass: 'AgBeBkoSkjCdussUsQRQibNojzpEW+2G3iGw+j4q3FcTGr4OXqG5AK2P+mmUykNm3BlNlbsvoDFAQRvz8SkMv5jhUL2bbg7m32j3GRmfi/q+kNJ0k4IzEDv9dV2snfcyoWEU+N/Q+WHOonq3zOxg76AQP/uNRHu2n71JgkshmGHD0B1+4eKGL58EDifq0jJviig6oKQSWCdEHkW1Jq25cUKe6tEB5NI8ppwKJ022famptdxs14duuKRflSjub6tFhv9RR7GBga6Xr2PR7CzyuoVL60o7x/sZwR+6E4Orp7r6/HqFkfvOnI9DsGcVHmvEbh0ASWPQQnmv3UI5MyLZLOpIe7++BTPMN31QdSaOmtapmccPD0R/6fkp7hQQKn41I0knvV7lx1dGtuRpndKYNNB+eHr76CfY0NlyN/a+v8Lr6Kq59TrEyGb8QWILTQDVIHjtBpqSNpExgxyUjH4h6Pc+tABBkbs20gpwwQk+qGDO0xmfKLs6cSaNDlgh1MxAhJz7COkHDPBjMy/8nETyO8/YMFAUmLNY0tZ3pqNSISYQjxqEwHh+MB+B0GUzCv8MpwITLW0P5DD0aQm5/6S7QpJsKQgBjYI+RpC4y3DJEV2Pssv4yuek60ohtGJW3tgtwli7KE+n1F4cTmX7197SXKdkLrWAb4uIywMBmoP/RBrbs4p/UkW7EubA3EobGHSJwt8cYbTAQvuEQ25RxzDr3PnY',
@@ -319,16 +285,8 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     db_pass: 'AgBwXwv/Wp28sWUkhe6Dd/gqFyMES3XvzsQPOGk/OvCHNiSWmj4sQCKO85G7bU1udNywoEGdEpsLtWyQ4aQNO4Bs2ZhMBZWvlAi10Fol+lf0bSNoZh4qMayTGf4KlYpQQah58P6mGXyENFgleDawZXWQ0eQMJ85HSKdeCrbNDOUNj4wF8UeqwFevIRyfHdQ44Oc8nZhlPSkIb3/A5FVZMjQ0/LNaqJYQvJVL6Xlse2KTIRanzk70Xx9WS/UjwEFVnPN6PckBBs/wIhUP6RPiVxZCBTm8iF2ALPMVxZ65UVZsunXIzNLlymQ1yM4C5VQRk1xQQnQ8wVafJMQz9dqA7kg05DhJkFbdMmuL3A0fsZpI81NlJUN1mYUZ858wTwDdxxn6cucpgQf7VpR7aikGw91y1Ni/+Zif6/VwNeJSWNHYt9CdoNZYKncX8fIcH9UnTV+0UKOcmqCVmpbLaJIKCsEb2CVNLwhW1ihUwI6NX7N7dhENksprf95p1OPI+tM9Wnd2T7ua9f4yG/X+tL9/SOixuuzVyG7zKubw9NrUAtJVXReidi0vtaTaKBRitgKz/L4IsaKP5OmXTlwJgh73ADvbUxeoz8Cow4AAikaevs4aI3AM7Zc2yYYxyAyVpQsoPOomCe+GsW3x1ImuUeo8aSt/R7y8wKmshb4Wc/fT4yGAmNY8XiUGvFZwQZ/NaThnB4rIydMSm67qN3PFBUrdyoBjl11zYToDONsyDpppKqqk+UHiN5ULgc2seRBSID4=',
                     db_root_pass: 'AgBjipdlUSpFS+IMbrnXZCSBSJdSimke0H4f8JzLwzy3Av4e94jJ546i4ixkHoPc8WXf9U+1EOHbCO3nn+USUqt/rfoOQrAKyFTz/Z9MVddrXkH/w9YQJCa9OQLpVvHVLWwmwGCWwYbBWzpnKx96QIl9rbXHLzzq3Vu3Eg9iTr1rCGSI5ID01he/CrgHV0voco1SutvNiw9YC+FYLmLYl7p5WZPxvmzvS36CLPupH6kkBUCM6NGzT3cENb3Y8yaHtCC6Lp84HoQRo5cuLSbW35FULTb4DkMhhS+CLLZd4raNDl66nQkT+SlSmgUo69ry8iv8bzqiMGEUNPLARd+h6RggIULbg7jht8TwCTA7BgHRWM8XpmqM40yNH59DIIlIDuMW8hjuD08WUVy8Ix7KaijDikgrHfw3iD5LkNCBlo0RKR/vpJbUJj+rmaP9Ootu4Q8mA5H5xyPLhgoMOxNUtdo1TmZa+BckMzkhLA1oxdryGXZNe0lO74rSl1UN1tGL4eMQM1SHDkO6hpuEHSo3tQuDfdpvpuwgT7ttApnAnpYth6ZThNjnMU9ll5ma+OwD9TXe2iJE707Wt7lN1bf30bQC5QPWTW+/UE7xm6wZ8CJNG/g2fYVUVT+WdRC2aVjKQn7oUEqq7sPFpqRoY8ERV/LOomI7p16mRlHc+qUnqaHsfoOUijo9htil+9g/1upZ22cUJzBPGPkpWMGm25yFxizOP7B16BNeOYTpC9mWTuyg42hOHOFfMPECWuHO0QM=',
                 },
-                template: {
-                    metadata: {
-                        annotations: {
-                            "sealedsecrets.bitnami.com/namespace-wide": "true",
-                        }
-                    }
-                }
             }
         }, {
-            deleteBeforeReplace: true,
             parent: this
         });
     }
