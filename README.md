@@ -46,9 +46,9 @@ images in the cluster.
     * need to disable k3s packaged helm-controller
     * no too much benefit than directly managing
 - - [x] nextcloud
-- - [ ] use glob to build config map for all files in a directory
-    * - [ ] rewrite resource to use initialize, which is async
-- - [ ] use sendmail to consolidate email sending
+- - [x] use glob to build config map for all files in a directory
+    * - [x] rewrite resource to use initialize, which is async
+- - [ ] use exim to consolidate email sending
 - - [ ] properly retain authelia user database. Currently it gets reset whenever it is redeployed
     * move mariadb in nextcloud to a shared service using statefulset
         + how does statefulset's pvc template works?

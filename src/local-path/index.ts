@@ -1,12 +1,10 @@
-import * as fs from "fs";
-import * as pathFn from "path";
-
 import * as _ from "lodash";
+
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import { setAndRegisterOutputs } from "#src/utils";
+import { ConfigMap, setAndRegisterOutputs } from "#src/utils";
 
 interface LocalPathProvisionerArgs {
     storageClass: string,
@@ -26,7 +24,7 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
         this.service_account = this.setupRBAC(name);
 
         this.storageClass = new k8s.storage.v1.StorageClass(args.storageClass, {
-            provisioner: pulumi.interpolate `cluster.local/${this.service_account.metadata.name}`,
+            provisioner: pulumi.interpolate`cluster.local/${this.service_account.metadata.name}`,
             volumeBindingMode: "WaitForFirstConsumer",
             reclaimPolicy: "Delete",
         }, { parent: this });
@@ -82,11 +80,10 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
     }
 
     private setupDeployment(name: string): kx.Deployment {
-        const cm = new kx.ConfigMap(name, {
-            data: _.chain(["config.json", "setup", "teardown", "helperPod.yaml"])
-                .map(name => [name, fs.readFileSync(pathFn.join(__dirname, "static", name), 'utf-8')])
-                .fromPairs()
-                .value()
+        const cm = new ConfigMap(name, {
+            base: __dirname,
+            data: 'static/*',
+            stripComponents: 1,
         }, { parent: this });
 
         const pb = new kx.PodBuilder({

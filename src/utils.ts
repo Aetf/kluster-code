@@ -1,7 +1,12 @@
+import { promises as fs } from 'fs';
+import * as pathFn from 'path';
+
+import * as _ from 'lodash';
+import * as fg from 'fast-glob';
+
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
-import _ = require("lodash");
 
 export function setAndRegisterOutputs(obj: any, outputs: pulumi.Inputs) {
     for (const key in outputs) {
@@ -114,4 +119,68 @@ export class HelmChart extends k8s.helm.v3.Chart {
             return undefined;
         });
     }
+}
+
+export type ConfigMapArgs = Omit<k8s.types.input.core.v1.ConfigMap, 'data'> & {
+    /**
+     * base directory to start glob
+     */
+    base: pulumi.Input<string>,
+    /**
+     * glob pattern for the data
+     */
+    data: pulumi.Input<string | pulumi.Input<string>[]>,
+    stripComponents?: pulumi.Input<number>,
+    /**
+     * if not null, render template
+     */
+    tplVariables?: pulumi.Inputs,
+};
+
+export class ConfigMap extends kx.ConfigMap {
+    constructor(name: string, args: ConfigMapArgs, opts?: pulumi.CustomResourceOptions) {
+        const renderedData = pulumi.output(args).apply(async args => {
+            const data = await this.globFiles(args.data, args);
+            if (_.isUndefined(args.tplVariables)) {
+                return data;
+            } else {
+                // render data with template
+                return _.mapValues(data, content => _.template(content)(args.tplVariables));
+            }
+        });
+
+        super(name, {
+            ...args,
+            data: renderedData,
+        }, opts);
+    }
+
+    private async globFiles(glob: string | string[], args: pulumi.UnwrappedObject<ConfigMapArgs>): Promise<Record<string, string>> {
+        const paths = await fg(glob, {
+            cwd: args.base,
+            onlyFiles: true,
+        });
+        const contents = await Promise.all(paths.map(path => fs.readFile(pathFn.join(args.base, path), 'utf-8')));
+        const stripped = paths.map(p => pathStripComponents(p, args.stripComponents ?? 1));
+        return _.fromPairs(_.zip(stripped, contents));
+    }
+}
+
+/**
+ * Remove leading dir components like tar's --strip-component
+ * @param path input path
+ * @param count 
+ * @returns 
+ */
+function pathStripComponents(path: string, count: number): string {
+    const parts = pathFn.normalize(path).split(pathFn.sep);
+    if (parts.length > 1 && parts[0] === '.') {
+        parts.shift();
+    }
+
+    if (count > parts.length - 1) {
+        return pathFn.normalize(parts[parts.length - 1]);
+    }
+
+    return pathFn.join(...parts.slice(count));
 }

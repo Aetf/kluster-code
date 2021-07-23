@@ -1,15 +1,14 @@
 import * as _ from 'lodash';
-import * as fs from 'fs';
-import * as pathFn from 'path';
 
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import { BackendCertificate, NodePV } from '#src/base-cluster';
-import { serviceFromDeployment, urlFromService } from "#src/utils";
-import { Serving } from "#src/serving";
 import { SealedSecret } from '#src/crds/bitnami/v1alpha1';
+
+import { BackendCertificate, NodePV } from '#src/base-cluster';
+import { serviceFromDeployment, urlFromService, ConfigMap } from "#src/utils";
+import { Serving } from "#src/serving";
 
 interface NextcloudArgs {
     serving: Serving,
@@ -79,8 +78,21 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
             namespace: this.namespace,
         }, { parent: this });
 
-        const cm = this.setupCM(name, args);
-        const phpCm = this.setupPhpCM(name, args);
+        const cm = new ConfigMap(name, {
+            base: __dirname,
+            data: 'static/nginx/*',
+            stripComponents: 2,
+            tplVariables: {
+                tlsMountPath: this.tlsMountPath,
+                servicePort: args.servicePort,
+            }
+        }, { parent: this });
+
+        const phpCm = new ConfigMap(`${name}-php`, {
+            base: __dirname,
+            data: 'static/php/*',
+            stripComponents: 2,
+        }, { parent: this });
 
         const secret = this.setupSecret(name);
 
@@ -286,33 +298,6 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
             failureThreshold: 30,
             ...(override ?? {})
         };
-    }
-
-    private setupCM(name: string, args: NextcloudArgs): kx.ConfigMap {
-        const confFile = 'nextcloud_nginx.conf';
-        const tpl = _.template(fs.readFileSync(pathFn.join(__dirname, 'static', confFile), 'utf-8'));
-
-        const cm = new kx.ConfigMap(name, {
-            data: {
-                [confFile]: tpl({
-                    tlsMountPath: this.tlsMountPath,
-                    args,
-                })
-            }
-        }, { parent: this });
-        return cm;
-    }
-
-    private setupPhpCM(name: string, args: NextcloudArgs): kx.ConfigMap {
-        const confFile = 'max_children.conf';
-        const tpl = _.template(fs.readFileSync(pathFn.join(__dirname, 'static', confFile), 'utf-8'));
-
-        const cm = new kx.ConfigMap(`${name}-php`, {
-            data: {
-                [confFile]: tpl({})
-            }
-        }, { parent: this });
-        return cm;
     }
 
     private setupSecret(name: string): SealedSecret {

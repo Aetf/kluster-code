@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import * as pathFn from 'path';
 
 import * as _ from 'lodash';
@@ -9,7 +8,7 @@ import * as kx from "@pulumi/kubernetesx";
 
 import { BackendCertificate, NodePV } from '#src/base-cluster';
 import { Serving } from "#src/serving";
-import { serviceFromDeployment } from '#src/utils';
+import { ConfigMap, serviceFromDeployment } from '#src/utils';
 
 export interface StaticSite {
     // document root is relative to /srv/http in hostPath, i.e. siteMountPath in container
@@ -100,19 +99,17 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
     }
 
     private setupCM(name: string, args: NginxArgs): kx.ConfigMap {
-        const confFile = 'static_sites.conf';
-        const tpl = _.template(fs.readFileSync(pathFn.join(__dirname, 'static', confFile), 'utf-8'));
-
-        const cm = new kx.ConfigMap(name, {
-            data: {
-                [confFile]: tpl({
-                    tlsMountPath: this.tlsMountPath,
-                    sites: args.staticSites.map(site => ({
-                        server_name: site.hostNames.join(' '),
-                        root: pathFn.join(this.siteMountPath, site.root),
-                        extra: site.extraConfig
-                    })),
-                })
+        const cm = new ConfigMap(name, {
+            base: __dirname,
+            data: 'static/*',
+            stripComponents: 1,
+            tplVariables: {
+                tlsMountPath: this.tlsMountPath,
+                sites: args.staticSites.map(site => ({
+                    server_name: site.hostNames.join(' '),
+                    root: pathFn.join(this.siteMountPath, site.root),
+                    extra: site.extraConfig
+                })),
             }
         }, { parent: this });
         return cm;

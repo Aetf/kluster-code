@@ -1,17 +1,13 @@
-import * as fs from 'fs';
-import * as pathFn from 'path';
-
 import * as _ from "lodash";
 
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import * as crds from "#src/crds";
 import { SealedSecret } from "#src/crds/bitnami/v1alpha1";
 
 import { BaseCluster, BackendCertificate } from '#src/base-cluster';
-import { setAndRegisterOutputs, urlFromService, serviceFromDeployment } from "#src/utils";
+import { setAndRegisterOutputs, urlFromService, serviceFromDeployment, ConfigMap } from "#src/utils";
 import { Middleware } from './traefik';
 import { FrontendService } from "./service";
 
@@ -87,18 +83,6 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         setAndRegisterOutputs(this, {});
     }
 
-    private setupCM(name: string, configKey: string, variables: Record<string, string>): kx.ConfigMap {
-        const tpl = _.template(fs.readFileSync(pathFn.join(__dirname, 'static', 'authelia.yaml'), 'utf-8'));
-        const cm = new kx.ConfigMap(name, {
-            data: {
-                [configKey]: tpl({
-                    ...variables
-                })
-            }
-        }, { parent: this });
-        return cm;
-    }
-
     private setupDeploymentService(name: string, args: AutheliaArgs, service_account: k8s.core.v1.ServiceAccount): kx.Service {
         // persistent storage
         const storagePath = "/storage";
@@ -126,12 +110,16 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
 
         // config file
         const configPath = "/config";
-        const configKey = "configuration.yaml";
-        const cm = this.setupCM(name, configKey, {
-            domain: args.domain,
-            subdomain: args.subdomain,
-            storagePath,
-        });
+        const cm = new ConfigMap(name, {
+            base: __dirname,
+            data: 'static/*',
+            stripComponents: 1,
+            tplVariables: {
+                domain: args.domain,
+                subdomain: args.subdomain,
+                storagePath,
+            },
+        }, { parent: this });
 
         // setup the secrets
         const secret = new AutheliaSecret(name, {
@@ -146,9 +134,9 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             containers: [{
                 name: "authelia",
                 image: "ghcr.io/authelia/authelia:4.29.4",
-                command: [ "authelia" ],
+                command: ["authelia"],
                 args: [
-                    `--config=${configPath}/${configKey}`
+                    `--config=${configPath}/authelia.yaml`
                 ],
                 // ports
                 ports: {
