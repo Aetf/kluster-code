@@ -70,7 +70,10 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     }
                 }
             }
-        }, { parent: this });
+        }, {
+            parent: this,
+            protect: true,
+        });
 
         this.namespace = pvc.metadata.namespace;
 

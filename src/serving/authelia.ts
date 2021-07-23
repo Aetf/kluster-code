@@ -106,7 +106,10 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                     }
                 }
             }
-        }, { parent: this });
+        }, {
+            parent: this,
+            protect: true,
+        });
 
         // config file
         const configPath = "/config";
