@@ -48,7 +48,8 @@ images in the cluster.
 - - [x] nextcloud
 - - [x] use glob to build config map for all files in a directory
     * - [x] rewrite resource to use initialize, which is async
-- - [ ] use exim to consolidate email sending
+- - [x] use exim to consolidate email sending
+    * - [ ] change authelia and nextcloud to use exim
 - - [ ] properly retain authelia user database. Currently it gets reset whenever it is redeployed
     * move mariadb in nextcloud to a shared service using statefulset
         + how does statefulset's pvc template works?

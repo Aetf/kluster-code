@@ -3,7 +3,7 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 export { BaseCluster } from "./base";
-export { FrontendCertificate, BackendCertificate } from "./certs";
+export { FrontendCertificate, BackendCertificate, ClusterCertificate } from "./certs";
 
 interface NodePVArgs {
     path: pulumi.Input<string>,

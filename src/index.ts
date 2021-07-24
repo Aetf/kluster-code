@@ -9,6 +9,7 @@ import { Serving } from "./serving";
 import { K8sDashboard } from "./k8s-dashboard";
 import { Nginx } from "./nginx";
 import { Nextcloud } from "./nextcloud";
+import { Exim } from "./mail";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -38,6 +39,14 @@ function setup() {
     if (isSetupSecrets) {
         return;
     }
+
+    // mail transfer agent
+    const mailer = new Exim("exim", {
+        base: cluster,
+        host: "unlimited-code.works",
+    }, {
+        provider: namespaced('mail-system')
+    });
 
     // serving
     const serving = new Serving("kluster-serving", {
