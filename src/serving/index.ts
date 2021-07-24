@@ -20,6 +20,9 @@ interface ServingArgs {
 
     certificates: ({ main: string } & FrontendCertificateArgs)[],
 
+    smtpHost: pulumi.Input<string>,
+    smtpPort: pulumi.Input<number>,
+
     httpPort?: number,
     httpsPort?: number,
 }
@@ -47,6 +50,8 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
             base: args.base,
             domain: args.authDomain,
             subdomain: 'auth',
+            smtpHost: args.smtpHost,
+            smtpPort: args.smtpPort,
         }, { parent: this, dependsOn: traefik.chart.ready });
         this.middlewareAuth = authelia.middlewareAuth;
 

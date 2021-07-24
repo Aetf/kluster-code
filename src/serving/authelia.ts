@@ -12,6 +12,9 @@ import { FrontendService } from "./service";
 interface AutheliaArgs {
     base: BaseCluster,
 
+    smtpHost: pulumi.Input<string>,
+    smtpPort: pulumi.Input<number>,
+
     domain: string,
     subdomain: string,
 }
@@ -118,6 +121,8 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             tplVariables: {
                 domain: args.domain,
                 subdomain: args.subdomain,
+                smtpHost: args.smtpHost,
+                smtpPort: args.smtpPort,
                 storagePath,
             },
         }, { parent: this });
@@ -125,7 +130,6 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         // setup the secrets
         const secret = new AutheliaSecret(name, {
             JWT_SECRET: "AgCYT9tnsHJ+P1k7vFUXHc9kDweaIezXQueesrJXOpba76gRBYIFkZpAySuHLPtS9B6on+8104Yp0cfu58qbZMtQouSs9woZhDjKbe/WStjx3Znr2S7pMn9oE/0mYk3uO91Q3Cdo98l+gQYSXeqiCl1TYnVG+u+/xuxey+R6U278RK7Q7uuqop3IQq2QfpyIeFI4EJcZfKkr5+9hPe53UjuaZG0AFQt+WBXiR2a8O1y7acL9MJAOJ0rlG9WJ2CNLKJ+XNQt9Vq/QAWlPenRc5PqH7X8+5ZcxB02WXKsU0gU2cyUmbYoK8eL5PwTKGWoZNoJdUb7tgBEfkGASGnQl3OEu+KKvPRhLYAoOmfTN65oeCZCBl/xuW3WnYSmzImYLLqRLkMU4UDbVIXn/w6kaiU+/O6GiE3d4gjVXOeBN5pT+I9NuFAzNqirBH/TFJoyFYuz8eDcz7GVbpHZ/c5NqVh/tu1V9mwTPaSxSeHc2RKBsYo4y7q+WauJXZZk0AZ/81jBDDct3WE3ROhhwWwokaTtelGGxacaug5Ij+92bt9C3ZNOw7VA/vdnoh/62Fr42gDfg9/fIdkorE2ep0eHSMeACUm49tyUXozYaVggTpbQJxTkU0Al8/2QNCIuNQTRg/I2jceqw7beTtPBnR6fJ7BNFhPWhSXH9MKzCP/3VUDKakwdUl9v2u/bOuuxLeGTBAJAJuE6tSUrEcMwgahC/YbKbMo0fHjcBD7IdRxnrwARrh+5tF7Y3WlQ+/pT+k1J+1bXdwWgjq88GVPmY+uQQjwuZplfCAbe4GONDgtECUE/1NZQWgyIz04Q/J3NaN6fTuDXqwfviD952Lck73/Jc82vL3Qz9cABVatnmQMtKS91JTA==",
-            NOTIFIER_SMTP_PASSWORD: "AgAE76D9ZnYsUSG/o2m72R0KN8UPXGRI9OrWHqE3Khq2ynatwueWstycQgz6QqVAv7HKvWkhNW/juTXsFjGrI24a4X8wY6Gc0dS5g5IbAujbqAqm4lX34zOOtyQTK1PEf9txvVTV3AUqCHIXYdDhC05M2QsAf8PL6L7Hh9FBadXEt1Vhn6SCFWVOEyrqYFwn6RddYB/ge4zWm5qCz/2MiZKyc3cF52h9BJ5Of0bz7FFu8CaP+fBq+K3aoYf0b6G2+a154KlKIftdfpgslDcr2Y3s+bUorxyPzmHAlzEJe8X6+BpNSKO74knTA8CeYrrRyzCZo8IutqadCXO5uSVrCK/DzbWUlFLobv8uvJfOO2E6H3aSsporEa2f+0CTlfP1Beyj9jIoVOXBXKe4gkgqbZpJp+CwBZ42+qsCqW4AYr6FAUbFyzMUSkkVoRsw7CJognny5hWT0ywiK3dt1g+9iOL3KB2dlr7sw9gnTlhult6bVuml2COQUFMMZ5n9pVbDLOdT9iO3EGl95BEpRUceIxZCi7QApPZtjfr2bHgaQz2tNbjcapTPNpf7CQOcs7FuibbEKbS6fmGL3eHrUNnj1loSry2cKZyr5+571nBRZUViRvt5j6oo0FMVg1DGWNgm8iPwnz6mlM8/LGaknhI6iMwXxvXJe4jTC/LcDqkrejiPkNRLKpUnqB/eXrFZDn3mh1CQdRGSzsqrZ4IVH/w8+hYL",
             SESSION_SECRET: "AgBHzPFXYd3WJezPRBsfa9iiQ4FFsq1XOpQRisPXF/DEtIivrHltMmrrt5XyU4LP2jjRBUIvk3dVdadpNoceDnVGld6JJOEjYk0GSSi5HVXcfg0cxwUhGm6tU8oFysFXAG0q2Y3dnElq35+gAWXdU7LheZLan36KUIrf767eDaZWgxPfyDAW1qB2gaGq2sWW2JH+UAD6DS/vL5ywdoMyLGFUdF/s73y/6qx06Oh0BwzrsCOzxB1+Rl0BKV7I4yVAuWhy2m7Iv/6+DoStL3QlQeM590KXLzgcEclvRfM0SxO3bzJ5f/BSPohdap5pB1jxD4qu4PWc7lDE1/ik0yDsfftyfdUAuXdlyihgQRq0O7UvQPpT/gqSY3waT3QsE89uWVd3EvN+noMPC4FugS4AeqAQOWX7cj6qFUkX61dzhcPHUz0CPmdCgRm7TDWCTnw9LbLp9fRIofHtukaHrzHSthvyFRQ8mw9KIear9Kj/89eUzDKisMr3RKSv8T8SReHD3yydvkKLXMOtMVF5nka5Z8RFLnf5IBZ3Zkq51SSCvlJNqZKjF8suw+XahKxq+DUi3wb/vqQ8M7Rqv0ME1AGsE8pVMmRXadmJ8icu4hhkH3L3+7sq9HWoxJDtQ04nFEk72mvsOopyt2CbXejVTGUAX/JwQnr5JGVe/RV0lrGgpvOFPbG4fUYzWnyCjdD1UsDsZmP3+z3ATOWevoEtEeSnz0W04xaYmTLi4CuUYcpxnwq6vVfyeE41wAg+xwvrD3WZ9UVG6nqeJB+JTbUBxtTtkdsoDa/QrDeqhgJItI/tbAeUhGkGvisZiHhvWbjHpzDdEZMBRSXMitiWzsOCnHbGbYFJ02T5g5yCUJp1pCffNzp/6w=="
         }, { parent: this });
         const [mountedSecret, secretEnvs] = secret.mountBoth('/secrets');

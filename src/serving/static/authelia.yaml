@@ -27,13 +27,13 @@ storage:
     path: "<%= storagePath %>/db.sqlite3"
 notifier:
   smtp:
-    username: 7437103@gmail.com
-    host: smtp.gmail.com
-    port: 587
+    host: "<%= smtpHost %>"
+    port: <%= smtpPort %>
     ## HELO/EHLO Identifier. Identifies the mail client
     identifier: "<%= subdomain %>.<%= domain %>"
-    sender: "master@<%= domain %>"
+    sender: "auth@<%= domain %>"
     subject: "[Authelia] {title}"
+    disable_require_tls: true
 server:
   # the default value is too small, and will cause 431 error
   read_buffer_size: 8192

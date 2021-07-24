@@ -11,6 +11,10 @@ import { Serving } from "#src/serving";
 interface NextcloudArgs {
     serving: Serving,
     host: string,
+
+    smtpHost: pulumi.Input<string>,
+    smtpPort: pulumi.Input<number>,
+
     servicePort?: number;
     image?: string,
     nginxImage?: string,
@@ -119,12 +123,9 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     // smtp settings
                     MAIL_FROM_ADDRESS: 'master',
                     MAIL_DOMAIN: 'unlimited-code.works',
-                    SMTP_HOST: 'smtp.gmail.com',
-                    SMTP_PORT: '587',
-                    SMTP_SECURE: 'tls',
-                    SMTP_NAME: secret.asEnvValue('smtp_user'),
-                    SMTP_PASSWORD: secret.asEnvValue('smtp_pass'),
-
+                    SMTP_HOST: args.smtpHost,
+                    SMTP_PORT: pulumi.interpolate`${args.smtpPort}`,
+                    SMTP_AUTHTYPE: 'NONE',
                     // force values
                     NC_default_phone_region: 'US',
                 },
@@ -280,8 +281,6 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         return new SealedSecret(name, {
             spec: {
                 encryptedData: {
-                    smtp_pass: 'AgBeBkoSkjCdussUsQRQibNojzpEW+2G3iGw+j4q3FcTGr4OXqG5AK2P+mmUykNm3BlNlbsvoDFAQRvz8SkMv5jhUL2bbg7m32j3GRmfi/q+kNJ0k4IzEDv9dV2snfcyoWEU+N/Q+WHOonq3zOxg76AQP/uNRHu2n71JgkshmGHD0B1+4eKGL58EDifq0jJviig6oKQSWCdEHkW1Jq25cUKe6tEB5NI8ppwKJ022famptdxs14duuKRflSjub6tFhv9RR7GBga6Xr2PR7CzyuoVL60o7x/sZwR+6E4Orp7r6/HqFkfvOnI9DsGcVHmvEbh0ASWPQQnmv3UI5MyLZLOpIe7++BTPMN31QdSaOmtapmccPD0R/6fkp7hQQKn41I0knvV7lx1dGtuRpndKYNNB+eHr76CfY0NlyN/a+v8Lr6Kq59TrEyGb8QWILTQDVIHjtBpqSNpExgxyUjH4h6Pc+tABBkbs20gpwwQk+qGDO0xmfKLs6cSaNDlgh1MxAhJz7COkHDPBjMy/8nETyO8/YMFAUmLNY0tZ3pqNSISYQjxqEwHh+MB+B0GUzCv8MpwITLW0P5DD0aQm5/6S7QpJsKQgBjYI+RpC4y3DJEV2Pssv4yuek60ohtGJW3tgtwli7KE+n1F4cTmX7197SXKdkLrWAb4uIywMBmoP/RBrbs4p/UkW7EubA3EobGHSJwt8cYbTAQvuEQ25RxzDr3PnY',
-                    smtp_user: 'AgBmpEDMjn2UmenbQG3KoI49l3f1jdzkreZyTl9wm4wJblK614TRuMofi/ZtuPJ8qK+fYAC0MQfX1AqkrcTI4uZlZ67AR7tAAyGZxcRixLmdbxbnArEXser0kG9OkUpwJtUnSH8Ov/o1r6YkM6XrzFCPxfY5rCQsJjKAVhPH2VBK7pe0Llu1vZfs1BStOd9W5wzNphdL3Vzn542dG0xEytwxi+FSUC4rZaA5xjAsaLe6QwZeWehtWYZ8HXO7ZkiT6wG1ZePS4Pla6+vRKUIWNcI2yQEY4wDHwFy5XX+D3qoU06e3khCwiFPa94bcPcDkADscbOcYQiNJ9TWue6ZfNaaYJmWTYGbuApm6mG2n4YcGe8fD67qAuazMndBDF6+ClpJAuodlRS5DQ3CDbACimYEpWAS6HhVWskbW8KDhEWD8CRf4dvrslyZUGKaTnVXEBEDmRbuveuGDGopIyoew72pkgTfQh04B9Jg0v6slXTEwxb4L8RPcfLr+cQpICCgtqOxfqL5oJP16bQ0/t76Z/0LxKfXZfgyCTXAK7lDLC9k19nRgFCBXzT/c3dSrnUPVy28V2xyOb5IBy6MFe2+bph/Q+QmiacSPV6FRYH3lCru9etLOqvjTLrHG4KZwMm7xHwXIY6kIdc/z+kzMIl27DfYlJzDtdjDmqKe8XfdlYon3No2JxBJCMMl66jRwDNfOFRnee08xaCfQnlYUF7RkJob5Wg==',
                     db_pass: 'AgBwXwv/Wp28sWUkhe6Dd/gqFyMES3XvzsQPOGk/OvCHNiSWmj4sQCKO85G7bU1udNywoEGdEpsLtWyQ4aQNO4Bs2ZhMBZWvlAi10Fol+lf0bSNoZh4qMayTGf4KlYpQQah58P6mGXyENFgleDawZXWQ0eQMJ85HSKdeCrbNDOUNj4wF8UeqwFevIRyfHdQ44Oc8nZhlPSkIb3/A5FVZMjQ0/LNaqJYQvJVL6Xlse2KTIRanzk70Xx9WS/UjwEFVnPN6PckBBs/wIhUP6RPiVxZCBTm8iF2ALPMVxZ65UVZsunXIzNLlymQ1yM4C5VQRk1xQQnQ8wVafJMQz9dqA7kg05DhJkFbdMmuL3A0fsZpI81NlJUN1mYUZ858wTwDdxxn6cucpgQf7VpR7aikGw91y1Ni/+Zif6/VwNeJSWNHYt9CdoNZYKncX8fIcH9UnTV+0UKOcmqCVmpbLaJIKCsEb2CVNLwhW1ihUwI6NX7N7dhENksprf95p1OPI+tM9Wnd2T7ua9f4yG/X+tL9/SOixuuzVyG7zKubw9NrUAtJVXReidi0vtaTaKBRitgKz/L4IsaKP5OmXTlwJgh73ADvbUxeoz8Cow4AAikaevs4aI3AM7Zc2yYYxyAyVpQsoPOomCe+GsW3x1ImuUeo8aSt/R7y8wKmshb4Wc/fT4yGAmNY8XiUGvFZwQZ/NaThnB4rIydMSm67qN3PFBUrdyoBjl11zYToDONsyDpppKqqk+UHiN5ULgc2seRBSID4=',
                     db_root_pass: 'AgBjipdlUSpFS+IMbrnXZCSBSJdSimke0H4f8JzLwzy3Av4e94jJ546i4ixkHoPc8WXf9U+1EOHbCO3nn+USUqt/rfoOQrAKyFTz/Z9MVddrXkH/w9YQJCa9OQLpVvHVLWwmwGCWwYbBWzpnKx96QIl9rbXHLzzq3Vu3Eg9iTr1rCGSI5ID01he/CrgHV0voco1SutvNiw9YC+FYLmLYl7p5WZPxvmzvS36CLPupH6kkBUCM6NGzT3cENb3Y8yaHtCC6Lp84HoQRo5cuLSbW35FULTb4DkMhhS+CLLZd4raNDl66nQkT+SlSmgUo69ry8iv8bzqiMGEUNPLARd+h6RggIULbg7jht8TwCTA7BgHRWM8XpmqM40yNH59DIIlIDuMW8hjuD08WUVy8Ix7KaijDikgrHfw3iD5LkNCBlo0RKR/vpJbUJj+rmaP9Ootu4Q8mA5H5xyPLhgoMOxNUtdo1TmZa+BckMzkhLA1oxdryGXZNe0lO74rSl1UN1tGL4eMQM1SHDkO6hpuEHSo3tQuDfdpvpuwgT7ttApnAnpYth6ZThNjnMU9ll5ma+OwD9TXe2iJE707Wt7lN1bf30bQC5QPWTW+/UE7xm6wZ8CJNG/g2fYVUVT+WdRC2aVjKQn7oUEqq7sPFpqRoY8ERV/LOomI7p16mRlHc+qUnqaHsfoOUijo9htil+9g/1upZ22cUJzBPGPkpWMGm25yFxizOP7B16BNeOYTpC9mWTuyg42hOHOFfMPECWuHO0QM=',
                 },

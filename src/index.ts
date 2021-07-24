@@ -77,6 +77,8 @@ function setup() {
                 "*.jiahui.love",
             ],
         }],
+        smtpHost: mailer.address,
+        smtpPort: mailer.port,
         httpPort: 10000,
         httpsPort: 10443,
     }, {
@@ -146,6 +148,8 @@ function setup() {
     const nextcloud = new Nextcloud("nextcloud", {
         serving,
         host: 'files.unlimited-code.works',
+        smtpHost: mailer.address,
+        smtpPort: mailer.port,
     }, {
         provider: namespaced("nextcloud"),
     });

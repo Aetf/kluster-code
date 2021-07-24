@@ -22,7 +22,7 @@ images in the cluster.
 
 - - [x] install cert-manager
     * - [x] create issuer: cluster root CA
-        + - [ ] find a way to notify and reload internal services when cert reneal
+        + - [ ] use [Reloader](https://github.com/stakater/Reloader) to notify and reload internal services when cert reneal
             + nginx
             + dashboard
             + authelia
@@ -49,7 +49,8 @@ images in the cluster.
 - - [x] use glob to build config map for all files in a directory
     * - [x] rewrite resource to use initialize, which is async
 - - [x] use exim to consolidate email sending
-    * - [ ] change authelia and nextcloud to use exim
+    * - [x] change authelia and nextcloud to use exim
+    * - [ ] config exim to use TLS on 587
 - - [ ] properly retain authelia user database. Currently it gets reset whenever it is redeployed
     * move mariadb in nextcloud to a shared service using statefulset
         + how does statefulset's pvc template works?
