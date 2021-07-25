@@ -83,7 +83,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
             namespace: this.namespace,
         }, { parent: this });
 
-        const cm = new ConfigMap(name, {
+        const nginxCm = new ConfigMap(name, {
             base: __dirname,
             data: 'static/nginx/*',
             stripComponents: 2,
@@ -96,6 +96,12 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         const phpCm = new ConfigMap(`${name}-php`, {
             base: __dirname,
             data: 'static/php/*',
+            stripComponents: 2,
+        }, { parent: this });
+
+        const nextcloudCm = new ConfigMap(`${name}-nc`, {
+            base: __dirname,
+            data: 'static/nextcloud/*',
             stripComponents: 2,
         }, { parent: this });
 
@@ -125,6 +131,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     MAIL_DOMAIN: 'unlimited-code.works',
                     SMTP_HOST: args.smtpHost,
                     SMTP_PORT: pulumi.interpolate`${args.smtpPort}`,
+                    SMTP_SECURE: 'tls',
                     SMTP_AUTHTYPE: 'NONE',
                     // force values
                     NC_default_phone_region: 'US',
@@ -137,6 +144,16 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     // host data access
                     homePV.mount(this.homeMountPath),
                     webdavPV.mount(this.webdavMountPath),
+
+                    // ca certificate for smtp tls
+                    // avoid deuplicate in nginx
+                    // TODO: change to mount after issue https://github.com/pulumi/pulumi-kubernetesx/issues/69
+                    {
+                        name: this.certificate.secretName,
+                        mountPath: '/tls',
+                    },
+                    // k8s specific settings
+                    nextcloudCm.mount('/var/www/html/config/k8s.config.php', 'k8s.config.php'),
 
                     // pvc.mount will be used in the nginx container
                     // so do not use pvc.mount, to not create an unnecessary second volume
@@ -164,7 +181,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     https: args.servicePort,
                 },
                 volumeMounts: [
-                    cm.mount('/opt/bitnami/nginx/conf/server_blocks'),
+                    nginxCm.mount('/opt/bitnami/nginx/conf/server_blocks'),
                     this.certificate.mount(this.tlsMountPath),
                     pvc.mount('/var/www'),
                 ],

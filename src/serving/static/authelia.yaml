@@ -1,3 +1,4 @@
+certificates_directory: /tls
 tls_cert: /tls/tls.crt
 tls_key: /tls/tls.key
 theme: "light"
@@ -33,7 +34,6 @@ notifier:
     identifier: "<%= subdomain %>.<%= domain %>"
     sender: "auth@<%= domain %>"
     subject: "[Authelia] {title}"
-    disable_require_tls: true
 server:
   # the default value is too small, and will cause 431 error
   read_buffer_size: 8192

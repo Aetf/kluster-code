@@ -147,7 +147,16 @@ export class ConfigMap extends kx.ConfigMap {
                 return data;
             } else {
                 // render data with template
-                return _.mapValues(data, content => _.template(content)(args.tplVariables));
+                try {
+                    return _.mapValues(data, content => {
+                        const tpl = _.template(content, { interpolate: /<%=([\s\S]+?)%>/g });
+                        return tpl(args.tplVariables);
+                    });
+                } catch (err) {
+                    console.log('Error rendering config map', name, args);
+                    throw err;
+                    // return data;
+                }
             }
         });
 
