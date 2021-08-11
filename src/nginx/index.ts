@@ -94,6 +94,7 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
         const front = args.serving.createFrontendService(name, {
             host: _.concat([], ...args.staticSites.map(s => s.hostNames)),
             targetService: service,
+            // we will use the authelia acl to control the site
             enableAuth: true,
         });
     }

@@ -83,9 +83,25 @@ access_control:
 
   rules:
   - domain:
-    - "*.<%= domain %>"
+    - "k8s.<%= domain %>"
     subject: "group:admins"
     policy: one_factor
+  - domain:
+    - "bt.<%= domain %>"
+    policy: one_factor
+  # disable auth for pub website
+  - domain:
+    - "<%= domain %>"
+    - "www.<%= domain %>"
+    - "unlimitedcodeworks.xyz"
+    - "www.unlimitedcodeworks.xyz"
+    - "games.unlimitedcodeworks.xyz"
+    - "game.unlimitedcodeworks.xyz"
+    - "jiahui.love"
+    - "*.jiahui.love"
+    - "jiahui.id"
+    - "*.jiahui.id"
+    policy: bypass
   # rules:
   # - domain: public.example.com
   #   policy: bypass

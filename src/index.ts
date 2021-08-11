@@ -27,6 +27,7 @@ function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
 function setup() {
     const config = new pulumi.Config();
     const isSetupSecrets = config.requireBoolean("setupSecrets");
+    const staging = config.requireBoolean("staging");
 
     // base cluster
     const cluster = new BaseCluster("kluster", { isSetupSecrets }, {
@@ -67,7 +68,6 @@ function setup() {
             main: 'unlimitedcodeworks.xyz',
             sans: [
                 "*.unlimitedcodeworks.xyz",
-                "*.archvps.unlimitedcodeworks.xyz",
             ],
         }, {
             main: 'jiahui.id',
@@ -79,8 +79,8 @@ function setup() {
         }],
         smtpHost: mailer.address,
         smtpPort: mailer.port,
-        httpPort: 10000,
-        httpsPort: 10443,
+        httpPort: staging ? 10000 : 80,
+        httpsPort: staging ? 10443 : 443,
     }, {
         provider: namespaced('serving-system')
     });
@@ -116,6 +116,8 @@ function setup() {
             hostNames: [
                 "unlimited-code.works",
                 "www.unlimited-code.works",
+                "unlimitedcodeworks.xyz",
+                "www.unlimitedcodeworks.xyz",
             ],
             extraConfig: `error_page 404 /404.html;`
         }, {
@@ -124,20 +126,12 @@ function setup() {
         }, {
             root: "door-shiyu",
             hostNames: [
-                "games.unlimited-code.works",
                 "games.unlimitedcodeworks.xyz",
             ]
         }, {
             root: "door",
             hostNames: [
-                "game.unlimited-code.works",
                 "game.unlimitedcodeworks.xyz"
-            ]
-        }, {
-            root: 'files',
-            hostNames: [
-                "static.unlimited-code.works",
-                "static.unlimitedcodeworks.xyz"
             ]
         }]
     }, {
