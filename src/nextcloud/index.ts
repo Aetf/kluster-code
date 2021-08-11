@@ -209,7 +209,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
             }],
             securityContext: {
                 // www-data
-                fsGroup: 82,
+                // fsGroup: 82,
             }
         });
 
