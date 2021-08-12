@@ -55,11 +55,15 @@ images in the cluster.
     * move mariadb in nextcloud to a shared service using statefulset
         + how does statefulset's pvc template works?
     * make authelia connect to mariadb instead of sqlite
+- - [ ] run syncthing inside k8s
+    * setup nodepv
+    * - [ ] tcp forwarding for btsync
+    * maybe not possible? maybe just deploy syncthing and etc as NodeIP Service
+- - [ ] run hath inside k8s
+    * note the open port
+- - [ ] check nofile: `sudo lsof | awk '{print $1 $2}' | sort | uniq -c | sort -n | tee ~/lsof.txt`
 
 ## Futures
-
-- - [ ] tcp forwarding for btsync
-    * maybe not possible? maybe just deploy syncthing and etc as NodeIP Service
 - - [ ] traefik websocket for jupyter
     * should be supported out of box
     * need testing
