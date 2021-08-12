@@ -52,30 +52,13 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         }, { parent: this });
 
         // persistent storage for config
-        const pvc = new kx.PersistentVolumeClaim(name, {
-            metadata: {
-                annotations: {
-                    // the pvc will be pending because of WaitForFirstConsumer
-                    // so don't wait for it in pulumi
-                    // see https://github.com/pulumi/pulumi-kubernetes/issues/895
-                    "pulumi.com/skipAwait": "true"
-                }
-            },
-            spec: {
-                storageClassName: args.serving.base.localStorageClass.metadata.name,
-                accessModes: [
-                    'ReadWriteOnce',
-                ],
-                resources: {
-                    requests: {
-                        storage: "1Gi"
-                    }
+        const pvc = args.serving.base.createLocalStoragePVC(name, {
+            resources: {
+                requests: {
+                    storage: "1Gi"
                 }
             }
-        }, {
-            parent: this,
-            protect: true,
-        });
+        }, { parent: this, });
 
         this.namespace = pvc.metadata.namespace;
 

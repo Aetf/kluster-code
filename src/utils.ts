@@ -111,14 +111,27 @@ export class HelmChart extends k8s.helm.v3.Chart {
 
     /**
      * Returns the first service
+     * @param namePattern: optional search for this name
      */
-    public get service(): pulumi.Output<k8s.core.v1.Service | undefined> {
+    public service(namePattern?: RegExp): pulumi.Output<k8s.core.v1.Service> {
         return this.resources.apply(res => {
-            const key = _.keys(res).find(k => k.startsWith('v1/Service::'));
-            if (!_.isUndefined(key)) {
-                return res[key] as k8s.core.v1.Service;
+            const keys = _.keys(res).filter(k => k.startsWith('v1/Service::'));
+            let key: string | undefined = undefined;
+            if (keys.length === 0) {
+                // pass
+            } else if (keys.length === 1) {
+                key = keys[0];
+            } else {
+                if (_.isUndefined(namePattern)) {
+                    throw new TypeError("Multiple services defined in the chart, specify a selector");
+                } else {
+                    key = keys.find(k => namePattern.test(k));
+                }
             }
-            return undefined;
+            if (_.isUndefined(key)) {
+                throw new TypeError("No service defined in the chart");
+            }
+            return res[key] as k8s.core.v1.Service;
         });
     }
 }

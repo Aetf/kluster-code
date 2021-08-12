@@ -1,5 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
+import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from "#src/crds";
 import { NamespaceProbe, HelmChart } from "#src/utils";
@@ -199,6 +200,39 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         }, {
             parent: this,
             ...opts,
+        });
+    }
+
+    public createLocalStoragePVC(
+        name: string,
+        spec: pulumi.Input<k8s.types.input.core.v1.PersistentVolumeClaimSpec>,
+        opts?: pulumi.CustomResourceOptions
+    ): kx.PersistentVolumeClaim {
+        return new kx.PersistentVolumeClaim(name, {
+            metadata: {
+                annotations: {
+                    // the pvc will be pending because of WaitForFirstConsumer
+                    // so don't wait for it in pulumi
+                    // see https://github.com/pulumi/pulumi-kubernetes/issues/895
+                    "pulumi.com/skipAwait": "true"
+                }
+            },
+            spec: {
+                storageClassName: this.localStorageClass.metadata.name,
+                accessModes: [
+                    'ReadWriteOnce',
+                ],
+                resources: {
+                    requests: {
+                        storage: "1Gi"
+                    }
+                },
+                ...spec,
+            }
+        }, {
+            parent: this,
+            protect: true,
+            ...opts ?? {}
         });
     }
 }

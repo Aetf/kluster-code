@@ -23,6 +23,9 @@ session:
   expiration: "1d"
   inactivity: "1d"
   remember_me_duration: "1y"
+  redis:
+    host: "<%= redisHost %>"
+    port: <%= redisPort %>
 storage:
   local:
     path: "<%= storagePath %>/db.sqlite3"
