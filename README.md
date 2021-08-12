@@ -69,3 +69,4 @@ images in the cluster.
     * need testing
 - - [ ] CRD and shell-operator: https://github.com/flant/shell-operator
     * could be used to monitor and implement cert reloading
+- - [ ] use Ed25519 for dkim key

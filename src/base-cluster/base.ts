@@ -64,12 +64,15 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.certManager = new HelmChart("cert-manager", {
             namespace,
             chart: "cert-manager",
-            version: "1.4.0",
+            version: "1.5.0",
             fetchOpts: {
                 repo: "https://charts.jetstack.io",
             },
             values: {
-                installCRDs: true
+                installCRDs: true,
+                startupapicheck: {
+                    enabled: false,
+                }
             }
         }, { parent: this });
 
