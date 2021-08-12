@@ -34,7 +34,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
         this.chart = new HelmChart(name, {
             namespace,
             chart: "traefik",
-            version: "9.19.2",
+            version: "10.1.2",
             fetchOpts: {
                 repo: "https://helm.traefik.io/traefik",
             },
@@ -88,7 +88,12 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     }
                 ],
                 additionalArguments: [
-                    "--serversTransport.rootCAs=/tls/ca.crt"
+                    "--serversTransport.rootCAs=/tls/ca.crt",
+                    // traefik by default do not allow ExternalName service due to minor CVE
+                    // see https://github.com/traefik/traefik/pull/8261
+                    // see https://doc.traefik.io/traefik/migration/v2/#k8s-externalname-service
+                    "--providers.kubernetescrd.allowexternalnameservices=true",
+                    "--providers.kubernetesingress.allowexternalnameservices=true"
                 ],
                 logs: {
                     general: {
@@ -104,7 +109,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     dashboard: false
                 },
                 // disable traefik data collection
-                globalArguments: null
+                globalArguments: null,
             },
             transformations: [
                 removeHelmTestAnnotation
