@@ -7,6 +7,7 @@ import * as kx from "@pulumi/kubernetesx";
 import { BackendCertificate, NodePV } from '#src/base-cluster';
 import { serviceFromDeployment, urlFromService, ConfigMap, SealedSecret } from "#src/utils";
 import { Serving } from "#src/serving";
+import { Redis } from '#src/redis';
 
 interface NextcloudArgs {
     serving: Serving,
@@ -89,6 +90,13 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         }, { parent: this });
 
         const secret = this.setupSecret(name);
+        
+        // redis
+        const redis = new Redis(`${name}-redis`, {
+            base: args.serving.base,
+            namespace: this.namespace,
+            password: secret.asSecretKeyRef('redis_pass'),
+        }, { parent: this });
 
         // deployment
         const pb = new kx.PodBuilder({
@@ -105,6 +113,13 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     MYSQL_DATABASE: name,
                     MYSQL_USER: name,
                     MYSQL_PASSWORD: secret.asEnvValue('db_pass'),
+
+                    // redis
+                    REDIS_HOST: redis.serviceHost,
+                    REDIS_HOST_PORT: pulumi.interpolate`${redis.servicePort}`,
+                    REDIS_HOST_PASSWORD: {
+                        secretKeyRef: redis.servicePassword
+                    },
 
                     // nginx reverse proxy
                     TRUSTED_PROXIES: 'localhost',
@@ -283,6 +298,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                 encryptedData: {
                     db_pass: 'AgBwXwv/Wp28sWUkhe6Dd/gqFyMES3XvzsQPOGk/OvCHNiSWmj4sQCKO85G7bU1udNywoEGdEpsLtWyQ4aQNO4Bs2ZhMBZWvlAi10Fol+lf0bSNoZh4qMayTGf4KlYpQQah58P6mGXyENFgleDawZXWQ0eQMJ85HSKdeCrbNDOUNj4wF8UeqwFevIRyfHdQ44Oc8nZhlPSkIb3/A5FVZMjQ0/LNaqJYQvJVL6Xlse2KTIRanzk70Xx9WS/UjwEFVnPN6PckBBs/wIhUP6RPiVxZCBTm8iF2ALPMVxZ65UVZsunXIzNLlymQ1yM4C5VQRk1xQQnQ8wVafJMQz9dqA7kg05DhJkFbdMmuL3A0fsZpI81NlJUN1mYUZ858wTwDdxxn6cucpgQf7VpR7aikGw91y1Ni/+Zif6/VwNeJSWNHYt9CdoNZYKncX8fIcH9UnTV+0UKOcmqCVmpbLaJIKCsEb2CVNLwhW1ihUwI6NX7N7dhENksprf95p1OPI+tM9Wnd2T7ua9f4yG/X+tL9/SOixuuzVyG7zKubw9NrUAtJVXReidi0vtaTaKBRitgKz/L4IsaKP5OmXTlwJgh73ADvbUxeoz8Cow4AAikaevs4aI3AM7Zc2yYYxyAyVpQsoPOomCe+GsW3x1ImuUeo8aSt/R7y8wKmshb4Wc/fT4yGAmNY8XiUGvFZwQZ/NaThnB4rIydMSm67qN3PFBUrdyoBjl11zYToDONsyDpppKqqk+UHiN5ULgc2seRBSID4=',
                     db_root_pass: 'AgBjipdlUSpFS+IMbrnXZCSBSJdSimke0H4f8JzLwzy3Av4e94jJ546i4ixkHoPc8WXf9U+1EOHbCO3nn+USUqt/rfoOQrAKyFTz/Z9MVddrXkH/w9YQJCa9OQLpVvHVLWwmwGCWwYbBWzpnKx96QIl9rbXHLzzq3Vu3Eg9iTr1rCGSI5ID01he/CrgHV0voco1SutvNiw9YC+FYLmLYl7p5WZPxvmzvS36CLPupH6kkBUCM6NGzT3cENb3Y8yaHtCC6Lp84HoQRo5cuLSbW35FULTb4DkMhhS+CLLZd4raNDl66nQkT+SlSmgUo69ry8iv8bzqiMGEUNPLARd+h6RggIULbg7jht8TwCTA7BgHRWM8XpmqM40yNH59DIIlIDuMW8hjuD08WUVy8Ix7KaijDikgrHfw3iD5LkNCBlo0RKR/vpJbUJj+rmaP9Ootu4Q8mA5H5xyPLhgoMOxNUtdo1TmZa+BckMzkhLA1oxdryGXZNe0lO74rSl1UN1tGL4eMQM1SHDkO6hpuEHSo3tQuDfdpvpuwgT7ttApnAnpYth6ZThNjnMU9ll5ma+OwD9TXe2iJE707Wt7lN1bf30bQC5QPWTW+/UE7xm6wZ8CJNG/g2fYVUVT+WdRC2aVjKQn7oUEqq7sPFpqRoY8ERV/LOomI7p16mRlHc+qUnqaHsfoOUijo9htil+9g/1upZ22cUJzBPGPkpWMGm25yFxizOP7B16BNeOYTpC9mWTuyg42hOHOFfMPECWuHO0QM=',
+                    redis_pass: 'AgAbuBt6nTZVuQYI132ddwjb1z3mNwXqsjPZOOFlxSblns9LAYezD/xdTSoLrBwKrEH9igz7FBKO3Y+2FJr+ygGytBaooXJwe8VxhdIPOcTDT3B5a7n4lotrWrj8NtMKf69mSqHVmTRerkyUV87PSTmAWE3U7ou6DrjSESj0hIjcdMmO7DO7r9AD+ClbYQPUjpD7C5Q1F9G3j15IcPSPGuPZxJmczMAAPGm7bop58sHWiyrSPrcbNUvbt0jHX1I10cFQKS7I+ybKeSdGo0VI2g1fsuVRDeAZ+vFzg994rJ0+GjuTDxwNXv629IPCMHidRq7W9gXxxfEGtwq/GOqXrpHr59m2wKADElwgS59kuwTK5h7Q/Tjqi/kQtjLeOcnWhb3+G3TxBfOIRv/5YSmjqfHMMZ7jOLzpDHarBuRrvXskC82Zjm4mD5rDDbKpsnd6+Vml8FKoup9CospCaD0U6JFL7w4osdjzvej51YmCCKxDNRWKK5DE5TShH5A6JXrzZtLCrmTg0IVOv368fzBc92jR3SZkFqjv/Ro6r8JPLBMruSmRir0truo0hhDA0wKvNQPtns3UvSyaZL/4D/a0Q8C8LnYrhGgrVAFEop52A1Qn+zC5BcGPS2hRJgF+/pzIj+BYL37nAMicC3cVQjhXnl+Cw2pnD83T4+np9Et7QjjXD2gj/lv/dZDwAAGRnTHn9GgBpcIxPdu4L36fEmdj1A9gnWPPN5SHHADq',
                 },
             }
         }, {

@@ -104,7 +104,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         args: AutheliaArgs,
         service_account: k8s.core.v1.ServiceAccount,
         secret: AutheliaSecret,
-        redis: HelmChart
+        redis: Redis
     ): kx.Service {
         // persistent storage
         const storagePath = "/storage";
@@ -118,7 +118,6 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
 
         // config file
         const configPath = "/config";
-        const redisService = redis.service(/master/);
         const cm = new ConfigMap(name, {
             base: __dirname,
             data: 'static/*',
@@ -129,8 +128,8 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                 smtpHost: args.smtpHost,
                 smtpPort: args.smtpPort,
                 storagePath,
-                redisHost: redisService.metadata.name,
-                redisPort: redisService.spec.ports.apply(ports => ports.find(port => port.name == 'tcp-redis')?.port ?? 6379)
+                redisHost: redis.serviceHost,
+                redisPort: redis.servicePort
             },
         }, { parent: this });
 

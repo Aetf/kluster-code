@@ -14,6 +14,8 @@ export interface RedisArgs {
 
 export class Redis extends HelmChart {
     private redisService: pulumi.Output<k8s.core.v1.Service>;
+    private authPassword: pulumi.Output<k8s.types.input.core.v1.SecretKeySelector>;
+
     constructor(name: string, args: RedisArgs, opts?: pulumi.ComponentResourceOptions) {
         const authPassword = pulumi.output(args.password);
         super(name, {
@@ -41,13 +43,18 @@ export class Redis extends HelmChart {
             }
         }, opts);
         this.redisService = this.service(/master/);
+        this.authPassword = authPassword;
     }
 
-    public get serviceName(): pulumi.Output<string> {
+    public get serviceHost(): pulumi.Output<string> {
         return this.redisService.metadata.name;
     }
 
     public get servicePort(): pulumi.Output<number> {
         return this.redisService.spec.ports.apply(ports => ports.find(port => port.name == 'tcp-redis')?.port ?? 6379);
+    }
+
+    public get servicePassword(): pulumi.Output<k8s.types.input.core.v1.SecretKeySelector> {
+        return this.authPassword;
     }
 }
