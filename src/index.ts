@@ -10,6 +10,7 @@ import { K8sDashboard } from "./k8s-dashboard";
 import { Nginx } from "./nginx";
 import { Nextcloud } from "./nextcloud";
 import { Exim } from "./mail";
+import { Genshin } from "./genshin";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -146,6 +147,12 @@ function setup() {
         smtpPort: mailer.port,
     }, {
         provider: namespaced("nextcloud"),
+    });
+
+    // genshin everyday task
+    const genshin = new Genshin("genshin", {
+    }, {
+        provider: namespaced("genshin")
     });
 }
 
