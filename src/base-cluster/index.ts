@@ -7,7 +7,7 @@ export { FrontendCertificate, BackendCertificate, ClusterCertificate } from "./c
 
 interface NodePVArgs {
     path: pulumi.Input<string>,
-    node: pulumi.Input<k8s.core.v1.Node>,
+    node: pulumi.Input<string>,
     capacity: pulumi.Input<string>,
     accessModes?: pulumi.Input<pulumi.Input<string>[]>,
 }
@@ -38,7 +38,7 @@ export class NodePV extends pulumi.ComponentResource<NodePVArgs> {
                             matchExpressions: [{
                                 key: 'kubernetes.io/hostname',
                                 operator: 'In',
-                                values: [pulumi.output(args.node).metadata.name],
+                                values: [args.node],
                             }]
                         }]
                     }

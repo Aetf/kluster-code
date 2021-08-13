@@ -14,7 +14,7 @@ export const SealedSecretCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition
 const NODE_NAMES = [
     "AetfArchVPS"
 ] as const;
-export type Nodes = Record<typeof NODE_NAMES[number], k8s.core.v1.Node>;
+export type Nodes = Record<typeof NODE_NAMES[number], string>;
 
 export interface BaseClusterArgs {
     isSetupSecrets: boolean,
@@ -42,7 +42,9 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         const nodes: Partial<Nodes> = {};
         for (const node of NODE_NAMES) {
             const hostname = node.split(/(?<=[a-z])(?=[A-Z])/).map(s => s.toLowerCase()).join('-');
-            nodes[node] = k8s.core.v1.Node.get(hostname, hostname);
+            // nodes[node] = k8s.core.v1.Node.get(hostname, hostname);
+            // no need to get the Node resource, which takes very long
+            nodes[node] = hostname;
         }
         this.nodes = nodes as Nodes;
 
