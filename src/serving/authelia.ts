@@ -8,6 +8,7 @@ import { BaseCluster, BackendCertificate } from '#src/base-cluster';
 import { setAndRegisterOutputs, urlFromService, serviceFromDeployment, ConfigMap, SealedSecret, HelmChart } from "#src/utils";
 import { Middleware } from './traefik';
 import { FrontendService } from "./service";
+import { Redis } from "#src/redis";
 
 interface AutheliaArgs {
     base: BaseCluster,
@@ -41,29 +42,11 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         }, { parent: this });
 
         // redis
-        const redis = new HelmChart(`${name}-redis`, {
+        const redis = new Redis(`${name}-redis`, {
             namespace,
-            chart: 'redis',
-            version: "14.4.0",
-            fetchOpts: {
-                repo: "https://charts.bitnami.com/bitnami",
-            },
-            values: {
-                global: {
-                    storageClass: args.base.localStorageClass.metadata.name,
-                },
-                architecture: "standalone",
-                auth: {
-                    usePasswordFiles: true,
-                    existingSecret: secret.metadata.name,
-                    existingSecretPasswordKey: "SESSION_REDIS_PASSWORD",
-                },
-                master: {
-                    persistence: {
-                        size: "50Mi"
-                    }
-                }
-            }
+            base: args.base,
+            password: secret.asSecretKeyRef('SESSION_REDIS_PASSWORD'),
+            size: "50Mi",
         }, { parent: this });
 
         // deployment and service

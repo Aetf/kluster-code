@@ -262,12 +262,16 @@ export class SealedSecret extends crds.bitnami.v1alpha1.SealedSecret {
         });
     }
 
+    public asSecretKeyRef(key: pulumi.Input<string>): pulumi.Output<Omit<k8s.types.input.core.v1.SecretKeySelector, 'optional'>> {
+        return pulumi.output({
+            name: this.metadata.name,
+            key,
+        });
+    }
+
     public asEnvValue(key: pulumi.Input<string>): pulumi.Output<k8s.types.input.core.v1.EnvVarSource> {
         return pulumi.output({
-            secretKeyRef: {
-                name: this.metadata.name,
-                key,
-            },
+            secretKeyRef: this.asSecretKeyRef(key),
         });
     }
 }
