@@ -17,7 +17,7 @@ export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
         const secrets = new SealedSecret(name, {
             spec: {
                 encryptedData: {
-                    COOKIE_HOYOLAB: "AgAASjGq3CVWRhbFMEDuwt+NqHlDfhIwTPtQ1Ql05kYM9qwjtP2r/KAQqHekz497ZJrUrk5fFv5XTQeT6rEKviI2MeKAzTtWDvucsnPT+5GC71Y1qKjL4fAeONMVBzaX/sHzHFfP1vUrWscNDlEll6Zvx1fORTjh7tk+XHr3rR4o1wbvhobn0nxdolcYdBufkqrG5srMg1I7LecemdnkcbDX1CKU7/GEf282Dy7odpk+PULVP0uxZ0R9tb9tou4DTZ78nfgeynAoa1+cQix6gE85YKAT4Baza9ai31I6jbQ3vskyyxMLVTwgOasa93A5fTev38QzqoU+qYeOxGAdCnqGLLiR7l1AJmrpYSrGQippjizez+IS2fwV6ItfDMo+dhQ10tJSkYeuOkPvhwTF16sifuxkjlfPSXyoV0tuT8DNLew5fG1d9GZCbIdIvBvzVbzlsIDDNFn+04RwDleaocfowQBA4esnzNeN9Rz7yLHhboNJxlv+4tTDEgghiGW6mN3sn6WqX2BvMOvbfYFYGTzEatRhR7GIe9GRrD0sRJkR1jlWAv7yTSdyJg8Zp0vF3OGG6O73MJbsx3I4KkxDAaxoI8ToS5MUoQI2uCKRIcEnJR4oVUIxcG5QqgRDQVQp8h9mfPc1izzJVaR+b9QtAjgv1sNqeqBIh4oR0CDhM6fRPs8hZWK7579H2cD2r8hwC1XstjR3E4ij8LzWhpwzeFTnTry4kcETlr4XXWOzVyVv/YIM2YwLiEoJr5F6gKb88e9jk5lFbNrCn71sUtD2hzekNXK7+B39W9VMLaK5Jq6lcx5p9fEDvYasdagQEWwlKCslibPjLOCe82trgzJJt5PmUZPAprr1k4lUnWgOOqeqtEi2+1GU2XGzYtXX1q37FhvETFssq4KCJU+u9k2b8SVy4gedNrugQ0Os6sUkujp3VrXBITon6itQjGhVLfTqWywpC6JEw3V0oA3K5iLpT8DldOjgGl4bA7efFCPggRV6Mp7oY5i2mHHMvI6EMzIn3NSUQ/X9Wu3LDPL4OAfUtGo6Ed4=",
+                    COOKIE_HOYOLAB: "AgAO69rI2bXl/jK99Ni8W4OFUBmhEIVo6hxciZ2gZEI9hFuTKNNxioj8Nl1xRC2i2/E48IAVK4U1pY067KY7r2k45EboDjRtqwmy7HOGJscBEUIQPd7X6h5uKu9GtZXFIrDDepVNNNG6Xd/dW70zEaEqGKNhQ7YZTq34aeVMNUfgTlcI63BfM66Mv+s3G5H1BIeF7xliAZN1s1FtYmc2SlJxJg5uklKUF6WMJuXnbMnqxcjZTBFO9Wsf8C/IREqxG7euibFPU8INea1Pnh3l1HoXXXy34mmLfwhNoN+PT/QKsf+VCaDeFWbOKnFKt4D2uGtgiyOpUZ4PDGZLW6OUDsUjkG6czQIVuA0/MIr0bnsBMB8LZ0dU4zKtfmc4zd3z1nHQxn6FA7GyWMuWNXwtB9/pSQX0Uc+BHf7lNZDI4nPPGA5TXlyd+/WvEL3QCqyndSDjmXa5KdLH0+I2U0IUsH8se1Mkas+nCQOxfmwdLcD33Kc6jsOXWdEN+dB/wP56WgVp4bE7YCMQ6+E6XFSpCCZdrxb7LPel7VDJtieuZr9dJ6DEf82uOtzzQBTadKgEmAblzeIs1pahLzUu5AhiDbd/ToG+BjWf0YUtyF696kL8hk0EAI1c+lCJFAK5CW/nTxGmLBHAs82pa8b2re7jTlCVrEId2CMy3gm7R1fXqwVEYz9UBODgoZI10XMv/KeN2TqmcsecDlOrsaQM570RV9MN6vf1Y+KF+4HKPuxkK7JFyvSDAJsf4/9VsJEbER879IG05FMpCYDrZ/+9uwpMFNKLj7YXNS7glqMN8hVf2zbE11ref5JdLWXw6iXZT7VCI0yrBT8+3c5BUPKvmsoTcVl3Mw0gBTcim8wm6D0U4m0cWea0/lHVhHYTDo2qUh9p0EuHNL6lfa5f13QsWbisfY5bdFNAmC0m1jgsj9Px4MWyCbvHUMNrt/GN+2XnnbmKrUfviMmTMc2CSezfcpS8fAD5ulqyDETPHHAJJm3mpqb2GO8cVt6N2lhUzQKxMLu7GihYetRQC7HKvM23QQxAYUvMI7ro8uAaX7JG3/0+qnyIqlo6iCHIqmR1RvYz4lT8+OYcr9zcdKSli0524nV2zVl+xtxT2jzHe+5palg8sb6H7lJZYFaKHwp0Ckrp3OA=",
                 }
             }
         }, { parent: this });
@@ -43,7 +43,7 @@ export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
         });
         const cron = new k8s.batch.v1.CronJob(name, {
             spec: {
-                schedule: "0 6 * * *",
+                schedule: "0 15 * * *",
                 concurrencyPolicy: 'Forbid',
                 failedJobsHistoryLimit: 5,
                 successfulJobsHistoryLimit: 1,
