@@ -76,8 +76,6 @@ images in the cluster.
 - - [ ] traefik websocket for jupyter
     * should be supported out of box
     * need testing
-- - [ ] CRD and shell-operator: https://github.com/flant/shell-operator
-    * could be used to monitor and implement cert reloading
 - - [ ] use Ed25519 for dkim key
 - - [ ] replace nextcloud with [dave](https://github.com/micromata/dave)
     * dave also supports config hot reload
