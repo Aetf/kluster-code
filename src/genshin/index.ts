@@ -45,7 +45,7 @@ export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
             spec: {
                 schedule: "0 15 * * *",
                 concurrencyPolicy: 'Forbid',
-                failedJobsHistoryLimit: 5,
+                failedJobsHistoryLimit: 1,
                 successfulJobsHistoryLimit: 1,
                 jobTemplate: {
                     spec: cronpb.asJobSpec()
