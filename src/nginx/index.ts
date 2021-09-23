@@ -16,6 +16,8 @@ export interface StaticSite {
     hostNames: string[],
     // extra directives in the server block
     extraConfig?: string,
+    // default to false
+    enableAuth?: boolean,
 }
 
 interface NginxArgs {
@@ -91,12 +93,25 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
             },
         });
 
+        // create a frontend service for each static site
+        // so we can config auth separately.
+        // Authelia can't protect multiple domains at the moment
+        // See https://github.com/authelia/authelia/issues/1198
+        for (const site of args.staticSites) {
+            args.serving.createFrontendService(`${name}-${site.root}`, {
+                host: site.hostNames,
+                targetService: service,
+                enableAuth: site.enableAuth ?? false,
+            });
+        }
+        /*
         const front = args.serving.createFrontendService(name, {
             host: _.concat([], ...args.staticSites.map(s => s.hostNames)),
             targetService: service,
             // we will use the authelia acl to control the site
             enableAuth: true,
         });
+        */
     }
 
     private setupCM(name: string, args: NginxArgs): kx.ConfigMap {

@@ -70,6 +70,7 @@ images in the cluster.
 - - [ ] run hath inside k8s
     * note the open port
 - - [ ] check nofile: `sudo lsof | awk '{print $1 $2}' | sort | uniq -c | sort -n | tee ~/lsof.txt`
+- - [ ] load sealed secret from yaml file
 
 ## Futures
 - - [ ] traefik websocket for jupyter
@@ -78,3 +79,7 @@ images in the cluster.
 - - [ ] CRD and shell-operator: https://github.com/flant/shell-operator
     * could be used to monitor and implement cert reloading
 - - [ ] use Ed25519 for dkim key
+- - [ ] replace nextcloud with [dave](https://github.com/micromata/dave)
+    * dave also supports config hot reload
+    * the reload only works for a few section, and noteably doesn't include TLS certificates
+    * protect this with http basic auth, using authelia, see https://github.com/authelia/authelia/pull/1563
