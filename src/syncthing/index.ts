@@ -49,6 +49,11 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
             }],
         });
         const deployment = new kx.Deployment(name, {
+            metadata: {
+                annotations: {
+                    "reloader.stakater.com/search": "true"
+                }
+            },
             spec: pb.asDeploymentSpec(),
         }, { parent: this });
         const service = serviceFromDeployment(name, deployment, {

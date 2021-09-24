@@ -22,6 +22,11 @@ export class ClusterCertificate extends crds.certmanager.v1.Certificate {
             ...args,
             spec: {
                 secretName: certName,
+                secretTemplate: {
+                    annotations: {
+                        "reloader.stakater.com/match": "true"
+                    }
+                },
                 issuerRef: {
                     name: args.spec.issuer.metadata.name,
                     kind: args.spec.issuer.kind,

@@ -84,6 +84,11 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
         });
 
         const deployment = new kx.Deployment(name, {
+            metadata: {
+                annotations: {
+                    "reloader.stakater.com/search": "true"
+                }
+            },
             spec: pb.asDeploymentSpec(),
         }, { parent: this });
 

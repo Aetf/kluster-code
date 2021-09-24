@@ -33,12 +33,14 @@ Note that the trailing slash is important.
 
 - - [x] install cert-manager
     * - [x] create issuer: cluster root CA
-        + - [ ] use [Reloader](https://github.com/stakater/Reloader) to notify and reload internal services when cert reneal
+        + they read in cert on start up and will not monitor cert change in file system
             + nginx
             + dashboard
             + authelia
             + nextcloud nginx frontend
-        + they read in cert on start up and will not monitor cert change in file system
+            + exim
+            + syncthing-discosrv
+        + - [x] use [Reloader](https://github.com/stakater/Reloader) to notify and reload internal services when cert reneal
     * - [x] create issuer: let's encrypt
     * - [x] manage cluster CA signed cert for dashboard
         + - [x] use this cert for dashboard

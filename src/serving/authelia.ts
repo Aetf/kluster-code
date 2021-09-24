@@ -175,6 +175,11 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         });
 
         const deployment = new kx.Deployment(name, {
+            metadata: {
+                annotations: {
+                    "reloader.stakater.com/search": "true"
+                }
+            },
             spec: pb.asDeploymentSpec(),
         }, { parent: this });
         return serviceFromDeployment(name, deployment, {

@@ -27,6 +27,7 @@ export interface BaseClusterArgs {
 export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     private readonly sealedSecret: HelmChart;
     private readonly certManager!: HelmChart;
+    private readonly reloader!: HelmChart;
 
     public readonly nodes: Nodes;
     public readonly rootIssuer!: crds.certmanager.v1.ClusterIssuer;
@@ -83,6 +84,15 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
 
         this.rootIssuer = this.setupPrivateCA(name);
         [this.letsencryptIssuer, this.letsencryptStagingIssuer] = this.setupLetsEncrypt();
+
+        this.reloader = new HelmChart("reloader", {
+            namespace,
+            chart: "reloader",
+            version: "0.0.99",
+            fetchOpts: {
+                repo: "https://stakater.github.io/stakater-charts"
+            },
+        });
     }
 
     protected async initialize(args: pulumi.Inputs): Promise<BaseClusterArgs> {

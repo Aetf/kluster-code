@@ -83,6 +83,11 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
         });
 
         const deployment = new kx.Deployment(name, {
+            metadata: {
+                annotations: {
+                    "reloader.stakater.com/search": "true"
+                }
+            },
             spec: pb.asDeploymentSpec(),
         }, { parent: this });
 
