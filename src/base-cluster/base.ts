@@ -3,7 +3,7 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from "#src/crds";
-import { NamespaceProbe, HelmChart } from "#src/utils";
+import { NamespaceProbe, HelmChart, SealedSecret } from "#src/utils";
 import LocalPathProvisioner from "#src/local-path";
 import { FrontendCertificate, FrontendCertificateArgs, BackendCertificate, BackendCertificateArgs } from "./certs";
 
@@ -139,23 +139,11 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         // Zone Resources:
         // * Include - All Zones
         const key = 'token';
-        const cloudflare_api_token = new crds.bitnami.v1alpha1.SealedSecret('cloudflare-api-token', {
-            metadata: {
-                annotations: {
-                    "sealedsecrets.bitnami.com/namespace-wide": "true",
-                }
-            },
+        const cloudflare_api_token = new SealedSecret('cloudflare-api-token', {
             spec: {
                 encryptedData: {
                     [key]: "AgCQHt140MhzcaBmIOoFhragr7KQWM/2G/SsZrsNOH2I3NvNP5s9mHs2/IFiefauoTUoH4Nf04qUuRWQlYz+K558fWQSA2J3LRRT8aJ2hNKZfQVHFZH67+gr4qoCGLEcVF0CWJ8a+eJQOtOq2WOj5jBbyfYW64jGvGy3BOghfba3pcqseO62eWnWEu0kJLTLY5Av8Lq36WsewexAHRlCidQli8QqgMwpXFhyNzPXVe0FyscdfesvTfYFPP52j4Cu3xG05SDRaxb1Ynq+9dVCgtqtxnDtU13QU0TgZQv0i6ndnhtsh6faivADnowzRCfimrDcbdQqvAFYJv/2rJQjiafg48rrjWEcHKbUj3GESWe5RetJouzyaPl2/9Rt5SlN6IM1xS+q8TBf74eSLZ6GfpAf/s+pPKBW5wMONShuiLvFXx5wuLVN/WPm5w62j8Qs+ko16cpHpOk6oVBeKlFb2pjddm63/4oOaRRs2k3tMwaCBClYDwXgQvojR9p0vxm++v24HAGKuzaGBcxsUj3QEB4B9J0SF9B92HcJ8bZrjBduGRDP1lEn8LU+zdRmAZEErO52twgyh1xhz6KrWx4OMrHGZCUxkAdKq+QiveySPwHAle/swn0LkOufecmvPxMVvhh4uwrx0o6zCyfzpNsTC2PTaNX/1ef+Ber+/ytMfCD2zqXoJVbFB+1OS6fyW8daoZVfU2Vz5FvRTy+iCLeT/Dk1euQr4NpmRAPgurs0myBAyU98o8MhrrIH",
                 },
-                template: {
-                    metadata: {
-                        annotations: {
-                            "sealedsecrets.bitnami.com/namespace-wide": "true",
-                        }
-                    }
-                }
             }
         }, { parent: this, dependsOn: [this.sealedSecret.resources[SealedSecretCRD]] });
 
@@ -175,10 +163,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
                             dns01: {
                                 cloudflare: {
                                     email: "7437103@gmail.com",
-                                    apiTokenSecretRef: {
-                                        name: cloudflare_api_token.metadata.name,
-                                        key,
-                                    }
+                                    apiTokenSecretRef: cloudflare_api_token.asSecretKeyRef(key)
                                 }
                             }
                         }

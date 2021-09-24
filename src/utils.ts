@@ -217,6 +217,11 @@ export interface SealedSecretSpecArgs {
     encryptedData: pulumi.Inputs,
 }
 
+export interface SecretKeyRef {
+    name: string,
+    key: string,
+}
+
 export class SealedSecret extends crds.bitnami.v1alpha1.SealedSecret {
     constructor(name: string, args: SealedSecretArgs, opts?: pulumi.CustomResourceOptions) {
         // add namespace-wide annotation by default,
@@ -262,7 +267,7 @@ export class SealedSecret extends crds.bitnami.v1alpha1.SealedSecret {
         });
     }
 
-    public asSecretKeyRef(key: pulumi.Input<string>): pulumi.Output<Omit<k8s.types.input.core.v1.SecretKeySelector, 'optional'>> {
+    public asSecretKeyRef(key: pulumi.Input<string>): pulumi.Output<SecretKeyRef> {
         return pulumi.output({
             name: this.metadata.name,
             key,
