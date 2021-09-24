@@ -18,6 +18,17 @@ This is implemented in `base-cluster/certs.ts`.
 The [`outdated`](https://github.com/replicatedhq/outdated) kubectl plugin can list all outdated
 images in the cluster.
 
+## Traefik Dashboard
+
+The internal dashboard can be accessed by forward the internal traefik port
+
+```
+kubectl port-forward -n serving-system service/traefik-internal 9000:80
+```
+
+The dashboard is available at `http://localhost:9000/dashboard/`.
+Note that the trailing slash is important.
+
 ## TODO
 
 - - [x] install cert-manager
