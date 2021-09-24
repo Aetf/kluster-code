@@ -62,10 +62,10 @@ images in the cluster.
         + permanent cert for device ID (this seems can be self generated, needs testing)
             + how to import existing ones
         + regular svc cert for GUI https
-    * syncthing-discorv needs cert-unlimited-code.works
     * manage the certs using cert-manager?
     * use the syncthing/syncthing docker image
-        + there's also syncthing/discorv image
+    * - [x] syncthing-discorv needs cert-unlimited-code.works
+        + - [x] there's also syncthing/discorv image
     * maybe not possible? maybe just deploy syncthing and etc as NodeIP Service
 - - [ ] run hath inside k8s
     * note the open port

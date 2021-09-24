@@ -148,7 +148,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
 }
 
 export class Middleware extends crds.traefik.v1alpha1.Middleware {
-    constructor(name: string, spec: Record<string, any>, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, spec: crds.types.input.traefik.v1alpha1.MiddlewareSpecArgs, opts?: pulumi.CustomResourceOptions) {
         super(name, {
             metadata: { name, },
             spec,
@@ -160,5 +160,30 @@ export class Middleware extends crds.traefik.v1alpha1.Middleware {
      */
     get fullname(): pulumi.Output<string> {
         return pulumi.interpolate`${this.metadata.namespace}-${this.metadata.name}@kubernetescrd`;
+    }
+}
+
+export class TLSOption extends crds.traefik.v1alpha1.TLSOption {
+    constructor(name: string, spec: crds.types.input.traefik.v1alpha1.TLSOptionSpecArgs, opts?: pulumi.CustomResourceOptions) {
+        super(name, {
+            metadata: { name, },
+            spec,
+        }, { deleteBeforeReplace: true, ...opts ?? {} });
+    }
+
+    /**
+     * Full name usable in annotations
+     */
+    get fullname(): pulumi.Output<string> {
+        return pulumi.interpolate`${this.metadata.namespace}-${this.metadata.name}@kubernetescrd`;
+    }
+
+    /**
+     * return an annotation object suitable to apply on Ingress
+     */
+    public asAnnotation(): Record<string, pulumi.Output<string>> {
+        return {
+            "traefik.ingress.kubernetes.io/router.tls.options": this.fullname
+        };
     }
 }

@@ -10,7 +10,7 @@ import { Authelia } from "./authelia";
 import { FrontendService, FrontendServiceArgs } from "./service";
 import { FrontendCertificateArgs } from "#src/base-cluster/certs";
 
-export { Middleware } from "./traefik";
+export { Middleware, TLSOption } from "./traefik";
 
 interface ServingArgs {
     base: BaseCluster,

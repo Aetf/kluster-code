@@ -80,6 +80,8 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             // TODO: authelia currently can't see client real IP
             forwardAuth: {
                 address: url,
+                // this is safe because traefik sanitize all forwarded header
+                // before handling req to middlewares
                 trustForwardHeader: true,
                 authResponseHeaders: [
                     "Remote-User",

@@ -7,15 +7,15 @@ import * as kx from "@pulumi/kubernetesx";
 import * as crds from '#src/crds';
 import { setAndRegisterOutputs, urlFromService } from "#src/utils";
 
-import { Middleware } from "./traefik";
+import { Middleware, TLSOption } from "./traefik";
 
 export interface FrontendServiceArgs {
     host: pulumi.Input<string | pulumi.Input<string>[]>,
     targetService: pulumi.Input<k8s.core.v1.Service>,
     targetPort?: string,
 
+    tlsOption?: pulumi.Input<TLSOption>,
     middlewares?: pulumi.Input<Middleware[]>,
-    frontendCertSecretNames?: pulumi.Input<pulumi.Input<string>[]>,
 }
 
 /**
@@ -55,10 +55,12 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
 
         new k8s.networking.v1.Ingress(name, {
             metadata: {
-                annotations: {
-                    "traefik.ingress.kubernetes.io/router.entrypoints": "websecure",
-                    "traefik.ingress.kubernetes.io/router.middlewares": middlewareList,
-                }
+                annotations: pulumi.output(args.tlsOption)
+                    .apply(tls => ({
+                        "traefik.ingress.kubernetes.io/router.entrypoints": "websecure",
+                        "traefik.ingress.kubernetes.io/router.middlewares": middlewareList,
+                        ...tls?.asAnnotation() ?? {}
+                    }))
             },
             spec: this.ingressSpecFromHosts(args.host),
         }, { parent: this });

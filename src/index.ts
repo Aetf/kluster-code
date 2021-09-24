@@ -11,6 +11,7 @@ import { Nginx } from "./nginx";
 import { Nextcloud } from "./nextcloud";
 import { Exim } from "./mail";
 import { Genshin } from "./genshin";
+import { SyncthingDiscosrv } from "./syncthing";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -153,6 +154,17 @@ function setup() {
     const genshin = new Genshin("genshin", {
     }, {
         provider: namespaced("genshin")
+    });
+
+    // syncthing
+    const stdiscosrv = new SyncthingDiscosrv("stdiscosrv", {
+        serving,
+        host: 'stdiscosrv.unlimited-code.works',
+        externalIPs: [
+            "45.77.144.92",
+        ]
+    }, {
+        provider: namespaced("syncthing")
     });
 }
 
