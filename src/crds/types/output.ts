@@ -18670,3 +18670,576 @@ export namespace certmanager {
         }
     }
 }
+
+export namespace traefik {
+    export namespace v1alpha1 {
+        /**
+         * MiddlewareSpec holds the Middleware configuration.
+         */
+        export interface MiddlewareSpec {
+            /**
+             * AddPrefix holds the AddPrefix configuration.
+             */
+            addPrefix?: outputs.traefik.v1alpha1.MiddlewareSpecAddPrefix;
+            /**
+             * BasicAuth holds the HTTP basic authentication configuration.
+             */
+            basicAuth?: outputs.traefik.v1alpha1.MiddlewareSpecBasicAuth;
+            /**
+             * Buffering holds the request/response buffering configuration.
+             */
+            buffering?: outputs.traefik.v1alpha1.MiddlewareSpecBuffering;
+            /**
+             * Chain holds a chain of middlewares.
+             */
+            chain?: outputs.traefik.v1alpha1.MiddlewareSpecChain;
+            /**
+             * CircuitBreaker holds the circuit breaker configuration.
+             */
+            circuitBreaker?: outputs.traefik.v1alpha1.MiddlewareSpecCircuitBreaker;
+            /**
+             * Compress holds the compress configuration.
+             */
+            compress?: outputs.traefik.v1alpha1.MiddlewareSpecCompress;
+            /**
+             * ContentType middleware - or rather its unique `autoDetect` option - specifies whether to let the `Content-Type` header, if it has not been set by the backend, be automatically set to a value derived from the contents of the response. As a proxy, the default behavior should be to leave the header alone, regardless of what the backend did with it. However, the historic default was to always auto-detect and set the header if it was nil, and it is going to be kept that way in order to support users currently relying on it. This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
+             */
+            contentType?: outputs.traefik.v1alpha1.MiddlewareSpecContentType;
+            /**
+             * DigestAuth holds the Digest HTTP authentication configuration.
+             */
+            digestAuth?: outputs.traefik.v1alpha1.MiddlewareSpecDigestAuth;
+            /**
+             * ErrorPage holds the custom error page configuration.
+             */
+            errors?: outputs.traefik.v1alpha1.MiddlewareSpecErrors;
+            /**
+             * ForwardAuth holds the http forward authentication configuration.
+             */
+            forwardAuth?: outputs.traefik.v1alpha1.MiddlewareSpecForwardAuth;
+            /**
+             * Headers holds the custom header configuration.
+             */
+            headers?: outputs.traefik.v1alpha1.MiddlewareSpecHeaders;
+            /**
+             * InFlightReq limits the number of requests being processed and served concurrently.
+             */
+            inFlightReq?: outputs.traefik.v1alpha1.MiddlewareSpecInFlightReq;
+            /**
+             * IPWhiteList holds the ip white list configuration.
+             */
+            ipWhiteList?: outputs.traefik.v1alpha1.MiddlewareSpecIpWhiteList;
+            /**
+             * PassTLSClientCert holds the TLS client cert headers configuration.
+             */
+            passTLSClientCert?: outputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCert;
+            plugin?: {[key: string]: {[key: string]: any}};
+            /**
+             * RateLimit holds the rate limiting configuration for a given router.
+             */
+            rateLimit?: outputs.traefik.v1alpha1.MiddlewareSpecRateLimit;
+            /**
+             * RedirectRegex holds the redirection configuration.
+             */
+            redirectRegex?: outputs.traefik.v1alpha1.MiddlewareSpecRedirectRegex;
+            /**
+             * RedirectScheme holds the scheme redirection configuration.
+             */
+            redirectScheme?: outputs.traefik.v1alpha1.MiddlewareSpecRedirectScheme;
+            /**
+             * ReplacePath holds the ReplacePath configuration.
+             */
+            replacePath?: outputs.traefik.v1alpha1.MiddlewareSpecReplacePath;
+            /**
+             * ReplacePathRegex holds the ReplacePathRegex configuration.
+             */
+            replacePathRegex?: outputs.traefik.v1alpha1.MiddlewareSpecReplacePathRegex;
+            /**
+             * Retry holds the retry configuration.
+             */
+            retry?: outputs.traefik.v1alpha1.MiddlewareSpecRetry;
+            /**
+             * StripPrefix holds the StripPrefix configuration.
+             */
+            stripPrefix?: outputs.traefik.v1alpha1.MiddlewareSpecStripPrefix;
+            /**
+             * StripPrefixRegex holds the StripPrefixRegex configuration.
+             */
+            stripPrefixRegex?: outputs.traefik.v1alpha1.MiddlewareSpecStripPrefixRegex;
+        }
+
+        /**
+         * AddPrefix holds the AddPrefix configuration.
+         */
+        export interface MiddlewareSpecAddPrefix {
+            prefix?: string;
+        }
+
+        /**
+         * BasicAuth holds the HTTP basic authentication configuration.
+         */
+        export interface MiddlewareSpecBasicAuth {
+            headerField?: string;
+            realm?: string;
+            removeHeader?: boolean;
+            secret?: string;
+        }
+
+        /**
+         * Buffering holds the request/response buffering configuration.
+         */
+        export interface MiddlewareSpecBuffering {
+            maxRequestBodyBytes?: number;
+            maxResponseBodyBytes?: number;
+            memRequestBodyBytes?: number;
+            memResponseBodyBytes?: number;
+            retryExpression?: string;
+        }
+
+        /**
+         * Chain holds a chain of middlewares.
+         */
+        export interface MiddlewareSpecChain {
+            middlewares?: outputs.traefik.v1alpha1.MiddlewareSpecChainMiddlewares[];
+        }
+
+        /**
+         * MiddlewareRef is a ref to the Middleware resources.
+         */
+        export interface MiddlewareSpecChainMiddlewares {
+            name: string;
+            namespace?: string;
+        }
+
+        /**
+         * CircuitBreaker holds the circuit breaker configuration.
+         */
+        export interface MiddlewareSpecCircuitBreaker {
+            expression?: string;
+        }
+
+        /**
+         * Compress holds the compress configuration.
+         */
+        export interface MiddlewareSpecCompress {
+            excludedContentTypes?: string[];
+        }
+
+        /**
+         * ContentType middleware - or rather its unique `autoDetect` option - specifies whether to let the `Content-Type` header, if it has not been set by the backend, be automatically set to a value derived from the contents of the response. As a proxy, the default behavior should be to leave the header alone, regardless of what the backend did with it. However, the historic default was to always auto-detect and set the header if it was nil, and it is going to be kept that way in order to support users currently relying on it. This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
+         */
+        export interface MiddlewareSpecContentType {
+            autoDetect?: boolean;
+        }
+
+        /**
+         * DigestAuth holds the Digest HTTP authentication configuration.
+         */
+        export interface MiddlewareSpecDigestAuth {
+            headerField?: string;
+            realm?: string;
+            removeHeader?: boolean;
+            secret?: string;
+        }
+
+        /**
+         * ErrorPage holds the custom error page configuration.
+         */
+        export interface MiddlewareSpecErrors {
+            query?: string;
+            /**
+             * Service defines an upstream to proxy traffic.
+             */
+            service?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsService;
+            status?: string[];
+        }
+
+        /**
+         * Service defines an upstream to proxy traffic.
+         */
+        export interface MiddlewareSpecErrorsService {
+            kind?: string;
+            /**
+             * Name is a reference to a Kubernetes Service object (for a load-balancer of servers), or to a TraefikService object (service load-balancer, mirroring, etc). The differentiation between the two is specified in the Kind field.
+             */
+            name: string;
+            namespace?: string;
+            passHostHeader?: boolean;
+            port?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsServicePort;
+            /**
+             * ResponseForwarding holds configuration for the forward of the response.
+             */
+            responseForwarding?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceResponseForwarding;
+            scheme?: string;
+            serversTransport?: string;
+            /**
+             * Sticky holds the sticky configuration.
+             */
+            sticky?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceSticky;
+            strategy?: string;
+            /**
+             * Weight should only be specified when Name references a TraefikService object (and to be precise, one that embeds a Weighted Round Robin).
+             */
+            weight?: number;
+        }
+
+        export interface MiddlewareSpecErrorsServicePort {
+        }
+
+        /**
+         * ResponseForwarding holds configuration for the forward of the response.
+         */
+        export interface MiddlewareSpecErrorsServiceResponseForwarding {
+            flushInterval?: string;
+        }
+
+        /**
+         * Sticky holds the sticky configuration.
+         */
+        export interface MiddlewareSpecErrorsServiceSticky {
+            /**
+             * Cookie holds the sticky configuration based on cookie.
+             */
+            cookie?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceStickyCookie;
+        }
+
+        /**
+         * Cookie holds the sticky configuration based on cookie.
+         */
+        export interface MiddlewareSpecErrorsServiceStickyCookie {
+            httpOnly?: boolean;
+            name?: string;
+            sameSite?: string;
+            secure?: boolean;
+        }
+
+        /**
+         * ForwardAuth holds the http forward authentication configuration.
+         */
+        export interface MiddlewareSpecForwardAuth {
+            address?: string;
+            authRequestHeaders?: string[];
+            authResponseHeaders?: string[];
+            authResponseHeadersRegex?: string;
+            /**
+             * ClientTLS holds TLS specific configurations as client.
+             */
+            tls?: outputs.traefik.v1alpha1.MiddlewareSpecForwardAuthTls;
+            trustForwardHeader?: boolean;
+        }
+
+        /**
+         * ClientTLS holds TLS specific configurations as client.
+         */
+        export interface MiddlewareSpecForwardAuthTls {
+            caOptional?: boolean;
+            caSecret?: string;
+            certSecret?: string;
+            insecureSkipVerify?: boolean;
+        }
+
+        /**
+         * Headers holds the custom header configuration.
+         */
+        export interface MiddlewareSpecHeaders {
+            /**
+             * AccessControlAllowCredentials is only valid if true. false is ignored.
+             */
+            accessControlAllowCredentials?: boolean;
+            /**
+             * AccessControlAllowHeaders must be used in response to a preflight request with Access-Control-Request-Headers set.
+             */
+            accessControlAllowHeaders?: string[];
+            /**
+             * AccessControlAllowMethods must be used in response to a preflight request with Access-Control-Request-Method set.
+             */
+            accessControlAllowMethods?: string[];
+            /**
+             * AccessControlAllowOriginList is a list of allowable origins. Can also be a wildcard origin "*".
+             */
+            accessControlAllowOriginList?: string[];
+            /**
+             * AccessControlAllowOriginListRegex is a list of allowable origins written following the Regular Expression syntax (https://golang.org/pkg/regexp/).
+             */
+            accessControlAllowOriginListRegex?: string[];
+            /**
+             * AccessControlExposeHeaders sets valid headers for the response.
+             */
+            accessControlExposeHeaders?: string[];
+            /**
+             * AccessControlMaxAge sets the time that a preflight request may be cached.
+             */
+            accessControlMaxAge?: number;
+            /**
+             * AddVaryHeader controls if the Vary header is automatically added/updated when the AccessControlAllowOriginList is set.
+             */
+            addVaryHeader?: boolean;
+            allowedHosts?: string[];
+            browserXssFilter?: boolean;
+            contentSecurityPolicy?: string;
+            contentTypeNosniff?: boolean;
+            customBrowserXSSValue?: string;
+            customFrameOptionsValue?: string;
+            customRequestHeaders?: {[key: string]: string};
+            customResponseHeaders?: {[key: string]: string};
+            featurePolicy?: string;
+            forceSTSHeader?: boolean;
+            frameDeny?: boolean;
+            hostsProxyHeaders?: string[];
+            isDevelopment?: boolean;
+            publicKey?: string;
+            referrerPolicy?: string;
+            /**
+             * Deprecated: use RedirectRegex instead.
+             */
+            sslForceHost?: boolean;
+            /**
+             * Deprecated: use RedirectRegex instead.
+             */
+            sslHost?: string;
+            sslProxyHeaders?: {[key: string]: string};
+            /**
+             * Deprecated: use EntryPoint redirection or RedirectScheme instead.
+             */
+            sslRedirect?: boolean;
+            /**
+             * Deprecated: use EntryPoint redirection or RedirectScheme instead.
+             */
+            sslTemporaryRedirect?: boolean;
+            stsIncludeSubdomains?: boolean;
+            stsPreload?: boolean;
+            stsSeconds?: number;
+        }
+
+        /**
+         * InFlightReq limits the number of requests being processed and served concurrently.
+         */
+        export interface MiddlewareSpecInFlightReq {
+            amount?: number;
+            /**
+             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If none are set, the default is to use the request's remote address field. All fields are mutually exclusive.
+             */
+            sourceCriterion?: outputs.traefik.v1alpha1.MiddlewareSpecInFlightReqSourceCriterion;
+        }
+
+        /**
+         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If none are set, the default is to use the request's remote address field. All fields are mutually exclusive.
+         */
+        export interface MiddlewareSpecInFlightReqSourceCriterion {
+            /**
+             * IPStrategy holds the ip strategy configuration.
+             */
+            ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecInFlightReqSourceCriterionIpStrategy;
+            requestHeaderName?: string;
+            requestHost?: boolean;
+        }
+
+        /**
+         * IPStrategy holds the ip strategy configuration.
+         */
+        export interface MiddlewareSpecInFlightReqSourceCriterionIpStrategy {
+            depth?: number;
+            excludedIPs?: string[];
+        }
+
+        /**
+         * IPWhiteList holds the ip white list configuration.
+         */
+        export interface MiddlewareSpecIpWhiteList {
+            /**
+             * IPStrategy holds the ip strategy configuration.
+             */
+            ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecIpWhiteListIpStrategy;
+            sourceRange?: string[];
+        }
+
+        /**
+         * IPStrategy holds the ip strategy configuration.
+         */
+        export interface MiddlewareSpecIpWhiteListIpStrategy {
+            depth?: number;
+            excludedIPs?: string[];
+        }
+
+        /**
+         * PassTLSClientCert holds the TLS client cert headers configuration.
+         */
+        export interface MiddlewareSpecPassTLSClientCert {
+            /**
+             * TLSClientCertificateInfo holds the client TLS certificate info configuration.
+             */
+            info?: outputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfo;
+            pem?: boolean;
+        }
+
+        /**
+         * TLSClientCertificateInfo holds the client TLS certificate info configuration.
+         */
+        export interface MiddlewareSpecPassTLSClientCertInfo {
+            /**
+             * TLSCLientCertificateDNInfo holds the client TLS certificate distinguished name info configuration. cf https://tools.ietf.org/html/rfc3739
+             */
+            issuer?: outputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoIssuer;
+            notAfter?: boolean;
+            notBefore?: boolean;
+            sans?: boolean;
+            serialNumber?: boolean;
+            /**
+             * TLSCLientCertificateDNInfo holds the client TLS certificate distinguished name info configuration. cf https://tools.ietf.org/html/rfc3739
+             */
+            subject?: outputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoSubject;
+        }
+
+        /**
+         * TLSCLientCertificateDNInfo holds the client TLS certificate distinguished name info configuration. cf https://tools.ietf.org/html/rfc3739
+         */
+        export interface MiddlewareSpecPassTLSClientCertInfoIssuer {
+            commonName?: boolean;
+            country?: boolean;
+            domainComponent?: boolean;
+            locality?: boolean;
+            organization?: boolean;
+            province?: boolean;
+            serialNumber?: boolean;
+        }
+
+        /**
+         * TLSCLientCertificateDNInfo holds the client TLS certificate distinguished name info configuration. cf https://tools.ietf.org/html/rfc3739
+         */
+        export interface MiddlewareSpecPassTLSClientCertInfoSubject {
+            commonName?: boolean;
+            country?: boolean;
+            domainComponent?: boolean;
+            locality?: boolean;
+            organization?: boolean;
+            province?: boolean;
+            serialNumber?: boolean;
+        }
+
+        /**
+         * RateLimit holds the rate limiting configuration for a given router.
+         */
+        export interface MiddlewareSpecRateLimit {
+            average?: number;
+            burst?: number;
+            period?: outputs.traefik.v1alpha1.MiddlewareSpecRateLimitPeriod;
+            /**
+             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If none are set, the default is to use the request's remote address field. All fields are mutually exclusive.
+             */
+            sourceCriterion?: outputs.traefik.v1alpha1.MiddlewareSpecRateLimitSourceCriterion;
+        }
+
+        export interface MiddlewareSpecRateLimitPeriod {
+        }
+
+        /**
+         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If none are set, the default is to use the request's remote address field. All fields are mutually exclusive.
+         */
+        export interface MiddlewareSpecRateLimitSourceCriterion {
+            /**
+             * IPStrategy holds the ip strategy configuration.
+             */
+            ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecRateLimitSourceCriterionIpStrategy;
+            requestHeaderName?: string;
+            requestHost?: boolean;
+        }
+
+        /**
+         * IPStrategy holds the ip strategy configuration.
+         */
+        export interface MiddlewareSpecRateLimitSourceCriterionIpStrategy {
+            depth?: number;
+            excludedIPs?: string[];
+        }
+
+        /**
+         * RedirectRegex holds the redirection configuration.
+         */
+        export interface MiddlewareSpecRedirectRegex {
+            permanent?: boolean;
+            regex?: string;
+            replacement?: string;
+        }
+
+        /**
+         * RedirectScheme holds the scheme redirection configuration.
+         */
+        export interface MiddlewareSpecRedirectScheme {
+            permanent?: boolean;
+            port?: string;
+            scheme?: string;
+        }
+
+        /**
+         * ReplacePath holds the ReplacePath configuration.
+         */
+        export interface MiddlewareSpecReplacePath {
+            path?: string;
+        }
+
+        /**
+         * ReplacePathRegex holds the ReplacePathRegex configuration.
+         */
+        export interface MiddlewareSpecReplacePathRegex {
+            regex?: string;
+            replacement?: string;
+        }
+
+        /**
+         * Retry holds the retry configuration.
+         */
+        export interface MiddlewareSpecRetry {
+            attempts?: number;
+            initialInterval?: outputs.traefik.v1alpha1.MiddlewareSpecRetryInitialInterval;
+        }
+
+        export interface MiddlewareSpecRetryInitialInterval {
+        }
+
+        /**
+         * StripPrefix holds the StripPrefix configuration.
+         */
+        export interface MiddlewareSpecStripPrefix {
+            forceSlash?: boolean;
+            prefixes?: string[];
+        }
+
+        /**
+         * StripPrefixRegex holds the StripPrefixRegex configuration.
+         */
+        export interface MiddlewareSpecStripPrefixRegex {
+            regex?: string[];
+        }
+
+        /**
+         * TLSOptionSpec configures TLS for an entry point.
+         */
+        export interface TLSOptionSpec {
+            alpnProtocols?: string[];
+            cipherSuites?: string[];
+            /**
+             * ClientAuth defines the parameters of the client authentication part of the TLS connection, if any.
+             */
+            clientAuth?: outputs.traefik.v1alpha1.TLSOptionSpecClientAuth;
+            curvePreferences?: string[];
+            maxVersion?: string;
+            minVersion?: string;
+            preferServerCipherSuites?: boolean;
+            sniStrict?: boolean;
+        }
+
+        /**
+         * ClientAuth defines the parameters of the client authentication part of the TLS connection, if any.
+         */
+        export interface TLSOptionSpecClientAuth {
+            /**
+             * ClientAuthType defines the client authentication type to apply.
+             */
+            clientAuthType?: string;
+            /**
+             * SecretName is the name of the referenced Kubernetes Secret to specify the certificate details.
+             */
+            secretNames?: string[];
+        }
+    }
+}

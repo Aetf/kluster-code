@@ -18670,3 +18670,576 @@ export namespace certmanager {
         }
     }
 }
+
+export namespace traefik {
+    export namespace v1alpha1 {
+        /**
+         * MiddlewareSpec holds the Middleware configuration.
+         */
+        export interface MiddlewareSpecArgs {
+            /**
+             * AddPrefix holds the AddPrefix configuration.
+             */
+            addPrefix?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecAddPrefixArgs>;
+            /**
+             * BasicAuth holds the HTTP basic authentication configuration.
+             */
+            basicAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecBasicAuthArgs>;
+            /**
+             * Buffering holds the request/response buffering configuration.
+             */
+            buffering?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecBufferingArgs>;
+            /**
+             * Chain holds a chain of middlewares.
+             */
+            chain?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecChainArgs>;
+            /**
+             * CircuitBreaker holds the circuit breaker configuration.
+             */
+            circuitBreaker?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecCircuitBreakerArgs>;
+            /**
+             * Compress holds the compress configuration.
+             */
+            compress?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecCompressArgs>;
+            /**
+             * ContentType middleware - or rather its unique `autoDetect` option - specifies whether to let the `Content-Type` header, if it has not been set by the backend, be automatically set to a value derived from the contents of the response. As a proxy, the default behavior should be to leave the header alone, regardless of what the backend did with it. However, the historic default was to always auto-detect and set the header if it was nil, and it is going to be kept that way in order to support users currently relying on it. This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
+             */
+            contentType?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecContentTypeArgs>;
+            /**
+             * DigestAuth holds the Digest HTTP authentication configuration.
+             */
+            digestAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecDigestAuthArgs>;
+            /**
+             * ErrorPage holds the custom error page configuration.
+             */
+            errors?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsArgs>;
+            /**
+             * ForwardAuth holds the http forward authentication configuration.
+             */
+            forwardAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecForwardAuthArgs>;
+            /**
+             * Headers holds the custom header configuration.
+             */
+            headers?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecHeadersArgs>;
+            /**
+             * InFlightReq limits the number of requests being processed and served concurrently.
+             */
+            inFlightReq?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInFlightReqArgs>;
+            /**
+             * IPWhiteList holds the ip white list configuration.
+             */
+            ipWhiteList?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecIpWhiteListArgs>;
+            /**
+             * PassTLSClientCert holds the TLS client cert headers configuration.
+             */
+            passTLSClientCert?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertArgs>;
+            plugin?: pulumi.Input<{[key: string]: pulumi.Input<{[key: string]: any}>}>;
+            /**
+             * RateLimit holds the rate limiting configuration for a given router.
+             */
+            rateLimit?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRateLimitArgs>;
+            /**
+             * RedirectRegex holds the redirection configuration.
+             */
+            redirectRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRedirectRegexArgs>;
+            /**
+             * RedirectScheme holds the scheme redirection configuration.
+             */
+            redirectScheme?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRedirectSchemeArgs>;
+            /**
+             * ReplacePath holds the ReplacePath configuration.
+             */
+            replacePath?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecReplacePathArgs>;
+            /**
+             * ReplacePathRegex holds the ReplacePathRegex configuration.
+             */
+            replacePathRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecReplacePathRegexArgs>;
+            /**
+             * Retry holds the retry configuration.
+             */
+            retry?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRetryArgs>;
+            /**
+             * StripPrefix holds the StripPrefix configuration.
+             */
+            stripPrefix?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecStripPrefixArgs>;
+            /**
+             * StripPrefixRegex holds the StripPrefixRegex configuration.
+             */
+            stripPrefixRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecStripPrefixRegexArgs>;
+        }
+
+        /**
+         * AddPrefix holds the AddPrefix configuration.
+         */
+        export interface MiddlewareSpecAddPrefixArgs {
+            prefix?: pulumi.Input<string>;
+        }
+
+        /**
+         * BasicAuth holds the HTTP basic authentication configuration.
+         */
+        export interface MiddlewareSpecBasicAuthArgs {
+            headerField?: pulumi.Input<string>;
+            realm?: pulumi.Input<string>;
+            removeHeader?: pulumi.Input<boolean>;
+            secret?: pulumi.Input<string>;
+        }
+
+        /**
+         * Buffering holds the request/response buffering configuration.
+         */
+        export interface MiddlewareSpecBufferingArgs {
+            maxRequestBodyBytes?: pulumi.Input<number>;
+            maxResponseBodyBytes?: pulumi.Input<number>;
+            memRequestBodyBytes?: pulumi.Input<number>;
+            memResponseBodyBytes?: pulumi.Input<number>;
+            retryExpression?: pulumi.Input<string>;
+        }
+
+        /**
+         * Chain holds a chain of middlewares.
+         */
+        export interface MiddlewareSpecChainArgs {
+            middlewares?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecChainMiddlewaresArgs>[]>;
+        }
+
+        /**
+         * MiddlewareRef is a ref to the Middleware resources.
+         */
+        export interface MiddlewareSpecChainMiddlewaresArgs {
+            name: pulumi.Input<string>;
+            namespace?: pulumi.Input<string>;
+        }
+
+        /**
+         * CircuitBreaker holds the circuit breaker configuration.
+         */
+        export interface MiddlewareSpecCircuitBreakerArgs {
+            expression?: pulumi.Input<string>;
+        }
+
+        /**
+         * Compress holds the compress configuration.
+         */
+        export interface MiddlewareSpecCompressArgs {
+            excludedContentTypes?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * ContentType middleware - or rather its unique `autoDetect` option - specifies whether to let the `Content-Type` header, if it has not been set by the backend, be automatically set to a value derived from the contents of the response. As a proxy, the default behavior should be to leave the header alone, regardless of what the backend did with it. However, the historic default was to always auto-detect and set the header if it was nil, and it is going to be kept that way in order to support users currently relying on it. This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
+         */
+        export interface MiddlewareSpecContentTypeArgs {
+            autoDetect?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * DigestAuth holds the Digest HTTP authentication configuration.
+         */
+        export interface MiddlewareSpecDigestAuthArgs {
+            headerField?: pulumi.Input<string>;
+            realm?: pulumi.Input<string>;
+            removeHeader?: pulumi.Input<boolean>;
+            secret?: pulumi.Input<string>;
+        }
+
+        /**
+         * ErrorPage holds the custom error page configuration.
+         */
+        export interface MiddlewareSpecErrorsArgs {
+            query?: pulumi.Input<string>;
+            /**
+             * Service defines an upstream to proxy traffic.
+             */
+            service?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceArgs>;
+            status?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * Service defines an upstream to proxy traffic.
+         */
+        export interface MiddlewareSpecErrorsServiceArgs {
+            kind?: pulumi.Input<string>;
+            /**
+             * Name is a reference to a Kubernetes Service object (for a load-balancer of servers), or to a TraefikService object (service load-balancer, mirroring, etc). The differentiation between the two is specified in the Kind field.
+             */
+            name: pulumi.Input<string>;
+            namespace?: pulumi.Input<string>;
+            passHostHeader?: pulumi.Input<boolean>;
+            port?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServicePortArgs>;
+            /**
+             * ResponseForwarding holds configuration for the forward of the response.
+             */
+            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceResponseForwardingArgs>;
+            scheme?: pulumi.Input<string>;
+            serversTransport?: pulumi.Input<string>;
+            /**
+             * Sticky holds the sticky configuration.
+             */
+            sticky?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceStickyArgs>;
+            strategy?: pulumi.Input<string>;
+            /**
+             * Weight should only be specified when Name references a TraefikService object (and to be precise, one that embeds a Weighted Round Robin).
+             */
+            weight?: pulumi.Input<number>;
+        }
+
+        export interface MiddlewareSpecErrorsServicePortArgs {
+        }
+
+        /**
+         * ResponseForwarding holds configuration for the forward of the response.
+         */
+        export interface MiddlewareSpecErrorsServiceResponseForwardingArgs {
+            flushInterval?: pulumi.Input<string>;
+        }
+
+        /**
+         * Sticky holds the sticky configuration.
+         */
+        export interface MiddlewareSpecErrorsServiceStickyArgs {
+            /**
+             * Cookie holds the sticky configuration based on cookie.
+             */
+            cookie?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceStickyCookieArgs>;
+        }
+
+        /**
+         * Cookie holds the sticky configuration based on cookie.
+         */
+        export interface MiddlewareSpecErrorsServiceStickyCookieArgs {
+            httpOnly?: pulumi.Input<boolean>;
+            name?: pulumi.Input<string>;
+            sameSite?: pulumi.Input<string>;
+            secure?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * ForwardAuth holds the http forward authentication configuration.
+         */
+        export interface MiddlewareSpecForwardAuthArgs {
+            address?: pulumi.Input<string>;
+            authRequestHeaders?: pulumi.Input<pulumi.Input<string>[]>;
+            authResponseHeaders?: pulumi.Input<pulumi.Input<string>[]>;
+            authResponseHeadersRegex?: pulumi.Input<string>;
+            /**
+             * ClientTLS holds TLS specific configurations as client.
+             */
+            tls?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecForwardAuthTlsArgs>;
+            trustForwardHeader?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * ClientTLS holds TLS specific configurations as client.
+         */
+        export interface MiddlewareSpecForwardAuthTlsArgs {
+            caOptional?: pulumi.Input<boolean>;
+            caSecret?: pulumi.Input<string>;
+            certSecret?: pulumi.Input<string>;
+            insecureSkipVerify?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * Headers holds the custom header configuration.
+         */
+        export interface MiddlewareSpecHeadersArgs {
+            /**
+             * AccessControlAllowCredentials is only valid if true. false is ignored.
+             */
+            accessControlAllowCredentials?: pulumi.Input<boolean>;
+            /**
+             * AccessControlAllowHeaders must be used in response to a preflight request with Access-Control-Request-Headers set.
+             */
+            accessControlAllowHeaders?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * AccessControlAllowMethods must be used in response to a preflight request with Access-Control-Request-Method set.
+             */
+            accessControlAllowMethods?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * AccessControlAllowOriginList is a list of allowable origins. Can also be a wildcard origin "*".
+             */
+            accessControlAllowOriginList?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * AccessControlAllowOriginListRegex is a list of allowable origins written following the Regular Expression syntax (https://golang.org/pkg/regexp/).
+             */
+            accessControlAllowOriginListRegex?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * AccessControlExposeHeaders sets valid headers for the response.
+             */
+            accessControlExposeHeaders?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * AccessControlMaxAge sets the time that a preflight request may be cached.
+             */
+            accessControlMaxAge?: pulumi.Input<number>;
+            /**
+             * AddVaryHeader controls if the Vary header is automatically added/updated when the AccessControlAllowOriginList is set.
+             */
+            addVaryHeader?: pulumi.Input<boolean>;
+            allowedHosts?: pulumi.Input<pulumi.Input<string>[]>;
+            browserXssFilter?: pulumi.Input<boolean>;
+            contentSecurityPolicy?: pulumi.Input<string>;
+            contentTypeNosniff?: pulumi.Input<boolean>;
+            customBrowserXSSValue?: pulumi.Input<string>;
+            customFrameOptionsValue?: pulumi.Input<string>;
+            customRequestHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            customResponseHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            featurePolicy?: pulumi.Input<string>;
+            forceSTSHeader?: pulumi.Input<boolean>;
+            frameDeny?: pulumi.Input<boolean>;
+            hostsProxyHeaders?: pulumi.Input<pulumi.Input<string>[]>;
+            isDevelopment?: pulumi.Input<boolean>;
+            publicKey?: pulumi.Input<string>;
+            referrerPolicy?: pulumi.Input<string>;
+            /**
+             * Deprecated: use RedirectRegex instead.
+             */
+            sslForceHost?: pulumi.Input<boolean>;
+            /**
+             * Deprecated: use RedirectRegex instead.
+             */
+            sslHost?: pulumi.Input<string>;
+            sslProxyHeaders?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            /**
+             * Deprecated: use EntryPoint redirection or RedirectScheme instead.
+             */
+            sslRedirect?: pulumi.Input<boolean>;
+            /**
+             * Deprecated: use EntryPoint redirection or RedirectScheme instead.
+             */
+            sslTemporaryRedirect?: pulumi.Input<boolean>;
+            stsIncludeSubdomains?: pulumi.Input<boolean>;
+            stsPreload?: pulumi.Input<boolean>;
+            stsSeconds?: pulumi.Input<number>;
+        }
+
+        /**
+         * InFlightReq limits the number of requests being processed and served concurrently.
+         */
+        export interface MiddlewareSpecInFlightReqArgs {
+            amount?: pulumi.Input<number>;
+            /**
+             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If none are set, the default is to use the request's remote address field. All fields are mutually exclusive.
+             */
+            sourceCriterion?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInFlightReqSourceCriterionArgs>;
+        }
+
+        /**
+         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If none are set, the default is to use the request's remote address field. All fields are mutually exclusive.
+         */
+        export interface MiddlewareSpecInFlightReqSourceCriterionArgs {
+            /**
+             * IPStrategy holds the ip strategy configuration.
+             */
+            ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInFlightReqSourceCriterionIpStrategyArgs>;
+            requestHeaderName?: pulumi.Input<string>;
+            requestHost?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * IPStrategy holds the ip strategy configuration.
+         */
+        export interface MiddlewareSpecInFlightReqSourceCriterionIpStrategyArgs {
+            depth?: pulumi.Input<number>;
+            excludedIPs?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * IPWhiteList holds the ip white list configuration.
+         */
+        export interface MiddlewareSpecIpWhiteListArgs {
+            /**
+             * IPStrategy holds the ip strategy configuration.
+             */
+            ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecIpWhiteListIpStrategyArgs>;
+            sourceRange?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * IPStrategy holds the ip strategy configuration.
+         */
+        export interface MiddlewareSpecIpWhiteListIpStrategyArgs {
+            depth?: pulumi.Input<number>;
+            excludedIPs?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * PassTLSClientCert holds the TLS client cert headers configuration.
+         */
+        export interface MiddlewareSpecPassTLSClientCertArgs {
+            /**
+             * TLSClientCertificateInfo holds the client TLS certificate info configuration.
+             */
+            info?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoArgs>;
+            pem?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * TLSClientCertificateInfo holds the client TLS certificate info configuration.
+         */
+        export interface MiddlewareSpecPassTLSClientCertInfoArgs {
+            /**
+             * TLSCLientCertificateDNInfo holds the client TLS certificate distinguished name info configuration. cf https://tools.ietf.org/html/rfc3739
+             */
+            issuer?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoIssuerArgs>;
+            notAfter?: pulumi.Input<boolean>;
+            notBefore?: pulumi.Input<boolean>;
+            sans?: pulumi.Input<boolean>;
+            serialNumber?: pulumi.Input<boolean>;
+            /**
+             * TLSCLientCertificateDNInfo holds the client TLS certificate distinguished name info configuration. cf https://tools.ietf.org/html/rfc3739
+             */
+            subject?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoSubjectArgs>;
+        }
+
+        /**
+         * TLSCLientCertificateDNInfo holds the client TLS certificate distinguished name info configuration. cf https://tools.ietf.org/html/rfc3739
+         */
+        export interface MiddlewareSpecPassTLSClientCertInfoIssuerArgs {
+            commonName?: pulumi.Input<boolean>;
+            country?: pulumi.Input<boolean>;
+            domainComponent?: pulumi.Input<boolean>;
+            locality?: pulumi.Input<boolean>;
+            organization?: pulumi.Input<boolean>;
+            province?: pulumi.Input<boolean>;
+            serialNumber?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * TLSCLientCertificateDNInfo holds the client TLS certificate distinguished name info configuration. cf https://tools.ietf.org/html/rfc3739
+         */
+        export interface MiddlewareSpecPassTLSClientCertInfoSubjectArgs {
+            commonName?: pulumi.Input<boolean>;
+            country?: pulumi.Input<boolean>;
+            domainComponent?: pulumi.Input<boolean>;
+            locality?: pulumi.Input<boolean>;
+            organization?: pulumi.Input<boolean>;
+            province?: pulumi.Input<boolean>;
+            serialNumber?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * RateLimit holds the rate limiting configuration for a given router.
+         */
+        export interface MiddlewareSpecRateLimitArgs {
+            average?: pulumi.Input<number>;
+            burst?: pulumi.Input<number>;
+            period?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRateLimitPeriodArgs>;
+            /**
+             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If none are set, the default is to use the request's remote address field. All fields are mutually exclusive.
+             */
+            sourceCriterion?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRateLimitSourceCriterionArgs>;
+        }
+
+        export interface MiddlewareSpecRateLimitPeriodArgs {
+        }
+
+        /**
+         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If none are set, the default is to use the request's remote address field. All fields are mutually exclusive.
+         */
+        export interface MiddlewareSpecRateLimitSourceCriterionArgs {
+            /**
+             * IPStrategy holds the ip strategy configuration.
+             */
+            ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRateLimitSourceCriterionIpStrategyArgs>;
+            requestHeaderName?: pulumi.Input<string>;
+            requestHost?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * IPStrategy holds the ip strategy configuration.
+         */
+        export interface MiddlewareSpecRateLimitSourceCriterionIpStrategyArgs {
+            depth?: pulumi.Input<number>;
+            excludedIPs?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * RedirectRegex holds the redirection configuration.
+         */
+        export interface MiddlewareSpecRedirectRegexArgs {
+            permanent?: pulumi.Input<boolean>;
+            regex?: pulumi.Input<string>;
+            replacement?: pulumi.Input<string>;
+        }
+
+        /**
+         * RedirectScheme holds the scheme redirection configuration.
+         */
+        export interface MiddlewareSpecRedirectSchemeArgs {
+            permanent?: pulumi.Input<boolean>;
+            port?: pulumi.Input<string>;
+            scheme?: pulumi.Input<string>;
+        }
+
+        /**
+         * ReplacePath holds the ReplacePath configuration.
+         */
+        export interface MiddlewareSpecReplacePathArgs {
+            path?: pulumi.Input<string>;
+        }
+
+        /**
+         * ReplacePathRegex holds the ReplacePathRegex configuration.
+         */
+        export interface MiddlewareSpecReplacePathRegexArgs {
+            regex?: pulumi.Input<string>;
+            replacement?: pulumi.Input<string>;
+        }
+
+        /**
+         * Retry holds the retry configuration.
+         */
+        export interface MiddlewareSpecRetryArgs {
+            attempts?: pulumi.Input<number>;
+            initialInterval?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRetryInitialIntervalArgs>;
+        }
+
+        export interface MiddlewareSpecRetryInitialIntervalArgs {
+        }
+
+        /**
+         * StripPrefix holds the StripPrefix configuration.
+         */
+        export interface MiddlewareSpecStripPrefixArgs {
+            forceSlash?: pulumi.Input<boolean>;
+            prefixes?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * StripPrefixRegex holds the StripPrefixRegex configuration.
+         */
+        export interface MiddlewareSpecStripPrefixRegexArgs {
+            regex?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * TLSOptionSpec configures TLS for an entry point.
+         */
+        export interface TLSOptionSpecArgs {
+            alpnProtocols?: pulumi.Input<pulumi.Input<string>[]>;
+            cipherSuites?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * ClientAuth defines the parameters of the client authentication part of the TLS connection, if any.
+             */
+            clientAuth?: pulumi.Input<inputs.traefik.v1alpha1.TLSOptionSpecClientAuthArgs>;
+            curvePreferences?: pulumi.Input<pulumi.Input<string>[]>;
+            maxVersion?: pulumi.Input<string>;
+            minVersion?: pulumi.Input<string>;
+            preferServerCipherSuites?: pulumi.Input<boolean>;
+            sniStrict?: pulumi.Input<boolean>;
+        }
+
+        /**
+         * ClientAuth defines the parameters of the client authentication part of the TLS connection, if any.
+         */
+        export interface TLSOptionSpecClientAuthArgs {
+            /**
+             * ClientAuthType defines the client authentication type to apply.
+             */
+            clientAuthType?: pulumi.Input<string>;
+            /**
+             * SecretName is the name of the referenced Kubernetes Secret to specify the certificate details.
+             */
+            secretNames?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+    }
+}

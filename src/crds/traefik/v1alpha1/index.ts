@@ -6,9 +6,11 @@ import * as utilities from "../../utilities";
 
 // Export members:
 export * from "./middleware";
+export * from "./tlsoption";
 
 // Import resources to register:
 import { Middleware } from "./middleware";
+import { TLSOption } from "./tlsoption";
 
 const _module = {
     version: utilities.getVersion(),
@@ -16,6 +18,8 @@ const _module = {
         switch (type) {
             case "kubernetes:traefik.containo.us/v1alpha1:Middleware":
                 return new Middleware(name, <any>undefined, { urn })
+            case "kubernetes:traefik.containo.us/v1alpha1:TLSOption":
+                return new TLSOption(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

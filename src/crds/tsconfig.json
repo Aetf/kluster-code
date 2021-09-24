@@ -55,6 +55,7 @@
         "traefik/index.ts",
         "traefik/v1alpha1/index.ts",
         "traefik/v1alpha1/middleware.ts",
+        "traefik/v1alpha1/tlsoption.ts",
         "types/index.ts",
         "types/input.ts",
         "types/output.ts",
