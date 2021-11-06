@@ -1,0 +1,6 @@
+config:
+  shards: 1              # Number of shards to create. 1 works for most bots
+  prefix: "::"           # Prefix to invoke commands with
+  database: "./db/database" # Database filename
+  game: "劳逸结合是不错，但也别放松过头。"               # Status message shown when your bot is online
+  trackDurationLimit: 0  # Maximum limit of track duration in minutes. Set to 0 for unlimited

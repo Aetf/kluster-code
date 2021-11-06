@@ -12,6 +12,7 @@ import { Nextcloud } from "./nextcloud";
 import { Exim } from "./mail";
 import { Genshin } from "./genshin";
 import { SyncthingDiscosrv } from "./syncthing";
+import { Ukulele } from "./ukulele";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -165,6 +166,12 @@ function setup() {
         ]
     }, {
         provider: namespaced("syncthing")
+    });
+
+    // ukulele, a discord music bot
+    // install into default namespace
+    const ukulele = new Ukulele("ukulele", {
+        base: cluster,
     });
 }
 
