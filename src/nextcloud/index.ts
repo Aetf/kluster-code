@@ -100,6 +100,14 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
 
         // deployment
         const pb = new kx.PodBuilder({
+            volumes: [
+                {
+                    name: homePV.name,
+                    persistentVolumeClaim: {
+                        claimName: homePV.name,
+                    }
+                }
+            ],
             containers: [{
                 image: args.image,
                 env: {
@@ -140,7 +148,11 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     phpCm.mount('/usr/local/etc/php-fpm.d/zz-max_children.conf', 'max_children.conf'),
 
                     // host data access
-                    homePV.mount(this.homeMountPath),
+                    {
+                        name: homePV.name,
+                        mountPath: this.homeMountPath,
+                        mountPropagation: 'HostToContainer'
+                    },
                     webdavPV.mount(this.webdavMountPath),
 
                     // ca certificate for smtp tls

@@ -84,6 +84,14 @@ Note that the trailing slash is important.
     * note the open port
 - - [ ] check nofile: `sudo lsof | awk '{print $1 $2}' | sort | uniq -c | sort -n | tee ~/lsof.txt`
 - - [ ] load sealed secret from yaml file
+- - [ ] add jellyfin
+    * should run on aetf-laptop only
+- - [ ] add [navidrome](https://www.navidrome.org/docs/installation/docker/)
+    * keep music library on aetf-laptop
+    * expose webservice
+    * this supports Authelia forward header auth: https://github.com/navidrome/navidrome/pull/1152
+    * the subsonic API has its own auth and must not be protected by authelia: https://github.com/navidrome/navidrome/issues/1189
+    * use [substreamer](https://substreamerapp.com) on android
 
 ## Futures
 - - [ ] traefik websocket for jupyter

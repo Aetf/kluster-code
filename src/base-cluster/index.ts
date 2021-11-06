@@ -16,7 +16,7 @@ interface NodePVArgs {
  * A static PV with matching PVC that is bond to a specific node host path
  */
 export class NodePV extends pulumi.ComponentResource<NodePVArgs> {
-    private pvc: kx.PersistentVolumeClaim;
+    public pvc: kx.PersistentVolumeClaim;
 
     constructor(name: string, args: NodePVArgs, opts?: pulumi.CustomResourceOptions) {
         super("kluster:BaseCluster:NodePV", name, args, opts);
@@ -57,6 +57,10 @@ export class NodePV extends pulumi.ComponentResource<NodePVArgs> {
                 volumeName: pv.metadata.name,
             }
         }, { parent: this });
+    }
+
+    public get name(): pulumi.Output<string> {
+        return this.pvc.metadata.name;
     }
 
     protected async initialize(args: pulumi.Inputs): Promise<NodePVArgs> {
