@@ -280,10 +280,12 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
             spec: {
                 schedule: "*/5 * * * *",
                 concurrencyPolicy: 'Forbid',
-                failedJobsHistoryLimit: 5,
+                failedJobsHistoryLimit: 1,
                 successfulJobsHistoryLimit: 1,
                 jobTemplate: {
-                    spec: cronpb.asJobSpec()
+                    spec: cronpb.asJobSpec({
+                        backoffLimit: 1,
+                    })
                 }
             }
         }, { parent: this });
