@@ -72,6 +72,11 @@ export class BackendCertificate extends ClusterCertificate {
     constructor(name: string, args: Omit<BackendCertificateArgs, 'base'> & { base: BaseCluster }, opts?: pulumi.CustomResourceOptions) {
         const certName = `cert-svc-${name}`;
         super(certName, {
+            metadata: {
+                labels: {
+                    'unlimited-code.works/cert-type': 'backend',
+                }
+            },
             spec: {
                 dnsNames: [pulumi.interpolate`${name}.${args.namespace}`],
                 issuer: args.base.rootIssuer,
@@ -93,6 +98,11 @@ export class FrontendCertificate extends ClusterCertificate {
         const issuer = config.requireBoolean('staging') ? args.base.letsencryptStagingIssuer : args.base.letsencryptIssuer;
 
         super(certName, {
+            metadata: {
+                labels: {
+                    'unlimited-code.works/cert-type': 'frontend',
+                }
+            },
             spec: {
                 dnsNames: [main, ...args.sans ?? []],
                 issuer,
