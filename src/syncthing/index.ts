@@ -54,7 +54,12 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
                     "reloader.stakater.com/search": "true"
                 }
             },
-            spec: pb.asDeploymentSpec(),
+            spec: pb.asDeploymentSpec({
+                strategy: {
+                    // stdiscosrv needs exclusive access to pvc, otherwise it will error out as resource busy
+                    type: 'Recreate'
+                }
+            }),
         }, { parent: this });
         const service = serviceFromDeployment(name, deployment, {
             metadata: {
