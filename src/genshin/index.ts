@@ -26,13 +26,8 @@ export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
             restartPolicy: 'Never',
             containers: [{
                 image: 'yindan/genshinhelper:2.0.3',
-                command: [
-                    "python3",
-                    "-m",
-                    "genshinhelper"
-                ],
                 env: {
-                    LANGUAGE: 'zh-cn'
+                    LANGUAGE: 'zh-cn',
                 },
                 envFrom: [{
                     secretRef: {
