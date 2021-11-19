@@ -144,7 +144,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             enableServiceLinks: false,
             containers: [{
                 name: "authelia",
-                image: "ghcr.io/authelia/authelia:4.31.0",
+                image: "ghcr.io/authelia/authelia:4.32.2",
                 command: ["authelia"],
                 args: [
                     `--config=${configPath}/authelia.yaml`

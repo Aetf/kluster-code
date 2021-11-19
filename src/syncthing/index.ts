@@ -70,7 +70,7 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
         const tlsOption = new TLSOption(name, {
             sniStrict: true,
             clientAuth: {
-                // TODO: change to RequreAnyClientCert after
+                // FUTURE: change to RequreAnyClientCert after
                 // https://github.com/traefik/traefik-helm-chart/issues/503
                 clientAuthType: 'RequestClientCert',
             }

@@ -157,7 +157,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
 
                     // ca certificate for smtp tls
                     // avoid deuplicate in nginx
-                    // TODO: change to mount after issue https://github.com/pulumi/pulumi-kubernetesx/issues/69
+                    // FUTURE: change to mount after issue https://github.com/pulumi/pulumi-kubernetesx/issues/69
                     {
                         name: this.certificate.secretName,
                         mountPath: '/tls',

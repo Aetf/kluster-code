@@ -25,7 +25,7 @@ export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
         const cronpb = new kx.PodBuilder({
             restartPolicy: 'Never',
             containers: [{
-                image: 'yindan/genshinhelper:1.7.1',
+                image: 'yindan/genshinhelper:2.0.3',
                 command: [
                     "python3",
                     "-m",
