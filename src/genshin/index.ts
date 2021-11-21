@@ -26,6 +26,10 @@ export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
             restartPolicy: 'Never',
             containers: [{
                 image: 'yindan/genshinhelper:2.0.3',
+                command: [
+                    'python3', '-c',
+                    'import genshincheckinhelper.main as gch; gch.run_once()'
+                ],
                 env: {
                     LANGUAGE: 'zh-cn',
                 },
