@@ -71,6 +71,9 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     }
                 },
                 deployment: {
+                    annotations: {
+                        "reloader.stakater.com/search": "true"
+                    },
                     additionalVolumes: [
                         {
                             // make the root ca available, so traefik can verify backend services
