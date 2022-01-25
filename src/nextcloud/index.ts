@@ -117,7 +117,9 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                         .apply(([host, name, namespace]) => [host, `${name}.${namespace}`].join(' ')),
 
                     // database
-                    MYSQL_HOST: 'localhost',
+
+                    // this has to be IP, using localhost will cause mysql trying to connect via unix socket
+                    MYSQL_HOST: '127.0.0.1',
                     MYSQL_DATABASE: name,
                     MYSQL_USER: name,
                     MYSQL_PASSWORD: secret.asEnvValue('db_pass'),
