@@ -36,7 +36,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         this.homeMountPath = '/homedata';
         this.webdavMountPath = '/webdav';
         args.servicePort = args.servicePort ?? 8443;
-        args.image = args.image ?? 'docker.io/nextcloud:21.0.3-fpm-alpine';
+        args.image = args.image ?? 'docker.io/nextcloud:23.0.0-fpm-alpine';
         args.nginxImage = args.nginxImage ?? 'docker.io/bitnami/nginx:1.21.0-debian-10-r20';
         args.mariadbImage = args.mariadbImage ?? 'docker.io/mariadb:10.6.2';
 
