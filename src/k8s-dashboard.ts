@@ -28,7 +28,7 @@ export class K8sDashboard extends pulumi.ComponentResource<K8sDashboardArgs> {
         this.chart = new HelmChart(name, {
             namespace,
             chart: "kubernetes-dashboard",
-            version: "5.0.4",
+            version: "5.3.1",
             fetchOpts: {
                 repo: "https://kubernetes.github.io/dashboard",
             },

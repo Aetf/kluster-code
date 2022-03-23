@@ -88,7 +88,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.reloader = new HelmChart("reloader", {
             namespace,
             chart: "reloader",
-            version: "0.0.103",
+            version: "0.0.109",
             fetchOpts: {
                 repo: "https://stakater.github.io/stakater-charts"
             },
