@@ -5,6 +5,7 @@ import * as kx from "@pulumi/kubernetesx";
 import * as crds from "#src/crds";
 import { NamespaceProbe, HelmChart, SealedSecret } from "#src/utils";
 import LocalPathProvisioner from "#src/local-path";
+import { JuiceFs } from "#src/juicefs";
 import { FrontendCertificate, FrontendCertificateArgs, BackendCertificate, BackendCertificateArgs } from "./certs";
 
 export const CertificateCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::certificates.cert-manager.io";
@@ -35,6 +36,8 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     public readonly letsencryptStagingIssuer!: crds.certmanager.v1.ClusterIssuer;
 
     public readonly localStorageClass!: k8s.storage.v1.StorageClass;
+    public readonly localStableStorageClass!: k8s.storage.v1.StorageClass;
+    public readonly jfsStorageClass!: k8s.storage.v1.StorageClass;
 
     constructor(name: string, args: BaseClusterArgs, opts?: pulumi.ComponentResourceOptions) {
         super("kluster:BaseCluster", name, args, opts);
@@ -54,7 +57,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.sealedSecret = new HelmChart("sealed-secrets-controller", {
             namespace,
             chart: "sealed-secrets",
-            version: "1.16.1",
+            version: "1.16.1", // TODO: update to 2.1.5
             fetchOpts: {
                 repo: "https://bitnami-labs.github.io/sealed-secrets"
             }
@@ -81,6 +84,14 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
 
         const lpp = new LocalPathProvisioner("local-path-provisioner", { storageClass: "local-path" }, { parent: this });
         this.localStorageClass = lpp.storageClass;
+        this.localStableStorageClass = lpp.storageClassStable;
+
+        const jfs = new JuiceFs("juicefs", {
+            namespace,
+            storageClass: "juicefs",
+            metadataStorageClass: lpp.storageClassStable.metadata.name,
+        }, { parent: this });
+        this.jfsStorageClass = jfs.storageClass;
 
         this.rootIssuer = this.setupPrivateCA(name);
         [this.letsencryptIssuer, this.letsencryptStagingIssuer] = this.setupLetsEncrypt();

@@ -45,7 +45,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         // redis
         const redis = new Redis(`${name}-redis`, {
             namespace,
-            base: args.base,
+            persistentStorageClass: args.base.localStorageClass.metadata.name,
             password: secret.asSecretKeyRef('SESSION_REDIS_PASSWORD'),
             size: "50Mi",
         }, { parent: this });

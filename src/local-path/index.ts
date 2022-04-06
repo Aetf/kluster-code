@@ -14,6 +14,7 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
     public readonly service_account: k8s.core.v1.ServiceAccount;
     public readonly deployment: kx.Deployment;
     public readonly storageClass: k8s.storage.v1.StorageClass;
+    public readonly storageClassStable: k8s.storage.v1.StorageClass;
 
     public readonly provisionerName!: pulumi.Output<string>;
     public readonly storageClassName!: pulumi.Output<string>;
@@ -27,6 +28,12 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
             provisioner: pulumi.interpolate`cluster.local/${this.service_account.metadata.name}`,
             volumeBindingMode: "WaitForFirstConsumer",
             reclaimPolicy: "Delete",
+        }, { parent: this });
+
+        this.storageClassStable = new k8s.storage.v1.StorageClass(`${args.storageClass}-stable`, {
+            provisioner: pulumi.interpolate`cluster.local/${this.service_account.metadata.name}`,
+            volumeBindingMode: "WaitForFirstConsumer",
+            reclaimPolicy: "Retain",
         }, { parent: this });
 
         this.deployment = this.setupDeployment(name);

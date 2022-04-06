@@ -22,7 +22,8 @@ export function chartNamingWorkaround(obj: any, opts: pulumi.CustomResourceOptio
 }
 
 export function removeHelmTestAnnotation(obj: any, opts: pulumi.CustomResourceOptions) {
-    _.unset(obj, 'metadata.annotations["helm.sh/hook"]')
+    _.unset(obj, 'metadata.annotations["helm.sh/hook"]');
+    _.unset(obj, 'metadata.annotations["helm.sh/hook-delete-policy"]')
 }
 
 export function urlFromService(service: k8s.core.v1.Service, schema: string): pulumi.Output<string> {

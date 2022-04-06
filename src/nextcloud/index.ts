@@ -90,10 +90,10 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         }, { parent: this });
 
         const secret = this.setupSecret(name);
-        
+
         // redis
         const redis = new Redis(`${name}-redis`, {
-            base: args.serving.base,
+            persistentStorageClass: args.serving.base.localStorageClass.metadata.name,
             namespace: this.namespace,
             password: secret.asSecretKeyRef('redis_pass'),
         }, { parent: this });
