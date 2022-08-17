@@ -57,7 +57,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.sealedSecret = new HelmChart("sealed-secrets-controller", {
             namespace,
             chart: "sealed-secrets",
-            version: "1.16.1", // TODO: update to 2.1.5
+            version: "2.6.0", // TODO: update to 2.1.5
             fetchOpts: {
                 repo: "https://bitnami-labs.github.io/sealed-secrets"
             }
