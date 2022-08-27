@@ -107,3 +107,5 @@ Note that the trailing slash is important.
     * currently this has be done manually: `k cert-manager renew -A -l 'unlimited-code.works/cert-type=backend'`
     * See https://github.com/jetstack/cert-manager/issues/2478
     * See https://github.com/jetstack/cert-manager/issues/4344
+- - [ ] manage custom images on AWS ECR (it has a free tier)
+    * See use pulumi to build, publish and consume the image: https://www.pulumi.com/blog/build-publish-containers-iac/

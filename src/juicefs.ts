@@ -118,16 +118,16 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
         return new SealedSecret(name, {
             spec: {
                 /*
-                name="juicefs",
-*               metaurl="redis://:password@juicefs-redis-master.kube-system:6379",
-*               storage="s3",
-*               bucket="https://works-unlimited-code-jfs.s3.us-east-1.amazonaws.com",
-*               redis_pass="",
-*               access-key="",
-*               secret-key="",
-                envs='{"JFS_RSA_PASSPHRASE": ""}',
-*               encrypt_rsa_key="",
-                */
+                 * name="juicefs",
+                 * metaurl="redis://:password@juicefs-redis-master.kube-system:6379",
+                 * storage="s3",
+                 * bucket="https://works-unlimited-code-jfs.s3.us-east-1.amazonaws.com",
+                 * redis_pass="",
+                 * access-key="",
+                 * secret-key="",
+                 * envs='{"JFS_RSA_PASSPHRASE": ""}',
+                 * encrypt_rsa_key="",
+                 */
                 encryptedData: {
                     name: 'AgAWELuoGXcv92S5HOzdnWIWxIaKbbzwvUNEA5sATIlhHTzhgYjAUZXy2q305wcSCk3cIghkdu/QjLm+5dY4vczv0UprO2phrph80XHaSvMFPvfLq5jgt/v1NBse3YQlJKdfgakCmWFdsx9Wa9kXZAEVvbIVPoEQ0A5xKERDnYCVXqeRDU02vncwPfiNNuOhAG437QG8gYv8Nt4ncgADpXTQ+e9n+hmIPau1D/1Ai3/S2IJdjObYQk4NbHPy+AP85CFz6lYG54dNZi81VwQwois/SlKLY145IHAb/8JLvABf3hsJQU+dYkMUpa8ozxwq96JWykDt/hCthPDEo2etBn16+ExdgyJIwAIevCxvnjTXTfLUuHcVKDv1STB4qeBvdjb1r/vu7TZwnQx+hXrMicmSxdGH/dHe8I3Mijc0MPzV7vjBXl8awhjjEXA07POGfDDr/5aztNcoTimv2gpgO72/s8waOVI1JATO9E5qDKseP6cZ7nZ4YK8Nit85Ag00ztCdlYtzeETz97HHQ1eB7BocGBdHP69BgH4Rlw/myk/jY251Ike46l3rGyvWP2CQe3+L5OVim+N15j53waMLJ0V46/VZj3MLdsBbTkq3p57GU8hzc9xAMs0SXy30uuwM63vS/VNh9NK6RsAIa9/V2jZV2hdiBx0PSHEOcOrOsIaRZuH3xh+lze/l6IkHaTQeITms82wErutP',
                     metaurl: 'AgBSA0hqkaJ9ci2+nghenPXi2LtwP8BrDAf/VMhQyJHl1hvK3ccADt+eY54tCQlJ8dsWquJeATxEmFECTrfTFMF9kDM8sl54K5UbTCj3jvGLXgjA7vjYsa3fYbzASzlwnWVL+RatC0T46hR+W7v+jjs/vWYhAqiueWnBWW5ExtrPJi2D8cEMxCVmCa0iRA/kPxgRL4fOZ03n2ZcA2p84xxzfofuywhr/X0iF1ARJEAgijB8XPdJJK7cnez/Q6QcR9b6TzPqDeGUQSzrnKE4+iOnQtn08lNh57rU1AVyllyTTYduKlFMrYKkl0qFodZIY9+ONJM4ZJ5QKpHCasGQux4tM9lGwPTVfIADkzlBruZuYPgR/KmHurMKOxnpU2wRjsIZH/5oK7tsoctBt7AqbGxYYjMIJlMoKOhXm/o/ndeu6aj8IYFBaOyN/mQOCPHiQvi0HSPCz315u25W5KmSa4fQHXmw6O5BMKFRfEzuHvlVtr/bDniSVJdpbaGWxLQbagUi9Cnd4j5bA7gRoD24zi0+HCi1ceLmcTlhLWshS1b8HQHgXqvTB5qpr1OxeKMpxVMrgNxmCCQHkqHzZT0nU45Ymkwh3dBu7CEgFia6tEcQ4OChNhDDpruxYxVjhJFxeYXk4H/hrmA+GFtIUCd1XyoCRcNqyXUSBe8vkaPtRAfJo7zKgjGu8WKjVKrZA3VmmQpDDgokDwWaZObE7HjRKQrKgjvChkEkB19IctdQMJrc4VnwJV7qU5rbjEgNFn/xuQ6UY1n+PDlLJuDspTAnywCjHEwc/I5i/+peiSMuFURgueYa6oUX3HfE=',
