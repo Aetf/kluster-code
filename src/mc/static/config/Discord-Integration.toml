@@ -1,0 +1,226 @@
+# General options for the bot
+[general]
+  # Insert your Bot Token here!
+  # DO NOT SHARE IT WITH ANYONE!
+  botToken = "${CFG_DISCORD_BOT_TOKEN}"
+  # The channel ID where the bot will be working in
+  botChannel = "1013343314948411412"
+  # The bot's status message
+  # 
+  # PLACEHOLDERS:
+  # %online% - Online Players
+  # %max% - Maximum Player Amount
+  botStatusName = "%online% players Online"
+  # Type of the bot's status
+  # Allowed Values: DISABLED,PLAYING,WATCHING,LISTENING,STREAMING,COMPETING
+  botStatusType = "PLAYING"
+  # URL of the bot's stream when using the status type 'STREAMING'
+  # Has to start with https://twitch.tv/ or https://www.youtube.com/watch?v=
+  streamingURL = ""
+  # Enable checking for updates?
+  # Notification will be shown after every server start in log when update is available
+  enableUpdateChecker = false
+  # The minimum release type for the update checker to notify
+  # Allowed values: release, beta, alpha
+  updateCheckerMinimumReleaseType = "beta"
+  # Set to false to disable config migration from other mods/plugins to this one
+  # This does not prevent updating of this config after mod updates
+  allowConfigMigration = true
+  # Attempt to parse id-based mentions to names in in-game chat
+  parseMentionsIngame = true
+  # Set to true to supress warning of unsafe mod download location
+  ignoreFileSource = false
+# Configuration options for commands
+[commands]
+  # The Role IDs of your Admin Roles
+  # Now supports multiple roles which can access admin commands
+  adminRoleIDs = [  "1013329268530491392"  ]
+  # Add your custom commands here
+  # You can also generate some on https://erdbeerbaerlp.de/dcintegration-commands/
+  # You must op this UUID in the ops.txt or some custom commands won't work!
+  senderUUID = "8d8982a5-8cf9-4604-8feb-3dd5ee1f83a3"
+  # Enable help command?
+  # Disabling also removes response when you entered an invalid command
+  # Requires server restart
+  helpCmdEnabled = true
+  # Enable the list command in discord
+  # Requires server restart
+  listCmdEnabled = true
+  # Enable the uptime command in discord
+  # Requires server restart
+  uptimeCmdEnabled = true
+  # Set to false to completely disable the "Unknown Command" message
+  showUnknownCommandMessage = true
+  # Set to true to enable the "Unknown Command" message in all channels
+  showUnknownCommandEverywhere = false
+
+  [[commands.customCommands]]
+    name = "kick"
+    description = "Kicks an player from the Server"
+    mcCommand = "kick %player% %reason%"
+    adminOnly = true
+    hidden = false
+
+    [[commands.customCommands.args]]
+      name = "player"
+      description = "The player to be kicked"
+      optional = false
+
+    [[commands.customCommands.args]]
+      name = "reason"
+      description = "Reason for the kick"
+      optional = true
+
+  [[commands.customCommands]]
+    name = "stop"
+    description = "Stops the server"
+    mcCommand = "stop"
+    adminOnly = true
+    hidden = false
+    args = [    ]
+
+  [[commands.customCommands]]
+    name = "kill"
+    description = "Kills an Player or Entity"
+    mcCommand = "kill %target%"
+    adminOnly = true
+    hidden = false
+
+    [[commands.customCommands.args]]
+      name = "target"
+      description = "The target(s) for the kill command."
+      optional = false
+
+# Toggle some message related features
+[messages]
+  # Changing this to an language key (like en-US, de-DE) will always attempt to download the latest language file from https://github.com/ErdbeerbaerLP/Discord-Integration-Translations
+  # Setting to 'local' disables downloading
+  language = "local"
+  # Enable formatting conversion (Markdown <==> Minecraft)
+  convertCodes = true
+  # Send formatting codes from mc chat to discord
+  # Has no effect when markdown <==> Minecraft is enabled
+  formattingCodesToDiscord = false
+  # Should /say output be sent to discord?
+  sendOnSayCommand = true
+  # Should /me output be sent to discord?
+  sendOnMeCommand = true
+  # When an /say command's message starts with this prefix, it will not be sent to discord
+  sayCommandIgnoredPrefix = "§4§6§k§r"
+  # Should tamed entity death be visible in discord?
+  sendDeathMessagesForTamedAnimals = true
+# Advanced options
+[advanced]
+  # Custom channel ID for server specific messages (like Join/leave)
+  # Leave 'default' to use default channel
+  serverChannelID = "default"
+  # Custom channel ID for death messages
+  # Leave 'default' to use default channel
+  deathsChannelID = "default"
+  # Custom channel for for ingame messages
+  # Leave 'default' to use default channel
+  chatOutputChannelID = "default"
+  # Custom channel where messages get sent to minecraft
+  # Leave 'default' to use default channel
+  chatInputChannelID = "default"
+  # Allows you to change the target URL for the API to make it usable with custom discord instances like fosscord
+  # DO NOT CHANGE if you don't know what you are doing!!
+  baseAPIUrl = "https://discord.com"
+# Config options which only have an effect when using forge
+[forgeSpecific]
+  # A list of blacklisted modids
+  # Adding one will prevent the mod to send messages to discord using forges IMC system
+IMC_modIdBlacklist = [  "examplemod"  ]
+  # Show item information, which is visible on hover ingame, as embed in discord?
+  sendItemInfo = true
+# Configuration for linking
+[linking]
+  # Unlink players when they leave the discord server for whatever reason (ex. leave,kick,ban)?
+  unlinkOnLeave = true
+  # Should discord linking be enabled?
+  # If whitelist is on, this can NOT be disabled
+  # DOES NOT WORK IN OFFLINE MODE!
+  enableLinking = true
+  # Role ID of an role an player should get when he links his discord account
+  # Leave as 0 to disable
+  linkedRoleID = "1013330697626341416"
+  # Enable discord based whitelist?
+  # This will override the link config!
+  # To whitelist use the whitelist command in the bot DMs
+  whitelistMode = true
+  # Adding Role IDs here will require the players to have at least ONE of these roles to link account
+  requiredRoles = [ ]
+  settingsBlacklist = [ ]
+
+  # Allows you to configure the default values of some personal settings
+  [linking.personalSettingsDefaults]
+    default_useDiscordNameInChannel = true
+    default_ignoreReactions = false
+    default_pingSound = true
+
+# Webhook configuration
+[webhook]
+  # Whether or not the bot should use a webhook (it will create one)
+  enable = true
+  # The avatar to be used for server messages
+  serverAvatarURL = "https://raw.githubusercontent.com/ErdbeerbaerLP/Discord-Chat-Integration/master/images/srv.png"
+  # The name to be used for server messages
+  serverName = "Fabric Science Minecraft Server"
+  # The URL where the player avatar gets fetched from
+  # 
+  # PLACEHOLDERS:
+  # %uuid% - Returns the player's UUID with dashes
+  # %uuid_dashless% - Returns the player's UUID without dashes
+  # %name% - Returns the player's name
+  # %randomUUID% - Returns an random UUID which can be used to prevent discord cache
+  playerAvatarURL = "https://minotar.net/avatar/%uuid%?randomuuid=%randomUUID%"
+  webhookName = "MC_DISCORD_INTEGRATION"
+
+# Configuration for the in-game command '/discord'
+[ingameCommand]
+  # Enable the /discord command to show an custom message with invite URL?
+  enabled = true
+  # The message displayed when typing /discord in the server chat
+  message = "Join our discord! https://discord.gg/sZtJhqCM6p"
+  # The message shown when hovering the /discord command message
+  hoverMessage = "Click to open the invite url"
+  # The url to open when clicking the /discord command text
+  inviteURL = "https://discord.gg/sZtJhqCM6p"
+# The command log channel is an channel where every command execution gets logged
+[commandLog]
+  # Channel ID for the command log channel
+  # Leave 0 to disable
+  channelID = "0"
+  # The format of the log messages
+  # 
+  # PLACEHOLDERS:
+  # %sender% - The name of the Command Source
+  # %cmd% - executed command (e.g. "say Hello World"
+  # %cmd-no-args% - Command without arguments (e.g. "say"
+  message = "%sender% executed command `%cmd%`"
+  # A list of commands that should NOT be logged
+  ignoredCommands = [  "list", "help", "?"  ]
+
+# Configure Dynmap integration here
+[dynmap]
+  # The message format of the message forwarded to discord
+  # 
+  # PLACEHOLDERS:
+  # %sender% - The sender´s name
+  # %msg% - The Message
+  dcMessage = "<%sender%> %msg%"
+  # Custom channel ID for dynmap chat
+  # Leave 'default' to use default channel
+  dynmapChannelID = "default"
+  # Name of the webhook title
+  name = "Dynmap Web-Chat"
+  # URL of the webhook avatar image
+  avatarURL = "https://static.wikia.nocookie.net/minecraft_gamepedia/images/9/91/Map_Zoom_0.png/revision/latest?cb=20200311153330"
+  # The name format of the message forwarded to the dynmap webchat
+  # 
+  # PLACEHOLDERS:
+  # %name% - The discord name of the sender (including nickname)
+  # %name#tag% - The discord name with tag of the sender (without nickname)
+  webName = "%name% (discord)"
+  # Name shown in discord when no name was specified on the website
+  unnamed = "Unnamed"

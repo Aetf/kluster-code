@@ -13,6 +13,7 @@ import { Exim } from "./mail";
 import { Genshin } from "./genshin";
 import { SyncthingDiscosrv } from "./syncthing";
 import { Ukulele } from "./ukulele";
+import { Mc } from "./mc";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -172,6 +173,17 @@ function setup() {
     // install into default namespace
     const ukulele = new Ukulele("ukulele", {
         base: cluster,
+    });
+
+    // Minecraft server
+    const mc = new Mc("mc", {
+        base: cluster,
+        externalIPs: [
+            "45.77.144.92",
+            "192.168.70.85",
+        ]
+    }, {
+        provider: namespaced("mc")
     });
 }
 
