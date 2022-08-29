@@ -149,7 +149,7 @@ IMC_modIdBlacklist = [  "examplemod"  ]
   # To whitelist use the whitelist command in the bot DMs
   whitelistMode = true
   # Adding Role IDs here will require the players to have at least ONE of these roles to link account
-  requiredRoles = [ ]
+  requiredRoles = [ "1013461245845844100" ]
   settingsBlacklist = [ ]
 
   # Allows you to configure the default values of some personal settings
