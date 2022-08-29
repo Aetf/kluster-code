@@ -104,22 +104,38 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                                 configMap: {
                                     name: configCm.metadata.name,
                                 }
-                            }
+                            },
+                            {
+                                name: 'discord-bot-token',
+                                secret: {
+                                    secretName: secrets.metadata.name,
+                                    items: [
+                                        {
+                                            key: 'discord-bot-token',
+                                            path: 'discord-bot-token',
+                                        }
+                                    ]
+                                }
+                            },
                         ],
                         volumeMounts: [
                             {
                                 name: 'config',
                                 mountPath: '/config',
-                                readOnly: true
+                                readOnly: true,
+                            },
+                            {
+                                name: 'discord-bot-token',
+                                mountPath: '/secrets',
+                                readOnly: true,
                             }
                         ]
                     }
                 ],
                 extraEnv: {
                     'PACKWIZ_URL': 'https://aetf.github.io/fabric-science/pack.toml',
-                    'CFG_DISCORD_BOT_TOKEN': {
-                        valueFrom: secrets.asEnvValue('discord-bot-token'),
-                    },
+                    'CFG_DISCORD_BOT_TOKEN_FILE': '/secrets/discord-bot-token',
+                    // 'CFG_DISCORD_BOT_TOKEN': 'false',
                     'ENABLE_WHITELIST': 'FALSE',
                     'ENFORCE_WHITELIST': 'FALSE',
                     'SYNC_SKIP_NEWER_IN_DESTINATION': 'false',
