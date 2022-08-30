@@ -17,7 +17,8 @@ default_redirection_url: "https://<%= subdomain %>.<%= domain %>"
 totp:
   issuer: "<%= domain %>"
 authentication_backend:
-  disable_reset_password: false
+  password_reset:
+    disable: false
   file:
     path: "<%= storagePath %>/users.yaml"
     password:

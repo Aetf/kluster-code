@@ -97,7 +97,7 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
             serviceAccountName: this.service_account.metadata.name,
             containers: [{
                 name: "local-path-provisioner",
-                image: "rancher/local-path-provisioner:v0.0.21",
+                image: "rancher/local-path-provisioner:v0.0.22",
                 command: [
                     "local-path-provisioner",
                     "--debug",
