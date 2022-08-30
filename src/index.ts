@@ -14,6 +14,7 @@ import { Genshin } from "./genshin";
 import { SyncthingDiscosrv } from "./syncthing";
 import { Ukulele } from "./ukulele";
 import { Mc } from "./mc";
+import { Bt } from "./bt";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -184,6 +185,14 @@ function setup() {
         ]
     }, {
         provider: namespaced("mc")
+    });
+
+    // transmission bt with openvpn
+    const bt = new Bt("bt", {
+        serving,
+        host: 'bt.unlimited-code.works',
+    }, {
+        provider: namespaced("bt"),
     });
 }
 

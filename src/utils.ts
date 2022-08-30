@@ -216,6 +216,7 @@ export type SealedSecretArgs = Omit<crds.bitnami.v1alpha1.SealedSecretArgs, 'spe
 
 export interface SealedSecretSpecArgs {
     encryptedData: pulumi.Inputs,
+    template?: k8s.core.v1.SecretArgs,
 }
 
 export interface SecretKeyRef {
