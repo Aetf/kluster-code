@@ -57,7 +57,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.sealedSecret = new HelmChart("sealed-secrets-controller", {
             namespace,
             chart: "sealed-secrets",
-            version: "2.6.1", // TODO: update to 2.1.5
+            version: "2.6.1",
             fetchOpts: {
                 repo: "https://bitnami-labs.github.io/sealed-secrets"
             }
@@ -76,9 +76,15 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
             },
             values: {
                 installCRDs: true,
+                // this is a helm post-hook that waits for the webhook to be ready,
+                // no need in pulumi
                 startupapicheck: {
                     enabled: false,
-                }
+                },
+                extraArgs: [
+                    // When this flag is enabled, secrets will be automatically removed when the certificate resource is deleted
+                    '--enable-certificate-owner-ref=true',
+                ]
             }
         }, { parent: this });
 

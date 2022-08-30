@@ -38,7 +38,6 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
                 commonName: 'dkim-k8s',
                 issuer: args.base.rootIssuer,
                 privateKey: {
-                    // TODO: change to Ed25519 once cert-manager 1.5.0 is released, also dkim dns record needs to change
                     algorithm: "RSA",
                     size: 2048,
                 },

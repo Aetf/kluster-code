@@ -105,7 +105,13 @@ Note that the trailing slash is important.
     * protect this with http basic auth, using authelia, see https://github.com/authelia/authelia/pull/1563
 - - [ ] renew leaf certificates when the ca cert is renewed
     * currently this has be done manually: `k cert-manager renew -A -l 'unlimited-code.works/cert-type=backend'`
+    * Maybe trigger a script after renew: https://github.com/Werkspot/k8s-event-listener
     * See https://github.com/jetstack/cert-manager/issues/2478
     * See https://github.com/jetstack/cert-manager/issues/4344
+- - [ ] Explore using linkerd2 service mesh to implement frontend <-> backend mTLS communication
+    * The trust anchor can be set to never expire for our simple setup (not recommended through), then cert-manager can be completely removed if
+      + frontend certs (let's encrypt certs) managed by traefik directly
+      + or disable most cert-manager components just use it for misc certs
+    * certificate rotation and ca distribution is handled by linkerd2 and there will be no issue of rotation
 - - [ ] manage custom images on AWS ECR (it has a free tier)
     * See use pulumi to build, publish and consume the image: https://www.pulumi.com/blog/build-publish-containers-iac/

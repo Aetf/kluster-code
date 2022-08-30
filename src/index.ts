@@ -60,7 +60,6 @@ function setup() {
         authDomain: 'unlimited-code.works',
         externalIPs: [
             "45.77.144.92",
-            // TODO: add zerotier-one IP
         ],
         certificates: [{
             main: 'unlimited-code.works',
