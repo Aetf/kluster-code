@@ -77,6 +77,14 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                     // memory limit
                     memory: "",
                     jvmXXOpts: "-XX:MaxRAMPercentage=75",
+                    ops: [
+                        // ChenGao
+                        '41cd7633-510b-4771-9434-bc4260390a59',
+                        // Aetf
+                        'b3c4aeb8-083a-434e-b89a-b6794431dfe1',
+                        // for the Discord integration bot
+                        '8d8982a5-8cf9-4604-8feb-3dd5ee1f83a3',
+                    ],
                     rcon: {
                         "enabled": true,
                         "existingSecret": secrets.metadata.name,
