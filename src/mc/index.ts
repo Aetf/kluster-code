@@ -68,6 +68,9 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                 nodeSelector: {
                     "kubernetes.io/hostname": "aetf-arch-homelab"
                 },
+                podAnnotations: {
+                    'kubectl.kubernetes.io/default-container': `${name}-minecraft`
+                }
                 minecraftServer: {
                     eula: "TRUE",
                     version: "1.19.2",
