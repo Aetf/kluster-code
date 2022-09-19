@@ -70,7 +70,7 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                 },
                 podAnnotations: {
                     'kubectl.kubernetes.io/default-container': `${name}-minecraft`
-                }
+                },
                 minecraftServer: {
                     eula: "TRUE",
                     version: "1.19.2",
