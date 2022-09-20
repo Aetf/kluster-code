@@ -112,7 +112,7 @@ export class HelmChart extends k8s.helm.v3.Chart {
 
     /**
      * Returns the first service
-     * @param namePattern: optional search for this name
+     * @param namePattern: optional search for this name. The name is in the format `v1/Service::<namespace>/<name>`
      */
     public service(namePattern?: RegExp): pulumi.Output<k8s.core.v1.Service> {
         return this.resources.apply(res => {
@@ -130,7 +130,7 @@ export class HelmChart extends k8s.helm.v3.Chart {
                 }
             }
             if (_.isUndefined(key)) {
-                throw new TypeError("No service defined in the chart");
+                throw new TypeError("No service found in the chart: " + keys.join(','));
             }
             return res[key] as k8s.core.v1.Service;
         });

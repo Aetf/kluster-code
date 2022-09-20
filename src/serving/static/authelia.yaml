@@ -100,6 +100,9 @@ access_control:
   - domain:
     - "bt.<%= domain %>"
     policy: one_factor
+  - domain:
+    - "mon.<%= domain %>"
+    policy: one_factor
   # rules:
   # - domain: public.example.com
   #   policy: bypass

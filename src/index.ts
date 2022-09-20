@@ -15,6 +15,7 @@ import { SyncthingDiscosrv } from "./syncthing";
 import { Ukulele } from "./ukulele";
 import { Mc } from "./mc";
 import { Bt } from "./bt";
+import { Prometheus } from "./mon";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -87,6 +88,14 @@ function setup() {
         httpsPort: staging ? 10443 : 443,
     }, {
         provider: namespaced('serving-system')
+    });
+
+    // monitoring
+    const prometheus = new Prometheus("prometheus", {
+        serving,
+        host: 'mon.unlimited-code.works',
+    }, {
+        provider: namespaced("mon"),
     });
 
     // dashboard

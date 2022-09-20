@@ -32,14 +32,21 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
         super('kluster:serving:FrontendService', name, args, opts);
 
         const serviceSpec = pulumi.output(args.targetService)
-            .apply(service => ({
+        .apply(service => {
+            return {
                 type: k8s.types.enums.core.v1.ServiceSpecType.ExternalName,
                 externalName: pulumi.interpolate`${service.metadata.name}.${service.metadata.namespace}`,
-                ports: service.spec.ports.apply(ports => ports.map(port => ({
-                    name: port.name,
-                    port: port.port,
-                })))
-            }));
+                ports: service.spec.ports.apply(ports => ports.map(port => {
+                    // be smart about service ports: if there's a 443 port, override its
+                    // name to be https
+                    const name = port.port == 443 ? 'https' : port.name;
+                    return {
+                        name,
+                        port: port.port,
+                    };
+                }))
+            };
+        });
 
         this.service = new kx.Service(`${name}-dns`, {
             metadata: {
