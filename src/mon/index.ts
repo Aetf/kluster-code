@@ -74,6 +74,10 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                             readOnly: true
                         },
                     ],
+                    // enable restart on cert change
+                    deploymentAnnotations: {
+                        "reloader.stakater.com/search": "true"
+                    },
                     // the probe endpoint also needs to be HTTPS now
                     probeScheme: 'HTTPS',
                     // make the service listen on 443 rather than 80
@@ -102,15 +106,17 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         },
                     },
                 },
-                extraScrapeConfigs: dedent`
-                - job_name: prometheus-secure
-                  scheme: https
-                  tls_config:
-                    ca_file: /tls/ca.crt
-                  static_configs:
-                  - targets:
-                    - localhost:9090
-                `
+                extraScrapeConfigs: pulumi.all([namespace]).apply(([ns]) => {
+                    return dedent`
+                    - job_name: prometheus-secure
+                      scheme: https
+                      tls_config:
+                        ca_file: /tls/ca.crt
+                      static_configs:
+                      - targets:
+                        - ${name}-server.${ns}
+                    `;
+                })
             },
         }, { parent: this });
 
