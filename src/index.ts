@@ -152,14 +152,14 @@ function setup() {
     });
 
     // nextcloud
-    const nextcloud = new Nextcloud("nextcloud", {
+    /* const nextcloud = new Nextcloud("nextcloud", {
         serving,
         host: 'files.unlimited-code.works',
         smtpHost: mailer.address,
         smtpPort: mailer.port,
     }, {
         provider: namespaced("nextcloud"),
-    });
+    }); */
 
     // genshin everyday task
     const genshin = new Genshin("genshin", {
