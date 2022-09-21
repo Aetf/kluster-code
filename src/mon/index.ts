@@ -4,7 +4,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
 import { BackendCertificate } from '#src/base-cluster';
-import { NamespaceProbe, HelmChart } from "#src/utils";
+import { NamespaceProbe, HelmChart, dedent } from "#src/utils";
 import { Serving } from "#src/serving";
 
 interface PrometheusArgs {
@@ -21,9 +21,26 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
 
         const namespace = new NamespaceProbe(`${name}-probe`, { parent: this }).namespace;
 
-        this.certificate = args.serving.base.createBackendCertificate(name, {
+        this.certificate = args.serving.base.createBackendCertificate(`${name}-server`, {
             namespace,
         }, { parent: this });
+
+        const alertpvc = args.serving.base.createLocalStoragePVC(`${name}-alertmanager`, {
+            storageClassName: args.serving.base.localStorageClass.metadata.name,
+            resources: {
+                requests: {
+                    storage: "2Gi"
+                }
+            }
+        }, { parent: this, });
+        const pvc = args.serving.base.createLocalStoragePVC(name, {
+            storageClassName: args.serving.base.localStorageClass.metadata.name,
+            resources: {
+                requests: {
+                    storage: "4Gi"
+                }
+            }
+        }, { parent: this, });
 
         this.chart = new HelmChart(name, {
             namespace,
@@ -36,7 +53,7 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                 nameOverride: name,
                 alertmanager: {
                     persistentVolume: {
-                        storageClass: args.serving.base.localStorageClass.metadata.name
+                        existingClaim: alertpvc.metadata.name,
                     }
                 },
                 server: {
@@ -65,7 +82,7 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                     },
                     // storage
                     persistentVolume: {
-                        storageClass: args.serving.base.jfsStorageClass.metadata.name
+                        existingClaim: pvc.metadata.name,
                     },
                     // with rolling update, the old ReplicaSet is kept before
                     // creating new one, causing lock issue on the storage
@@ -85,7 +102,7 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         },
                     },
                 },
-                extraScrapeConfigs: `
+                extraScrapeConfigs: dedent`
                 - job_name: prometheus-secure
                   scheme: https
                   tls_config:
