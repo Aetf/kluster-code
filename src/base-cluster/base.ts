@@ -29,6 +29,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     private readonly sealedSecret: HelmChart;
     private readonly certManager!: HelmChart;
     private readonly reloader!: HelmChart;
+    private readonly nfd!: HelmChart;
 
     public readonly nodes: Nodes;
     public readonly rootIssuer!: crds.certmanager.v1.ClusterIssuer;
@@ -109,7 +110,25 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
             fetchOpts: {
                 repo: "https://stakater.github.io/stakater-charts"
             },
-        });
+        }, { parent: this });
+
+        this.nfd = new HelmChart("nfd", {
+            namespace,
+            chart: "node-feature-discovery",
+            version: "0.11.2",
+            fetchOpts: {
+                repo: "https://kubernetes-sigs.github.io/node-feature-discovery/charts",
+            },
+            values: {
+                image: {
+                    tag: "v0.11.2-minimal"
+                },
+                tls: {
+                    enable: true,
+                    certManager: true,
+                }
+            }
+        }, { parent: this });
     }
 
     protected async initialize(args: pulumi.Inputs): Promise<BaseClusterArgs> {
