@@ -28,7 +28,7 @@ export class ClusterCertificate extends crds.certmanager.v1.Certificate {
                     }
                 },
                 issuerRef: {
-                    name: args.spec.issuer.metadata.name,
+                    name: pulumi.output(args.spec.issuer.metadata).apply(md => md.name!),
                     kind: args.spec.issuer.kind,
                 },
                 // common args

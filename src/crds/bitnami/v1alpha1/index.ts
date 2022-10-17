@@ -5,10 +5,11 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "../../utilities";
 
 // Export members:
-export * from "./sealedSecret";
+export { SealedSecretArgs } from "./sealedSecret";
+export type SealedSecret = import("./sealedSecret").SealedSecret;
+export const SealedSecret: typeof import("./sealedSecret").SealedSecret = null as any;
+utilities.lazyLoad(exports, ["SealedSecret"], () => require("./sealedSecret"));
 
-// Import resources to register:
-import { SealedSecret } from "./sealedSecret";
 
 const _module = {
     version: utilities.getVersion(),

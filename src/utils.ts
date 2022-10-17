@@ -17,11 +17,11 @@ export function setAndRegisterOutputs(obj: any, outputs: pulumi.Inputs) {
     obj.registerOutputs(outputs);
 }
 
-export function chartNamingWorkaround(obj: any, opts: pulumi.CustomResourceOptions) {
+export function chartNamingWorkaround(_obj: any, opts: pulumi.CustomResourceOptions) {
     opts.deleteBeforeReplace = true;
 }
 
-export function removeHelmTestAnnotation(obj: any, opts: pulumi.CustomResourceOptions) {
+export function removeHelmTestAnnotation(obj: any, _opts: pulumi.CustomResourceOptions) {
     _.unset(obj, 'metadata.annotations["helm.sh/hook"]');
     _.unset(obj, 'metadata.annotations["helm.sh/hook-delete-policy"]')
 }
@@ -257,28 +257,46 @@ export class SealedSecret extends crds.bitnami.v1alpha1.SealedSecret {
     }
 
     public mount(destPath: pulumi.Input<string>, srcPath?: pulumi.Input<string>): pulumi.Output<kx.types.VolumeMount> {
-        return pulumi.output({
-            volume: {
-                name: this.metadata.name,
-                secret: {
-                    secretName: this.metadata.name,
+        return pulumi.all([this.metadata, destPath, srcPath]).apply(([md, destPath, srcPath]) => {
+            return {
+                volume: {
+                    name: md.name!,
+                    secret: {
+                        secretName: md.name!,
+                    },
                 },
-            },
-            destPath,
-            srcPath,
+                destPath,
+                srcPath,
+            };
+        });
+    }
+
+    public asSecretRef(): pulumi.Output<k8s.types.input.core.v1.SecretEnvSource> {
+        return pulumi.output(this.metadata).apply(md => {
+            return {
+                name: md.name!,
+            }
         });
     }
 
     public asSecretKeyRef(key: pulumi.Input<string>): pulumi.Output<SecretKeyRef> {
-        return pulumi.output({
-            name: this.metadata.name,
-            key,
+        return pulumi.all([this.metadata, key]).apply(([md, key]) => {
+            return {
+                name: md.name!,
+                key,
+            }
         });
     }
 
     public asEnvValue(key: pulumi.Input<string>): pulumi.Output<k8s.types.input.core.v1.EnvVarSource> {
         return pulumi.output({
             secretKeyRef: this.asSecretKeyRef(key),
+        });
+    }
+
+    public asEnvFromSource(): pulumi.Output<k8s.types.input.core.v1.EnvFromSource> {
+        return pulumi.output({
+            secretRef: this.asSecretRef(),
         });
     }
 }

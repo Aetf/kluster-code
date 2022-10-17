@@ -5,7 +5,6 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import { SealedSecret } from "#src/utils";
-import { Serving } from "#src/serving";
 
 interface GenshinArgs {
 }
@@ -33,11 +32,9 @@ export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
                 env: {
                     LANGUAGE: 'zh-cn',
                 },
-                envFrom: [{
-                    secretRef: {
-                        name: secrets.metadata.name
-                    }
-                }],
+                envFrom: [
+                    secrets.asEnvFromSource()
+                ],
             }]
         });
         const cron = new k8s.batch.v1.CronJob(name, {

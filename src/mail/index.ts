@@ -45,7 +45,7 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
         }, { parent: this });
 
         const cert = args.base.createBackendCertificate('smtp', {
-            namespace: secret.metadata.namespace
+            namespace: pulumi.output(secret.metadata).apply(md => md.namespace!)
         }, { parent: this });
 
         const cm = new ConfigMap(name, {

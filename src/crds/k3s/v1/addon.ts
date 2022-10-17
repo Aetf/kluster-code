@@ -2,61 +2,56 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
-import * as inputs from "../../types/input";
-import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
 import {ObjectMeta} from "../../meta/v1";
 
-/**
- * Order is a type to represent an Order with an ACME server
- */
-export class Order extends pulumi.CustomResource {
+export class Addon extends pulumi.CustomResource {
     /**
-     * Get an existing Order resource's state with the given name, ID, and optional extra
+     * Get an existing Addon resource's state with the given name, ID, and optional extra
      * properties used to qualify the lookup.
      *
      * @param name The _unique_ name of the resulting resource.
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
-    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): Order {
-        return new Order(name, undefined as any, { ...opts, id: id });
+    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): Addon {
+        return new Addon(name, undefined as any, { ...opts, id: id });
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:acme.cert-manager.io/v1:Order';
+    public static readonly __pulumiType = 'kubernetes:k3s.cattle.io/v1:Addon';
 
     /**
-     * Returns true if the given object is an instance of Order.  This is designed to work even
+     * Returns true if the given object is an instance of Addon.  This is designed to work even
      * when multiple copies of the Pulumi SDK have been loaded into the same process.
      */
-    public static isInstance(obj: any): obj is Order {
+    public static isInstance(obj: any): obj is Addon {
         if (obj === undefined || obj === null) {
             return false;
         }
-        return obj['__pulumiType'] === Order.__pulumiType;
+        return obj['__pulumiType'] === Addon.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"acme.cert-manager.io/v1">;
-    public readonly kind!: pulumi.Output<"Order">;
+    public readonly apiVersion!: pulumi.Output<"k3s.cattle.io/v1">;
+    public readonly kind!: pulumi.Output<"Addon">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
-    public readonly spec!: pulumi.Output<outputs.acme.v1.OrderSpec>;
-    public readonly status!: pulumi.Output<outputs.acme.v1.OrderStatus | undefined>;
+    public readonly spec!: pulumi.Output<{[key: string]: any} | undefined>;
+    public readonly status!: pulumi.Output<{[key: string]: any} | undefined>;
 
     /**
-     * Create a Order resource with the given unique name, arguments, and options.
+     * Create a Addon resource with the given unique name, arguments, and options.
      *
      * @param name The _unique_ name of the resource.
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: OrderArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args?: AddonArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "acme.cert-manager.io/v1";
-            resourceInputs["kind"] = "Order";
+            resourceInputs["apiVersion"] = "k3s.cattle.io/v1";
+            resourceInputs["kind"] = "Addon";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
             resourceInputs["status"] = args ? args.status : undefined;
@@ -68,17 +63,17 @@ export class Order extends pulumi.CustomResource {
             resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        super(Order.__pulumiType, name, resourceInputs, opts);
+        super(Addon.__pulumiType, name, resourceInputs, opts);
     }
 }
 
 /**
- * The set of arguments for constructing a Order resource.
+ * The set of arguments for constructing a Addon resource.
  */
-export interface OrderArgs {
-    apiVersion?: pulumi.Input<"acme.cert-manager.io/v1">;
-    kind?: pulumi.Input<"Order">;
+export interface AddonArgs {
+    apiVersion?: pulumi.Input<"k3s.cattle.io/v1">;
+    kind?: pulumi.Input<"Addon">;
     metadata?: pulumi.Input<ObjectMeta>;
-    spec?: pulumi.Input<inputs.acme.v1.OrderSpecArgs>;
-    status?: pulumi.Input<inputs.acme.v1.OrderStatusArgs>;
+    spec?: pulumi.Input<{[key: string]: any}>;
+    status?: pulumi.Input<{[key: string]: any}>;
 }

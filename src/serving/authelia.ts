@@ -230,7 +230,7 @@ class AutheliaSecret extends SealedSecret {
      */
     public mountBoth(destPath: string): [pulumi.Output<kx.types.VolumeMount>, pulumi.Output<kx.types.EnvMap>] {
         const secretEnvs = this.spec.apply(spec =>
-            _.chain(spec.encryptedData)
+            _.chain(spec?.encryptedData)
                 .mapValues((_, k) => `${destPath}/${k}`)
                 .mapKeys((_, k) => `AUTHELIA_${k}_FILE`)
                 .value()

@@ -1,5 +1,8 @@
 {
     "name": "kluster-code",
+    "scripts": {
+        "crds": "scripts/update-crds.sh"
+    },
     "devDependencies": {
         "@types/lodash": "^4.14.173",
         "@types/node": "^16.9.6",

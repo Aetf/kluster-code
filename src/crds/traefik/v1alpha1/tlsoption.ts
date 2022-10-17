@@ -2,13 +2,14 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
-import { input as inputs, output as outputs } from "../../types";
+import * as inputs from "../../types/input";
+import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta,InputObjectMeta} from "../../meta/v1";
+import {ObjectMeta} from "../../meta/v1";
 
 /**
- * TLSOption is a specification for a TLSOption resource.
+ * TLSOption is the CRD implementation of a Traefik TLS Option, allowing to configure some parameters of the TLS connection. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#tls-options
  */
 export class TLSOption extends pulumi.CustomResource {
     /**
@@ -37,11 +38,11 @@ export class TLSOption extends pulumi.CustomResource {
         return obj['__pulumiType'] === TLSOption.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1" | undefined>;
-    public readonly kind!: pulumi.Output<"TLSOption" | undefined>;
+    public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1">;
+    public readonly kind!: pulumi.Output<"TLSOption">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * TLSOptionSpec configures TLS for an entry point.
+     * TLSOptionSpec defines the desired state of a TLSOption.
      */
     public readonly spec!: pulumi.Output<outputs.traefik.v1alpha1.TLSOptionSpec>;
 
@@ -53,23 +54,21 @@ export class TLSOption extends pulumi.CustomResource {
      * @param opts A bag of options that control this resource's behavior.
      */
     constructor(name: string, args?: TLSOptionArgs, opts?: pulumi.CustomResourceOptions) {
-        let inputs: pulumi.Inputs = {};
+        let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            inputs["apiVersion"] = "traefik.containo.us/v1alpha1";
-            inputs["kind"] = "TLSOption";
-            inputs["metadata"] = args ? args.metadata : undefined;
-            inputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["apiVersion"] = "traefik.containo.us/v1alpha1";
+            resourceInputs["kind"] = "TLSOption";
+            resourceInputs["metadata"] = args ? args.metadata : undefined;
+            resourceInputs["spec"] = args ? args.spec : undefined;
         } else {
-            inputs["apiVersion"] = undefined /*out*/;
-            inputs["kind"] = undefined /*out*/;
-            inputs["metadata"] = undefined /*out*/;
-            inputs["spec"] = undefined /*out*/;
+            resourceInputs["apiVersion"] = undefined /*out*/;
+            resourceInputs["kind"] = undefined /*out*/;
+            resourceInputs["metadata"] = undefined /*out*/;
+            resourceInputs["spec"] = undefined /*out*/;
         }
-        if (!opts.version) {
-            opts = pulumi.mergeOptions(opts, { version: utilities.getVersion()});
-        }
-        super(TLSOption.__pulumiType, name, inputs, opts);
+        opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
+        super(TLSOption.__pulumiType, name, resourceInputs, opts);
     }
 }
 
@@ -77,11 +76,11 @@ export class TLSOption extends pulumi.CustomResource {
  * The set of arguments for constructing a TLSOption resource.
  */
 export interface TLSOptionArgs {
-    readonly apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
-    readonly kind?: pulumi.Input<"TLSOption">;
-    readonly metadata?: pulumi.Input<InputObjectMeta>;
+    apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
+    kind?: pulumi.Input<"TLSOption">;
+    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * TLSOptionSpec configures TLS for an entry point.
+     * TLSOptionSpec defines the desired state of a TLSOption.
      */
-    readonly spec?: pulumi.Input<inputs.traefik.v1alpha1.TLSOptionSpecArgs>;
+    spec?: pulumi.Input<inputs.traefik.v1alpha1.TLSOptionSpecArgs>;
 }

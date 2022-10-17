@@ -41,11 +41,9 @@ export class Ukulele extends pulumi.ComponentResource<UkuleleArgs> {
             restartPolicy: 'Always',
             containers: [{
                 image: 'ghcr.io/freyacodes/ukulele:master',
-                envFrom: [{
-                    secretRef: {
-                        name: secrets.metadata.name
-                    }
-                }],
+                envFrom: [
+                    secrets.asEnvFromSource(),
+                ],
                 volumeMounts: [
                     cm.mount('/opt/ukulele/ukulele.yml', 'ukulele.yml'),
                     pvc.mount('/opt/ukulele/db'),

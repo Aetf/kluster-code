@@ -4,7 +4,7 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta,InputObjectMeta} from "../../meta/v1";
+import {ObjectMeta} from "../../meta/v1";
 
 export class SealedSecret extends pulumi.CustomResource {
     /**
@@ -36,8 +36,8 @@ export class SealedSecret extends pulumi.CustomResource {
     public readonly apiVersion!: pulumi.Output<"bitnami.com/v1alpha1">;
     public readonly kind!: pulumi.Output<"SealedSecret">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
-    public readonly spec!: pulumi.Output<{[key: string]: any}>;
-    public readonly status!: pulumi.Output<{[key: string]: any}>;
+    public readonly spec!: pulumi.Output<{[key: string]: any} | undefined>;
+    public readonly status!: pulumi.Output<{[key: string]: any} | undefined>;
 
     /**
      * Create a SealedSecret resource with the given unique name, arguments, and options.
@@ -47,25 +47,23 @@ export class SealedSecret extends pulumi.CustomResource {
      * @param opts A bag of options that control this resource's behavior.
      */
     constructor(name: string, args?: SealedSecretArgs, opts?: pulumi.CustomResourceOptions) {
-        let inputs: pulumi.Inputs = {};
+        let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            inputs["apiVersion"] = "bitnami.com/v1alpha1";
-            inputs["kind"] = "SealedSecret";
-            inputs["metadata"] = args ? args.metadata : undefined;
-            inputs["spec"] = args ? args.spec : undefined;
-            inputs["status"] = args ? args.status : undefined;
+            resourceInputs["apiVersion"] = "bitnami.com/v1alpha1";
+            resourceInputs["kind"] = "SealedSecret";
+            resourceInputs["metadata"] = args ? args.metadata : undefined;
+            resourceInputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["status"] = args ? args.status : undefined;
         } else {
-            inputs["apiVersion"] = undefined /*out*/;
-            inputs["kind"] = undefined /*out*/;
-            inputs["metadata"] = undefined /*out*/;
-            inputs["spec"] = undefined /*out*/;
-            inputs["status"] = undefined /*out*/;
+            resourceInputs["apiVersion"] = undefined /*out*/;
+            resourceInputs["kind"] = undefined /*out*/;
+            resourceInputs["metadata"] = undefined /*out*/;
+            resourceInputs["spec"] = undefined /*out*/;
+            resourceInputs["status"] = undefined /*out*/;
         }
-        if (!opts.version) {
-            opts = pulumi.mergeOptions(opts, { version: utilities.getVersion()});
-        }
-        super(SealedSecret.__pulumiType, name, inputs, opts);
+        opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
+        super(SealedSecret.__pulumiType, name, resourceInputs, opts);
     }
 }
 
@@ -73,9 +71,9 @@ export class SealedSecret extends pulumi.CustomResource {
  * The set of arguments for constructing a SealedSecret resource.
  */
 export interface SealedSecretArgs {
-    readonly apiVersion?: pulumi.Input<"bitnami.com/v1alpha1">;
-    readonly kind?: pulumi.Input<"SealedSecret">;
-    readonly metadata?: pulumi.Input<InputObjectMeta>;
-    readonly spec?: pulumi.Input<{[key: string]: any}>;
-    readonly status?: pulumi.Input<{[key: string]: any}>;
+    apiVersion?: pulumi.Input<"bitnami.com/v1alpha1">;
+    kind?: pulumi.Input<"SealedSecret">;
+    metadata?: pulumi.Input<ObjectMeta>;
+    spec?: pulumi.Input<{[key: string]: any}>;
+    status?: pulumi.Input<{[key: string]: any}>;
 }

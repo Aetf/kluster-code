@@ -9,56 +9,56 @@ import * as utilities from "../../utilities";
 import {ObjectMeta} from "../../meta/v1";
 
 /**
- * Middleware is the CRD implementation of a Traefik Middleware. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/overview/
+ * TLSStore is the CRD implementation of a Traefik TLS Store. For the time being, only the TLSStore named default is supported. This means that you cannot have two stores that are named default in different Kubernetes namespaces. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#certificates-stores
  */
-export class Middleware extends pulumi.CustomResource {
+export class TLSStore extends pulumi.CustomResource {
     /**
-     * Get an existing Middleware resource's state with the given name, ID, and optional extra
+     * Get an existing TLSStore resource's state with the given name, ID, and optional extra
      * properties used to qualify the lookup.
      *
      * @param name The _unique_ name of the resulting resource.
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
-    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): Middleware {
-        return new Middleware(name, undefined as any, { ...opts, id: id });
+    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): TLSStore {
+        return new TLSStore(name, undefined as any, { ...opts, id: id });
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.containo.us/v1alpha1:Middleware';
+    public static readonly __pulumiType = 'kubernetes:traefik.containo.us/v1alpha1:TLSStore';
 
     /**
-     * Returns true if the given object is an instance of Middleware.  This is designed to work even
+     * Returns true if the given object is an instance of TLSStore.  This is designed to work even
      * when multiple copies of the Pulumi SDK have been loaded into the same process.
      */
-    public static isInstance(obj: any): obj is Middleware {
+    public static isInstance(obj: any): obj is TLSStore {
         if (obj === undefined || obj === null) {
             return false;
         }
-        return obj['__pulumiType'] === Middleware.__pulumiType;
+        return obj['__pulumiType'] === TLSStore.__pulumiType;
     }
 
     public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1">;
-    public readonly kind!: pulumi.Output<"Middleware">;
+    public readonly kind!: pulumi.Output<"TLSStore">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * MiddlewareSpec defines the desired state of a Middleware.
+     * TLSStoreSpec defines the desired state of a TLSStore.
      */
-    public readonly spec!: pulumi.Output<outputs.traefik.v1alpha1.MiddlewareSpec>;
+    public readonly spec!: pulumi.Output<outputs.traefik.v1alpha1.TLSStoreSpec>;
 
     /**
-     * Create a Middleware resource with the given unique name, arguments, and options.
+     * Create a TLSStore resource with the given unique name, arguments, and options.
      *
      * @param name The _unique_ name of the resource.
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: MiddlewareArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args?: TLSStoreArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
             resourceInputs["apiVersion"] = "traefik.containo.us/v1alpha1";
-            resourceInputs["kind"] = "Middleware";
+            resourceInputs["kind"] = "TLSStore";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
         } else {
@@ -68,19 +68,19 @@ export class Middleware extends pulumi.CustomResource {
             resourceInputs["spec"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        super(Middleware.__pulumiType, name, resourceInputs, opts);
+        super(TLSStore.__pulumiType, name, resourceInputs, opts);
     }
 }
 
 /**
- * The set of arguments for constructing a Middleware resource.
+ * The set of arguments for constructing a TLSStore resource.
  */
-export interface MiddlewareArgs {
+export interface TLSStoreArgs {
     apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
-    kind?: pulumi.Input<"Middleware">;
+    kind?: pulumi.Input<"TLSStore">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * MiddlewareSpec defines the desired state of a Middleware.
+     * TLSStoreSpec defines the desired state of a TLSStore.
      */
-    spec?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecArgs>;
+    spec?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecArgs>;
 }

@@ -5,24 +5,21 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "../../utilities";
 
 // Export members:
-export * from "./challenge";
-export * from "./order";
+export { AddonArgs } from "./addon";
+export type Addon = import("./addon").Addon;
+export const Addon: typeof import("./addon").Addon = null as any;
+utilities.lazyLoad(exports, ["Addon"], () => require("./addon"));
 
-// Import resources to register:
-import { Challenge } from "./challenge";
-import { Order } from "./order";
 
 const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
-            case "kubernetes:acme.cert-manager.io/v1beta1:Challenge":
-                return new Challenge(name, <any>undefined, { urn })
-            case "kubernetes:acme.cert-manager.io/v1beta1:Order":
-                return new Order(name, <any>undefined, { urn })
+            case "kubernetes:k3s.cattle.io/v1:Addon":
+                return new Addon(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }
     },
 };
-pulumi.runtime.registerResourceModule("crds", "acme.cert-manager.io/v1beta1", _module)
+pulumi.runtime.registerResourceModule("crds", "k3s.cattle.io/v1", _module)

@@ -152,7 +152,10 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
                 commonName: certName,
                 secretName: certName,
                 issuerRef: {
-                    name: bootstrap.metadata.name,
+                    // the extra shenanigans is necessary because we need to
+                    // assert the name is not undefined, which isn't the case
+                    // with auto lifting `bootstrap.metadata.name`
+                    name: pulumi.output(bootstrap.metadata).apply(md => md.name!),
                     kind: bootstrap.kind,
                 },
                 privateKey: {

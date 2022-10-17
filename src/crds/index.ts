@@ -5,12 +5,19 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 // Export members:
-export * from "./provider";
+export { ProviderArgs } from "./provider";
+export type Provider = import("./provider").Provider;
+export const Provider: typeof import("./provider").Provider = null as any;
+utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
+
 
 // Export sub-modules:
 import * as acme from "./acme";
 import * as bitnami from "./bitnami";
 import * as certmanager from "./certmanager";
+import * as helm from "./helm";
+import * as k3s from "./k3s";
+import * as nfd from "./nfd";
 import * as traefik from "./traefik";
 import * as types from "./types";
 
@@ -18,12 +25,12 @@ export {
     acme,
     bitnami,
     certmanager,
+    helm,
+    k3s,
+    nfd,
     traefik,
     types,
 };
-
-import { Provider } from "./provider";
-
 pulumi.runtime.registerResourcePackage("crds", {
     version: utilities.getVersion(),
     constructProvider: (name: string, type: string, urn: string): pulumi.ProviderResource => {

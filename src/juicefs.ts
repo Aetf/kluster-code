@@ -35,7 +35,7 @@ function patchCsiNode(obj: any, opts: pulumi.CustomResourceOptions) {
 * It has on storage class: juicefs-sc
 */
 export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
-    public readonly storageClass: k8s.storage.v1.StorageClass;
+    public readonly storageClass: pulumi.Output<k8s.storage.v1.StorageClass>;
     public readonly chart: HelmChart;
 
     constructor(name: string, args: JuiceFsArgs, opts?: pulumi.ComponentResourceOptions) {
@@ -89,29 +89,32 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
             }
         }, opts);
 
-        this.storageClass = new k8s.storage.v1.StorageClass(args.storageClass, {
-            provisioner: 'csi.juicefs.com',
-            volumeBindingMode: "Immediate",
-            reclaimPolicy: "Retain",
-            parameters: {
-                "csi.storage.k8s.io/provisioner-secret-name": secret.metadata.name,
-                "csi.storage.k8s.io/provisioner-secret-namespace": args.namespace,
-                "csi.storage.k8s.io/node-publish-secret-name": secret.metadata.name,
-                "csi.storage.k8s.io/node-publish-secret-namespace": args.namespace,
-                "juicefs/mount-delete-delay": "10m",
-                "juicefs/mount-cpu-limit": "100m",
-                "juicefs/mount-memory-limit": "128Mi",
-                "juicefs/mount-cpu-request": "50m",
-                "juicefs/mount-memory-request": "64Mi",
-            },
-            mountOptions: [
-                "enable-xattr",
-                "allow_other",
-                "writeback", // async upload to cloud
-                "free-space-ratio=0.1",
-                "cache-dir=/mnt/storage/jfs-cache",
-            ]
-        }, { parent: this });
+        this.storageClass = pulumi.all([args.storageClass, secret.metadata, args.namespace])
+            .apply(([storageClass, secret_md, namespace]) => {
+            return new k8s.storage.v1.StorageClass(storageClass, {
+                provisioner: 'csi.juicefs.com',
+                volumeBindingMode: "Immediate",
+                reclaimPolicy: "Retain",
+                parameters: {
+                    "csi.storage.k8s.io/provisioner-secret-name": secret_md.name!,
+                    "csi.storage.k8s.io/provisioner-secret-namespace": namespace,
+                    "csi.storage.k8s.io/node-publish-secret-name": secret_md.name!,
+                    "csi.storage.k8s.io/node-publish-secret-namespace": namespace,
+                    "juicefs/mount-delete-delay": "10m",
+                    "juicefs/mount-cpu-limit": "100m",
+                    "juicefs/mount-memory-limit": "128Mi",
+                    "juicefs/mount-cpu-request": "50m",
+                    "juicefs/mount-memory-request": "64Mi",
+                },
+                mountOptions: [
+                    "enable-xattr",
+                    "allow_other",
+                    "writeback", // async upload to cloud
+                    "free-space-ratio=0.1",
+                    "cache-dir=/mnt/storage/jfs-cache",
+                ]
+            }, { parent: this });
+        });
     }
 
     private setupSecret(name: string): SealedSecret {
