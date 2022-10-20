@@ -38,7 +38,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
 
     public readonly localStorageClass!: k8s.storage.v1.StorageClass;
     public readonly localStableStorageClass!: k8s.storage.v1.StorageClass;
-    public readonly jfsStorageClass!: k8s.storage.v1.StorageClass;
+    public readonly jfsStorageClass!: pulumi.Output<k8s.storage.v1.StorageClass>;
 
     constructor(name: string, args: BaseClusterArgs, opts?: pulumi.ComponentResourceOptions) {
         super("kluster:BaseCluster", name, args, opts);

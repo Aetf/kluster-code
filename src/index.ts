@@ -8,7 +8,6 @@ import { BaseCluster } from "./base-cluster";
 import { Serving } from "./serving";
 import { K8sDashboard } from "./k8s-dashboard";
 import { Nginx } from "./nginx";
-import { Nextcloud } from "./nextcloud";
 import { Exim } from "./mail";
 import { Genshin } from "./genshin";
 import { SyncthingDiscosrv } from "./syncthing";
@@ -16,17 +15,18 @@ import { Ukulele } from "./ukulele";
 import { Mc } from "./mc";
 import { Bt } from "./bt";
 import { Prometheus } from "./mon";
+import { IntelDevicePlugins } from "./base-cluster/intel-gpu";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
         metadata: {
             name: ns,
         }
-    }, { deleteBeforeReplace: true }).metadata.name;
+    }, { deleteBeforeReplace: true });
     return new k8s.Provider(`${ns}-provider`, {
         ...args,
         suppressDeprecationWarnings: true,
-        namespace: ns,
+        namespace: namespace.metadata.name,
     });
 }
 
@@ -46,6 +46,12 @@ function setup() {
     if (isSetupSecrets) {
         return;
     }
+
+    // intel gpu device plugin
+    const intelGPU = new IntelDevicePlugins("intel-gpu", {
+    }, {
+        provider: namespaced('intel-gpu')
+    });
 
     // mail transfer agent
     const mailer = new Exim("exim", {
