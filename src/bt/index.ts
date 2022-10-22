@@ -10,6 +10,7 @@ import { Serving } from "#src/serving";
 interface BtArgs {
     serving: Serving,
     host: string,
+    pvc: pulumi.Input<kx.PersistentVolumeClaim>,
 }
 
 export class Bt extends pulumi.ComponentResource<BtArgs> {
@@ -24,8 +25,8 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
         const secrets = new SealedSecret(name, {
             spec: {
                 encryptedData: {
-                    'OPENVPN_USERNAME': 'AgAlu4p768QXgd7QU0JK8tIizjA96C07Q/BV56eQNKF/OsJQ/btQ4ri1T45cs20eQE0HESONiD+qEhejBj17NMKTN0zDJueTXxbxskgau5oFmgRVrvvYiPIZhFdoEhMbm3ZXqmw68YtANHWQ615UO3a7VSDlBtkZ/CJVW4oY6cJ+8bKwIaeJzrM54Ls5PuQTkIRH7Jdmt6KNzFwSiMl+AaHAh9MW2T+vKxcZs3FnIS5DXHxDRHmIjGmL3bhonIFwg/IT0b2MG3aePNEBcTcQ+61Miy2r+1kV0j9UZmhOhQ5QNiq9dgBvYGFJ1/kmL67MZjYfhzuhXzQkMXXrp8FKorf8kQ4ct0yPD/gzzlHdqx46YJzFzRp0ViG6bmPe1sAoFzoN6whaaEuLgUJFPjIJC/jYGqKEQ1f5VDRHFqJAp9mmCDCLkb/Ct8d46P699HPgJJnVJMr7Jbabeia4ortdidPQsk2af2TLem1/Nr2uHvQjy8ZTbPMcuaQfbt2Non/kjJtQmdw2UZAQB8ytb0zUWgIgYWyuKy7EKwBAhggwg0uT2zd5cERiebc/+HDRFBpHDpQ5rIxa3KjbHPxa0XiamBs1gx+bzCM9SNRX+NKJ8jpGv9emq/+ryZWOf7etEBpm8A8fIibJupzwRBK1hhLnafcE8Z5+7An3psIMUXkVbTHUkwraFkheMmZX7LAZUpysBBCffn+UpzFlDw==',
-                    'OPENVPN_PASSWORD': 'AgAKxfIODupi/+k9UHcDWbho97eoW4ZFNJqy4tXBcV8KRqJZIf9evaW9nWVhFIjFDVoe0ppRDIYUIrYabL3l/rMziyq/Ep8J+0rInyGIg9TD0iiR6EqKfda32jHNkkoWzh9o7VxfB+TtD3UYLrBlhrjqAl0e5iOov9ILD0XikYYTxJA0eEJMgRiIbo4VeJ/2Sy1XHMV8ECcK7KPICCbtenh3a8QuyGTONQCoGyeXAfQ6t7nzgUFvg5yHAY8zdmlKH12w4Miv1qqv9dUuZ2UzavAGPZV9KQi4Gi4TlRbsYSBP6wsaBD42CmL56Mm8BxE5Fi50MDni5V82OXJ5vrJUbWFL4Z90xpiSWeKyxSgmhBsL6l90Fwz9oNCPKtem9RFJH1rCQ5JUrdfdeekZtW6rfjslfTanGtdVfpxPMeJG/Twa1OcmWzDzGerwCV3LXs9hDoHhx76H8EmF3vvVxFNR4KJQ8MnBYhjOxX32/WXHZQFPCaM6lrtehjXsYIiL0poBb9CYN+/RaDwNyD9eiFmDM0R7BmKavOgUE7CfrbKAeTL/Ta4y1c+5FRTH6ljKFkLdjH+TVQJhHWonUd5OOdvOe9Xw//qiZHs9Wp72h4M3LxIVeNcFF2BNXd5aVg9oC/cMweAr1iu6gf85XYxTilgclBYSf2TK7emcA2vwTNllnXOmXAl7tcxHGMGbx83gIcK6gkXmSjnGC/GIR1Yc+KDCRMoRd4sD5//NA/QtSD9+jBHRkfoZyJY3UdrqZ63S6jQb9r4o',
+                    'OPENVPN_USERNAME': 'AgAwNa64mIuj5mSyjBZzFHgmnVeOUZaLuPLbp8HYNBXTxSvLHSPDN/XpYdM9EISuRIpYeGoWd2Gxd1gUtDrRsyGqHY3dS2iMnxsIYcMDrEuZI2rCYL4rZk2jLCkP345Uo6hrJAWfzWHjC/t8CzbEE0xhhp/J/WktXw9Akdeu2Hcvun0D9OK+WJLFhIs5LnrLEyx3EF6dvyiUxd5ZrjsOD/pHLqrEzpRXRDFNSSq+WRdJck/iPpGnx7q+roNalybC7U3ohdxdc7E1XMzwcwg7ODu+P0QraiiGyD+rnoa24G9V2Bsg4hiltspf/bGkvAlgk8a/iHPCkz87auVYn4A7PQ0WmCmXfAvNDKrt6RFW23tRP5JYbJyIH+NTuKRfi2yttCB2lVFcLDSi867SGWNRzJAwJNPy+72e11K0csarTeaUQAKXjSGluRYq96uB0V5ivcejw61nxmDZqy7qlxfJ2fIqN7lXfXUEx91T0+lI1zjShMs3e6qmC2FB8Tit9YgUtr/ERO0qErjKx/342IRKBIylBqIYao6QUHwHigRXYTAU1jNDV0FkolzZT9J/mCxSTWruItl1F4R+Jnjb/L/INZuK68tdYpfMJmZNJgo7zzpFFikcDD40xVHvFDdcOEurUs2t6iLrJ5ycJCMq+Xq7nwyZpbKZMtDEF90MmpLHVddqPGNVNdOjmqd68xEASseFgMv2TcG/4C4/q+8=',
+                    'OPENVPN_PASSWORD': 'AgAPTzZfybtX9IDZIPsF12MTXl+qGv1iAcIPN7GJIhfgKrtnmTM56q+gMV5vFK/jEGpJqmNDYXnR4DBBHM+aUKM8Xsc7riyr/0614wUxjcWQhNvYpueKlslCZqoJkueGttUy3fK+s4aP8zj2Wnxpnp/ir3ntdv+inwobiLdQgXlyTmxmnnJKAz8N3pHwWRnRZyAnoc7sQy608qL4bH3NtT8mbZuHKg1VRQcm0/k+VTkglX9e9O2ubig7NS7eE+w5K0AB0PO5rGgxuycdBwGN2RmTGOqT6TxazgFVoXiK439bwzsp/bBbOoFD6QO453k+VrkkYF7o8OuM5/Vlm4bnq7e6N+ZnLwL5qIv+/iLGeFst24v5F/vitpmlYYTSL3RCnQeMFFElvJKb7+3hkU8PyB1QOLBATmK6Y5Frh/t7wvc3i8h9hAUI18afDm6e5BoGk9vwroYIgvtCCN6h8dON76fIE42Y03gktvG4LdTuZ6bOmwZ6rQwAbEA8glTZvKm835ja7i1P0yomoA7HGPeGMg9joza4NKGeP71h5OA9Zql/7f+Aclw5Mebckrqrpx4Jnn1iM4QjPCTKZNS+TpbgHRbOmi9uy6x34HM9SXPGOKne5Va2GMkEg1pFup1JYHHlJyv6f83pYclV7v5YMPgEEiHU9xN9q0DruDB63VfGgoG99fNQB/rsJE+Nz7L1iIoQ4wxa5UAgBq9hb0k1dNQzvoe+S1XDBMrYi32sWYpqBEcIvGQGqaOwrULfL5+hV8YynJUuMQ==',
                 },
                 template: {
                     data: {
@@ -46,24 +47,14 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
             }
         }, { parent: this });
 
-        // download storage
-        // TODO: use NodePV on homelab
-        const pvc = args.serving.base.createLocalStoragePVC(name, {
-            resources: {
-                requests: {
-                    storage: "100Gi"
-                }
-            }
-        }, { parent: this, });
-
         this.certificate = args.serving.base.createBackendCertificate(name, {
-            namespace: pvc.metadata.namespace,
+            namespace: cm.metadata.namespace,
         }, { parent: this });
 
         const pb = new kx.PodBuilder({
             restartPolicy: 'Always',
             nodeSelector: {
-                "kubernetes.io/hostname": "aetf-arch-homelab"
+                "kubernetes.io/hostname": args.serving.base.nodes.AetfArchHomelab
             },
             containers: [
             {
@@ -82,7 +73,7 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
                     'PGID': '1000',
                 },
                 volumeMounts: [
-                    pvc.mount('/data'),
+                    pulumi.output(args.pvc).apply(pvc => pvc.mount('/data')),
                     secrets.mount('/config/openvpn-credentials.txt', 'openvpn-credentials.txt'),
                 ],
                 securityContext: {
@@ -115,7 +106,7 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
                 }
             }],
             securityContext: {
-                fsGroup: 1000,
+                /* fsGroup: 1000, */
             }
         });
 

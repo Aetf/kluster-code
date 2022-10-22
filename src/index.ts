@@ -4,7 +4,7 @@ tsConfigPaths.register(undefined as any);
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
-import { BaseCluster } from "./base-cluster";
+import { BaseCluster, NodePV } from "./base-cluster";
 import { Serving } from "./serving";
 import { K8sDashboard } from "./k8s-dashboard";
 import { Nginx } from "./nginx";
@@ -16,6 +16,7 @@ import { Mc } from "./mc";
 import { Bt } from "./bt";
 import { Prometheus } from "./mon";
 import { IntelDevicePlugins } from "./base-cluster/intel-gpu";
+import { Jellyfin } from "./jellyfin";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -201,13 +202,31 @@ function setup() {
         provider: namespaced("mc")
     });
 
+    // All media goes in one namespace because otherwise they can not share the
+    // NodePV
+    const mediaProvider = namespaced("media");
+    const mediaPv = new NodePV('media-pv', {
+        path: "/srv/share/I/Media",
+        node: cluster.nodes.AetfArchHomelab,
+        capacity: "10Ti",
+        accessModes: [ "ReadOnlyMany" ]
+    }, { provider: mediaProvider });
+
     // transmission bt with openvpn
+    /*
     const bt = new Bt("bt", {
         serving,
         host: 'bt.unlimited-code.works',
-    }, {
-        provider: namespaced("bt"),
-    });
+        pvc: mediaPv.pvc,
+    }, { provider: mediaProvider, });
+    */
+
+    // media serving using jellyfin
+    const jellyfin = new Jellyfin("jellyfin", {
+        serving,
+        externalIP: "192.168.70.85",
+        pvc: mediaPv.pvc,
+    }, { provider: mediaProvider });
 }
 
 setup();

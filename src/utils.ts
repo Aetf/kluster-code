@@ -258,12 +258,18 @@ export class SealedSecret extends crds.bitnami.v1alpha1.SealedSecret {
 
     public mount(destPath: pulumi.Input<string>, srcPath?: pulumi.Input<string>): pulumi.Output<kx.types.VolumeMount> {
         return pulumi.all([this.metadata, destPath, srcPath]).apply(([md, destPath, srcPath]) => {
+            let secret: k8s.types.input.core.v1.SecretVolumeSource = {
+                secretName: md.name!,
+                // force the mode setting
+                defaultMode: 0o600,
+            };
+            if (srcPath != null) {
+                secret.items = [{ key: srcPath, path: srcPath, mode: 0o600 }];
+            }
             return {
                 volume: {
                     name: md.name!,
-                    secret: {
-                        secretName: md.name!,
-                    },
+                    secret,
                 },
                 destPath,
                 srcPath,

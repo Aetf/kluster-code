@@ -13,7 +13,8 @@ export const ClusterIssuerCRD = "apiextensions.k8s.io/v1/CustomResourceDefinitio
 export const SealedSecretCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::sealedsecrets.bitnami.com";
 
 const NODE_NAMES = [
-    "AetfArchVPS"
+    "AetfArchVPS",
+    "AetfArchHomelab",
 ] as const;
 export type Nodes = Record<typeof NODE_NAMES[number], string>;
 

@@ -13,7 +13,9 @@ interface NodePVArgs {
 }
 
 /**
- * A static PV with matching PVC that is bond to a specific node host path
+ * A static PV with matching PVC that is bond to a specific node host path.
+ * Note that PV to PVC bound is 1:1, but a PVC can be mounted by multiple
+ * pods depending on access mode.
  */
 export class NodePV extends pulumi.ComponentResource<NodePVArgs> {
     public pvc: kx.PersistentVolumeClaim;
