@@ -206,7 +206,7 @@ function setup() {
     // NodePV
     const mediaProvider = namespaced("media");
     const mediaPv = new NodePV('media-pv', {
-        path: "/srv/share/I/Media",
+        path: "/mnt/nas/Media",
         node: cluster.nodes.AetfArchHomelab,
         capacity: "10Ti",
         accessModes: [ "ReadOnlyMany" ]
