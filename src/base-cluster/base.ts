@@ -59,7 +59,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.sealedSecret = new HelmChart("sealed-secrets-controller", {
             namespace,
             chart: "sealed-secrets",
-            version: "2.6.1",
+            version: "2.7.2",
             fetchOpts: {
                 repo: "https://bitnami-labs.github.io/sealed-secrets"
             }
@@ -107,7 +107,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.reloader = new HelmChart("reloader", {
             namespace,
             chart: "reloader",
-            version: "0.0.118",
+            version: "0.0.129",
             fetchOpts: {
                 repo: "https://stakater.github.io/stakater-charts"
             },
