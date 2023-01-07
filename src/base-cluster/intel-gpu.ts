@@ -32,7 +32,7 @@ export class IntelDevicePlugins extends pulumi.ComponentResource<IntelDevicePlug
                         name: "intel.gpu",
                         labels: { "intel.feature.node.kubernetes.io/gpu": "true" },
                         matchFeatures: [
-                            { feature: "pci.device", matchExpressions: { vendor: { op: "In", value: ["8086"], class: { op: "In", value: ["0300", "0380"] } } } },
+                            { feature: "pci.device", matchExpressions: { vendor: { op: "In", value: ["8086"] }, class: { op: "In", value: ["0300", "0380"] } } },
                             { feature: "kernel.loadedmodule", matchExpressions: { i915: { op: "Exists" } } },
                         ]
                     }

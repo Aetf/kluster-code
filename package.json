@@ -5,8 +5,8 @@
     },
     "devDependencies": {
         "@types/lodash": "^4.14.173",
-        "@types/node": "^16.9.6",
-        "tsconfig-paths": "^3.11.0"
+        "@types/node": "^18.1.18",
+        "tsconfig-paths": "^4.1.2"
     },
     "dependencies": {
         "@pulumi/kubernetes": "^3.7.2",

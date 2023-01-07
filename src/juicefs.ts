@@ -48,7 +48,7 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
         this.chart = new HelmChart(name, {
             namespace: args.namespace,
             chart: 'juicefs-csi-driver',
-            version: "0.13.0",
+            version: "0.13.5",
             fetchOpts: {
                 repo: "https://juicedata.github.io/charts/",
             },
@@ -63,6 +63,7 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                 ],
                 // change the controller and node plugin reousrce limits, the default is too high
                 controller: {
+                    provisioner: true,
                     resources: {
                         limits: {
                             cpu: '250m',
@@ -105,6 +106,7 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                     "juicefs/mount-memory-limit": "128Mi",
                     "juicefs/mount-cpu-request": "50m",
                     "juicefs/mount-memory-request": "64Mi",
+                    "pathPattern": "${.PVC.namespace}-${.PVC.name}",
                 },
                 mountOptions: [
                     "enable-xattr",
@@ -112,6 +114,7 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                     "writeback", // async upload to cloud
                     "free-space-ratio=0.1",
                     "cache-dir=/mnt/storage/jfs-cache",
+                    "put-timeout=3600", // allow more time to upload
                 ]
             }, { parent: this });
         });
