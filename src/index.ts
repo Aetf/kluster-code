@@ -17,6 +17,7 @@ import { Bt } from "./bt";
 import { Prometheus } from "./mon";
 import { IntelDevicePlugins } from "./base-cluster/intel-gpu";
 import { Jellyfin } from "./jellyfin";
+import { Shoko } from "./shoko";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -227,6 +228,10 @@ function setup() {
         externalIPs: ["192.168.70.85", "10.144.180.10"],
         pvc: mediaPv.pvc,
     }, { provider: mediaProvider });
+
+    const shoko = new Shoko("shoko", {
+        serving,
+        externalIPs: ["10.144.180.10"],
         pvc: mediaPv.pvc,
     }, { provider: mediaProvider });
 }
