@@ -10,7 +10,7 @@ import { Serving } from "#src/serving";
 
 interface JellyfinArgs {
     serving: Serving,
-    externalIP: string,
+    externalIPs: string[],
     pvc: pulumi.Input<kx.PersistentVolumeClaim>,
 }
 
@@ -48,7 +48,7 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
                     {
                         image: 'docker.io/jellyfin/jellyfin:latest',
                         env: {
-                            'JELLYFIN_PublishedServerUrl': args.externalIP,
+                            'JELLYFIN_PublishedServerUrl': args.externalIPs[0],
                             // cache dir defaults to /config/cache, but we want it
                             // separate
                             'JELLYFIN_CACHE_DIR': '/cache'
@@ -95,7 +95,7 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
                     name,
                 },
                 spec: {
-                    externalIPs: [args.externalIP],
+                    externalIPs: args.externalIPs,
                 },
             });
         });
