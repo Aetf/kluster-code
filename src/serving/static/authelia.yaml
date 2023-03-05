@@ -95,13 +95,17 @@ access_control:
   rules:
   - domain:
     - "k8s.<%= domain %>"
+    - "mon.<%= domain %>"
     subject: "group:admins"
     policy: one_factor
+
   - domain:
     - "bt.<%= domain %>"
     policy: one_factor
+
   - domain:
-    - "mon.<%= domain %>"
+    - "dav.<%= domain %>"
+    subject: "user:webdav"
     policy: one_factor
   # rules:
   # - domain: public.example.com

@@ -18,6 +18,7 @@ import { Prometheus } from "./mon";
 import { IntelDevicePlugins } from "./base-cluster/intel-gpu";
 import { Jellyfin } from "./jellyfin";
 import { Shoko } from "./shoko";
+import { Dufs } from "./dav";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -159,6 +160,13 @@ function setup() {
         provider: namespaced("nginx"),
     });
 
+    const webdav = new Dufs("dav", {
+        serving,
+        host: 'dav.unlimited-code.works',
+    }, {
+        provider: namespaced("dav")
+    });
+
     // nextcloud
     /* const nextcloud = new Nextcloud("nextcloud", {
         serving,
@@ -210,7 +218,7 @@ function setup() {
         path: "/mnt/nas/Media",
         node: cluster.nodes.AetfArchHomelab,
         capacity: "10Ti",
-        accessModes: [ "ReadOnlyMany" ]
+        accessModes: ["ReadOnlyMany"]
     }, { provider: mediaProvider });
 
     // transmission bt with openvpn

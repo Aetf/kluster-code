@@ -99,9 +99,7 @@ Note that the trailing slash is important.
     * should be supported out of box
     * need testing
 - - [ ] use Ed25519 for dkim key
-- - [ ] replace nextcloud with [dave](https://github.com/micromata/dave)
-    * dave also supports config hot reload
-    * the reload only works for a few section, and noteably doesn't include TLS certificates
+- - [x] replace nextcloud with [dufs](https://github.com/sigoden/dufs)
     * protect this with http basic auth, using authelia, see https://github.com/authelia/authelia/pull/1563
 - - [ ] renew leaf certificates when the ca cert is renewed
     * currently this has be done manually: `k cert-manager renew -A -l 'unlimited-code.works/cert-type=backend'`
