@@ -33,6 +33,7 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
 
     public readonly ready: pulumi.Output<pulumi.CustomResource[]>;
     public readonly middlewareAuth: Middleware;
+    public readonly middlewareAuthBasic: Middleware;
 
     constructor(name: string, args: ServingArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:Serving', name, args, opts);
@@ -54,6 +55,7 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
             smtpPort: args.smtpPort,
         }, { parent: this, dependsOn: traefik.chart.ready });
         this.middlewareAuth = authelia.middlewareAuth;
+        this.middlewareAuthBasic = authelia.middlewareAuthBasic;
 
         this.certificates = args.certificates.map(cert => {
             return args.base.createFrontendCertificate(cert.main, cert, { parent: this });
@@ -70,16 +72,19 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
 
     public createFrontendService(
         name: string,
-        args: FrontendServiceArgs & { enableAuth?: boolean },
+        args: FrontendServiceArgs & { enableAuth?: boolean, enableBasicAuth?: boolean },
         opts?: Omit<pulumi.ComponentResourceOptions, 'parent'>
     ): FrontendService {
         const enableAuth = args.enableAuth ?? false;
+        const enableBasicAuth = args.enableBasicAuth ?? false;
         _.unset(args, 'enableAuth');
+        _.unset(args, 'enableBasicAuth');
         return new FrontendService(name, {
             ...args,
             middlewares: pulumi.output(args.middlewares)
                 .apply(ms => [
                     ...(enableAuth ?? false) ? [this.middlewareAuth] : [],
+                    ...(enableBasicAuth ?? false) ? [this.middlewareAuthBasic] : [],
                     ...ms ?? [],
                 ])
         }, {

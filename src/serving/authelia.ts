@@ -24,6 +24,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
     public readonly service: kx.Service;
     public readonly certificate: BackendCertificate;
     public readonly middlewareAuth: Middleware;
+    public readonly middlewareAuthBasic: Middleware;
 
     constructor(name: string, args: AutheliaArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:Authelia', name, args, opts);
@@ -77,10 +78,32 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             fullUrl.searchParams.append('rd', loginUrl);
             return fullUrl.href;
         });
+        const urlBasic = pulumi.all([urlFromService(this.service, 'https')]).apply(([url]) => {
+            const fullUrl = new URL(url);
+            fullUrl.pathname = '/api/verify';
+            fullUrl.searchParams.append('auth', 'basic');
+            return fullUrl.href;
+        });
         this.middlewareAuth = new Middleware('auth', {
-            // TODO: authelia currently can't see client real IP
             forwardAuth: {
                 address: url,
+                // this is safe because traefik sanitize all forwarded header
+                // before handling req to middlewares
+                trustForwardHeader: true,
+                authResponseHeaders: [
+                    "Remote-User",
+                    "Remote-Name",
+                    "Remote-Email",
+                    "Remote-Groups",
+                ],
+                tls: {
+                    caSecret: "cert-svc-authelia"
+                }
+            }
+        }, { parent: this });
+        this.middlewareAuthBasic = new Middleware('auth-basic', {
+            forwardAuth: {
+                address: urlBasic,
                 // this is safe because traefik sanitize all forwarded header
                 // before handling req to middlewares
                 trustForwardHeader: true,
