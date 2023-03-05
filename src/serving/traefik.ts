@@ -45,6 +45,13 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     },
                     kubernetesIngress: {
                         enabled: true,
+                        // Use publishedService once traefik/traefik#7972 is
+                        // fixed.
+                        /*
+                        publishedService: {
+                            enabled: true
+                        }
+                        */
                     }
                 },
                 service: {
@@ -96,7 +103,8 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     // see https://github.com/traefik/traefik/pull/8261
                     // see https://doc.traefik.io/traefik/migration/v2/#k8s-externalname-service
                     "--providers.kubernetescrd.allowexternalnameservices=true",
-                    "--providers.kubernetesingress.allowexternalnameservices=true"
+                    "--providers.kubernetesingress.allowexternalnameservices=true",
+                    pulumi.interpolate`--providers.kubernetesingress.ingressendpoint.ip=${args.externalIPs[0]}`,
                 ],
                 logs: {
                     general: {
