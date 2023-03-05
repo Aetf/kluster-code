@@ -91,10 +91,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                     "Remote-Groups",
                 ],
                 tls: {
-                    // remove this and use caSecret once
-                    // PR#7789 hits release in traefik
-                    //caSecret: cert-svc-authelia
-                    insecureSkipVerify: true
+                    caSecret: "cert-svc-authelia"
                 }
             }
         }, { parent: this });
