@@ -61,6 +61,10 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
             },
             values: {
                 resources: {
+                    limits: {
+                        memory: "12Gi",
+                        cpu: "2",
+                    },
                     requests: {
                         memory: "8Gi",
                         cpu: "2",

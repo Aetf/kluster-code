@@ -65,10 +65,6 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                 controller: {
                     provisioner: true,
                     resources: {
-                        limits: {
-                            cpu: '250m',
-                            memory: '256Mi',
-                        },
                         requests: {
                             cpu: '25m',
                             memory: '128Mi',
@@ -77,13 +73,9 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                 },
                 node: {
                     resources: {
-                        limits: {
-                            cpu: '500m',
-                            memory: '1.25Gi',
-                        },
                         requests: {
                             cpu: '256m',
-                            memory: '256Mi',
+                            memory: '1Gi',
                         }
                     }
                 }
