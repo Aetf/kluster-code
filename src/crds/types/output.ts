@@ -1421,6 +1421,83 @@ export namespace acme {
 
 export namespace bitnami {
     export namespace v1alpha1 {
+        /**
+         * SealedSecretSpec is the specification of a SealedSecret
+         */
+        export interface SealedSecretSpec {
+            /**
+             * Data is deprecated and will be removed eventually. Use per-value EncryptedData instead.
+             */
+            data?: string;
+            encryptedData: {[key: string]: any};
+            /**
+             * Template defines the structure of the Secret that will be created from this sealed secret.
+             */
+            template?: outputs.bitnami.v1alpha1.SealedSecretSpecTemplate;
+        }
+
+        /**
+         * Template defines the structure of the Secret that will be created from this sealed secret.
+         */
+        export interface SealedSecretSpecTemplate {
+            /**
+             * Keys that should be templated using decrypted data
+             */
+            data?: {[key: string]: string};
+            /**
+             * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+             */
+            metadata?: {[key: string]: any};
+            /**
+             * Used to facilitate programmatic handling of secret data.
+             */
+            type?: string;
+        }
+
+        /**
+         * SealedSecretStatus is the most recently observed status of the SealedSecret.
+         */
+        export interface SealedSecretStatus {
+            /**
+             * Represents the latest available observations of a sealed secret's current state.
+             */
+            conditions?: outputs.bitnami.v1alpha1.SealedSecretStatusConditions[];
+            /**
+             * ObservedGeneration reflects the generation most recently observed by the sealed-secrets controller.
+             */
+            observedGeneration?: number;
+        }
+
+        /**
+         * SealedSecretCondition describes the state of a sealed secret at a certain point.
+         */
+        export interface SealedSecretStatusConditions {
+            /**
+             * Last time the condition transitioned from one status to another.
+             */
+            lastTransitionTime?: string;
+            /**
+             * The last time this condition was updated.
+             */
+            lastUpdateTime?: string;
+            /**
+             * A human readable message indicating details about the transition.
+             */
+            message?: string;
+            /**
+             * The reason for the condition's last transition.
+             */
+            reason?: string;
+            /**
+             * Status of the condition for a sealed secret. Valid values for "Synced": "True", "False", or "Unknown".
+             */
+            status: string;
+            /**
+             * Type of condition for a sealed secret. Valid value: "Synced"
+             */
+            type: string;
+        }
+
     }
 }
 
@@ -5072,6 +5149,634 @@ export namespace certmanager {
     }
 }
 
+export namespace deviceplugin {
+    export namespace v1 {
+        /**
+         * DlbDevicePluginSpec defines the desired state of DlbDevicePlugin.
+         */
+        export interface DlbDevicePluginSpec {
+            /**
+             * Image is a container image with DLB device plugin executable.
+             */
+            image?: string;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: number;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: {[key: string]: string};
+        }
+
+        /**
+         * DlbDevicePluginStatus defines the observed state of DlbDevicePlugin.
+         */
+        export interface DlbDevicePluginStatus {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: outputs.deviceplugin.v1.DlbDevicePluginStatusControlleddaemonset;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: number;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: string[];
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: number;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface DlbDevicePluginStatusControlleddaemonset {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: string;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: string;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: string;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: string;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: string;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: string;
+        }
+
+        /**
+         * DsaDevicePluginSpec defines the desired state of DsaDevicePlugin.
+         */
+        export interface DsaDevicePluginSpec {
+            /**
+             * Image is a container image with DSA device plugin executable.
+             */
+            image?: string;
+            /**
+             * InitImage is an initcontainer image to configure and enable DSA devices and workqueues with idxd-config (accel-config) utility
+             */
+            initImage?: string;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: number;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: {[key: string]: string};
+            /**
+             * ProvisioningConfig is a ConfigMap used to pass the DSA devices and workqueues configuration into idxd-config initcontainer.
+             */
+            provisioningConfig?: string;
+            /**
+             * SharedDevNum is a number of containers that can share the same DSA device.
+             */
+            sharedDevNum?: number;
+        }
+
+        /**
+         * DsaDevicePluginStatus defines the observed state of DsaDevicePlugin.
+         */
+        export interface DsaDevicePluginStatus {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: outputs.deviceplugin.v1.DsaDevicePluginStatusControlleddaemonset;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: number;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: string[];
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: number;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface DsaDevicePluginStatusControlleddaemonset {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: string;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: string;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: string;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: string;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: string;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: string;
+        }
+
+        /**
+         * FpgaDevicePluginSpec defines the desired state of FpgaDevicePlugin.
+         */
+        export interface FpgaDevicePluginSpec {
+            /**
+             * Image is a container image with FPGA device plugin executable.
+             */
+            image?: string;
+            /**
+             * InitImage is a container image with tools used to initialize the host before starting FPGA workloads on it.
+             */
+            initImage?: string;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: number;
+            /**
+             * Mode is a mode of the plugin's operation.
+             */
+            mode?: string;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: {[key: string]: string};
+        }
+
+        /**
+         * FpgaDevicePluginStatus defines the observed state of FpgaDevicePlugin.
+         */
+        export interface FpgaDevicePluginStatus {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: outputs.deviceplugin.v1.FpgaDevicePluginStatusControlleddaemonset;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: number;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: string[];
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: number;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface FpgaDevicePluginStatusControlleddaemonset {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: string;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: string;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: string;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: string;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: string;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: string;
+        }
+
+        /**
+         * GpuDevicePluginSpec defines the desired state of GpuDevicePlugin.
+         */
+        export interface GpuDevicePluginSpec {
+            /**
+             * EnableMonitoring enables the monitoring resource ('i915_monitoring') which gives access to all GPU devices on given node.
+             */
+            enableMonitoring?: boolean;
+            /**
+             * Image is a container image with GPU device plugin executable.
+             */
+            image?: string;
+            /**
+             * InitImage is a container image with tools (e.g., GPU NFD source hook) installed on each node.
+             */
+            initImage?: string;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: number;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: {[key: string]: string};
+            /**
+             * PreferredAllocationPolicy sets the mode of allocating GPU devices on a node. See documentation for detailed description of the policies. Only valid when SharedDevNum > 1 is set.
+             */
+            preferredAllocationPolicy?: string;
+            /**
+             * ResourceManager handles the fractional resource management for multi-GPU nodes
+             */
+            resourceManager?: boolean;
+            /**
+             * SharedDevNum is a number of containers that can share the same GPU device.
+             */
+            sharedDevNum?: number;
+        }
+
+        /**
+         * GpuDevicePluginStatus defines the observed state of GpuDevicePlugin. TODO(rojkov): consider code deduplication with QatDevicePluginStatus.
+         */
+        export interface GpuDevicePluginStatus {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: outputs.deviceplugin.v1.GpuDevicePluginStatusControlleddaemonset;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: number;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: string[];
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: number;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface GpuDevicePluginStatusControlleddaemonset {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: string;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: string;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: string;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: string;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: string;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: string;
+        }
+
+        /**
+         * IaaDevicePluginSpec defines the desired state of IaaDevicePlugin.
+         */
+        export interface IaaDevicePluginSpec {
+            /**
+             * Image is a container image with IAA device plugin executable.
+             */
+            image?: string;
+            /**
+             * InitImage is an initcontainer image to configure and enable IAA devices and workqueues with accel-config utility
+             */
+            initImage?: string;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: number;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: {[key: string]: string};
+            /**
+             * ProvisioningConfig is a ConfigMap used to pass the IAA configuration into idxd initcontainer.
+             */
+            provisioningConfig?: string;
+            /**
+             * SharedDevNum is a number of containers that can share the same IAA device.
+             */
+            sharedDevNum?: number;
+        }
+
+        /**
+         * IaaDevicePluginStatus defines the observed state of IaaDevicePlugin.
+         */
+        export interface IaaDevicePluginStatus {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: outputs.deviceplugin.v1.IaaDevicePluginStatusControlleddaemonset;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: number;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: string[];
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: number;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface IaaDevicePluginStatusControlleddaemonset {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: string;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: string;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: string;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: string;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: string;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: string;
+        }
+
+        /**
+         * QatDevicePluginSpec defines the desired state of QatDevicePlugin.
+         */
+        export interface QatDevicePluginSpec {
+            /**
+             * DpdkDriver is a DPDK device driver for configuring the QAT device.
+             */
+            dpdkDriver?: string;
+            /**
+             * Image is a container image with QAT device plugin executable.
+             */
+            image?: string;
+            /**
+             * InitImage is a container image with a script that initialize devices.
+             */
+            initImage?: string;
+            /**
+             * KernelVfDrivers is a list of VF device drivers for the QuickAssist devices in the system.
+             */
+            kernelVfDrivers?: string[];
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: number;
+            /**
+             * MaxNumDevices is a maximum number of QAT devices to be provided to the QuickAssist device plugin
+             */
+            maxNumDevices?: number;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: {[key: string]: string};
+            /**
+             * PreferredAllocationPolicy sets the mode of allocating QAT devices on a node. See documentation for detailed description of the policies.
+             */
+            preferredAllocationPolicy?: string;
+        }
+
+        /**
+         * QatDevicePluginStatus defines the observed state of QatDevicePlugin. TODO(rojkov): consider code deduplication with GpuDevicePluginStatus.
+         */
+        export interface QatDevicePluginStatus {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: outputs.deviceplugin.v1.QatDevicePluginStatusControlleddaemonset;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: number;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: string[];
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: number;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface QatDevicePluginStatusControlleddaemonset {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: string;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: string;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: string;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: string;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: string;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: string;
+        }
+
+        /**
+         * SgxDevicePluginSpec defines the desired state of SgxDevicePlugin.
+         */
+        export interface SgxDevicePluginSpec {
+            /**
+             * EnclaveLimit is a number of containers that can share the same SGX enclave device.
+             */
+            enclaveLimit?: number;
+            /**
+             * Image is a container image with SGX device plugin executable.
+             */
+            image?: string;
+            /**
+             * InitImage is a container image with tools (e.g., SGX NFD source hook) installed on each node.
+             */
+            initImage?: string;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: number;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: {[key: string]: string};
+            /**
+             * ProvisionLimit is a number of containers that can share the same SGX provision device.
+             */
+            provisionLimit?: number;
+        }
+
+        /**
+         * SgxDevicePluginStatus defines the observed state of SgxDevicePlugin.
+         */
+        export interface SgxDevicePluginStatus {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: outputs.deviceplugin.v1.SgxDevicePluginStatusControlleddaemonset;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: number;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: string[];
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: number;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface SgxDevicePluginStatusControlleddaemonset {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: string;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: string;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: string;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: string;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: string;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: string;
+        }
+
+    }
+}
+
+export namespace fpga {
+    export namespace v2 {
+        /**
+         * AcceleratorFunctionSpec contains actual specs for AcceleratorFunction.
+         */
+        export interface AcceleratorFunctionSpec {
+            afuId: string;
+            interfaceId: string;
+            mode: string;
+        }
+
+        /**
+         * FpgaRegionSpec contains actual specs for FpgaRegion.
+         */
+        export interface FpgaRegionSpec {
+            interfaceId: string;
+        }
+
+    }
+}
+
 export namespace helm {
     export namespace v1 {
     }
@@ -5200,7 +5905,7 @@ export namespace traefik {
          */
         export interface IngressRouteSpec {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
              */
             entryPoints?: string[];
             /**
@@ -5208,7 +5913,7 @@ export namespace traefik {
              */
             routes: outputs.traefik.v1alpha1.IngressRouteSpecRoutes[];
             /**
-             * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#tls
+             * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls
              */
             tls?: outputs.traefik.v1alpha1.IngressRouteSpecTls;
         }
@@ -5222,15 +5927,15 @@ export namespace traefik {
              */
             kind: string;
             /**
-             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#rule
+             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#rule
              */
             match: string;
             /**
-             * Middlewares defines the list of references to Middleware resources. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-middleware
+             * Middlewares defines the list of references to Middleware resources. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-middleware
              */
             middlewares?: outputs.traefik.v1alpha1.IngressRouteSpecRoutesMiddlewares[];
             /**
-             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#priority
+             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#priority
              */
             priority?: number;
             /**
@@ -5290,7 +5995,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.IngressRouteSpecRoutesServicesSticky;
             /**
@@ -5314,7 +6019,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface IngressRouteSpecRoutesServicesSticky {
             /**
@@ -5346,19 +6051,19 @@ export namespace traefik {
         }
 
         /**
-         * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#tls
+         * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls
          */
         export interface IngressRouteSpecTls {
             /**
-             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/https/acme/#certificate-resolvers
+             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/https/acme/#certificate-resolvers
              */
             certResolver?: string;
             /**
-             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#domains
+             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#domains
              */
             domains?: outputs.traefik.v1alpha1.IngressRouteSpecTlsDomains[];
             /**
-             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#tls-options
+             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
              */
             options?: outputs.traefik.v1alpha1.IngressRouteSpecTlsOptions;
             /**
@@ -5386,15 +6091,15 @@ export namespace traefik {
         }
 
         /**
-         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#tls-options
+         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
          */
         export interface IngressRouteSpecTlsOptions {
             /**
-             * Name defines the name of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-tlsoption
+             * Name defines the name of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsoption
              */
             name: string;
             /**
-             * Namespace defines the namespace of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-tlsoption
+             * Namespace defines the namespace of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsoption
              */
             namespace?: string;
         }
@@ -5404,11 +6109,11 @@ export namespace traefik {
          */
         export interface IngressRouteSpecTlsStore {
             /**
-             * Name defines the name of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-tlsstore
+             * Name defines the name of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsstore
              */
             name: string;
             /**
-             * Namespace defines the namespace of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-tlsstore
+             * Namespace defines the namespace of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsstore
              */
             namespace?: string;
         }
@@ -5418,7 +6123,7 @@ export namespace traefik {
          */
         export interface IngressRouteTCPSpec {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
              */
             entryPoints?: string[];
             /**
@@ -5426,7 +6131,7 @@ export namespace traefik {
              */
             routes: outputs.traefik.v1alpha1.IngressRouteTCPSpecRoutes[];
             /**
-             * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#tls_1
+             * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls_1
              */
             tls?: outputs.traefik.v1alpha1.IngressRouteTCPSpecTls;
         }
@@ -5436,7 +6141,7 @@ export namespace traefik {
          */
         export interface IngressRouteTCPSpecRoutes {
             /**
-             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#rule_1
+             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#rule_1
              */
             match: string;
             /**
@@ -5444,7 +6149,7 @@ export namespace traefik {
              */
             middlewares?: outputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesMiddlewares[];
             /**
-             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#priority_1
+             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#priority_1
              */
             priority?: number;
             /**
@@ -5484,7 +6189,7 @@ export namespace traefik {
              */
             port: number | string;
             /**
-             * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#proxy-protocol
+             * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#proxy-protocol
              */
             proxyProtocol?: outputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesServicesProxyprotocol;
             /**
@@ -5498,7 +6203,7 @@ export namespace traefik {
         }
 
         /**
-         * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#proxy-protocol
+         * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#proxy-protocol
          */
         export interface IngressRouteTCPSpecRoutesServicesProxyprotocol {
             /**
@@ -5508,19 +6213,19 @@ export namespace traefik {
         }
 
         /**
-         * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#tls_1
+         * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls_1
          */
         export interface IngressRouteTCPSpecTls {
             /**
-             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/https/acme/#certificate-resolvers
+             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/https/acme/#certificate-resolvers
              */
             certResolver?: string;
             /**
-             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#domains
+             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#domains
              */
             domains?: outputs.traefik.v1alpha1.IngressRouteTCPSpecTlsDomains[];
             /**
-             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#tls-options
+             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
              */
             options?: outputs.traefik.v1alpha1.IngressRouteTCPSpecTlsOptions;
             /**
@@ -5552,7 +6257,7 @@ export namespace traefik {
         }
 
         /**
-         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#tls-options
+         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
          */
         export interface IngressRouteTCPSpecTlsOptions {
             /**
@@ -5584,7 +6289,7 @@ export namespace traefik {
          */
         export interface IngressRouteUDPSpec {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
              */
             entryPoints?: string[];
             /**
@@ -5630,19 +6335,19 @@ export namespace traefik {
          */
         export interface MiddlewareSpec {
             /**
-             * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/addprefix/
+             * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/addprefix/
              */
             addPrefix?: outputs.traefik.v1alpha1.MiddlewareSpecAddprefix;
             /**
-             * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/basicauth/
+             * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/
              */
             basicAuth?: outputs.traefik.v1alpha1.MiddlewareSpecBasicauth;
             /**
-             * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/buffering/#maxrequestbodybytes
+             * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#maxrequestbodybytes
              */
             buffering?: outputs.traefik.v1alpha1.MiddlewareSpecBuffering;
             /**
-             * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/chain/
+             * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/chain/
              */
             chain?: outputs.traefik.v1alpha1.MiddlewareSpecChain;
             /**
@@ -5650,7 +6355,7 @@ export namespace traefik {
              */
             circuitBreaker?: outputs.traefik.v1alpha1.MiddlewareSpecCircuitbreaker;
             /**
-             * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/compress/
+             * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/compress/
              */
             compress?: outputs.traefik.v1alpha1.MiddlewareSpecCompress;
             /**
@@ -5658,31 +6363,31 @@ export namespace traefik {
              */
             contentType?: outputs.traefik.v1alpha1.MiddlewareSpecContenttype;
             /**
-             * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/digestauth/
+             * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/digestauth/
              */
             digestAuth?: outputs.traefik.v1alpha1.MiddlewareSpecDigestauth;
             /**
-             * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/errorpages/
+             * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/
              */
             errors?: outputs.traefik.v1alpha1.MiddlewareSpecErrors;
             /**
-             * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/forwardauth/
+             * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/
              */
             forwardAuth?: outputs.traefik.v1alpha1.MiddlewareSpecForwardauth;
             /**
-             * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/headers/#customrequestheaders
+             * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/headers/#customrequestheaders
              */
             headers?: outputs.traefik.v1alpha1.MiddlewareSpecHeaders;
             /**
-             * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/inflightreq/
+             * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/
              */
             inFlightReq?: outputs.traefik.v1alpha1.MiddlewareSpecInflightreq;
             /**
-             * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/
+             * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/
              */
             ipWhiteList?: outputs.traefik.v1alpha1.MiddlewareSpecIpwhitelist;
             /**
-             * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/passtlsclientcert/
+             * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/passtlsclientcert/
              */
             passTLSClientCert?: outputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcert;
             /**
@@ -5690,41 +6395,41 @@ export namespace traefik {
              */
             plugin?: {[key: string]: {[key: string]: any}};
             /**
-             * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ratelimit/
+             * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ratelimit/
              */
             rateLimit?: outputs.traefik.v1alpha1.MiddlewareSpecRatelimit;
             /**
-             * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/redirectregex/#regex
+             * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectregex/#regex
              */
             redirectRegex?: outputs.traefik.v1alpha1.MiddlewareSpecRedirectregex;
             /**
-             * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/redirectscheme/
+             * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectscheme/
              */
             redirectScheme?: outputs.traefik.v1alpha1.MiddlewareSpecRedirectscheme;
             /**
-             * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/replacepath/
+             * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepath/
              */
             replacePath?: outputs.traefik.v1alpha1.MiddlewareSpecReplacepath;
             /**
-             * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/replacepathregex/
+             * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepathregex/
              */
             replacePathRegex?: outputs.traefik.v1alpha1.MiddlewareSpecReplacepathregex;
             /**
-             * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/retry/
+             * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/retry/
              */
             retry?: outputs.traefik.v1alpha1.MiddlewareSpecRetry;
             /**
-             * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/stripprefix/
+             * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefix/
              */
             stripPrefix?: outputs.traefik.v1alpha1.MiddlewareSpecStripprefix;
             /**
-             * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/stripprefixregex/
+             * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefixregex/
              */
             stripPrefixRegex?: outputs.traefik.v1alpha1.MiddlewareSpecStripprefixregex;
         }
 
         /**
-         * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/addprefix/
+         * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/addprefix/
          */
         export interface MiddlewareSpecAddprefix {
             /**
@@ -5734,11 +6439,11 @@ export namespace traefik {
         }
 
         /**
-         * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/basicauth/
+         * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/
          */
         export interface MiddlewareSpecBasicauth {
             /**
-             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/basicauth/#headerfield
+             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/#headerfield
              */
             headerField?: string;
             /**
@@ -5756,7 +6461,7 @@ export namespace traefik {
         }
 
         /**
-         * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/buffering/#maxrequestbodybytes
+         * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#maxrequestbodybytes
          */
         export interface MiddlewareSpecBuffering {
             /**
@@ -5776,13 +6481,13 @@ export namespace traefik {
              */
             memResponseBodyBytes?: number;
             /**
-             * RetryExpression defines the retry conditions. It is a logical combination of functions with operators AND (&&) and OR (||). More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/buffering/#retryexpression
+             * RetryExpression defines the retry conditions. It is a logical combination of functions with operators AND (&&) and OR (||). More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#retryexpression
              */
             retryExpression?: string;
         }
 
         /**
-         * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/chain/
+         * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/chain/
          */
         export interface MiddlewareSpecChain {
             /**
@@ -5828,7 +6533,7 @@ export namespace traefik {
         }
 
         /**
-         * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/compress/
+         * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/compress/
          */
         export interface MiddlewareSpecCompress {
             /**
@@ -5852,11 +6557,11 @@ export namespace traefik {
         }
 
         /**
-         * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/digestauth/
+         * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/digestauth/
          */
         export interface MiddlewareSpecDigestauth {
             /**
-             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/basicauth/#headerfield
+             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/#headerfield
              */
             headerField?: string;
             /**
@@ -5874,7 +6579,7 @@ export namespace traefik {
         }
 
         /**
-         * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/errorpages/
+         * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/
          */
         export interface MiddlewareSpecErrors {
             /**
@@ -5882,7 +6587,7 @@ export namespace traefik {
              */
             query?: string;
             /**
-             * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/errorpages/#service
+             * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/#service
              */
             service?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsService;
             /**
@@ -5892,7 +6597,7 @@ export namespace traefik {
         }
 
         /**
-         * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/errorpages/#service
+         * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/#service
          */
         export interface MiddlewareSpecErrorsService {
             /**
@@ -5928,7 +6633,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceSticky;
             /**
@@ -5952,7 +6657,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface MiddlewareSpecErrorsServiceSticky {
             /**
@@ -5984,7 +6689,7 @@ export namespace traefik {
         }
 
         /**
-         * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/forwardauth/
+         * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/
          */
         export interface MiddlewareSpecForwardauth {
             /**
@@ -6000,7 +6705,7 @@ export namespace traefik {
              */
             authResponseHeaders?: string[];
             /**
-             * AuthResponseHeadersRegex defines the regex to match headers to copy from the authentication server response and set on forwarded request, after stripping all headers that match the regex. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/forwardauth/#authresponseheadersregex
+             * AuthResponseHeadersRegex defines the regex to match headers to copy from the authentication server response and set on forwarded request, after stripping all headers that match the regex. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/#authresponseheadersregex
              */
             authResponseHeadersRegex?: string;
             /**
@@ -6033,7 +6738,7 @@ export namespace traefik {
         }
 
         /**
-         * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/headers/#customrequestheaders
+         * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/headers/#customrequestheaders
          */
         export interface MiddlewareSpecHeaders {
             /**
@@ -6167,7 +6872,7 @@ export namespace traefik {
         }
 
         /**
-         * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/inflightreq/
+         * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/
          */
         export interface MiddlewareSpecInflightreq {
             /**
@@ -6175,17 +6880,17 @@ export namespace traefik {
              */
             amount?: number;
             /**
-             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/inflightreq/#sourcecriterion
+             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/#sourcecriterion
              */
             sourceCriterion?: outputs.traefik.v1alpha1.MiddlewareSpecInflightreqSourcecriterion;
         }
 
         /**
-         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/inflightreq/#sourcecriterion
+         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/#sourcecriterion
          */
         export interface MiddlewareSpecInflightreqSourcecriterion {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
              */
             ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecInflightreqSourcecriterionIpstrategy;
             /**
@@ -6199,7 +6904,7 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
          */
         export interface MiddlewareSpecInflightreqSourcecriterionIpstrategy {
             /**
@@ -6213,11 +6918,11 @@ export namespace traefik {
         }
 
         /**
-         * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/
+         * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/
          */
         export interface MiddlewareSpecIpwhitelist {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
              */
             ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecIpwhitelistIpstrategy;
             /**
@@ -6227,7 +6932,7 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
          */
         export interface MiddlewareSpecIpwhitelistIpstrategy {
             /**
@@ -6241,7 +6946,7 @@ export namespace traefik {
         }
 
         /**
-         * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/passtlsclientcert/
+         * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/passtlsclientcert/
          */
         export interface MiddlewareSpecPasstlsclientcert {
             /**
@@ -6357,7 +7062,7 @@ export namespace traefik {
         }
 
         /**
-         * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ratelimit/
+         * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ratelimit/
          */
         export interface MiddlewareSpecRatelimit {
             /**
@@ -6383,7 +7088,7 @@ export namespace traefik {
          */
         export interface MiddlewareSpecRatelimitSourcecriterion {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
              */
             ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecRatelimitSourcecriterionIpstrategy;
             /**
@@ -6397,7 +7102,7 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
          */
         export interface MiddlewareSpecRatelimitSourcecriterionIpstrategy {
             /**
@@ -6411,7 +7116,7 @@ export namespace traefik {
         }
 
         /**
-         * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/redirectregex/#regex
+         * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectregex/#regex
          */
         export interface MiddlewareSpecRedirectregex {
             /**
@@ -6429,7 +7134,7 @@ export namespace traefik {
         }
 
         /**
-         * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/redirectscheme/
+         * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectscheme/
          */
         export interface MiddlewareSpecRedirectscheme {
             /**
@@ -6447,7 +7152,7 @@ export namespace traefik {
         }
 
         /**
-         * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/replacepath/
+         * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepath/
          */
         export interface MiddlewareSpecReplacepath {
             /**
@@ -6457,7 +7162,7 @@ export namespace traefik {
         }
 
         /**
-         * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/replacepathregex/
+         * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepathregex/
          */
         export interface MiddlewareSpecReplacepathregex {
             /**
@@ -6471,7 +7176,7 @@ export namespace traefik {
         }
 
         /**
-         * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/retry/
+         * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/retry/
          */
         export interface MiddlewareSpecRetry {
             /**
@@ -6485,7 +7190,7 @@ export namespace traefik {
         }
 
         /**
-         * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/stripprefix/
+         * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefix/
          */
         export interface MiddlewareSpecStripprefix {
             /**
@@ -6499,7 +7204,7 @@ export namespace traefik {
         }
 
         /**
-         * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/stripprefixregex/
+         * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefixregex/
          */
         export interface MiddlewareSpecStripprefixregex {
             /**
@@ -6611,11 +7316,11 @@ export namespace traefik {
          */
         export interface TLSOptionSpec {
             /**
-             * ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#alpn-protocols
+             * ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#alpn-protocols
              */
             alpnProtocols?: string[];
             /**
-             * CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#cipher-suites
+             * CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#cipher-suites
              */
             cipherSuites?: string[];
             /**
@@ -6623,7 +7328,7 @@ export namespace traefik {
              */
             clientAuth?: outputs.traefik.v1alpha1.TLSOptionSpecClientauth;
             /**
-             * CurvePreferences defines the preferred elliptic curves in a specific order. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#curve-preferences
+             * CurvePreferences defines the preferred elliptic curves in a specific order. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#curve-preferences
              */
             curvePreferences?: string[];
             /**
@@ -6635,7 +7340,7 @@ export namespace traefik {
              */
             minVersion?: string;
             /**
-             * PreferServerCipherSuites defines whether the server chooses a cipher suite among his own instead of among the client's. It is enabled automatically when minVersion or maxVersion are set.
+             * PreferServerCipherSuites defines whether the server chooses a cipher suite among his own instead of among the client's. It is enabled automatically when minVersion or maxVersion is set. Deprecated: https://github.com/golang/go/issues/45430
              */
             preferServerCipherSuites?: boolean;
             /**
@@ -6670,6 +7375,10 @@ export namespace traefik {
              * DefaultCertificate defines the default certificate configuration.
              */
             defaultCertificate?: outputs.traefik.v1alpha1.TLSStoreSpecDefaultcertificate;
+            /**
+             * DefaultGeneratedCert defines the default generated certificate configuration.
+             */
+            defaultGeneratedCert?: outputs.traefik.v1alpha1.TLSStoreSpecDefaultgeneratedcert;
         }
 
         /**
@@ -6690,6 +7399,34 @@ export namespace traefik {
              * SecretName is the name of the referenced Kubernetes Secret to specify the certificate details.
              */
             secretName: string;
+        }
+
+        /**
+         * DefaultGeneratedCert defines the default generated certificate configuration.
+         */
+        export interface TLSStoreSpecDefaultgeneratedcert {
+            /**
+             * Domain is the domain definition for the DefaultCertificate.
+             */
+            domain?: outputs.traefik.v1alpha1.TLSStoreSpecDefaultgeneratedcertDomain;
+            /**
+             * Resolver is the name of the resolver that will be used to issue the DefaultCertificate.
+             */
+            resolver?: string;
+        }
+
+        /**
+         * Domain is the domain definition for the DefaultCertificate.
+         */
+        export interface TLSStoreSpecDefaultgeneratedcertDomain {
+            /**
+             * Main defines the main domain name.
+             */
+            main?: string;
+            /**
+             * SANs defines the subject alternative domain names.
+             */
+            sans?: string[];
         }
 
         /**
@@ -6751,7 +7488,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.TraefikServiceSpecMirroringSticky;
             /**
@@ -6805,7 +7542,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.TraefikServiceSpecMirroringMirrorsSticky;
             /**
@@ -6829,7 +7566,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecMirroringMirrorsSticky {
             /**
@@ -6871,7 +7608,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecMirroringSticky {
             /**
@@ -6911,7 +7648,7 @@ export namespace traefik {
              */
             services?: outputs.traefik.v1alpha1.TraefikServiceSpecWeightedServices[];
             /**
-             * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
+             * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
              */
             sticky?: outputs.traefik.v1alpha1.TraefikServiceSpecWeightedSticky;
         }
@@ -6953,7 +7690,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesSticky;
             /**
@@ -6977,7 +7714,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecWeightedServicesSticky {
             /**
@@ -7009,7 +7746,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
+         * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
          */
         export interface TraefikServiceSpecWeightedSticky {
             /**

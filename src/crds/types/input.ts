@@ -1420,6 +1420,82 @@ export namespace acme {
 
 export namespace bitnami {
     export namespace v1alpha1 {
+        /**
+         * SealedSecretSpec is the specification of a SealedSecret
+         */
+        export interface SealedSecretSpecArgs {
+            /**
+             * Data is deprecated and will be removed eventually. Use per-value EncryptedData instead.
+             */
+            data?: pulumi.Input<string>;
+            encryptedData: pulumi.Input<{[key: string]: any}>;
+            /**
+             * Template defines the structure of the Secret that will be created from this sealed secret.
+             */
+            template?: pulumi.Input<inputs.bitnami.v1alpha1.SealedSecretSpecTemplateArgs>;
+        }
+
+        /**
+         * Template defines the structure of the Secret that will be created from this sealed secret.
+         */
+        export interface SealedSecretSpecTemplateArgs {
+            /**
+             * Keys that should be templated using decrypted data
+             */
+            data?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            /**
+             * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+             */
+            metadata?: pulumi.Input<{[key: string]: any}>;
+            /**
+             * Used to facilitate programmatic handling of secret data.
+             */
+            type?: pulumi.Input<string>;
+        }
+
+        /**
+         * SealedSecretStatus is the most recently observed status of the SealedSecret.
+         */
+        export interface SealedSecretStatusArgs {
+            /**
+             * Represents the latest available observations of a sealed secret's current state.
+             */
+            conditions?: pulumi.Input<pulumi.Input<inputs.bitnami.v1alpha1.SealedSecretStatusConditionsArgs>[]>;
+            /**
+             * ObservedGeneration reflects the generation most recently observed by the sealed-secrets controller.
+             */
+            observedGeneration?: pulumi.Input<number>;
+        }
+
+        /**
+         * SealedSecretCondition describes the state of a sealed secret at a certain point.
+         */
+        export interface SealedSecretStatusConditionsArgs {
+            /**
+             * Last time the condition transitioned from one status to another.
+             */
+            lastTransitionTime?: pulumi.Input<string>;
+            /**
+             * The last time this condition was updated.
+             */
+            lastUpdateTime?: pulumi.Input<string>;
+            /**
+             * A human readable message indicating details about the transition.
+             */
+            message?: pulumi.Input<string>;
+            /**
+             * The reason for the condition's last transition.
+             */
+            reason?: pulumi.Input<string>;
+            /**
+             * Status of the condition for a sealed secret. Valid values for "Synced": "True", "False", or "Unknown".
+             */
+            status: pulumi.Input<string>;
+            /**
+             * Type of condition for a sealed secret. Valid value: "Synced"
+             */
+            type: pulumi.Input<string>;
+        }
     }
 }
 
@@ -5070,6 +5146,633 @@ export namespace certmanager {
     }
 }
 
+export namespace deviceplugin {
+    export namespace v1 {
+        /**
+         * DlbDevicePluginSpec defines the desired state of DlbDevicePlugin.
+         */
+        export interface DlbDevicePluginSpecArgs {
+            /**
+             * Image is a container image with DLB device plugin executable.
+             */
+            image?: pulumi.Input<string>;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: pulumi.Input<number>;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+        }
+
+        /**
+         * DlbDevicePluginStatus defines the observed state of DlbDevicePlugin.
+         */
+        export interface DlbDevicePluginStatusArgs {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.DlbDevicePluginStatusControlleddaemonsetArgs>;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: pulumi.Input<number>;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: pulumi.Input<number>;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface DlbDevicePluginStatusControlleddaemonsetArgs {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: pulumi.Input<string>;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: pulumi.Input<string>;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: pulumi.Input<string>;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string>;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: pulumi.Input<string>;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: pulumi.Input<string>;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: pulumi.Input<string>;
+        }
+
+        /**
+         * DsaDevicePluginSpec defines the desired state of DsaDevicePlugin.
+         */
+        export interface DsaDevicePluginSpecArgs {
+            /**
+             * Image is a container image with DSA device plugin executable.
+             */
+            image?: pulumi.Input<string>;
+            /**
+             * InitImage is an initcontainer image to configure and enable DSA devices and workqueues with idxd-config (accel-config) utility
+             */
+            initImage?: pulumi.Input<string>;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: pulumi.Input<number>;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            /**
+             * ProvisioningConfig is a ConfigMap used to pass the DSA devices and workqueues configuration into idxd-config initcontainer.
+             */
+            provisioningConfig?: pulumi.Input<string>;
+            /**
+             * SharedDevNum is a number of containers that can share the same DSA device.
+             */
+            sharedDevNum?: pulumi.Input<number>;
+        }
+
+        /**
+         * DsaDevicePluginStatus defines the observed state of DsaDevicePlugin.
+         */
+        export interface DsaDevicePluginStatusArgs {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.DsaDevicePluginStatusControlleddaemonsetArgs>;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: pulumi.Input<number>;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: pulumi.Input<number>;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface DsaDevicePluginStatusControlleddaemonsetArgs {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: pulumi.Input<string>;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: pulumi.Input<string>;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: pulumi.Input<string>;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string>;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: pulumi.Input<string>;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: pulumi.Input<string>;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: pulumi.Input<string>;
+        }
+
+        /**
+         * FpgaDevicePluginSpec defines the desired state of FpgaDevicePlugin.
+         */
+        export interface FpgaDevicePluginSpecArgs {
+            /**
+             * Image is a container image with FPGA device plugin executable.
+             */
+            image?: pulumi.Input<string>;
+            /**
+             * InitImage is a container image with tools used to initialize the host before starting FPGA workloads on it.
+             */
+            initImage?: pulumi.Input<string>;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: pulumi.Input<number>;
+            /**
+             * Mode is a mode of the plugin's operation.
+             */
+            mode?: pulumi.Input<string>;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+        }
+
+        /**
+         * FpgaDevicePluginStatus defines the observed state of FpgaDevicePlugin.
+         */
+        export interface FpgaDevicePluginStatusArgs {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.FpgaDevicePluginStatusControlleddaemonsetArgs>;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: pulumi.Input<number>;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: pulumi.Input<number>;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface FpgaDevicePluginStatusControlleddaemonsetArgs {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: pulumi.Input<string>;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: pulumi.Input<string>;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: pulumi.Input<string>;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string>;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: pulumi.Input<string>;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: pulumi.Input<string>;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: pulumi.Input<string>;
+        }
+
+        /**
+         * GpuDevicePluginSpec defines the desired state of GpuDevicePlugin.
+         */
+        export interface GpuDevicePluginSpecArgs {
+            /**
+             * EnableMonitoring enables the monitoring resource ('i915_monitoring') which gives access to all GPU devices on given node.
+             */
+            enableMonitoring?: pulumi.Input<boolean>;
+            /**
+             * Image is a container image with GPU device plugin executable.
+             */
+            image?: pulumi.Input<string>;
+            /**
+             * InitImage is a container image with tools (e.g., GPU NFD source hook) installed on each node.
+             */
+            initImage?: pulumi.Input<string>;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: pulumi.Input<number>;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            /**
+             * PreferredAllocationPolicy sets the mode of allocating GPU devices on a node. See documentation for detailed description of the policies. Only valid when SharedDevNum > 1 is set.
+             */
+            preferredAllocationPolicy?: pulumi.Input<string>;
+            /**
+             * ResourceManager handles the fractional resource management for multi-GPU nodes
+             */
+            resourceManager?: pulumi.Input<boolean>;
+            /**
+             * SharedDevNum is a number of containers that can share the same GPU device.
+             */
+            sharedDevNum?: pulumi.Input<number>;
+        }
+
+        /**
+         * GpuDevicePluginStatus defines the observed state of GpuDevicePlugin. TODO(rojkov): consider code deduplication with QatDevicePluginStatus.
+         */
+        export interface GpuDevicePluginStatusArgs {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.GpuDevicePluginStatusControlleddaemonsetArgs>;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: pulumi.Input<number>;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: pulumi.Input<number>;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface GpuDevicePluginStatusControlleddaemonsetArgs {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: pulumi.Input<string>;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: pulumi.Input<string>;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: pulumi.Input<string>;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string>;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: pulumi.Input<string>;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: pulumi.Input<string>;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: pulumi.Input<string>;
+        }
+
+        /**
+         * IaaDevicePluginSpec defines the desired state of IaaDevicePlugin.
+         */
+        export interface IaaDevicePluginSpecArgs {
+            /**
+             * Image is a container image with IAA device plugin executable.
+             */
+            image?: pulumi.Input<string>;
+            /**
+             * InitImage is an initcontainer image to configure and enable IAA devices and workqueues with accel-config utility
+             */
+            initImage?: pulumi.Input<string>;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: pulumi.Input<number>;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            /**
+             * ProvisioningConfig is a ConfigMap used to pass the IAA configuration into idxd initcontainer.
+             */
+            provisioningConfig?: pulumi.Input<string>;
+            /**
+             * SharedDevNum is a number of containers that can share the same IAA device.
+             */
+            sharedDevNum?: pulumi.Input<number>;
+        }
+
+        /**
+         * IaaDevicePluginStatus defines the observed state of IaaDevicePlugin.
+         */
+        export interface IaaDevicePluginStatusArgs {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.IaaDevicePluginStatusControlleddaemonsetArgs>;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: pulumi.Input<number>;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: pulumi.Input<number>;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface IaaDevicePluginStatusControlleddaemonsetArgs {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: pulumi.Input<string>;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: pulumi.Input<string>;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: pulumi.Input<string>;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string>;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: pulumi.Input<string>;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: pulumi.Input<string>;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: pulumi.Input<string>;
+        }
+
+        /**
+         * QatDevicePluginSpec defines the desired state of QatDevicePlugin.
+         */
+        export interface QatDevicePluginSpecArgs {
+            /**
+             * DpdkDriver is a DPDK device driver for configuring the QAT device.
+             */
+            dpdkDriver?: pulumi.Input<string>;
+            /**
+             * Image is a container image with QAT device plugin executable.
+             */
+            image?: pulumi.Input<string>;
+            /**
+             * InitImage is a container image with a script that initialize devices.
+             */
+            initImage?: pulumi.Input<string>;
+            /**
+             * KernelVfDrivers is a list of VF device drivers for the QuickAssist devices in the system.
+             */
+            kernelVfDrivers?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: pulumi.Input<number>;
+            /**
+             * MaxNumDevices is a maximum number of QAT devices to be provided to the QuickAssist device plugin
+             */
+            maxNumDevices?: pulumi.Input<number>;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            /**
+             * PreferredAllocationPolicy sets the mode of allocating QAT devices on a node. See documentation for detailed description of the policies.
+             */
+            preferredAllocationPolicy?: pulumi.Input<string>;
+        }
+
+        /**
+         * QatDevicePluginStatus defines the observed state of QatDevicePlugin. TODO(rojkov): consider code deduplication with GpuDevicePluginStatus.
+         */
+        export interface QatDevicePluginStatusArgs {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.QatDevicePluginStatusControlleddaemonsetArgs>;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: pulumi.Input<number>;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: pulumi.Input<number>;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface QatDevicePluginStatusControlleddaemonsetArgs {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: pulumi.Input<string>;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: pulumi.Input<string>;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: pulumi.Input<string>;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string>;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: pulumi.Input<string>;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: pulumi.Input<string>;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: pulumi.Input<string>;
+        }
+
+        /**
+         * SgxDevicePluginSpec defines the desired state of SgxDevicePlugin.
+         */
+        export interface SgxDevicePluginSpecArgs {
+            /**
+             * EnclaveLimit is a number of containers that can share the same SGX enclave device.
+             */
+            enclaveLimit?: pulumi.Input<number>;
+            /**
+             * Image is a container image with SGX device plugin executable.
+             */
+            image?: pulumi.Input<string>;
+            /**
+             * InitImage is a container image with tools (e.g., SGX NFD source hook) installed on each node.
+             */
+            initImage?: pulumi.Input<string>;
+            /**
+             * LogLevel sets the plugin's log level.
+             */
+            logLevel?: pulumi.Input<number>;
+            /**
+             * NodeSelector provides a simple way to constrain device plugin pods to nodes with particular labels.
+             */
+            nodeSelector?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            /**
+             * ProvisionLimit is a number of containers that can share the same SGX provision device.
+             */
+            provisionLimit?: pulumi.Input<number>;
+        }
+
+        /**
+         * SgxDevicePluginStatus defines the observed state of SgxDevicePlugin.
+         */
+        export interface SgxDevicePluginStatusArgs {
+            /**
+             * ControlledDaemoSet references the DaemonSet controlled by the operator.
+             */
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.SgxDevicePluginStatusControlleddaemonsetArgs>;
+            /**
+             * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
+             */
+            desiredNumberScheduled: pulumi.Input<number>;
+            /**
+             * The list of Node names where the device plugin pods are running.
+             */
+            nodeNames?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * The number of nodes that should be running the device plugin pod and have one or more of the device plugin pod running and ready.
+             */
+            numberReady: pulumi.Input<number>;
+        }
+
+        /**
+         * ControlledDaemoSet references the DaemonSet controlled by the operator.
+         */
+        export interface SgxDevicePluginStatusControlleddaemonsetArgs {
+            /**
+             * API version of the referent.
+             */
+            apiVersion?: pulumi.Input<string>;
+            /**
+             * If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2]. For example, if the object reference is to a container within a pod, this would take on a value like: "spec.containers{name}" (where "name" refers to the name of the container that triggered the event) or if no container name is specified "spec.containers[2]" (container with index 2 in this pod). This syntax is chosen only to have some well-defined way of referencing a part of an object. TODO: this design is not final and this field is subject to change in the future.
+             */
+            fieldPath?: pulumi.Input<string>;
+            /**
+             * Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: pulumi.Input<string>;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string>;
+            /**
+             * Namespace of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+             */
+            namespace?: pulumi.Input<string>;
+            /**
+             * Specific resourceVersion to which this reference is made, if any. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+             */
+            resourceVersion?: pulumi.Input<string>;
+            /**
+             * UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+             */
+            uid?: pulumi.Input<string>;
+        }
+    }
+}
+
+export namespace fpga {
+    export namespace v2 {
+        /**
+         * AcceleratorFunctionSpec contains actual specs for AcceleratorFunction.
+         */
+        export interface AcceleratorFunctionSpecArgs {
+            afuId: pulumi.Input<string>;
+            interfaceId: pulumi.Input<string>;
+            mode: pulumi.Input<string>;
+        }
+
+        /**
+         * FpgaRegionSpec contains actual specs for FpgaRegion.
+         */
+        export interface FpgaRegionSpecArgs {
+            interfaceId: pulumi.Input<string>;
+        }
+
+    }
+}
+
 export namespace helm {
     export namespace v1 {
     }
@@ -5198,7 +5901,7 @@ export namespace traefik {
          */
         export interface IngressRouteSpecArgs {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
              */
             entryPoints?: pulumi.Input<pulumi.Input<string>[]>;
             /**
@@ -5206,7 +5909,7 @@ export namespace traefik {
              */
             routes: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecRoutesArgs>[]>;
             /**
-             * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#tls
+             * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls
              */
             tls?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecTlsArgs>;
         }
@@ -5220,15 +5923,15 @@ export namespace traefik {
              */
             kind: pulumi.Input<string>;
             /**
-             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#rule
+             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#rule
              */
             match: pulumi.Input<string>;
             /**
-             * Middlewares defines the list of references to Middleware resources. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-middleware
+             * Middlewares defines the list of references to Middleware resources. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-middleware
              */
             middlewares?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecRoutesMiddlewaresArgs>[]>;
             /**
-             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#priority
+             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#priority
              */
             priority?: pulumi.Input<number>;
             /**
@@ -5288,7 +5991,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecRoutesServicesStickyArgs>;
             /**
@@ -5312,7 +6015,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface IngressRouteSpecRoutesServicesStickyArgs {
             /**
@@ -5344,19 +6047,19 @@ export namespace traefik {
         }
 
         /**
-         * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#tls
+         * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls
          */
         export interface IngressRouteSpecTlsArgs {
             /**
-             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/https/acme/#certificate-resolvers
+             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/https/acme/#certificate-resolvers
              */
             certResolver?: pulumi.Input<string>;
             /**
-             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#domains
+             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#domains
              */
             domains?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecTlsDomainsArgs>[]>;
             /**
-             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#tls-options
+             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
              */
             options?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecTlsOptionsArgs>;
             /**
@@ -5384,15 +6087,15 @@ export namespace traefik {
         }
 
         /**
-         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#tls-options
+         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
          */
         export interface IngressRouteSpecTlsOptionsArgs {
             /**
-             * Name defines the name of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-tlsoption
+             * Name defines the name of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsoption
              */
             name: pulumi.Input<string>;
             /**
-             * Namespace defines the namespace of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-tlsoption
+             * Namespace defines the namespace of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsoption
              */
             namespace?: pulumi.Input<string>;
         }
@@ -5402,11 +6105,11 @@ export namespace traefik {
          */
         export interface IngressRouteSpecTlsStoreArgs {
             /**
-             * Name defines the name of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-tlsstore
+             * Name defines the name of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsstore
              */
             name: pulumi.Input<string>;
             /**
-             * Namespace defines the namespace of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#kind-tlsstore
+             * Namespace defines the namespace of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsstore
              */
             namespace?: pulumi.Input<string>;
         }
@@ -5416,7 +6119,7 @@ export namespace traefik {
          */
         export interface IngressRouteTCPSpecArgs {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
              */
             entryPoints?: pulumi.Input<pulumi.Input<string>[]>;
             /**
@@ -5424,7 +6127,7 @@ export namespace traefik {
              */
             routes: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesArgs>[]>;
             /**
-             * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#tls_1
+             * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls_1
              */
             tls?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecTlsArgs>;
         }
@@ -5434,7 +6137,7 @@ export namespace traefik {
          */
         export interface IngressRouteTCPSpecRoutesArgs {
             /**
-             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#rule_1
+             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#rule_1
              */
             match: pulumi.Input<string>;
             /**
@@ -5442,7 +6145,7 @@ export namespace traefik {
              */
             middlewares?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesMiddlewaresArgs>[]>;
             /**
-             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#priority_1
+             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#priority_1
              */
             priority?: pulumi.Input<number>;
             /**
@@ -5482,7 +6185,7 @@ export namespace traefik {
              */
             port: pulumi.Input<number | string>;
             /**
-             * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#proxy-protocol
+             * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#proxy-protocol
              */
             proxyProtocol?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesServicesProxyprotocolArgs>;
             /**
@@ -5496,7 +6199,7 @@ export namespace traefik {
         }
 
         /**
-         * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#proxy-protocol
+         * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#proxy-protocol
          */
         export interface IngressRouteTCPSpecRoutesServicesProxyprotocolArgs {
             /**
@@ -5506,19 +6209,19 @@ export namespace traefik {
         }
 
         /**
-         * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#tls_1
+         * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls_1
          */
         export interface IngressRouteTCPSpecTlsArgs {
             /**
-             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/https/acme/#certificate-resolvers
+             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/https/acme/#certificate-resolvers
              */
             certResolver?: pulumi.Input<string>;
             /**
-             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.8/routing/routers/#domains
+             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#domains
              */
             domains?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecTlsDomainsArgs>[]>;
             /**
-             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#tls-options
+             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
              */
             options?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecTlsOptionsArgs>;
             /**
@@ -5550,7 +6253,7 @@ export namespace traefik {
         }
 
         /**
-         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#tls-options
+         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
          */
         export interface IngressRouteTCPSpecTlsOptionsArgs {
             /**
@@ -5582,7 +6285,7 @@ export namespace traefik {
          */
         export interface IngressRouteUDPSpecArgs {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
              */
             entryPoints?: pulumi.Input<pulumi.Input<string>[]>;
             /**
@@ -5628,19 +6331,19 @@ export namespace traefik {
          */
         export interface MiddlewareSpecArgs {
             /**
-             * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/addprefix/
+             * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/addprefix/
              */
             addPrefix?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecAddprefixArgs>;
             /**
-             * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/basicauth/
+             * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/
              */
             basicAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecBasicauthArgs>;
             /**
-             * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/buffering/#maxrequestbodybytes
+             * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#maxrequestbodybytes
              */
             buffering?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecBufferingArgs>;
             /**
-             * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/chain/
+             * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/chain/
              */
             chain?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecChainArgs>;
             /**
@@ -5648,7 +6351,7 @@ export namespace traefik {
              */
             circuitBreaker?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecCircuitbreakerArgs>;
             /**
-             * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/compress/
+             * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/compress/
              */
             compress?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecCompressArgs>;
             /**
@@ -5656,31 +6359,31 @@ export namespace traefik {
              */
             contentType?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecContenttypeArgs>;
             /**
-             * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/digestauth/
+             * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/digestauth/
              */
             digestAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecDigestauthArgs>;
             /**
-             * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/errorpages/
+             * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/
              */
             errors?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsArgs>;
             /**
-             * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/forwardauth/
+             * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/
              */
             forwardAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecForwardauthArgs>;
             /**
-             * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/headers/#customrequestheaders
+             * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/headers/#customrequestheaders
              */
             headers?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecHeadersArgs>;
             /**
-             * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/inflightreq/
+             * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/
              */
             inFlightReq?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInflightreqArgs>;
             /**
-             * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/
+             * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/
              */
             ipWhiteList?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecIpwhitelistArgs>;
             /**
-             * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/passtlsclientcert/
+             * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/passtlsclientcert/
              */
             passTLSClientCert?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcertArgs>;
             /**
@@ -5688,41 +6391,41 @@ export namespace traefik {
              */
             plugin?: pulumi.Input<{[key: string]: pulumi.Input<{[key: string]: any}>}>;
             /**
-             * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ratelimit/
+             * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ratelimit/
              */
             rateLimit?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRatelimitArgs>;
             /**
-             * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/redirectregex/#regex
+             * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectregex/#regex
              */
             redirectRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRedirectregexArgs>;
             /**
-             * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/redirectscheme/
+             * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectscheme/
              */
             redirectScheme?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRedirectschemeArgs>;
             /**
-             * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/replacepath/
+             * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepath/
              */
             replacePath?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecReplacepathArgs>;
             /**
-             * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/replacepathregex/
+             * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepathregex/
              */
             replacePathRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecReplacepathregexArgs>;
             /**
-             * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/retry/
+             * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/retry/
              */
             retry?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRetryArgs>;
             /**
-             * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/stripprefix/
+             * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefix/
              */
             stripPrefix?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecStripprefixArgs>;
             /**
-             * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/stripprefixregex/
+             * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefixregex/
              */
             stripPrefixRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecStripprefixregexArgs>;
         }
 
         /**
-         * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/addprefix/
+         * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/addprefix/
          */
         export interface MiddlewareSpecAddprefixArgs {
             /**
@@ -5732,11 +6435,11 @@ export namespace traefik {
         }
 
         /**
-         * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/basicauth/
+         * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/
          */
         export interface MiddlewareSpecBasicauthArgs {
             /**
-             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/basicauth/#headerfield
+             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/#headerfield
              */
             headerField?: pulumi.Input<string>;
             /**
@@ -5754,7 +6457,7 @@ export namespace traefik {
         }
 
         /**
-         * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/buffering/#maxrequestbodybytes
+         * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#maxrequestbodybytes
          */
         export interface MiddlewareSpecBufferingArgs {
             /**
@@ -5774,13 +6477,13 @@ export namespace traefik {
              */
             memResponseBodyBytes?: pulumi.Input<number>;
             /**
-             * RetryExpression defines the retry conditions. It is a logical combination of functions with operators AND (&&) and OR (||). More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/buffering/#retryexpression
+             * RetryExpression defines the retry conditions. It is a logical combination of functions with operators AND (&&) and OR (||). More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#retryexpression
              */
             retryExpression?: pulumi.Input<string>;
         }
 
         /**
-         * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/chain/
+         * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/chain/
          */
         export interface MiddlewareSpecChainArgs {
             /**
@@ -5826,7 +6529,7 @@ export namespace traefik {
         }
 
         /**
-         * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/compress/
+         * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/compress/
          */
         export interface MiddlewareSpecCompressArgs {
             /**
@@ -5850,11 +6553,11 @@ export namespace traefik {
         }
 
         /**
-         * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/digestauth/
+         * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/digestauth/
          */
         export interface MiddlewareSpecDigestauthArgs {
             /**
-             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/basicauth/#headerfield
+             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/#headerfield
              */
             headerField?: pulumi.Input<string>;
             /**
@@ -5872,7 +6575,7 @@ export namespace traefik {
         }
 
         /**
-         * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/errorpages/
+         * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/
          */
         export interface MiddlewareSpecErrorsArgs {
             /**
@@ -5880,7 +6583,7 @@ export namespace traefik {
              */
             query?: pulumi.Input<string>;
             /**
-             * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/errorpages/#service
+             * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/#service
              */
             service?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceArgs>;
             /**
@@ -5890,7 +6593,7 @@ export namespace traefik {
         }
 
         /**
-         * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/errorpages/#service
+         * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/#service
          */
         export interface MiddlewareSpecErrorsServiceArgs {
             /**
@@ -5926,7 +6629,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceStickyArgs>;
             /**
@@ -5950,7 +6653,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface MiddlewareSpecErrorsServiceStickyArgs {
             /**
@@ -5982,7 +6685,7 @@ export namespace traefik {
         }
 
         /**
-         * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/forwardauth/
+         * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/
          */
         export interface MiddlewareSpecForwardauthArgs {
             /**
@@ -5998,7 +6701,7 @@ export namespace traefik {
              */
             authResponseHeaders?: pulumi.Input<pulumi.Input<string>[]>;
             /**
-             * AuthResponseHeadersRegex defines the regex to match headers to copy from the authentication server response and set on forwarded request, after stripping all headers that match the regex. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/forwardauth/#authresponseheadersregex
+             * AuthResponseHeadersRegex defines the regex to match headers to copy from the authentication server response and set on forwarded request, after stripping all headers that match the regex. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/#authresponseheadersregex
              */
             authResponseHeadersRegex?: pulumi.Input<string>;
             /**
@@ -6031,7 +6734,7 @@ export namespace traefik {
         }
 
         /**
-         * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/headers/#customrequestheaders
+         * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/headers/#customrequestheaders
          */
         export interface MiddlewareSpecHeadersArgs {
             /**
@@ -6165,7 +6868,7 @@ export namespace traefik {
         }
 
         /**
-         * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/inflightreq/
+         * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/
          */
         export interface MiddlewareSpecInflightreqArgs {
             /**
@@ -6173,17 +6876,17 @@ export namespace traefik {
              */
             amount?: pulumi.Input<number>;
             /**
-             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/inflightreq/#sourcecriterion
+             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/#sourcecriterion
              */
             sourceCriterion?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInflightreqSourcecriterionArgs>;
         }
 
         /**
-         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/inflightreq/#sourcecriterion
+         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/#sourcecriterion
          */
         export interface MiddlewareSpecInflightreqSourcecriterionArgs {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
              */
             ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInflightreqSourcecriterionIpstrategyArgs>;
             /**
@@ -6197,7 +6900,7 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
          */
         export interface MiddlewareSpecInflightreqSourcecriterionIpstrategyArgs {
             /**
@@ -6211,11 +6914,11 @@ export namespace traefik {
         }
 
         /**
-         * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/
+         * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/
          */
         export interface MiddlewareSpecIpwhitelistArgs {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
              */
             ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecIpwhitelistIpstrategyArgs>;
             /**
@@ -6225,7 +6928,7 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
          */
         export interface MiddlewareSpecIpwhitelistIpstrategyArgs {
             /**
@@ -6239,7 +6942,7 @@ export namespace traefik {
         }
 
         /**
-         * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/passtlsclientcert/
+         * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/passtlsclientcert/
          */
         export interface MiddlewareSpecPasstlsclientcertArgs {
             /**
@@ -6355,7 +7058,7 @@ export namespace traefik {
         }
 
         /**
-         * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ratelimit/
+         * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ratelimit/
          */
         export interface MiddlewareSpecRatelimitArgs {
             /**
@@ -6381,7 +7084,7 @@ export namespace traefik {
          */
         export interface MiddlewareSpecRatelimitSourcecriterionArgs {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
              */
             ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRatelimitSourcecriterionIpstrategyArgs>;
             /**
@@ -6395,7 +7098,7 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
          */
         export interface MiddlewareSpecRatelimitSourcecriterionIpstrategyArgs {
             /**
@@ -6409,7 +7112,7 @@ export namespace traefik {
         }
 
         /**
-         * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/redirectregex/#regex
+         * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectregex/#regex
          */
         export interface MiddlewareSpecRedirectregexArgs {
             /**
@@ -6427,7 +7130,7 @@ export namespace traefik {
         }
 
         /**
-         * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/redirectscheme/
+         * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectscheme/
          */
         export interface MiddlewareSpecRedirectschemeArgs {
             /**
@@ -6445,7 +7148,7 @@ export namespace traefik {
         }
 
         /**
-         * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/replacepath/
+         * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepath/
          */
         export interface MiddlewareSpecReplacepathArgs {
             /**
@@ -6455,7 +7158,7 @@ export namespace traefik {
         }
 
         /**
-         * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/replacepathregex/
+         * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepathregex/
          */
         export interface MiddlewareSpecReplacepathregexArgs {
             /**
@@ -6469,7 +7172,7 @@ export namespace traefik {
         }
 
         /**
-         * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/retry/
+         * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/retry/
          */
         export interface MiddlewareSpecRetryArgs {
             /**
@@ -6483,7 +7186,7 @@ export namespace traefik {
         }
 
         /**
-         * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/stripprefix/
+         * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefix/
          */
         export interface MiddlewareSpecStripprefixArgs {
             /**
@@ -6497,7 +7200,7 @@ export namespace traefik {
         }
 
         /**
-         * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.8/middlewares/http/stripprefixregex/
+         * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefixregex/
          */
         export interface MiddlewareSpecStripprefixregexArgs {
             /**
@@ -6609,11 +7312,11 @@ export namespace traefik {
          */
         export interface TLSOptionSpecArgs {
             /**
-             * ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#alpn-protocols
+             * ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#alpn-protocols
              */
             alpnProtocols?: pulumi.Input<pulumi.Input<string>[]>;
             /**
-             * CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#cipher-suites
+             * CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#cipher-suites
              */
             cipherSuites?: pulumi.Input<pulumi.Input<string>[]>;
             /**
@@ -6621,7 +7324,7 @@ export namespace traefik {
              */
             clientAuth?: pulumi.Input<inputs.traefik.v1alpha1.TLSOptionSpecClientauthArgs>;
             /**
-             * CurvePreferences defines the preferred elliptic curves in a specific order. More info: https://doc.traefik.io/traefik/v2.8/https/tls/#curve-preferences
+             * CurvePreferences defines the preferred elliptic curves in a specific order. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#curve-preferences
              */
             curvePreferences?: pulumi.Input<pulumi.Input<string>[]>;
             /**
@@ -6633,7 +7336,7 @@ export namespace traefik {
              */
             minVersion?: pulumi.Input<string>;
             /**
-             * PreferServerCipherSuites defines whether the server chooses a cipher suite among his own instead of among the client's. It is enabled automatically when minVersion or maxVersion are set.
+             * PreferServerCipherSuites defines whether the server chooses a cipher suite among his own instead of among the client's. It is enabled automatically when minVersion or maxVersion is set. Deprecated: https://github.com/golang/go/issues/45430
              */
             preferServerCipherSuites?: pulumi.Input<boolean>;
             /**
@@ -6668,6 +7371,10 @@ export namespace traefik {
              * DefaultCertificate defines the default certificate configuration.
              */
             defaultCertificate?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecDefaultcertificateArgs>;
+            /**
+             * DefaultGeneratedCert defines the default generated certificate configuration.
+             */
+            defaultGeneratedCert?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecDefaultgeneratedcertArgs>;
         }
 
         /**
@@ -6688,6 +7395,34 @@ export namespace traefik {
              * SecretName is the name of the referenced Kubernetes Secret to specify the certificate details.
              */
             secretName: pulumi.Input<string>;
+        }
+
+        /**
+         * DefaultGeneratedCert defines the default generated certificate configuration.
+         */
+        export interface TLSStoreSpecDefaultgeneratedcertArgs {
+            /**
+             * Domain is the domain definition for the DefaultCertificate.
+             */
+            domain?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecDefaultgeneratedcertDomainArgs>;
+            /**
+             * Resolver is the name of the resolver that will be used to issue the DefaultCertificate.
+             */
+            resolver?: pulumi.Input<string>;
+        }
+
+        /**
+         * Domain is the domain definition for the DefaultCertificate.
+         */
+        export interface TLSStoreSpecDefaultgeneratedcertDomainArgs {
+            /**
+             * Main defines the main domain name.
+             */
+            main?: pulumi.Input<string>;
+            /**
+             * SANs defines the subject alternative domain names.
+             */
+            sans?: pulumi.Input<pulumi.Input<string>[]>;
         }
 
         /**
@@ -6749,7 +7484,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecMirroringStickyArgs>;
             /**
@@ -6803,7 +7538,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecMirroringMirrorsStickyArgs>;
             /**
@@ -6827,7 +7562,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecMirroringMirrorsStickyArgs {
             /**
@@ -6869,7 +7604,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecMirroringStickyArgs {
             /**
@@ -6909,7 +7644,7 @@ export namespace traefik {
              */
             services?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesArgs>[]>;
             /**
-             * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
+             * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecWeightedStickyArgs>;
         }
@@ -6951,7 +7686,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesStickyArgs>;
             /**
@@ -6975,7 +7710,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.8/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecWeightedServicesStickyArgs {
             /**
@@ -7007,7 +7742,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.8/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
+         * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
          */
         export interface TraefikServiceSpecWeightedStickyArgs {
             /**

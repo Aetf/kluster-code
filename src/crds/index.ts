@@ -15,6 +15,8 @@ utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 import * as acme from "./acme";
 import * as bitnami from "./bitnami";
 import * as certmanager from "./certmanager";
+import * as deviceplugin from "./deviceplugin";
+import * as fpga from "./fpga";
 import * as helm from "./helm";
 import * as k3s from "./k3s";
 import * as nfd from "./nfd";
@@ -25,6 +27,8 @@ export {
     acme,
     bitnami,
     certmanager,
+    deviceplugin,
+    fpga,
     helm,
     k3s,
     nfd,
