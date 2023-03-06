@@ -103,10 +103,19 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                 mountOptions: [
                     "enable-xattr",
                     "allow_other",
-                    "writeback", // async upload to cloud
+                    "writeback_cache", // fuse option for write syscall to complete rapidly
+
+                    // async upload to cloud, this causes very slow performance in low bandwidth env, 
+                    // See https://juicefs.com/docs/community/administration/troubleshooting#io-error-object-storage
+                    //"writeback",
+
+                    "put-timeout=3600", // allow more time to upload
+                    "max-uploads=2", // limit upload concurrency to avoid upload timeouts
+                    //"no-bgjob", // disable background jobs
+
+                    "upload-delay=10s", // wait 10s before upload, such that small write and delete is completely served from local cache
                     "free-space-ratio=0.1",
                     "cache-dir=/mnt/storage/jfs-cache",
-                    "put-timeout=3600", // allow more time to upload
                 ]
             }, { parent: this });
         });
