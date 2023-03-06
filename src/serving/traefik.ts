@@ -18,7 +18,6 @@ interface TraefikArgs {
 export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
     public readonly chart: HelmChart;
     public readonly certificate: BackendCertificate;
-    public readonly internalService: kx.Service;
 
     public readonly ready!: pulumi.Output<pulumi.CustomResource[]>;
 
@@ -34,17 +33,25 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
         this.chart = new HelmChart(name, {
             namespace,
             chart: "traefik",
-            version: "10.24.1",
+            version: "21.1.0",
             fetchOpts: {
                 repo: "https://helm.traefik.io/traefik",
             },
             values: {
                 providers: {
                     kubernetesCRD: {
-                        enabled: true
+                        enabled: true,
+                        // traefik by default do not allow ExternalName service due to minor CVE
+                        // see https://github.com/traefik/traefik/pull/8261
+                        // see https://doc.traefik.io/traefik/migration/v2/#k8s-externalname-service
+                        allowExternalNameServices: true,
                     },
                     kubernetesIngress: {
                         enabled: true,
+                        // traefik by default do not allow ExternalName service due to minor CVE
+                        // see https://github.com/traefik/traefik/pull/8261
+                        // see https://doc.traefik.io/traefik/migration/v2/#k8s-externalname-service
+                        allowExternalNameServices: true,
                         // Use publishedService once traefik/traefik#7972 is
                         // fixed.
                         /*
@@ -57,6 +64,10 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                 service: {
                     type: "ClusterIP",
                     externalIPs: args.externalIPs,
+                    // an additional internal service for traefik dashbaord
+                    internal: {
+                        type: "ClusterIP",
+                    }
                 },
                 ports: {
                     web: {
@@ -99,11 +110,6 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                 ],
                 additionalArguments: [
                     "--serversTransport.rootCAs=/tls/ca.crt",
-                    // traefik by default do not allow ExternalName service due to minor CVE
-                    // see https://github.com/traefik/traefik/pull/8261
-                    // see https://doc.traefik.io/traefik/migration/v2/#k8s-externalname-service
-                    "--providers.kubernetescrd.allowexternalnameservices=true",
-                    "--providers.kubernetesingress.allowexternalnameservices=true",
                     pulumi.interpolate`--providers.kubernetesingress.ingressendpoint.ip=${args.externalIPs[0]}`,
                 ],
                 logs: {
@@ -128,25 +134,6 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
         }, {
             parent: this,
         });
-
-        // This service should never be exposed
-        this.internalService = new kx.Service(`${name}-internal`, {
-            metadata: {
-                name: `${name}-internal`
-            },
-            spec: {
-                type: kx.types.ServiceType.ClusterIP,
-                ports: [{
-                    name: 'traefik',
-                    port: 80,
-                    targetPort: 'traefik'
-                }],
-                selector: {
-                    "app.kubernetes.io/name": "traefik",
-                    "app.kubernetes.io/instance": "traefik"
-                }
-            }
-        }, { parent: this, deleteBeforeReplace: true });
 
         setAndRegisterOutputs(this, {
             ready: this.chart.ready,
