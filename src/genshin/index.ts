@@ -10,6 +10,7 @@ interface GenshinArgs {
 }
 
 export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
+    cron: k8s.batch.v1.CronJob
     constructor(name: string, args: GenshinArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:Genshin', name, args, opts);
 
@@ -37,7 +38,7 @@ export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
                 ],
             }]
         });
-        const cron = new k8s.batch.v1.CronJob(name, {
+        this.cron = new k8s.batch.v1.CronJob(name, {
             spec: {
                 schedule: "0 15 * * *",
                 concurrencyPolicy: 'Forbid',
