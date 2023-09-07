@@ -165,7 +165,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             enableServiceLinks: false,
             containers: [{
                 name: "authelia",
-                image: "ghcr.io/authelia/authelia:4.36.5",
+                image: "ghcr.io/authelia/authelia:4.37.5",
                 command: ["authelia"],
                 args: [
                     `--config=${configPath}/authelia.yaml`
@@ -176,7 +176,9 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                 },
                 // each key in secret is mounted in as a file,
                 // and the file path is set in the env var
-                env: secretEnvs,
+                env: {
+                    ...secretEnvs,
+                },
                 volumeMounts: [
                     cm.mount(configPath),
                     pvc.mount(storagePath),

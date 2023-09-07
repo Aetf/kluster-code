@@ -116,14 +116,11 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.nfd = new HelmChart("nfd", {
             namespace,
             chart: "node-feature-discovery",
-            version: "0.11.2",
+            version: "0.13.4",
             fetchOpts: {
                 repo: "https://kubernetes-sigs.github.io/node-feature-discovery/charts",
             },
             values: {
-                image: {
-                    tag: "v0.11.2-minimal"
-                },
                 tls: {
                     enable: true,
                     certManager: true,

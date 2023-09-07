@@ -20,7 +20,7 @@ export class Redis extends HelmChart {
         super(name, {
             namespace: args.namespace,
             chart: 'redis',
-            version: "17.4.1",
+            version: "18.0.1",
             fetchOpts: {
                 repo: "https://charts.bitnami.com/bitnami",
             },
@@ -46,7 +46,8 @@ export class Redis extends HelmChart {
     }
 
     public get serviceHost(): pulumi.Output<string> {
-        return this.redisService.metadata.name;
+        /* return pulumi.interpolate`${this.redisService.metadata.name}.${this.redisService.metadata.namespace}`; */
+        return pulumi.interpolate`${this.redisService.metadata.name}.${this.redisService.metadata.namespace}.svc.cluster.local`;
     }
 
     public get servicePort(): pulumi.Output<number> {

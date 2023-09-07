@@ -1,6 +1,9 @@
 server:
   # the default value is too small, and will cause 431 error
-  read_buffer_size: 8192
+  buffers:
+    read: 8192
+  # disable internal healthcheck, we rely on k8s probes
+  disable_healthcheck: true
   tls:
     key: /tls/tls.key
     certificate: /tls/tls.crt

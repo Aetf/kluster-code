@@ -33,7 +33,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
         this.chart = new HelmChart(name, {
             namespace,
             chart: "traefik",
-            version: "21.1.0",
+            version: "24.0.0",
             fetchOpts: {
                 repo: "https://helm.traefik.io/traefik",
             },
