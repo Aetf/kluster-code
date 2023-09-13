@@ -9,7 +9,7 @@ import * as utilities from "../../utilities";
 import {ObjectMeta} from "../../meta/v1";
 
 /**
- * TraefikService is the CRD implementation of a Traefik Service. TraefikService object allows to: - Apply weight to Services on load-balancing - Mirror traffic on services More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-traefikservice
+ * TraefikService is the CRD implementation of a Traefik Service. TraefikService object allows to: - Apply weight to Services on load-balancing - Mirror traffic on services More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-traefikservice
  */
 export class TraefikService extends pulumi.CustomResource {
     /**
@@ -25,7 +25,7 @@ export class TraefikService extends pulumi.CustomResource {
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.containo.us/v1alpha1:TraefikService';
+    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:TraefikService';
 
     /**
      * Returns true if the given object is an instance of TraefikService.  This is designed to work even
@@ -38,7 +38,7 @@ export class TraefikService extends pulumi.CustomResource {
         return obj['__pulumiType'] === TraefikService.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1">;
+    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
     public readonly kind!: pulumi.Output<"TraefikService">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
@@ -57,7 +57,7 @@ export class TraefikService extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "traefik.containo.us/v1alpha1";
+            resourceInputs["apiVersion"] = "traefik.io/v1alpha1";
             resourceInputs["kind"] = "TraefikService";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
@@ -76,7 +76,7 @@ export class TraefikService extends pulumi.CustomResource {
  * The set of arguments for constructing a TraefikService resource.
  */
 export interface TraefikServiceArgs {
-    apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
     kind?: pulumi.Input<"TraefikService">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**

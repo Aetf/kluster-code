@@ -9,56 +9,56 @@ import * as utilities from "../../utilities";
 import {ObjectMeta} from "../../meta/v1";
 
 /**
- * IngressRouteTCP is the CRD implementation of a Traefik TCP Router.
+ * NodeFeature resource holds the features discovered for one node in the cluster.
  */
-export class IngressRouteTCP extends pulumi.CustomResource {
+export class NodeFeature extends pulumi.CustomResource {
     /**
-     * Get an existing IngressRouteTCP resource's state with the given name, ID, and optional extra
+     * Get an existing NodeFeature resource's state with the given name, ID, and optional extra
      * properties used to qualify the lookup.
      *
      * @param name The _unique_ name of the resulting resource.
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
-    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): IngressRouteTCP {
-        return new IngressRouteTCP(name, undefined as any, { ...opts, id: id });
+    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): NodeFeature {
+        return new NodeFeature(name, undefined as any, { ...opts, id: id });
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:IngressRouteTCP';
+    public static readonly __pulumiType = 'kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeature';
 
     /**
-     * Returns true if the given object is an instance of IngressRouteTCP.  This is designed to work even
+     * Returns true if the given object is an instance of NodeFeature.  This is designed to work even
      * when multiple copies of the Pulumi SDK have been loaded into the same process.
      */
-    public static isInstance(obj: any): obj is IngressRouteTCP {
+    public static isInstance(obj: any): obj is NodeFeature {
         if (obj === undefined || obj === null) {
             return false;
         }
-        return obj['__pulumiType'] === IngressRouteTCP.__pulumiType;
+        return obj['__pulumiType'] === NodeFeature.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
-    public readonly kind!: pulumi.Output<"IngressRouteTCP">;
+    public readonly apiVersion!: pulumi.Output<"nfd.k8s-sigs.io/v1alpha1">;
+    public readonly kind!: pulumi.Output<"NodeFeature">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * IngressRouteTCPSpec defines the desired state of IngressRouteTCP.
+     * NodeFeatureSpec describes a NodeFeature object.
      */
-    public readonly spec!: pulumi.Output<outputs.traefik.v1alpha1.IngressRouteTCPSpec>;
+    public readonly spec!: pulumi.Output<outputs.nfd.v1alpha1.NodeFeatureSpec>;
 
     /**
-     * Create a IngressRouteTCP resource with the given unique name, arguments, and options.
+     * Create a NodeFeature resource with the given unique name, arguments, and options.
      *
      * @param name The _unique_ name of the resource.
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: IngressRouteTCPArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args?: NodeFeatureArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "traefik.io/v1alpha1";
-            resourceInputs["kind"] = "IngressRouteTCP";
+            resourceInputs["apiVersion"] = "nfd.k8s-sigs.io/v1alpha1";
+            resourceInputs["kind"] = "NodeFeature";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
         } else {
@@ -68,19 +68,19 @@ export class IngressRouteTCP extends pulumi.CustomResource {
             resourceInputs["spec"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        super(IngressRouteTCP.__pulumiType, name, resourceInputs, opts);
+        super(NodeFeature.__pulumiType, name, resourceInputs, opts);
     }
 }
 
 /**
- * The set of arguments for constructing a IngressRouteTCP resource.
+ * The set of arguments for constructing a NodeFeature resource.
  */
-export interface IngressRouteTCPArgs {
-    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
-    kind?: pulumi.Input<"IngressRouteTCP">;
+export interface NodeFeatureArgs {
+    apiVersion?: pulumi.Input<"nfd.k8s-sigs.io/v1alpha1">;
+    kind?: pulumi.Input<"NodeFeature">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * IngressRouteTCPSpec defines the desired state of IngressRouteTCP.
+     * NodeFeatureSpec describes a NodeFeature object.
      */
-    spec?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecArgs>;
+    spec?: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureSpecArgs>;
 }

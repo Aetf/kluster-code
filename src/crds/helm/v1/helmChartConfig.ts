@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "../../types/input";
+import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
 import {ObjectMeta} from "../../meta/v1";
@@ -36,8 +38,7 @@ export class HelmChartConfig extends pulumi.CustomResource {
     public readonly apiVersion!: pulumi.Output<"helm.cattle.io/v1">;
     public readonly kind!: pulumi.Output<"HelmChartConfig">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
-    public readonly spec!: pulumi.Output<{[key: string]: any} | undefined>;
-    public readonly status!: pulumi.Output<{[key: string]: any} | undefined>;
+    public readonly spec!: pulumi.Output<outputs.helm.v1.HelmChartConfigSpec | undefined>;
 
     /**
      * Create a HelmChartConfig resource with the given unique name, arguments, and options.
@@ -54,13 +55,11 @@ export class HelmChartConfig extends pulumi.CustomResource {
             resourceInputs["kind"] = "HelmChartConfig";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
             resourceInputs["metadata"] = undefined /*out*/;
             resourceInputs["spec"] = undefined /*out*/;
-            resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(HelmChartConfig.__pulumiType, name, resourceInputs, opts);
@@ -74,6 +73,5 @@ export interface HelmChartConfigArgs {
     apiVersion?: pulumi.Input<"helm.cattle.io/v1">;
     kind?: pulumi.Input<"HelmChartConfig">;
     metadata?: pulumi.Input<ObjectMeta>;
-    spec?: pulumi.Input<{[key: string]: any}>;
-    status?: pulumi.Input<{[key: string]: any}>;
+    spec?: pulumi.Input<inputs.helm.v1.HelmChartConfigSpecArgs>;
 }

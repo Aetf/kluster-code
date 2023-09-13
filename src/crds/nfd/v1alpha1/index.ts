@@ -5,6 +5,11 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "../../utilities";
 
 // Export members:
+export { NodeFeatureArgs } from "./nodeFeature";
+export type NodeFeature = import("./nodeFeature").NodeFeature;
+export const NodeFeature: typeof import("./nodeFeature").NodeFeature = null as any;
+utilities.lazyLoad(exports, ["NodeFeature"], () => require("./nodeFeature"));
+
 export { NodeFeatureRuleArgs } from "./nodeFeatureRule";
 export type NodeFeatureRule = import("./nodeFeatureRule").NodeFeatureRule;
 export const NodeFeatureRule: typeof import("./nodeFeatureRule").NodeFeatureRule = null as any;
@@ -15,6 +20,8 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
+            case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeature":
+                return new NodeFeature(name, <any>undefined, { urn })
             case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeatureRule":
                 return new NodeFeatureRule(name, <any>undefined, { urn })
             default:

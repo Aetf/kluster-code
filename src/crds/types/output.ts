@@ -23,7 +23,7 @@ export namespace acme {
             /**
              * References a properly configured ACME-type Issuer which should be used to create this Challenge. If the Issuer does not exist, processing will be retried. If the Issuer is not an 'ACME' Issuer, an error will be returned and the Challenge will be marked as failed.
              */
-            issuerRef: outputs.acme.v1.ChallengeSpecIssuerref;
+            issuerRef: outputs.acme.v1.ChallengeSpecIssuerRef;
             /**
              * The ACME challenge key for this challenge For HTTP01 challenges, this is the value that must be responded with to complete the HTTP01 challenge in the format: `<private key JWK thumbprint>.<key from acme server for challenge>`. For DNS01 challenges, this is the base64 encoded SHA256 sum of the `<private key JWK thumbprint>.<key from acme server for challenge>` text that must be set as the TXT record content.
              */
@@ -53,7 +53,7 @@ export namespace acme {
         /**
          * References a properly configured ACME-type Issuer which should be used to create this Challenge. If the Issuer does not exist, processing will be retried. If the Issuer is not an 'ACME' Issuer, an error will be returned and the Challenge will be marked as failed.
          */
-        export interface ChallengeSpecIssuerref {
+        export interface ChallengeSpecIssuerRef {
             /**
              * Group of the resource being referred to.
              */
@@ -93,7 +93,7 @@ export namespace acme {
             /**
              * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
              */
-            acmeDNS?: outputs.acme.v1.ChallengeSpecSolverDns01Acmedns;
+            acmeDNS?: outputs.acme.v1.ChallengeSpecSolverDns01AcmeDNS;
             /**
              * Use the Akamai DNS zone management API to manage DNS01 challenge records.
              */
@@ -101,11 +101,11 @@ export namespace acme {
             /**
              * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
              */
-            azureDNS?: outputs.acme.v1.ChallengeSpecSolverDns01Azuredns;
+            azureDNS?: outputs.acme.v1.ChallengeSpecSolverDns01AzureDNS;
             /**
              * Use the Google Cloud DNS API to manage DNS01 challenge records.
              */
-            cloudDNS?: outputs.acme.v1.ChallengeSpecSolverDns01Clouddns;
+            cloudDNS?: outputs.acme.v1.ChallengeSpecSolverDns01CloudDNS;
             /**
              * Use the Cloudflare API to manage DNS01 challenge records.
              */
@@ -135,18 +135,18 @@ export namespace acme {
         /**
          * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
          */
-        export interface ChallengeSpecSolverDns01Acmedns {
+        export interface ChallengeSpecSolverDns01AcmeDNS {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accountSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01AcmednsAccountsecretref;
+            accountSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01AcmeDNSAccountSecretRef;
             host: string;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01AcmednsAccountsecretref {
+        export interface ChallengeSpecSolverDns01AcmeDNSAccountSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -164,22 +164,22 @@ export namespace acme {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accessTokenSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01AkamaiAccesstokensecretref;
+            accessTokenSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01AkamaiAccessTokenSecretRef;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientSecretSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01AkamaiClientsecretsecretref;
+            clientSecretSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01AkamaiClientSecretSecretRef;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientTokenSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01AkamaiClienttokensecretref;
+            clientTokenSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01AkamaiClientTokenSecretRef;
             serviceConsumerDomain: string;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01AkamaiAccesstokensecretref {
+        export interface ChallengeSpecSolverDns01AkamaiAccessTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -193,7 +193,7 @@ export namespace acme {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01AkamaiClientsecretsecretref {
+        export interface ChallengeSpecSolverDns01AkamaiClientSecretSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -207,7 +207,7 @@ export namespace acme {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01AkamaiClienttokensecretref {
+        export interface ChallengeSpecSolverDns01AkamaiClientTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -221,7 +221,7 @@ export namespace acme {
         /**
          * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
          */
-        export interface ChallengeSpecSolverDns01Azuredns {
+        export interface ChallengeSpecSolverDns01AzureDNS {
             /**
              * if both this and ClientSecret are left unset MSI will be used
              */
@@ -229,7 +229,7 @@ export namespace acme {
             /**
              * if both this and ClientID are left unset MSI will be used
              */
-            clientSecretSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01AzurednsClientsecretsecretref;
+            clientSecretSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01AzureDNSClientSecretSecretRef;
             /**
              * name of the Azure environment (default AzurePublicCloud)
              */
@@ -241,7 +241,7 @@ export namespace acme {
             /**
              * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
              */
-            managedIdentity?: outputs.acme.v1.ChallengeSpecSolverDns01AzurednsManagedidentity;
+            managedIdentity?: outputs.acme.v1.ChallengeSpecSolverDns01AzureDNSManagedIdentity;
             /**
              * resource group the DNS zone is located in
              */
@@ -259,7 +259,7 @@ export namespace acme {
         /**
          * if both this and ClientID are left unset MSI will be used
          */
-        export interface ChallengeSpecSolverDns01AzurednsClientsecretsecretref {
+        export interface ChallengeSpecSolverDns01AzureDNSClientSecretSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -273,7 +273,7 @@ export namespace acme {
         /**
          * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
          */
-        export interface ChallengeSpecSolverDns01AzurednsManagedidentity {
+        export interface ChallengeSpecSolverDns01AzureDNSManagedIdentity {
             /**
              * client ID of the managed identity, can not be used at the same time as resourceID
              */
@@ -287,7 +287,7 @@ export namespace acme {
         /**
          * Use the Google Cloud DNS API to manage DNS01 challenge records.
          */
-        export interface ChallengeSpecSolverDns01Clouddns {
+        export interface ChallengeSpecSolverDns01CloudDNS {
             /**
              * HostedZoneName is an optional field that tells cert-manager in which Cloud DNS zone the challenge record has to be created. If left empty cert-manager will automatically choose a zone.
              */
@@ -296,13 +296,13 @@ export namespace acme {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            serviceAccountSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01ClouddnsServiceaccountsecretref;
+            serviceAccountSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01CloudDNSServiceAccountSecretRef;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01ClouddnsServiceaccountsecretref {
+        export interface ChallengeSpecSolverDns01CloudDNSServiceAccountSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -320,11 +320,11 @@ export namespace acme {
             /**
              * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
              */
-            apiKeySecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01CloudflareApikeysecretref;
+            apiKeySecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01CloudflareApiKeySecretRef;
             /**
              * API token used to authenticate with Cloudflare.
              */
-            apiTokenSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01CloudflareApitokensecretref;
+            apiTokenSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01CloudflareApiTokenSecretRef;
             /**
              * Email of the account, only required when using API key based authentication.
              */
@@ -334,7 +334,7 @@ export namespace acme {
         /**
          * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
          */
-        export interface ChallengeSpecSolverDns01CloudflareApikeysecretref {
+        export interface ChallengeSpecSolverDns01CloudflareApiKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -348,7 +348,7 @@ export namespace acme {
         /**
          * API token used to authenticate with Cloudflare.
          */
-        export interface ChallengeSpecSolverDns01CloudflareApitokensecretref {
+        export interface ChallengeSpecSolverDns01CloudflareApiTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -366,13 +366,13 @@ export namespace acme {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            tokenSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01DigitaloceanTokensecretref;
+            tokenSecretRef: outputs.acme.v1.ChallengeSpecSolverDns01DigitaloceanTokenSecretRef;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01DigitaloceanTokensecretref {
+        export interface ChallengeSpecSolverDns01DigitaloceanTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -402,13 +402,13 @@ export namespace acme {
             /**
              * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
              */
-            tsigSecretSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01Rfc2136Tsigsecretsecretref;
+            tsigSecretSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01Rfc2136TsigSecretSecretRef;
         }
 
         /**
          * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
          */
-        export interface ChallengeSpecSolverDns01Rfc2136Tsigsecretsecretref {
+        export interface ChallengeSpecSolverDns01Rfc2136TsigSecretSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -430,7 +430,7 @@ export namespace acme {
             /**
              * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            accessKeyIDSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01Route53Accesskeyidsecretref;
+            accessKeyIDSecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01Route53AccessKeyIDSecretRef;
             /**
              * If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
              */
@@ -446,13 +446,13 @@ export namespace acme {
             /**
              * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            secretAccessKeySecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01Route53Secretaccesskeysecretref;
+            secretAccessKeySecretRef?: outputs.acme.v1.ChallengeSpecSolverDns01Route53SecretAccessKeySecretRef;
         }
 
         /**
          * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface ChallengeSpecSolverDns01Route53Accesskeyidsecretref {
+        export interface ChallengeSpecSolverDns01Route53AccessKeyIDSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -466,7 +466,7 @@ export namespace acme {
         /**
          * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface ChallengeSpecSolverDns01Route53Secretaccesskeysecretref {
+        export interface ChallengeSpecSolverDns01Route53SecretAccessKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -502,7 +502,7 @@ export namespace acme {
             /**
              * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
              */
-            gatewayHTTPRoute?: outputs.acme.v1.ChallengeSpecSolverHttp01Gatewayhttproute;
+            gatewayHTTPRoute?: outputs.acme.v1.ChallengeSpecSolverHttp01GatewayHTTPRoute;
             /**
              * The ingress based HTTP01 challenge solver will solve challenges by creating or modifying Ingress resources in order to route requests for '/.well-known/acme-challenge/XYZ' to 'challenge solver' pods that are provisioned by cert-manager for each Challenge to be completed.
              */
@@ -512,7 +512,7 @@ export namespace acme {
         /**
          * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
          */
-        export interface ChallengeSpecSolverHttp01Gatewayhttproute {
+        export interface ChallengeSpecSolverHttp01GatewayHTTPRoute {
             /**
              * Custom labels that will be applied to HTTPRoutes created by cert-manager while solving HTTP-01 challenges.
              */
@@ -520,7 +520,7 @@ export namespace acme {
             /**
              * When solving an HTTP-01 challenge, cert-manager creates an HTTPRoute. cert-manager needs to know which parentRefs should be used when creating the HTTPRoute. Usually, the parentRef references a Gateway. See: https://gateway-api.sigs.k8s.io/v1alpha2/api-types/httproute/#attaching-to-gateways
              */
-            parentRefs?: outputs.acme.v1.ChallengeSpecSolverHttp01GatewayhttprouteParentrefs[];
+            parentRefs?: outputs.acme.v1.ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefs[];
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -532,7 +532,7 @@ export namespace acme {
          *  The API object must be valid in the cluster; the Group and Kind must be registered in the cluster for this reference to be valid. 
          *  References to objects with invalid Group and Kind are not valid, and must be rejected by the implementation, with appropriate Conditions set on the containing object.
          */
-        export interface ChallengeSpecSolverHttp01GatewayhttprouteParentrefs {
+        export interface ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefs {
             /**
              * Group is the group of the referent. 
              *  Support: Core
@@ -563,9 +563,9 @@ export namespace acme {
             sectionName?: string;
         }
         /**
-         * challengeSpecSolverHttp01GatewayhttprouteParentrefsProvideDefaults sets the appropriate defaults for ChallengeSpecSolverHttp01GatewayhttprouteParentrefs
+         * challengeSpecSolverHttp01GatewayHTTPRouteParentRefsProvideDefaults sets the appropriate defaults for ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefs
          */
-        export function challengeSpecSolverHttp01GatewayhttprouteParentrefsProvideDefaults(val: ChallengeSpecSolverHttp01GatewayhttprouteParentrefs): ChallengeSpecSolverHttp01GatewayhttprouteParentrefs {
+        export function challengeSpecSolverHttp01GatewayHTTPRouteParentRefsProvideDefaults(val: ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefs): ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefs {
             return {
                 ...val,
                 group: (val.group) ?? "gateway.networking.k8s.io",
@@ -584,7 +584,7 @@ export namespace acme {
             /**
              * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
              */
-            ingressTemplate?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressIngresstemplate;
+            ingressTemplate?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressIngressTemplate;
             /**
              * The name of the ingress resource that should have ACME challenge solving routes inserted into it in order to solve HTTP01 challenges. This is typically used in conjunction with ingress controllers like ingress-gce, which maintains a 1:1 mapping between external IPs and ingress resources.
              */
@@ -592,7 +592,7 @@ export namespace acme {
             /**
              * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
              */
-            podTemplate?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplate;
+            podTemplate?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplate;
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -602,17 +602,17 @@ export namespace acme {
         /**
          * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
          */
-        export interface ChallengeSpecSolverHttp01IngressIngresstemplate {
+        export interface ChallengeSpecSolverHttp01IngressIngressTemplate {
             /**
              * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressIngresstemplateMetadata;
+            metadata?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressIngressTemplateMetadata;
         }
 
         /**
          * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface ChallengeSpecSolverHttp01IngressIngresstemplateMetadata {
+        export interface ChallengeSpecSolverHttp01IngressIngressTemplateMetadata {
             /**
              * Annotations that should be added to the created ACME HTTP01 solver ingress.
              */
@@ -626,21 +626,21 @@ export namespace acme {
         /**
          * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplate {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplate {
             /**
              * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateMetadata;
+            metadata?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateMetadata;
             /**
              * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
              */
-            spec?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpec;
+            spec?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpec;
         }
 
         /**
          * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateMetadata {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateMetadata {
             /**
              * Annotations that should be added to the create ACME HTTP01 solver pods.
              */
@@ -654,11 +654,11 @@ export namespace acme {
         /**
          * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpec {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpec {
             /**
              * If specified, the pod's scheduling constraints
              */
-            affinity?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinity;
+            affinity?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinity;
             /**
              * NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
              */
@@ -674,49 +674,49 @@ export namespace acme {
             /**
              * If specified, the pod's tolerations.
              */
-            tolerations?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecTolerations[];
+            tolerations?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecTolerations[];
         }
 
         /**
          * If specified, the pod's scheduling constraints
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinity {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinity {
             /**
              * Describes node affinity scheduling rules for the pod.
              */
-            nodeAffinity?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinity;
+            nodeAffinity?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinity;
             /**
              * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAffinity?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinity;
+            podAffinity?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinity;
             /**
              * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAntiAffinity?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinity;
+            podAntiAffinity?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinity;
         }
 
         /**
          * Describes node affinity scheduling rules for the pod.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinity {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinity {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node matches the corresponding matchExpressions; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecution[];
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecution;
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution;
         }
 
         /**
          * An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecution {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution {
             /**
              * A node selector term, associated with the corresponding weight.
              */
-            preference: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreference;
+            preference: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference;
             /**
              * Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
              */
@@ -726,21 +726,21 @@ export namespace acme {
         /**
          * A node selector term, associated with the corresponding weight.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreference {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions[];
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfields[];
+            matchFields?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields[];
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions {
             /**
              * The label key that the selector applies to.
              */
@@ -758,7 +758,7 @@ export namespace acme {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfields {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields {
             /**
              * The label key that the selector applies to.
              */
@@ -776,31 +776,31 @@ export namespace acme {
         /**
          * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecution {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution {
             /**
              * Required. A list of node selector terms. The terms are ORed.
              */
-            nodeSelectorTerms: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectorterms[];
+            nodeSelectorTerms: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms[];
         }
 
         /**
          * A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectorterms {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions[];
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfields[];
+            matchFields?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields[];
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions {
             /**
              * The label key that the selector applies to.
              */
@@ -818,7 +818,7 @@ export namespace acme {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfields {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields {
             /**
              * The label key that the selector applies to.
              */
@@ -836,25 +836,25 @@ export namespace acme {
         /**
          * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinity {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinity {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecution[];
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecution[];
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecution {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecution {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm;
+            podAffinityTerm: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -864,15 +864,15 @@ export namespace acme {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector;
+            labelSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector;
+            namespaceSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -886,11 +886,11 @@ export namespace acme {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -900,7 +900,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -918,11 +918,11 @@ export namespace acme {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -932,7 +932,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -950,15 +950,15 @@ export namespace acme {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecution {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecution {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselector;
+            labelSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector;
+            namespaceSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -972,11 +972,11 @@ export namespace acme {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselector {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -986,7 +986,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1004,11 +1004,11 @@ export namespace acme {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1018,7 +1018,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1036,25 +1036,25 @@ export namespace acme {
         /**
          * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinity {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinity {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecution[];
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
             /**
              * If the anti-affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the anti-affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecution[];
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecution {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm;
+            podAffinityTerm: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -1064,15 +1064,15 @@ export namespace acme {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector;
+            labelSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector;
+            namespaceSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -1086,11 +1086,11 @@ export namespace acme {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1100,7 +1100,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1118,11 +1118,11 @@ export namespace acme {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1132,7 +1132,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1150,15 +1150,15 @@ export namespace acme {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecution {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselector;
+            labelSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector;
+            namespaceSelector?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -1172,11 +1172,11 @@ export namespace acme {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselector {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1186,7 +1186,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1204,11 +1204,11 @@ export namespace acme {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1218,7 +1218,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1236,7 +1236,7 @@ export namespace acme {
         /**
          * The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecTolerations {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecTolerations {
             /**
              * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
              */
@@ -1316,7 +1316,7 @@ export namespace acme {
             /**
              * IssuerRef references a properly configured ACME-type Issuer which should be used to create this Order. If the Issuer does not exist, processing will be retried. If the Issuer is not an 'ACME' Issuer, an error will be returned and the Order will be marked as failed.
              */
-            issuerRef: outputs.acme.v1.OrderSpecIssuerref;
+            issuerRef: outputs.acme.v1.OrderSpecIssuerRef;
             /**
              * Certificate signing request bytes in DER encoding. This will be used when finalizing the order. This field must be set on the order.
              */
@@ -1326,7 +1326,7 @@ export namespace acme {
         /**
          * IssuerRef references a properly configured ACME-type Issuer which should be used to create this Order. If the Issuer does not exist, processing will be retried. If the Issuer is not an 'ACME' Issuer, an error will be returned and the Order will be marked as failed.
          */
-        export interface OrderSpecIssuerref {
+        export interface OrderSpecIssuerRef {
             /**
              * Group of the resource being referred to.
              */
@@ -1526,7 +1526,7 @@ export namespace certmanager {
             /**
              * IssuerRef is a reference to the issuer for this CertificateRequest.  If the `kind` field is not set, or set to `Issuer`, an Issuer resource with the given name in the same namespace as the CertificateRequest will be used.  If the `kind` field is set to `ClusterIssuer`, a ClusterIssuer with the provided name will be used. The `name` field in this stanza is required at all times. The group field refers to the API group of the issuer which defaults to `cert-manager.io` if empty.
              */
-            issuerRef: outputs.certmanager.v1.CertificateRequestSpecIssuerref;
+            issuerRef: outputs.certmanager.v1.CertificateRequestSpecIssuerRef;
             /**
              * The PEM-encoded x509 certificate signing request to be submitted to the CA for signing.
              */
@@ -1548,7 +1548,7 @@ export namespace certmanager {
         /**
          * IssuerRef is a reference to the issuer for this CertificateRequest.  If the `kind` field is not set, or set to `Issuer`, an Issuer resource with the given name in the same namespace as the CertificateRequest will be used.  If the `kind` field is set to `ClusterIssuer`, a ClusterIssuer with the provided name will be used. The `name` field in this stanza is required at all times. The group field refers to the API group of the issuer which defaults to `cert-manager.io` if empty.
          */
-        export interface CertificateRequestSpecIssuerref {
+        export interface CertificateRequestSpecIssuerRef {
             /**
              * Group of the resource being referred to.
              */
@@ -1618,7 +1618,7 @@ export namespace certmanager {
             /**
              * AdditionalOutputFormats defines extra output formats of the private key and signed certificate chain to be written to this Certificate's target Secret. This is an Alpha Feature and is only enabled with the `--feature-gates=AdditionalCertificateOutputFormats=true` option on both the controller and webhook components.
              */
-            additionalOutputFormats?: outputs.certmanager.v1.CertificateSpecAdditionaloutputformats[];
+            additionalOutputFormats?: outputs.certmanager.v1.CertificateSpecAdditionalOutputFormats[];
             /**
              * CommonName is a common name to be used on the Certificate. The CommonName should have a length of 64 characters or fewer to avoid generating invalid CSRs. This value is ignored by TLS clients when any subject alt name is set. This is x509 behaviour: https://tools.ietf.org/html/rfc6125#section-6.4.4
              */
@@ -1650,7 +1650,7 @@ export namespace certmanager {
             /**
              * IssuerRef is a reference to the issuer for this certificate. If the `kind` field is not set, or set to `Issuer`, an Issuer resource with the given name in the same namespace as the Certificate will be used. If the `kind` field is set to `ClusterIssuer`, a ClusterIssuer with the provided name will be used. The `name` field in this stanza is required at all times.
              */
-            issuerRef: outputs.certmanager.v1.CertificateSpecIssuerref;
+            issuerRef: outputs.certmanager.v1.CertificateSpecIssuerRef;
             /**
              * Keystores configures additional keystore output formats stored in the `secretName` Secret resource.
              */
@@ -1662,7 +1662,7 @@ export namespace certmanager {
             /**
              * Options to control private keys used for the Certificate.
              */
-            privateKey?: outputs.certmanager.v1.CertificateSpecPrivatekey;
+            privateKey?: outputs.certmanager.v1.CertificateSpecPrivateKey;
             /**
              * How long before the currently issued certificate's expiry cert-manager should renew the certificate. The default is 2/3 of the issued certificate's duration. Minimum accepted value is 5 minutes. Value must be in units accepted by Go time.ParseDuration https://golang.org/pkg/time/#ParseDuration
              */
@@ -1678,7 +1678,7 @@ export namespace certmanager {
             /**
              * SecretTemplate defines annotations and labels to be copied to the Certificate's Secret. Labels and annotations on the Secret will be changed as they appear on the SecretTemplate when added or removed. SecretTemplate annotations are added in conjunction with, and cannot overwrite, the base set of annotations cert-manager sets on the Certificate's Secret.
              */
-            secretTemplate?: outputs.certmanager.v1.CertificateSpecSecrettemplate;
+            secretTemplate?: outputs.certmanager.v1.CertificateSpecSecretTemplate;
             /**
              * Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).
              */
@@ -1696,7 +1696,7 @@ export namespace certmanager {
         /**
          * CertificateAdditionalOutputFormat defines an additional output format of a Certificate resource. These contain supplementary data formats of the signed certificate chain and paired private key.
          */
-        export interface CertificateSpecAdditionaloutputformats {
+        export interface CertificateSpecAdditionalOutputFormats {
             /**
              * Type is the name of the format type that should be written to the Certificate's target Secret.
              */
@@ -1706,7 +1706,7 @@ export namespace certmanager {
         /**
          * IssuerRef is a reference to the issuer for this certificate. If the `kind` field is not set, or set to `Issuer`, an Issuer resource with the given name in the same namespace as the Certificate will be used. If the `kind` field is set to `ClusterIssuer`, a ClusterIssuer with the provided name will be used. The `name` field in this stanza is required at all times.
          */
-        export interface CertificateSpecIssuerref {
+        export interface CertificateSpecIssuerRef {
             /**
              * Group of the resource being referred to.
              */
@@ -1746,13 +1746,13 @@ export namespace certmanager {
             /**
              * PasswordSecretRef is a reference to a key in a Secret resource containing the password used to encrypt the JKS keystore.
              */
-            passwordSecretRef: outputs.certmanager.v1.CertificateSpecKeystoresJksPasswordsecretref;
+            passwordSecretRef: outputs.certmanager.v1.CertificateSpecKeystoresJksPasswordSecretRef;
         }
 
         /**
          * PasswordSecretRef is a reference to a key in a Secret resource containing the password used to encrypt the JKS keystore.
          */
-        export interface CertificateSpecKeystoresJksPasswordsecretref {
+        export interface CertificateSpecKeystoresJksPasswordSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -1774,13 +1774,13 @@ export namespace certmanager {
             /**
              * PasswordSecretRef is a reference to a key in a Secret resource containing the password used to encrypt the PKCS12 keystore.
              */
-            passwordSecretRef: outputs.certmanager.v1.CertificateSpecKeystoresPkcs12Passwordsecretref;
+            passwordSecretRef: outputs.certmanager.v1.CertificateSpecKeystoresPkcs12PasswordSecretRef;
         }
 
         /**
          * PasswordSecretRef is a reference to a key in a Secret resource containing the password used to encrypt the PKCS12 keystore.
          */
-        export interface CertificateSpecKeystoresPkcs12Passwordsecretref {
+        export interface CertificateSpecKeystoresPkcs12PasswordSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -1794,7 +1794,7 @@ export namespace certmanager {
         /**
          * Options to control private keys used for the Certificate.
          */
-        export interface CertificateSpecPrivatekey {
+        export interface CertificateSpecPrivateKey {
             /**
              * Algorithm is the private key algorithm of the corresponding private key for this certificate. If provided, allowed values are either `RSA`,`Ed25519` or `ECDSA` If `algorithm` is specified and `size` is not provided, key size of 256 will be used for `ECDSA` key algorithm and key size of 2048 will be used for `RSA` key algorithm. key size is ignored when using the `Ed25519` key algorithm.
              */
@@ -1816,7 +1816,7 @@ export namespace certmanager {
         /**
          * SecretTemplate defines annotations and labels to be copied to the Certificate's Secret. Labels and annotations on the Secret will be changed as they appear on the SecretTemplate when added or removed. SecretTemplate annotations are added in conjunction with, and cannot overwrite, the base set of annotations cert-manager sets on the Certificate's Secret.
          */
-        export interface CertificateSpecSecrettemplate {
+        export interface CertificateSpecSecretTemplate {
             /**
              * Annotations is a key value map to be copied to the target Kubernetes Secret.
              */
@@ -1951,7 +1951,7 @@ export namespace certmanager {
             /**
              * SelfSigned configures this issuer to 'self sign' certificates using the private key used to create the CertificateRequest object.
              */
-            selfSigned?: outputs.certmanager.v1.ClusterIssuerSpecSelfsigned;
+            selfSigned?: outputs.certmanager.v1.ClusterIssuerSpecSelfSigned;
             /**
              * Vault configures this issuer to sign certificates using a HashiCorp Vault PKI backend.
              */
@@ -1981,7 +1981,7 @@ export namespace certmanager {
             /**
              * ExternalAccountBinding is a reference to a CA external account of the ACME server. If set, upon registration cert-manager will attempt to associate the given external account credentials with the registered ACME account.
              */
-            externalAccountBinding?: outputs.certmanager.v1.ClusterIssuerSpecAcmeExternalaccountbinding;
+            externalAccountBinding?: outputs.certmanager.v1.ClusterIssuerSpecAcmeExternalAccountBinding;
             /**
              * PreferredChain is the chain to use if the ACME server outputs multiple. PreferredChain is no guarantee that this one gets delivered by the ACME endpoint. For example, for Let's Encrypt's DST crosssign you would use: "DST Root CA X3" or "ISRG Root X1" for the newer Let's Encrypt root CA. This value picks the first certificate bundle in the ACME alternative chains that has a certificate with this value as its issuer's CN
              */
@@ -1989,7 +1989,7 @@ export namespace certmanager {
             /**
              * PrivateKey is the name of a Kubernetes Secret resource that will be used to store the automatically generated ACME account private key. Optionally, a `key` may be specified to select a specific entry within the named Secret resource. If `key` is not specified, a default of `tls.key` will be used.
              */
-            privateKeySecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmePrivatekeysecretref;
+            privateKeySecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmePrivateKeySecretRef;
             /**
              * Server is the URL used to access the ACME server's 'directory' endpoint. For example, for Let's Encrypt's staging endpoint, you would use: "https://acme-staging-v02.api.letsencrypt.org/directory". Only ACME v2 endpoints (i.e. RFC 8555) are supported.
              */
@@ -2007,7 +2007,7 @@ export namespace certmanager {
         /**
          * ExternalAccountBinding is a reference to a CA external account of the ACME server. If set, upon registration cert-manager will attempt to associate the given external account credentials with the registered ACME account.
          */
-        export interface ClusterIssuerSpecAcmeExternalaccountbinding {
+        export interface ClusterIssuerSpecAcmeExternalAccountBinding {
             /**
              * Deprecated: keyAlgorithm field exists for historical compatibility reasons and should not be used. The algorithm is now hardcoded to HS256 in golang/x/crypto/acme.
              */
@@ -2019,13 +2019,13 @@ export namespace certmanager {
             /**
              * keySecretRef is a Secret Key Selector referencing a data item in a Kubernetes Secret which holds the symmetric MAC key of the External Account Binding. The `key` is the index string that is paired with the key data in the Secret and should not be confused with the key data itself, or indeed with the External Account Binding keyID above. The secret key stored in the Secret **must** be un-padded, base64 URL encoded data.
              */
-            keySecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeExternalaccountbindingKeysecretref;
+            keySecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeExternalAccountBindingKeySecretRef;
         }
 
         /**
          * keySecretRef is a Secret Key Selector referencing a data item in a Kubernetes Secret which holds the symmetric MAC key of the External Account Binding. The `key` is the index string that is paired with the key data in the Secret and should not be confused with the key data itself, or indeed with the External Account Binding keyID above. The secret key stored in the Secret **must** be un-padded, base64 URL encoded data.
          */
-        export interface ClusterIssuerSpecAcmeExternalaccountbindingKeysecretref {
+        export interface ClusterIssuerSpecAcmeExternalAccountBindingKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2039,7 +2039,7 @@ export namespace certmanager {
         /**
          * PrivateKey is the name of a Kubernetes Secret resource that will be used to store the automatically generated ACME account private key. Optionally, a `key` may be specified to select a specific entry within the named Secret resource. If `key` is not specified, a default of `tls.key` will be used.
          */
-        export interface ClusterIssuerSpecAcmePrivatekeysecretref {
+        export interface ClusterIssuerSpecAcmePrivateKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2075,7 +2075,7 @@ export namespace certmanager {
             /**
              * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
              */
-            acmeDNS?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Acmedns;
+            acmeDNS?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AcmeDNS;
             /**
              * Use the Akamai DNS zone management API to manage DNS01 challenge records.
              */
@@ -2083,11 +2083,11 @@ export namespace certmanager {
             /**
              * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
              */
-            azureDNS?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Azuredns;
+            azureDNS?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzureDNS;
             /**
              * Use the Google Cloud DNS API to manage DNS01 challenge records.
              */
-            cloudDNS?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Clouddns;
+            cloudDNS?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudDNS;
             /**
              * Use the Cloudflare API to manage DNS01 challenge records.
              */
@@ -2117,18 +2117,18 @@ export namespace certmanager {
         /**
          * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01Acmedns {
+        export interface ClusterIssuerSpecAcmeSolversDns01AcmeDNS {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accountSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AcmednsAccountsecretref;
+            accountSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AcmeDNSAccountSecretRef;
             host: string;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AcmednsAccountsecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01AcmeDNSAccountSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2146,22 +2146,22 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accessTokenSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiAccesstokensecretref;
+            accessTokenSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiAccessTokenSecretRef;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientSecretSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiClientsecretsecretref;
+            clientSecretSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiClientSecretSecretRef;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientTokenSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiClienttokensecretref;
+            clientTokenSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiClientTokenSecretRef;
             serviceConsumerDomain: string;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiAccesstokensecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiAccessTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2175,7 +2175,7 @@ export namespace certmanager {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiClientsecretsecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiClientSecretSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2189,7 +2189,7 @@ export namespace certmanager {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiClienttokensecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiClientTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2203,7 +2203,7 @@ export namespace certmanager {
         /**
          * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01Azuredns {
+        export interface ClusterIssuerSpecAcmeSolversDns01AzureDNS {
             /**
              * if both this and ClientSecret are left unset MSI will be used
              */
@@ -2211,7 +2211,7 @@ export namespace certmanager {
             /**
              * if both this and ClientID are left unset MSI will be used
              */
-            clientSecretSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzurednsClientsecretsecretref;
+            clientSecretSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzureDNSClientSecretSecretRef;
             /**
              * name of the Azure environment (default AzurePublicCloud)
              */
@@ -2223,7 +2223,7 @@ export namespace certmanager {
             /**
              * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
              */
-            managedIdentity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzurednsManagedidentity;
+            managedIdentity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzureDNSManagedIdentity;
             /**
              * resource group the DNS zone is located in
              */
@@ -2241,7 +2241,7 @@ export namespace certmanager {
         /**
          * if both this and ClientID are left unset MSI will be used
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AzurednsClientsecretsecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01AzureDNSClientSecretSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2255,7 +2255,7 @@ export namespace certmanager {
         /**
          * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AzurednsManagedidentity {
+        export interface ClusterIssuerSpecAcmeSolversDns01AzureDNSManagedIdentity {
             /**
              * client ID of the managed identity, can not be used at the same time as resourceID
              */
@@ -2269,7 +2269,7 @@ export namespace certmanager {
         /**
          * Use the Google Cloud DNS API to manage DNS01 challenge records.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01Clouddns {
+        export interface ClusterIssuerSpecAcmeSolversDns01CloudDNS {
             /**
              * HostedZoneName is an optional field that tells cert-manager in which Cloud DNS zone the challenge record has to be created. If left empty cert-manager will automatically choose a zone.
              */
@@ -2278,13 +2278,13 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            serviceAccountSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01ClouddnsServiceaccountsecretref;
+            serviceAccountSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudDNSServiceAccountSecretRef;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01ClouddnsServiceaccountsecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01CloudDNSServiceAccountSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2302,11 +2302,11 @@ export namespace certmanager {
             /**
              * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
              */
-            apiKeySecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudflareApikeysecretref;
+            apiKeySecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudflareApiKeySecretRef;
             /**
              * API token used to authenticate with Cloudflare.
              */
-            apiTokenSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudflareApitokensecretref;
+            apiTokenSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudflareApiTokenSecretRef;
             /**
              * Email of the account, only required when using API key based authentication.
              */
@@ -2316,7 +2316,7 @@ export namespace certmanager {
         /**
          * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01CloudflareApikeysecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01CloudflareApiKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2330,7 +2330,7 @@ export namespace certmanager {
         /**
          * API token used to authenticate with Cloudflare.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01CloudflareApitokensecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01CloudflareApiTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2348,13 +2348,13 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            tokenSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01DigitaloceanTokensecretref;
+            tokenSecretRef: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01DigitaloceanTokenSecretRef;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01DigitaloceanTokensecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01DigitaloceanTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2384,13 +2384,13 @@ export namespace certmanager {
             /**
              * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
              */
-            tsigSecretSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Rfc2136Tsigsecretsecretref;
+            tsigSecretSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Rfc2136TsigSecretSecretRef;
         }
 
         /**
          * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01Rfc2136Tsigsecretsecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01Rfc2136TsigSecretSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2412,7 +2412,7 @@ export namespace certmanager {
             /**
              * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            accessKeyIDSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Route53Accesskeyidsecretref;
+            accessKeyIDSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Route53AccessKeyIDSecretRef;
             /**
              * If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
              */
@@ -2428,13 +2428,13 @@ export namespace certmanager {
             /**
              * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            secretAccessKeySecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Route53Secretaccesskeysecretref;
+            secretAccessKeySecretRef?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Route53SecretAccessKeySecretRef;
         }
 
         /**
          * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01Route53Accesskeyidsecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01Route53AccessKeyIDSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2448,7 +2448,7 @@ export namespace certmanager {
         /**
          * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01Route53Secretaccesskeysecretref {
+        export interface ClusterIssuerSpecAcmeSolversDns01Route53SecretAccessKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2484,7 +2484,7 @@ export namespace certmanager {
             /**
              * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
              */
-            gatewayHTTPRoute?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01Gatewayhttproute;
+            gatewayHTTPRoute?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRoute;
             /**
              * The ingress based HTTP01 challenge solver will solve challenges by creating or modifying Ingress resources in order to route requests for '/.well-known/acme-challenge/XYZ' to 'challenge solver' pods that are provisioned by cert-manager for each Challenge to be completed.
              */
@@ -2494,7 +2494,7 @@ export namespace certmanager {
         /**
          * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01Gatewayhttproute {
+        export interface ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRoute {
             /**
              * Custom labels that will be applied to HTTPRoutes created by cert-manager while solving HTTP-01 challenges.
              */
@@ -2502,7 +2502,7 @@ export namespace certmanager {
             /**
              * When solving an HTTP-01 challenge, cert-manager creates an HTTPRoute. cert-manager needs to know which parentRefs should be used when creating the HTTPRoute. Usually, the parentRef references a Gateway. See: https://gateway-api.sigs.k8s.io/v1alpha2/api-types/httproute/#attaching-to-gateways
              */
-            parentRefs?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs[];
+            parentRefs?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs[];
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -2514,7 +2514,7 @@ export namespace certmanager {
          *  The API object must be valid in the cluster; the Group and Kind must be registered in the cluster for this reference to be valid. 
          *  References to objects with invalid Group and Kind are not valid, and must be rejected by the implementation, with appropriate Conditions set on the containing object.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs {
             /**
              * Group is the group of the referent. 
              *  Support: Core
@@ -2545,9 +2545,9 @@ export namespace certmanager {
             sectionName?: string;
         }
         /**
-         * clusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsProvideDefaults sets the appropriate defaults for ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs
+         * clusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsProvideDefaults sets the appropriate defaults for ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs
          */
-        export function clusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsProvideDefaults(val: ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs): ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs {
+        export function clusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsProvideDefaults(val: ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs): ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs {
             return {
                 ...val,
                 group: (val.group) ?? "gateway.networking.k8s.io",
@@ -2566,7 +2566,7 @@ export namespace certmanager {
             /**
              * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
              */
-            ingressTemplate?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressIngresstemplate;
+            ingressTemplate?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressIngressTemplate;
             /**
              * The name of the ingress resource that should have ACME challenge solving routes inserted into it in order to solve HTTP01 challenges. This is typically used in conjunction with ingress controllers like ingress-gce, which maintains a 1:1 mapping between external IPs and ingress resources.
              */
@@ -2574,7 +2574,7 @@ export namespace certmanager {
             /**
              * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
              */
-            podTemplate?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplate;
+            podTemplate?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplate;
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -2584,17 +2584,17 @@ export namespace certmanager {
         /**
          * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressIngresstemplate {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressIngressTemplate {
             /**
              * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressIngresstemplateMetadata;
+            metadata?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressIngressTemplateMetadata;
         }
 
         /**
          * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressIngresstemplateMetadata {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressIngressTemplateMetadata {
             /**
              * Annotations that should be added to the created ACME HTTP01 solver ingress.
              */
@@ -2608,21 +2608,21 @@ export namespace certmanager {
         /**
          * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplate {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplate {
             /**
              * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateMetadata;
+            metadata?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateMetadata;
             /**
              * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
              */
-            spec?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpec;
+            spec?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpec;
         }
 
         /**
          * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateMetadata {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateMetadata {
             /**
              * Annotations that should be added to the create ACME HTTP01 solver pods.
              */
@@ -2636,11 +2636,11 @@ export namespace certmanager {
         /**
          * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpec {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpec {
             /**
              * If specified, the pod's scheduling constraints
              */
-            affinity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinity;
+            affinity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinity;
             /**
              * NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
              */
@@ -2656,49 +2656,49 @@ export namespace certmanager {
             /**
              * If specified, the pod's tolerations.
              */
-            tolerations?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecTolerations[];
+            tolerations?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecTolerations[];
         }
 
         /**
          * If specified, the pod's scheduling constraints
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinity {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinity {
             /**
              * Describes node affinity scheduling rules for the pod.
              */
-            nodeAffinity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinity;
+            nodeAffinity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinity;
             /**
              * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAffinity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinity;
+            podAffinity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinity;
             /**
              * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAntiAffinity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinity;
+            podAntiAffinity?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinity;
         }
 
         /**
          * Describes node affinity scheduling rules for the pod.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinity {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinity {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node matches the corresponding matchExpressions; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecution[];
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecution;
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution;
         }
 
         /**
          * An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecution {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution {
             /**
              * A node selector term, associated with the corresponding weight.
              */
-            preference: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreference;
+            preference: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference;
             /**
              * Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
              */
@@ -2708,21 +2708,21 @@ export namespace certmanager {
         /**
          * A node selector term, associated with the corresponding weight.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreference {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions[];
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfields[];
+            matchFields?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields[];
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions {
             /**
              * The label key that the selector applies to.
              */
@@ -2740,7 +2740,7 @@ export namespace certmanager {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfields {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields {
             /**
              * The label key that the selector applies to.
              */
@@ -2758,31 +2758,31 @@ export namespace certmanager {
         /**
          * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecution {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution {
             /**
              * Required. A list of node selector terms. The terms are ORed.
              */
-            nodeSelectorTerms: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectorterms[];
+            nodeSelectorTerms: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms[];
         }
 
         /**
          * A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectorterms {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions[];
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfields[];
+            matchFields?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields[];
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions {
             /**
              * The label key that the selector applies to.
              */
@@ -2800,7 +2800,7 @@ export namespace certmanager {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfields {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields {
             /**
              * The label key that the selector applies to.
              */
@@ -2818,25 +2818,25 @@ export namespace certmanager {
         /**
          * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinity {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinity {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecution[];
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecution[];
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecution {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecution {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm;
+            podAffinityTerm: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -2846,15 +2846,15 @@ export namespace certmanager {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector;
+            labelSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector;
+            namespaceSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -2868,11 +2868,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -2882,7 +2882,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -2900,11 +2900,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -2914,7 +2914,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -2932,15 +2932,15 @@ export namespace certmanager {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecution {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecution {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselector;
+            labelSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector;
+            namespaceSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -2954,11 +2954,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselector {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -2968,7 +2968,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -2986,11 +2986,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -3000,7 +3000,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3018,25 +3018,25 @@ export namespace certmanager {
         /**
          * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinity {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinity {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecution[];
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
             /**
              * If the anti-affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the anti-affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecution[];
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecution {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm;
+            podAffinityTerm: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -3046,15 +3046,15 @@ export namespace certmanager {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector;
+            labelSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector;
+            namespaceSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -3068,11 +3068,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -3082,7 +3082,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3100,11 +3100,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -3114,7 +3114,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3132,15 +3132,15 @@ export namespace certmanager {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecution {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselector;
+            labelSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector;
+            namespaceSelector?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -3154,11 +3154,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselector {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -3168,7 +3168,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3186,11 +3186,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -3200,7 +3200,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3218,7 +3218,7 @@ export namespace certmanager {
         /**
          * The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecTolerations {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecTolerations {
             /**
              * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
              */
@@ -3280,7 +3280,7 @@ export namespace certmanager {
         /**
          * SelfSigned configures this issuer to 'self sign' certificates using the private key used to create the CertificateRequest object.
          */
-        export interface ClusterIssuerSpecSelfsigned {
+        export interface ClusterIssuerSpecSelfSigned {
             /**
              * The CRL distribution points is an X.509 v3 certificate extension which identifies the location of the CRL from which the revocation of this certificate can be checked. If not set certificate will be issued without CDP. Values are strings.
              */
@@ -3320,7 +3320,7 @@ export namespace certmanager {
             /**
              * AppRole authenticates with Vault using the App Role auth mechanism, with the role and secret stored in a Kubernetes Secret resource.
              */
-            appRole?: outputs.certmanager.v1.ClusterIssuerSpecVaultAuthApprole;
+            appRole?: outputs.certmanager.v1.ClusterIssuerSpecVaultAuthAppRole;
             /**
              * Kubernetes authenticates with Vault by passing the ServiceAccount token stored in the named Secret resource to the Vault server.
              */
@@ -3328,13 +3328,13 @@ export namespace certmanager {
             /**
              * TokenSecretRef authenticates with Vault by presenting a token.
              */
-            tokenSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecVaultAuthTokensecretref;
+            tokenSecretRef?: outputs.certmanager.v1.ClusterIssuerSpecVaultAuthTokenSecretRef;
         }
 
         /**
          * AppRole authenticates with Vault using the App Role auth mechanism, with the role and secret stored in a Kubernetes Secret resource.
          */
-        export interface ClusterIssuerSpecVaultAuthApprole {
+        export interface ClusterIssuerSpecVaultAuthAppRole {
             /**
              * Path where the App Role authentication backend is mounted in Vault, e.g: "approle"
              */
@@ -3346,13 +3346,13 @@ export namespace certmanager {
             /**
              * Reference to a key in a Secret that contains the App Role secret used to authenticate with Vault. The `key` field must be specified and denotes which entry within the Secret resource is used as the app role secret.
              */
-            secretRef: outputs.certmanager.v1.ClusterIssuerSpecVaultAuthApproleSecretref;
+            secretRef: outputs.certmanager.v1.ClusterIssuerSpecVaultAuthAppRoleSecretRef;
         }
 
         /**
          * Reference to a key in a Secret that contains the App Role secret used to authenticate with Vault. The `key` field must be specified and denotes which entry within the Secret resource is used as the app role secret.
          */
-        export interface ClusterIssuerSpecVaultAuthApproleSecretref {
+        export interface ClusterIssuerSpecVaultAuthAppRoleSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3378,13 +3378,13 @@ export namespace certmanager {
             /**
              * The required Secret field containing a Kubernetes ServiceAccount JWT used for authenticating with Vault. Use of 'ambient credentials' is not supported.
              */
-            secretRef: outputs.certmanager.v1.ClusterIssuerSpecVaultAuthKubernetesSecretref;
+            secretRef: outputs.certmanager.v1.ClusterIssuerSpecVaultAuthKubernetesSecretRef;
         }
 
         /**
          * The required Secret field containing a Kubernetes ServiceAccount JWT used for authenticating with Vault. Use of 'ambient credentials' is not supported.
          */
-        export interface ClusterIssuerSpecVaultAuthKubernetesSecretref {
+        export interface ClusterIssuerSpecVaultAuthKubernetesSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3398,7 +3398,7 @@ export namespace certmanager {
         /**
          * TokenSecretRef authenticates with Vault by presenting a token.
          */
-        export interface ClusterIssuerSpecVaultAuthTokensecretref {
+        export interface ClusterIssuerSpecVaultAuthTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3434,7 +3434,7 @@ export namespace certmanager {
             /**
              * APITokenSecretRef is a secret key selector for the Venafi Cloud API token.
              */
-            apiTokenSecretRef: outputs.certmanager.v1.ClusterIssuerSpecVenafiCloudApitokensecretref;
+            apiTokenSecretRef: outputs.certmanager.v1.ClusterIssuerSpecVenafiCloudApiTokenSecretRef;
             /**
              * URL is the base URL for Venafi Cloud. Defaults to "https://api.venafi.cloud/v1".
              */
@@ -3444,7 +3444,7 @@ export namespace certmanager {
         /**
          * APITokenSecretRef is a secret key selector for the Venafi Cloud API token.
          */
-        export interface ClusterIssuerSpecVenafiCloudApitokensecretref {
+        export interface ClusterIssuerSpecVenafiCloudApiTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3466,7 +3466,7 @@ export namespace certmanager {
             /**
              * CredentialsRef is a reference to a Secret containing the username and password for the TPP server. The secret must contain two keys, 'username' and 'password'.
              */
-            credentialsRef: outputs.certmanager.v1.ClusterIssuerSpecVenafiTppCredentialsref;
+            credentialsRef: outputs.certmanager.v1.ClusterIssuerSpecVenafiTppCredentialsRef;
             /**
              * URL is the base URL for the vedsdk endpoint of the Venafi TPP instance, for example: "https://tpp.example.com/vedsdk".
              */
@@ -3476,7 +3476,7 @@ export namespace certmanager {
         /**
          * CredentialsRef is a reference to a Secret containing the username and password for the TPP server. The secret must contain two keys, 'username' and 'password'.
          */
-        export interface ClusterIssuerSpecVenafiTppCredentialsref {
+        export interface ClusterIssuerSpecVenafiTppCredentialsRef {
             /**
              * Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
              */
@@ -3556,7 +3556,7 @@ export namespace certmanager {
             /**
              * SelfSigned configures this issuer to 'self sign' certificates using the private key used to create the CertificateRequest object.
              */
-            selfSigned?: outputs.certmanager.v1.IssuerSpecSelfsigned;
+            selfSigned?: outputs.certmanager.v1.IssuerSpecSelfSigned;
             /**
              * Vault configures this issuer to sign certificates using a HashiCorp Vault PKI backend.
              */
@@ -3586,7 +3586,7 @@ export namespace certmanager {
             /**
              * ExternalAccountBinding is a reference to a CA external account of the ACME server. If set, upon registration cert-manager will attempt to associate the given external account credentials with the registered ACME account.
              */
-            externalAccountBinding?: outputs.certmanager.v1.IssuerSpecAcmeExternalaccountbinding;
+            externalAccountBinding?: outputs.certmanager.v1.IssuerSpecAcmeExternalAccountBinding;
             /**
              * PreferredChain is the chain to use if the ACME server outputs multiple. PreferredChain is no guarantee that this one gets delivered by the ACME endpoint. For example, for Let's Encrypt's DST crosssign you would use: "DST Root CA X3" or "ISRG Root X1" for the newer Let's Encrypt root CA. This value picks the first certificate bundle in the ACME alternative chains that has a certificate with this value as its issuer's CN
              */
@@ -3594,7 +3594,7 @@ export namespace certmanager {
             /**
              * PrivateKey is the name of a Kubernetes Secret resource that will be used to store the automatically generated ACME account private key. Optionally, a `key` may be specified to select a specific entry within the named Secret resource. If `key` is not specified, a default of `tls.key` will be used.
              */
-            privateKeySecretRef: outputs.certmanager.v1.IssuerSpecAcmePrivatekeysecretref;
+            privateKeySecretRef: outputs.certmanager.v1.IssuerSpecAcmePrivateKeySecretRef;
             /**
              * Server is the URL used to access the ACME server's 'directory' endpoint. For example, for Let's Encrypt's staging endpoint, you would use: "https://acme-staging-v02.api.letsencrypt.org/directory". Only ACME v2 endpoints (i.e. RFC 8555) are supported.
              */
@@ -3612,7 +3612,7 @@ export namespace certmanager {
         /**
          * ExternalAccountBinding is a reference to a CA external account of the ACME server. If set, upon registration cert-manager will attempt to associate the given external account credentials with the registered ACME account.
          */
-        export interface IssuerSpecAcmeExternalaccountbinding {
+        export interface IssuerSpecAcmeExternalAccountBinding {
             /**
              * Deprecated: keyAlgorithm field exists for historical compatibility reasons and should not be used. The algorithm is now hardcoded to HS256 in golang/x/crypto/acme.
              */
@@ -3624,13 +3624,13 @@ export namespace certmanager {
             /**
              * keySecretRef is a Secret Key Selector referencing a data item in a Kubernetes Secret which holds the symmetric MAC key of the External Account Binding. The `key` is the index string that is paired with the key data in the Secret and should not be confused with the key data itself, or indeed with the External Account Binding keyID above. The secret key stored in the Secret **must** be un-padded, base64 URL encoded data.
              */
-            keySecretRef: outputs.certmanager.v1.IssuerSpecAcmeExternalaccountbindingKeysecretref;
+            keySecretRef: outputs.certmanager.v1.IssuerSpecAcmeExternalAccountBindingKeySecretRef;
         }
 
         /**
          * keySecretRef is a Secret Key Selector referencing a data item in a Kubernetes Secret which holds the symmetric MAC key of the External Account Binding. The `key` is the index string that is paired with the key data in the Secret and should not be confused with the key data itself, or indeed with the External Account Binding keyID above. The secret key stored in the Secret **must** be un-padded, base64 URL encoded data.
          */
-        export interface IssuerSpecAcmeExternalaccountbindingKeysecretref {
+        export interface IssuerSpecAcmeExternalAccountBindingKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3644,7 +3644,7 @@ export namespace certmanager {
         /**
          * PrivateKey is the name of a Kubernetes Secret resource that will be used to store the automatically generated ACME account private key. Optionally, a `key` may be specified to select a specific entry within the named Secret resource. If `key` is not specified, a default of `tls.key` will be used.
          */
-        export interface IssuerSpecAcmePrivatekeysecretref {
+        export interface IssuerSpecAcmePrivateKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3680,7 +3680,7 @@ export namespace certmanager {
             /**
              * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
              */
-            acmeDNS?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01Acmedns;
+            acmeDNS?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AcmeDNS;
             /**
              * Use the Akamai DNS zone management API to manage DNS01 challenge records.
              */
@@ -3688,11 +3688,11 @@ export namespace certmanager {
             /**
              * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
              */
-            azureDNS?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01Azuredns;
+            azureDNS?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzureDNS;
             /**
              * Use the Google Cloud DNS API to manage DNS01 challenge records.
              */
-            cloudDNS?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01Clouddns;
+            cloudDNS?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudDNS;
             /**
              * Use the Cloudflare API to manage DNS01 challenge records.
              */
@@ -3722,18 +3722,18 @@ export namespace certmanager {
         /**
          * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
          */
-        export interface IssuerSpecAcmeSolversDns01Acmedns {
+        export interface IssuerSpecAcmeSolversDns01AcmeDNS {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accountSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AcmednsAccountsecretref;
+            accountSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AcmeDNSAccountSecretRef;
             host: string;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01AcmednsAccountsecretref {
+        export interface IssuerSpecAcmeSolversDns01AcmeDNSAccountSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3751,22 +3751,22 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accessTokenSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiAccesstokensecretref;
+            accessTokenSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiAccessTokenSecretRef;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientSecretSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiClientsecretsecretref;
+            clientSecretSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiClientSecretSecretRef;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientTokenSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiClienttokensecretref;
+            clientTokenSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiClientTokenSecretRef;
             serviceConsumerDomain: string;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01AkamaiAccesstokensecretref {
+        export interface IssuerSpecAcmeSolversDns01AkamaiAccessTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3780,7 +3780,7 @@ export namespace certmanager {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01AkamaiClientsecretsecretref {
+        export interface IssuerSpecAcmeSolversDns01AkamaiClientSecretSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3794,7 +3794,7 @@ export namespace certmanager {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01AkamaiClienttokensecretref {
+        export interface IssuerSpecAcmeSolversDns01AkamaiClientTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3808,7 +3808,7 @@ export namespace certmanager {
         /**
          * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
          */
-        export interface IssuerSpecAcmeSolversDns01Azuredns {
+        export interface IssuerSpecAcmeSolversDns01AzureDNS {
             /**
              * if both this and ClientSecret are left unset MSI will be used
              */
@@ -3816,7 +3816,7 @@ export namespace certmanager {
             /**
              * if both this and ClientID are left unset MSI will be used
              */
-            clientSecretSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzurednsClientsecretsecretref;
+            clientSecretSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzureDNSClientSecretSecretRef;
             /**
              * name of the Azure environment (default AzurePublicCloud)
              */
@@ -3828,7 +3828,7 @@ export namespace certmanager {
             /**
              * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
              */
-            managedIdentity?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzurednsManagedidentity;
+            managedIdentity?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzureDNSManagedIdentity;
             /**
              * resource group the DNS zone is located in
              */
@@ -3846,7 +3846,7 @@ export namespace certmanager {
         /**
          * if both this and ClientID are left unset MSI will be used
          */
-        export interface IssuerSpecAcmeSolversDns01AzurednsClientsecretsecretref {
+        export interface IssuerSpecAcmeSolversDns01AzureDNSClientSecretSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3860,7 +3860,7 @@ export namespace certmanager {
         /**
          * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
          */
-        export interface IssuerSpecAcmeSolversDns01AzurednsManagedidentity {
+        export interface IssuerSpecAcmeSolversDns01AzureDNSManagedIdentity {
             /**
              * client ID of the managed identity, can not be used at the same time as resourceID
              */
@@ -3874,7 +3874,7 @@ export namespace certmanager {
         /**
          * Use the Google Cloud DNS API to manage DNS01 challenge records.
          */
-        export interface IssuerSpecAcmeSolversDns01Clouddns {
+        export interface IssuerSpecAcmeSolversDns01CloudDNS {
             /**
              * HostedZoneName is an optional field that tells cert-manager in which Cloud DNS zone the challenge record has to be created. If left empty cert-manager will automatically choose a zone.
              */
@@ -3883,13 +3883,13 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            serviceAccountSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01ClouddnsServiceaccountsecretref;
+            serviceAccountSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudDNSServiceAccountSecretRef;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01ClouddnsServiceaccountsecretref {
+        export interface IssuerSpecAcmeSolversDns01CloudDNSServiceAccountSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3907,11 +3907,11 @@ export namespace certmanager {
             /**
              * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
              */
-            apiKeySecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudflareApikeysecretref;
+            apiKeySecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudflareApiKeySecretRef;
             /**
              * API token used to authenticate with Cloudflare.
              */
-            apiTokenSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudflareApitokensecretref;
+            apiTokenSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudflareApiTokenSecretRef;
             /**
              * Email of the account, only required when using API key based authentication.
              */
@@ -3921,7 +3921,7 @@ export namespace certmanager {
         /**
          * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
          */
-        export interface IssuerSpecAcmeSolversDns01CloudflareApikeysecretref {
+        export interface IssuerSpecAcmeSolversDns01CloudflareApiKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3935,7 +3935,7 @@ export namespace certmanager {
         /**
          * API token used to authenticate with Cloudflare.
          */
-        export interface IssuerSpecAcmeSolversDns01CloudflareApitokensecretref {
+        export interface IssuerSpecAcmeSolversDns01CloudflareApiTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3953,13 +3953,13 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            tokenSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01DigitaloceanTokensecretref;
+            tokenSecretRef: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01DigitaloceanTokenSecretRef;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01DigitaloceanTokensecretref {
+        export interface IssuerSpecAcmeSolversDns01DigitaloceanTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3989,13 +3989,13 @@ export namespace certmanager {
             /**
              * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
              */
-            tsigSecretSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01Rfc2136Tsigsecretsecretref;
+            tsigSecretSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01Rfc2136TsigSecretSecretRef;
         }
 
         /**
          * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
          */
-        export interface IssuerSpecAcmeSolversDns01Rfc2136Tsigsecretsecretref {
+        export interface IssuerSpecAcmeSolversDns01Rfc2136TsigSecretSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -4017,7 +4017,7 @@ export namespace certmanager {
             /**
              * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            accessKeyIDSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01Route53Accesskeyidsecretref;
+            accessKeyIDSecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01Route53AccessKeyIDSecretRef;
             /**
              * If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
              */
@@ -4033,13 +4033,13 @@ export namespace certmanager {
             /**
              * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            secretAccessKeySecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01Route53Secretaccesskeysecretref;
+            secretAccessKeySecretRef?: outputs.certmanager.v1.IssuerSpecAcmeSolversDns01Route53SecretAccessKeySecretRef;
         }
 
         /**
          * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface IssuerSpecAcmeSolversDns01Route53Accesskeyidsecretref {
+        export interface IssuerSpecAcmeSolversDns01Route53AccessKeyIDSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -4053,7 +4053,7 @@ export namespace certmanager {
         /**
          * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface IssuerSpecAcmeSolversDns01Route53Secretaccesskeysecretref {
+        export interface IssuerSpecAcmeSolversDns01Route53SecretAccessKeySecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -4089,7 +4089,7 @@ export namespace certmanager {
             /**
              * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
              */
-            gatewayHTTPRoute?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01Gatewayhttproute;
+            gatewayHTTPRoute?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01GatewayHTTPRoute;
             /**
              * The ingress based HTTP01 challenge solver will solve challenges by creating or modifying Ingress resources in order to route requests for '/.well-known/acme-challenge/XYZ' to 'challenge solver' pods that are provisioned by cert-manager for each Challenge to be completed.
              */
@@ -4099,7 +4099,7 @@ export namespace certmanager {
         /**
          * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
          */
-        export interface IssuerSpecAcmeSolversHttp01Gatewayhttproute {
+        export interface IssuerSpecAcmeSolversHttp01GatewayHTTPRoute {
             /**
              * Custom labels that will be applied to HTTPRoutes created by cert-manager while solving HTTP-01 challenges.
              */
@@ -4107,7 +4107,7 @@ export namespace certmanager {
             /**
              * When solving an HTTP-01 challenge, cert-manager creates an HTTPRoute. cert-manager needs to know which parentRefs should be used when creating the HTTPRoute. Usually, the parentRef references a Gateway. See: https://gateway-api.sigs.k8s.io/v1alpha2/api-types/httproute/#attaching-to-gateways
              */
-            parentRefs?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs[];
+            parentRefs?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs[];
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -4119,7 +4119,7 @@ export namespace certmanager {
          *  The API object must be valid in the cluster; the Group and Kind must be registered in the cluster for this reference to be valid. 
          *  References to objects with invalid Group and Kind are not valid, and must be rejected by the implementation, with appropriate Conditions set on the containing object.
          */
-        export interface IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs {
+        export interface IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs {
             /**
              * Group is the group of the referent. 
              *  Support: Core
@@ -4150,9 +4150,9 @@ export namespace certmanager {
             sectionName?: string;
         }
         /**
-         * issuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsProvideDefaults sets the appropriate defaults for IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs
+         * issuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsProvideDefaults sets the appropriate defaults for IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs
          */
-        export function issuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsProvideDefaults(val: IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs): IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefs {
+        export function issuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsProvideDefaults(val: IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs): IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefs {
             return {
                 ...val,
                 group: (val.group) ?? "gateway.networking.k8s.io",
@@ -4171,7 +4171,7 @@ export namespace certmanager {
             /**
              * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
              */
-            ingressTemplate?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressIngresstemplate;
+            ingressTemplate?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressIngressTemplate;
             /**
              * The name of the ingress resource that should have ACME challenge solving routes inserted into it in order to solve HTTP01 challenges. This is typically used in conjunction with ingress controllers like ingress-gce, which maintains a 1:1 mapping between external IPs and ingress resources.
              */
@@ -4179,7 +4179,7 @@ export namespace certmanager {
             /**
              * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
              */
-            podTemplate?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplate;
+            podTemplate?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplate;
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -4189,17 +4189,17 @@ export namespace certmanager {
         /**
          * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressIngresstemplate {
+        export interface IssuerSpecAcmeSolversHttp01IngressIngressTemplate {
             /**
              * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressIngresstemplateMetadata;
+            metadata?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressIngressTemplateMetadata;
         }
 
         /**
          * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressIngresstemplateMetadata {
+        export interface IssuerSpecAcmeSolversHttp01IngressIngressTemplateMetadata {
             /**
              * Annotations that should be added to the created ACME HTTP01 solver ingress.
              */
@@ -4213,21 +4213,21 @@ export namespace certmanager {
         /**
          * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplate {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplate {
             /**
              * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateMetadata;
+            metadata?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateMetadata;
             /**
              * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
              */
-            spec?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpec;
+            spec?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpec;
         }
 
         /**
          * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateMetadata {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateMetadata {
             /**
              * Annotations that should be added to the create ACME HTTP01 solver pods.
              */
@@ -4241,11 +4241,11 @@ export namespace certmanager {
         /**
          * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpec {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpec {
             /**
              * If specified, the pod's scheduling constraints
              */
-            affinity?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinity;
+            affinity?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinity;
             /**
              * NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
              */
@@ -4261,49 +4261,49 @@ export namespace certmanager {
             /**
              * If specified, the pod's tolerations.
              */
-            tolerations?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecTolerations[];
+            tolerations?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecTolerations[];
         }
 
         /**
          * If specified, the pod's scheduling constraints
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinity {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinity {
             /**
              * Describes node affinity scheduling rules for the pod.
              */
-            nodeAffinity?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinity;
+            nodeAffinity?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinity;
             /**
              * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAffinity?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinity;
+            podAffinity?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinity;
             /**
              * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAntiAffinity?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinity;
+            podAntiAffinity?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinity;
         }
 
         /**
          * Describes node affinity scheduling rules for the pod.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinity {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinity {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node matches the corresponding matchExpressions; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecution[];
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecution;
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution;
         }
 
         /**
          * An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecution {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution {
             /**
              * A node selector term, associated with the corresponding weight.
              */
-            preference: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreference;
+            preference: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference;
             /**
              * Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
              */
@@ -4313,21 +4313,21 @@ export namespace certmanager {
         /**
          * A node selector term, associated with the corresponding weight.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreference {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions[];
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfields[];
+            matchFields?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields[];
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions {
             /**
              * The label key that the selector applies to.
              */
@@ -4345,7 +4345,7 @@ export namespace certmanager {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfields {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields {
             /**
              * The label key that the selector applies to.
              */
@@ -4363,31 +4363,31 @@ export namespace certmanager {
         /**
          * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecution {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution {
             /**
              * Required. A list of node selector terms. The terms are ORed.
              */
-            nodeSelectorTerms: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectorterms[];
+            nodeSelectorTerms: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms[];
         }
 
         /**
          * A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectorterms {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions[];
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfields[];
+            matchFields?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields[];
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions {
             /**
              * The label key that the selector applies to.
              */
@@ -4405,7 +4405,7 @@ export namespace certmanager {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfields {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields {
             /**
              * The label key that the selector applies to.
              */
@@ -4423,25 +4423,25 @@ export namespace certmanager {
         /**
          * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinity {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinity {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecution[];
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecution[];
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecution {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecution {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm;
+            podAffinityTerm: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -4451,15 +4451,15 @@ export namespace certmanager {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector;
+            labelSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector;
+            namespaceSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -4473,11 +4473,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4487,7 +4487,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4505,11 +4505,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4519,7 +4519,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4537,15 +4537,15 @@ export namespace certmanager {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecution {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecution {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselector;
+            labelSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector;
+            namespaceSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -4559,11 +4559,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselector {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4573,7 +4573,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4591,11 +4591,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4605,7 +4605,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4623,25 +4623,25 @@ export namespace certmanager {
         /**
          * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinity {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinity {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecution[];
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
             /**
              * If the anti-affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the anti-affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecution[];
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecution {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm;
+            podAffinityTerm: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -4651,15 +4651,15 @@ export namespace certmanager {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinityterm {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector;
+            labelSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector;
+            namespaceSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -4673,11 +4673,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselector {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4687,7 +4687,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4705,11 +4705,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselector {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4719,7 +4719,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4737,15 +4737,15 @@ export namespace certmanager {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecution {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselector;
+            labelSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector;
+            namespaceSelector?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -4759,11 +4759,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselector {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4773,7 +4773,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4791,11 +4791,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselector {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions[];
+            matchExpressions?: outputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4805,7 +4805,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressions {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4823,7 +4823,7 @@ export namespace certmanager {
         /**
          * The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecTolerations {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecTolerations {
             /**
              * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
              */
@@ -4885,7 +4885,7 @@ export namespace certmanager {
         /**
          * SelfSigned configures this issuer to 'self sign' certificates using the private key used to create the CertificateRequest object.
          */
-        export interface IssuerSpecSelfsigned {
+        export interface IssuerSpecSelfSigned {
             /**
              * The CRL distribution points is an X.509 v3 certificate extension which identifies the location of the CRL from which the revocation of this certificate can be checked. If not set certificate will be issued without CDP. Values are strings.
              */
@@ -4925,7 +4925,7 @@ export namespace certmanager {
             /**
              * AppRole authenticates with Vault using the App Role auth mechanism, with the role and secret stored in a Kubernetes Secret resource.
              */
-            appRole?: outputs.certmanager.v1.IssuerSpecVaultAuthApprole;
+            appRole?: outputs.certmanager.v1.IssuerSpecVaultAuthAppRole;
             /**
              * Kubernetes authenticates with Vault by passing the ServiceAccount token stored in the named Secret resource to the Vault server.
              */
@@ -4933,13 +4933,13 @@ export namespace certmanager {
             /**
              * TokenSecretRef authenticates with Vault by presenting a token.
              */
-            tokenSecretRef?: outputs.certmanager.v1.IssuerSpecVaultAuthTokensecretref;
+            tokenSecretRef?: outputs.certmanager.v1.IssuerSpecVaultAuthTokenSecretRef;
         }
 
         /**
          * AppRole authenticates with Vault using the App Role auth mechanism, with the role and secret stored in a Kubernetes Secret resource.
          */
-        export interface IssuerSpecVaultAuthApprole {
+        export interface IssuerSpecVaultAuthAppRole {
             /**
              * Path where the App Role authentication backend is mounted in Vault, e.g: "approle"
              */
@@ -4951,13 +4951,13 @@ export namespace certmanager {
             /**
              * Reference to a key in a Secret that contains the App Role secret used to authenticate with Vault. The `key` field must be specified and denotes which entry within the Secret resource is used as the app role secret.
              */
-            secretRef: outputs.certmanager.v1.IssuerSpecVaultAuthApproleSecretref;
+            secretRef: outputs.certmanager.v1.IssuerSpecVaultAuthAppRoleSecretRef;
         }
 
         /**
          * Reference to a key in a Secret that contains the App Role secret used to authenticate with Vault. The `key` field must be specified and denotes which entry within the Secret resource is used as the app role secret.
          */
-        export interface IssuerSpecVaultAuthApproleSecretref {
+        export interface IssuerSpecVaultAuthAppRoleSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -4983,13 +4983,13 @@ export namespace certmanager {
             /**
              * The required Secret field containing a Kubernetes ServiceAccount JWT used for authenticating with Vault. Use of 'ambient credentials' is not supported.
              */
-            secretRef: outputs.certmanager.v1.IssuerSpecVaultAuthKubernetesSecretref;
+            secretRef: outputs.certmanager.v1.IssuerSpecVaultAuthKubernetesSecretRef;
         }
 
         /**
          * The required Secret field containing a Kubernetes ServiceAccount JWT used for authenticating with Vault. Use of 'ambient credentials' is not supported.
          */
-        export interface IssuerSpecVaultAuthKubernetesSecretref {
+        export interface IssuerSpecVaultAuthKubernetesSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -5003,7 +5003,7 @@ export namespace certmanager {
         /**
          * TokenSecretRef authenticates with Vault by presenting a token.
          */
-        export interface IssuerSpecVaultAuthTokensecretref {
+        export interface IssuerSpecVaultAuthTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -5039,7 +5039,7 @@ export namespace certmanager {
             /**
              * APITokenSecretRef is a secret key selector for the Venafi Cloud API token.
              */
-            apiTokenSecretRef: outputs.certmanager.v1.IssuerSpecVenafiCloudApitokensecretref;
+            apiTokenSecretRef: outputs.certmanager.v1.IssuerSpecVenafiCloudApiTokenSecretRef;
             /**
              * URL is the base URL for Venafi Cloud. Defaults to "https://api.venafi.cloud/v1".
              */
@@ -5049,7 +5049,7 @@ export namespace certmanager {
         /**
          * APITokenSecretRef is a secret key selector for the Venafi Cloud API token.
          */
-        export interface IssuerSpecVenafiCloudApitokensecretref {
+        export interface IssuerSpecVenafiCloudApiTokenSecretRef {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -5071,7 +5071,7 @@ export namespace certmanager {
             /**
              * CredentialsRef is a reference to a Secret containing the username and password for the TPP server. The secret must contain two keys, 'username' and 'password'.
              */
-            credentialsRef: outputs.certmanager.v1.IssuerSpecVenafiTppCredentialsref;
+            credentialsRef: outputs.certmanager.v1.IssuerSpecVenafiTppCredentialsRef;
             /**
              * URL is the base URL for the vedsdk endpoint of the Venafi TPP instance, for example: "https://tpp.example.com/vedsdk".
              */
@@ -5081,7 +5081,7 @@ export namespace certmanager {
         /**
          * CredentialsRef is a reference to a Secret containing the username and password for the TPP server. The secret must contain two keys, 'username' and 'password'.
          */
-        export interface IssuerSpecVenafiTppCredentialsref {
+        export interface IssuerSpecVenafiTppCredentialsRef {
             /**
              * Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
              */
@@ -5176,7 +5176,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: outputs.deviceplugin.v1.DlbDevicePluginStatusControlleddaemonset;
+            controlledDaemonSet?: outputs.deviceplugin.v1.DlbDevicePluginStatusControlledDaemonSet;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5194,7 +5194,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface DlbDevicePluginStatusControlleddaemonset {
+        export interface DlbDevicePluginStatusControlledDaemonSet {
             /**
              * API version of the referent.
              */
@@ -5262,7 +5262,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: outputs.deviceplugin.v1.DsaDevicePluginStatusControlleddaemonset;
+            controlledDaemonSet?: outputs.deviceplugin.v1.DsaDevicePluginStatusControlledDaemonSet;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5280,7 +5280,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface DsaDevicePluginStatusControlleddaemonset {
+        export interface DsaDevicePluginStatusControlledDaemonSet {
             /**
              * API version of the referent.
              */
@@ -5344,7 +5344,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: outputs.deviceplugin.v1.FpgaDevicePluginStatusControlleddaemonset;
+            controlledDaemonSet?: outputs.deviceplugin.v1.FpgaDevicePluginStatusControlledDaemonSet;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5362,7 +5362,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface FpgaDevicePluginStatusControlleddaemonset {
+        export interface FpgaDevicePluginStatusControlledDaemonSet {
             /**
              * API version of the referent.
              */
@@ -5438,7 +5438,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: outputs.deviceplugin.v1.GpuDevicePluginStatusControlleddaemonset;
+            controlledDaemonSet?: outputs.deviceplugin.v1.GpuDevicePluginStatusControlledDaemonSet;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5456,7 +5456,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface GpuDevicePluginStatusControlleddaemonset {
+        export interface GpuDevicePluginStatusControlledDaemonSet {
             /**
              * API version of the referent.
              */
@@ -5524,7 +5524,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: outputs.deviceplugin.v1.IaaDevicePluginStatusControlleddaemonset;
+            controlledDaemonSet?: outputs.deviceplugin.v1.IaaDevicePluginStatusControlledDaemonSet;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5542,7 +5542,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface IaaDevicePluginStatusControlleddaemonset {
+        export interface IaaDevicePluginStatusControlledDaemonSet {
             /**
              * API version of the referent.
              */
@@ -5609,6 +5609,10 @@ export namespace deviceplugin {
              * PreferredAllocationPolicy sets the mode of allocating QAT devices on a node. See documentation for detailed description of the policies.
              */
             preferredAllocationPolicy?: string;
+            /**
+             * ProvisioningConfig is a ConfigMap used to pass the configuration of QAT devices into qat initcontainer.
+             */
+            provisioningConfig?: string;
         }
 
         /**
@@ -5618,7 +5622,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: outputs.deviceplugin.v1.QatDevicePluginStatusControlleddaemonset;
+            controlledDaemonSet?: outputs.deviceplugin.v1.QatDevicePluginStatusControlledDaemonSet;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5636,7 +5640,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface QatDevicePluginStatusControlleddaemonset {
+        export interface QatDevicePluginStatusControlledDaemonSet {
             /**
              * API version of the referent.
              */
@@ -5704,7 +5708,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: outputs.deviceplugin.v1.SgxDevicePluginStatusControlleddaemonset;
+            controlledDaemonSet?: outputs.deviceplugin.v1.SgxDevicePluginStatusControlledDaemonSet;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5722,7 +5726,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface SgxDevicePluginStatusControlleddaemonset {
+        export interface SgxDevicePluginStatusControlledDaemonSet {
             /**
              * API version of the referent.
              */
@@ -5779,11 +5783,58 @@ export namespace fpga {
 
 export namespace helm {
     export namespace v1 {
+        export interface HelmChartConfigSpec {
+            failurePolicy?: string;
+            valuesContent?: string;
+        }
+
+        export interface HelmChartSpec {
+            authPassCredentials?: boolean;
+            authSecret?: outputs.helm.v1.HelmChartSpecAuthSecret;
+            bootstrap?: boolean;
+            chart?: string;
+            chartContent?: string;
+            createNamespace?: boolean;
+            dockerRegistrySecret?: outputs.helm.v1.HelmChartSpecDockerRegistrySecret;
+            failurePolicy?: string;
+            helmVersion?: string;
+            jobImage?: string;
+            repo?: string;
+            repoCA?: string;
+            repoCAConfigMap?: outputs.helm.v1.HelmChartSpecRepoCAConfigMap;
+            set?: {[key: string]: number | string};
+            targetNamespace?: string;
+            timeout?: string;
+            valuesContent?: string;
+            version?: string;
+        }
+
+        export interface HelmChartSpecAuthSecret {
+            name?: string;
+        }
+
+        export interface HelmChartSpecDockerRegistrySecret {
+            name?: string;
+        }
+
+        export interface HelmChartSpecRepoCAConfigMap {
+            name?: string;
+        }
+
+        export interface HelmChartStatus {
+            jobName?: string;
+        }
+
     }
 }
 
 export namespace k3s {
     export namespace v1 {
+        export interface AddonSpec {
+            checksum?: string;
+            source?: string;
+        }
+
     }
 }
 
@@ -5804,6 +5855,10 @@ export namespace nfd {
          */
         export interface NodeFeatureRuleSpecRules {
             /**
+             * ExtendedResources to create if the rule matches.
+             */
+            extendedResources?: {[key: string]: string};
+            /**
              * Labels to create if the rule matches.
              */
             labels?: {[key: string]: string};
@@ -5814,15 +5869,19 @@ export namespace nfd {
             /**
              * MatchAny specifies a list of matchers one of which must match.
              */
-            matchAny?: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchany[];
+            matchAny?: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchAny[];
             /**
              * MatchFeatures specifies a set of matcher terms all of which must match.
              */
-            matchFeatures?: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchfeatures[];
+            matchFeatures?: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchFeatures[];
             /**
              * Name of the rule.
              */
             name: string;
+            /**
+             * Taints to create if the rule matches.
+             */
+            taints?: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesTaints[];
             /**
              * Vars is the variables to store if the rule matches. Variables do not directly inflict any changes in the node object. However, they can be referenced from other rules enabling more complex rule hierarchies, without exposing intermediary output values as labels.
              */
@@ -5836,29 +5895,30 @@ export namespace nfd {
         /**
          * MatchAnyElem specifies one sub-matcher of MatchAny.
          */
-        export interface NodeFeatureRuleSpecRulesMatchany {
+        export interface NodeFeatureRuleSpecRulesMatchAny {
             /**
              * MatchFeatures specifies a set of matcher terms all of which must match.
              */
-            matchFeatures: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchanyMatchfeatures[];
+            matchFeatures: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchAnyMatchFeatures[];
         }
 
         /**
          * FeatureMatcherTerm defines requirements against one feature set. All requirements (specified as MatchExpressions) are evaluated against each element in the feature set.
          */
-        export interface NodeFeatureRuleSpecRulesMatchanyMatchfeatures {
+        export interface NodeFeatureRuleSpecRulesMatchAnyMatchFeatures {
             feature: string;
             /**
              * MatchExpressionSet contains a set of MatchExpressions, each of which is evaluated against a set of input values.
              */
-            matchExpressions: {[key: string]: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchanyMatchfeaturesMatchexpressions};
+            matchExpressions: {[key: string]: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchAnyMatchFeaturesMatchExpressions};
         }
 
         /**
          * MatchExpression specifies an expression to evaluate against a set of input values. It contains an operator that is applied when matching the input and an array of values that the operator evaluates the input against. 
-         *  NB: CreateMatchExpression or MustCreateMatchExpression() should be used for     creating new instances. NB: Validate() must be called if Op or Value fields are modified or if a new     instance is created from scratch without using the helper functions.
+         *  NB: CreateMatchExpression or MustCreateMatchExpression() should be used for creating new instances. 
+         *  NB: Validate() must be called if Op or Value fields are modified or if a new instance is created from scratch without using the helper functions.
          */
-        export interface NodeFeatureRuleSpecRulesMatchanyMatchfeaturesMatchexpressions {
+        export interface NodeFeatureRuleSpecRulesMatchAnyMatchFeaturesMatchExpressions {
             /**
              * Op is the operator to be applied.
              */
@@ -5872,19 +5932,20 @@ export namespace nfd {
         /**
          * FeatureMatcherTerm defines requirements against one feature set. All requirements (specified as MatchExpressions) are evaluated against each element in the feature set.
          */
-        export interface NodeFeatureRuleSpecRulesMatchfeatures {
+        export interface NodeFeatureRuleSpecRulesMatchFeatures {
             feature: string;
             /**
              * MatchExpressionSet contains a set of MatchExpressions, each of which is evaluated against a set of input values.
              */
-            matchExpressions: {[key: string]: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchfeaturesMatchexpressions};
+            matchExpressions: {[key: string]: outputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchFeaturesMatchExpressions};
         }
 
         /**
          * MatchExpression specifies an expression to evaluate against a set of input values. It contains an operator that is applied when matching the input and an array of values that the operator evaluates the input against. 
-         *  NB: CreateMatchExpression or MustCreateMatchExpression() should be used for     creating new instances. NB: Validate() must be called if Op or Value fields are modified or if a new     instance is created from scratch without using the helper functions.
+         *  NB: CreateMatchExpression or MustCreateMatchExpression() should be used for creating new instances. 
+         *  NB: Validate() must be called if Op or Value fields are modified or if a new instance is created from scratch without using the helper functions.
          */
-        export interface NodeFeatureRuleSpecRulesMatchfeaturesMatchexpressions {
+        export interface NodeFeatureRuleSpecRulesMatchFeaturesMatchExpressions {
             /**
              * Op is the operator to be applied.
              */
@@ -5893,6 +5954,88 @@ export namespace nfd {
              * Value is the list of values that the operand evaluates the input against. Value should be empty if the operator is Exists, DoesNotExist, IsTrue or IsFalse. Value should contain exactly one element if the operator is Gt or Lt and exactly two elements if the operator is GtLt. In other cases Value should contain at least one element.
              */
             value?: string[];
+        }
+
+        /**
+         * The node this Taint is attached to has the "effect" on any pod that does not tolerate the Taint.
+         */
+        export interface NodeFeatureRuleSpecRulesTaints {
+            /**
+             * Required. The effect of the taint on pods that do not tolerate the taint. Valid effects are NoSchedule, PreferNoSchedule and NoExecute.
+             */
+            effect: string;
+            /**
+             * Required. The taint key to be applied to a node.
+             */
+            key: string;
+            /**
+             * TimeAdded represents the time at which the taint was added. It is only written for NoExecute taints.
+             */
+            timeAdded?: string;
+            /**
+             * The taint value corresponding to the taint key.
+             */
+            value?: string;
+        }
+
+        /**
+         * NodeFeatureSpec describes a NodeFeature object.
+         */
+        export interface NodeFeatureSpec {
+            /**
+             * Features is the full "raw" features data that has been discovered.
+             */
+            features?: outputs.nfd.v1alpha1.NodeFeatureSpecFeatures;
+            /**
+             * Labels is the set of node labels that are requested to be created.
+             */
+            labels?: {[key: string]: string};
+        }
+
+        /**
+         * Features is the full "raw" features data that has been discovered.
+         */
+        export interface NodeFeatureSpecFeatures {
+            /**
+             * Attributes contains all the attribute-type features of the node.
+             */
+            attributes?: {[key: string]: outputs.nfd.v1alpha1.NodeFeatureSpecFeaturesAttributes};
+            /**
+             * Flags contains all the flag-type features of the node.
+             */
+            flags?: {[key: string]: outputs.nfd.v1alpha1.NodeFeatureSpecFeaturesFlags};
+            /**
+             * Instances contains all the instance-type features of the node.
+             */
+            instances?: {[key: string]: outputs.nfd.v1alpha1.NodeFeatureSpecFeaturesInstances};
+        }
+
+        /**
+         * AttributeFeatureSet is a set of features having string value.
+         */
+        export interface NodeFeatureSpecFeaturesAttributes {
+            elements: {[key: string]: string};
+        }
+
+        /**
+         * FlagFeatureSet is a set of simple features only containing names without values.
+         */
+        export interface NodeFeatureSpecFeaturesFlags {
+            elements: {[key: string]: {[key: string]: any}};
+        }
+
+        /**
+         * InstanceFeatureSet is a set of features each of which is an instance having multiple attributes.
+         */
+        export interface NodeFeatureSpecFeaturesInstances {
+            elements: outputs.nfd.v1alpha1.NodeFeatureSpecFeaturesInstancesElements[];
+        }
+
+        /**
+         * InstanceFeature represents one instance of a complex features, e.g. a device.
+         */
+        export interface NodeFeatureSpecFeaturesInstancesElements {
+            attributes: {[key: string]: string};
         }
 
     }
@@ -5905,7 +6048,7 @@ export namespace traefik {
          */
         export interface IngressRouteSpec {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/entrypoints/ Default: all.
              */
             entryPoints?: string[];
             /**
@@ -5913,7 +6056,7 @@ export namespace traefik {
              */
             routes: outputs.traefik.v1alpha1.IngressRouteSpecRoutes[];
             /**
-             * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls
+             * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#tls
              */
             tls?: outputs.traefik.v1alpha1.IngressRouteSpecTls;
         }
@@ -5927,15 +6070,15 @@ export namespace traefik {
              */
             kind: string;
             /**
-             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#rule
+             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#rule
              */
             match: string;
             /**
-             * Middlewares defines the list of references to Middleware resources. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-middleware
+             * Middlewares defines the list of references to Middleware resources. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-middleware
              */
             middlewares?: outputs.traefik.v1alpha1.IngressRouteSpecRoutesMiddlewares[];
             /**
-             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#priority
+             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#priority
              */
             priority?: number;
             /**
@@ -5975,6 +6118,10 @@ export namespace traefik {
              */
             namespace?: string;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: boolean;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: boolean;
@@ -5985,7 +6132,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: outputs.traefik.v1alpha1.IngressRouteSpecRoutesServicesResponseforwarding;
+            responseForwarding?: outputs.traefik.v1alpha1.IngressRouteSpecRoutesServicesResponseForwarding;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -5995,7 +6142,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.IngressRouteSpecRoutesServicesSticky;
             /**
@@ -6011,7 +6158,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface IngressRouteSpecRoutesServicesResponseforwarding {
+        export interface IngressRouteSpecRoutesServicesResponseForwarding {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -6019,7 +6166,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface IngressRouteSpecRoutesServicesSticky {
             /**
@@ -6051,19 +6198,19 @@ export namespace traefik {
         }
 
         /**
-         * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls
+         * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#tls
          */
         export interface IngressRouteSpecTls {
             /**
-             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/https/acme/#certificate-resolvers
+             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/https/acme/#certificate-resolvers
              */
             certResolver?: string;
             /**
-             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#domains
+             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#domains
              */
             domains?: outputs.traefik.v1alpha1.IngressRouteSpecTlsDomains[];
             /**
-             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
+             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
              */
             options?: outputs.traefik.v1alpha1.IngressRouteSpecTlsOptions;
             /**
@@ -6091,15 +6238,15 @@ export namespace traefik {
         }
 
         /**
-         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
+         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
          */
         export interface IngressRouteSpecTlsOptions {
             /**
-             * Name defines the name of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsoption
+             * Name defines the name of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-tlsoption
              */
             name: string;
             /**
-             * Namespace defines the namespace of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsoption
+             * Namespace defines the namespace of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-tlsoption
              */
             namespace?: string;
         }
@@ -6109,11 +6256,11 @@ export namespace traefik {
          */
         export interface IngressRouteSpecTlsStore {
             /**
-             * Name defines the name of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsstore
+             * Name defines the name of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-tlsstore
              */
             name: string;
             /**
-             * Namespace defines the namespace of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsstore
+             * Namespace defines the namespace of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-tlsstore
              */
             namespace?: string;
         }
@@ -6123,7 +6270,7 @@ export namespace traefik {
          */
         export interface IngressRouteTCPSpec {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/entrypoints/ Default: all.
              */
             entryPoints?: string[];
             /**
@@ -6131,7 +6278,7 @@ export namespace traefik {
              */
             routes: outputs.traefik.v1alpha1.IngressRouteTCPSpecRoutes[];
             /**
-             * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls_1
+             * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#tls_1
              */
             tls?: outputs.traefik.v1alpha1.IngressRouteTCPSpecTls;
         }
@@ -6141,7 +6288,7 @@ export namespace traefik {
          */
         export interface IngressRouteTCPSpecRoutes {
             /**
-             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#rule_1
+             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#rule_1
              */
             match: string;
             /**
@@ -6149,7 +6296,7 @@ export namespace traefik {
              */
             middlewares?: outputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesMiddlewares[];
             /**
-             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#priority_1
+             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#priority_1
              */
             priority?: number;
             /**
@@ -6185,13 +6332,17 @@ export namespace traefik {
              */
             namespace?: string;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: boolean;
+            /**
              * Port defines the port of a Kubernetes Service. This can be a reference to a named port.
              */
             port: number | string;
             /**
-             * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#proxy-protocol
+             * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#proxy-protocol
              */
-            proxyProtocol?: outputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesServicesProxyprotocol;
+            proxyProtocol?: outputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesServicesProxyProtocol;
             /**
              * TerminationDelay defines the deadline that the proxy sets, after one of its connected peers indicates it has closed the writing capability of its connection, to close the reading capability as well, hence fully terminating the connection. It is a duration in milliseconds, defaulting to 100. A negative value means an infinite deadline (i.e. the reading capability is never closed).
              */
@@ -6203,9 +6354,9 @@ export namespace traefik {
         }
 
         /**
-         * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#proxy-protocol
+         * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#proxy-protocol
          */
-        export interface IngressRouteTCPSpecRoutesServicesProxyprotocol {
+        export interface IngressRouteTCPSpecRoutesServicesProxyProtocol {
             /**
              * Version defines the PROXY Protocol version to use.
              */
@@ -6213,19 +6364,19 @@ export namespace traefik {
         }
 
         /**
-         * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls_1
+         * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#tls_1
          */
         export interface IngressRouteTCPSpecTls {
             /**
-             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/https/acme/#certificate-resolvers
+             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/https/acme/#certificate-resolvers
              */
             certResolver?: string;
             /**
-             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#domains
+             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#domains
              */
             domains?: outputs.traefik.v1alpha1.IngressRouteTCPSpecTlsDomains[];
             /**
-             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
+             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
              */
             options?: outputs.traefik.v1alpha1.IngressRouteTCPSpecTlsOptions;
             /**
@@ -6257,7 +6408,7 @@ export namespace traefik {
         }
 
         /**
-         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
+         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
          */
         export interface IngressRouteTCPSpecTlsOptions {
             /**
@@ -6289,7 +6440,7 @@ export namespace traefik {
          */
         export interface IngressRouteUDPSpec {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/entrypoints/ Default: all.
              */
             entryPoints?: string[];
             /**
@@ -6321,6 +6472,10 @@ export namespace traefik {
              */
             namespace?: string;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: boolean;
+            /**
              * Port defines the port of a Kubernetes Service. This can be a reference to a named port.
              */
             port: number | string;
@@ -6335,103 +6490,103 @@ export namespace traefik {
          */
         export interface MiddlewareSpec {
             /**
-             * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/addprefix/
+             * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/addprefix/
              */
-            addPrefix?: outputs.traefik.v1alpha1.MiddlewareSpecAddprefix;
+            addPrefix?: outputs.traefik.v1alpha1.MiddlewareSpecAddPrefix;
             /**
-             * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/
+             * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/basicauth/
              */
-            basicAuth?: outputs.traefik.v1alpha1.MiddlewareSpecBasicauth;
+            basicAuth?: outputs.traefik.v1alpha1.MiddlewareSpecBasicAuth;
             /**
-             * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#maxrequestbodybytes
+             * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/buffering/#maxrequestbodybytes
              */
             buffering?: outputs.traefik.v1alpha1.MiddlewareSpecBuffering;
             /**
-             * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/chain/
+             * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/chain/
              */
             chain?: outputs.traefik.v1alpha1.MiddlewareSpecChain;
             /**
              * CircuitBreaker holds the circuit breaker configuration.
              */
-            circuitBreaker?: outputs.traefik.v1alpha1.MiddlewareSpecCircuitbreaker;
+            circuitBreaker?: outputs.traefik.v1alpha1.MiddlewareSpecCircuitBreaker;
             /**
-             * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/compress/
+             * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/compress/
              */
             compress?: outputs.traefik.v1alpha1.MiddlewareSpecCompress;
             /**
              * ContentType holds the content-type middleware configuration. This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
              */
-            contentType?: outputs.traefik.v1alpha1.MiddlewareSpecContenttype;
+            contentType?: outputs.traefik.v1alpha1.MiddlewareSpecContentType;
             /**
-             * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/digestauth/
+             * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/digestauth/
              */
-            digestAuth?: outputs.traefik.v1alpha1.MiddlewareSpecDigestauth;
+            digestAuth?: outputs.traefik.v1alpha1.MiddlewareSpecDigestAuth;
             /**
-             * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/
+             * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/errorpages/
              */
             errors?: outputs.traefik.v1alpha1.MiddlewareSpecErrors;
             /**
-             * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/
+             * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/forwardauth/
              */
-            forwardAuth?: outputs.traefik.v1alpha1.MiddlewareSpecForwardauth;
+            forwardAuth?: outputs.traefik.v1alpha1.MiddlewareSpecForwardAuth;
             /**
-             * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/headers/#customrequestheaders
+             * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/headers/#customrequestheaders
              */
             headers?: outputs.traefik.v1alpha1.MiddlewareSpecHeaders;
             /**
-             * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/
+             * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/inflightreq/
              */
-            inFlightReq?: outputs.traefik.v1alpha1.MiddlewareSpecInflightreq;
+            inFlightReq?: outputs.traefik.v1alpha1.MiddlewareSpecInFlightReq;
             /**
-             * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/
+             * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/
              */
-            ipWhiteList?: outputs.traefik.v1alpha1.MiddlewareSpecIpwhitelist;
+            ipWhiteList?: outputs.traefik.v1alpha1.MiddlewareSpecIpWhiteList;
             /**
-             * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/passtlsclientcert/
+             * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/passtlsclientcert/
              */
-            passTLSClientCert?: outputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcert;
+            passTLSClientCert?: outputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCert;
             /**
              * Plugin defines the middleware plugin configuration. More info: https://doc.traefik.io/traefik/plugins/
              */
             plugin?: {[key: string]: {[key: string]: any}};
             /**
-             * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ratelimit/
+             * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ratelimit/
              */
-            rateLimit?: outputs.traefik.v1alpha1.MiddlewareSpecRatelimit;
+            rateLimit?: outputs.traefik.v1alpha1.MiddlewareSpecRateLimit;
             /**
-             * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectregex/#regex
+             * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/redirectregex/#regex
              */
-            redirectRegex?: outputs.traefik.v1alpha1.MiddlewareSpecRedirectregex;
+            redirectRegex?: outputs.traefik.v1alpha1.MiddlewareSpecRedirectRegex;
             /**
-             * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectscheme/
+             * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/redirectscheme/
              */
-            redirectScheme?: outputs.traefik.v1alpha1.MiddlewareSpecRedirectscheme;
+            redirectScheme?: outputs.traefik.v1alpha1.MiddlewareSpecRedirectScheme;
             /**
-             * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepath/
+             * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/replacepath/
              */
-            replacePath?: outputs.traefik.v1alpha1.MiddlewareSpecReplacepath;
+            replacePath?: outputs.traefik.v1alpha1.MiddlewareSpecReplacePath;
             /**
-             * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepathregex/
+             * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/replacepathregex/
              */
-            replacePathRegex?: outputs.traefik.v1alpha1.MiddlewareSpecReplacepathregex;
+            replacePathRegex?: outputs.traefik.v1alpha1.MiddlewareSpecReplacePathRegex;
             /**
-             * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/retry/
+             * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/retry/
              */
             retry?: outputs.traefik.v1alpha1.MiddlewareSpecRetry;
             /**
-             * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefix/
+             * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/stripprefix/
              */
-            stripPrefix?: outputs.traefik.v1alpha1.MiddlewareSpecStripprefix;
+            stripPrefix?: outputs.traefik.v1alpha1.MiddlewareSpecStripPrefix;
             /**
-             * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefixregex/
+             * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/stripprefixregex/
              */
-            stripPrefixRegex?: outputs.traefik.v1alpha1.MiddlewareSpecStripprefixregex;
+            stripPrefixRegex?: outputs.traefik.v1alpha1.MiddlewareSpecStripPrefixRegex;
         }
 
         /**
-         * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/addprefix/
+         * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/addprefix/
          */
-        export interface MiddlewareSpecAddprefix {
+        export interface MiddlewareSpecAddPrefix {
             /**
              * Prefix is the string to add before the current path in the requested URL. It should include a leading slash (/).
              */
@@ -6439,11 +6594,11 @@ export namespace traefik {
         }
 
         /**
-         * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/
+         * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/basicauth/
          */
-        export interface MiddlewareSpecBasicauth {
+        export interface MiddlewareSpecBasicAuth {
             /**
-             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/#headerfield
+             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/basicauth/#headerfield
              */
             headerField?: string;
             /**
@@ -6461,7 +6616,7 @@ export namespace traefik {
         }
 
         /**
-         * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#maxrequestbodybytes
+         * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/buffering/#maxrequestbodybytes
          */
         export interface MiddlewareSpecBuffering {
             /**
@@ -6481,13 +6636,13 @@ export namespace traefik {
              */
             memResponseBodyBytes?: number;
             /**
-             * RetryExpression defines the retry conditions. It is a logical combination of functions with operators AND (&&) and OR (||). More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#retryexpression
+             * RetryExpression defines the retry conditions. It is a logical combination of functions with operators AND (&&) and OR (||). More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/buffering/#retryexpression
              */
             retryExpression?: string;
         }
 
         /**
-         * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/chain/
+         * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/chain/
          */
         export interface MiddlewareSpecChain {
             /**
@@ -6513,7 +6668,7 @@ export namespace traefik {
         /**
          * CircuitBreaker holds the circuit breaker configuration.
          */
-        export interface MiddlewareSpecCircuitbreaker {
+        export interface MiddlewareSpecCircuitBreaker {
             /**
              * CheckPeriod is the interval between successive checks of the circuit breaker condition (when in standby state).
              */
@@ -6533,7 +6688,7 @@ export namespace traefik {
         }
 
         /**
-         * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/compress/
+         * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/compress/
          */
         export interface MiddlewareSpecCompress {
             /**
@@ -6549,7 +6704,7 @@ export namespace traefik {
         /**
          * ContentType holds the content-type middleware configuration. This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
          */
-        export interface MiddlewareSpecContenttype {
+        export interface MiddlewareSpecContentType {
             /**
              * AutoDetect specifies whether to let the `Content-Type` header, if it has not been set by the backend, be automatically set to a value derived from the contents of the response. As a proxy, the default behavior should be to leave the header alone, regardless of what the backend did with it. However, the historic default was to always auto-detect and set the header if it was nil, and it is going to be kept that way in order to support users currently relying on it.
              */
@@ -6557,11 +6712,11 @@ export namespace traefik {
         }
 
         /**
-         * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/digestauth/
+         * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/digestauth/
          */
-        export interface MiddlewareSpecDigestauth {
+        export interface MiddlewareSpecDigestAuth {
             /**
-             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/#headerfield
+             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/basicauth/#headerfield
              */
             headerField?: string;
             /**
@@ -6579,7 +6734,7 @@ export namespace traefik {
         }
 
         /**
-         * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/
+         * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/errorpages/
          */
         export interface MiddlewareSpecErrors {
             /**
@@ -6587,7 +6742,7 @@ export namespace traefik {
              */
             query?: string;
             /**
-             * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/#service
+             * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/errorpages/#service
              */
             service?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsService;
             /**
@@ -6597,7 +6752,7 @@ export namespace traefik {
         }
 
         /**
-         * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/#service
+         * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/errorpages/#service
          */
         export interface MiddlewareSpecErrorsService {
             /**
@@ -6613,6 +6768,10 @@ export namespace traefik {
              */
             namespace?: string;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: boolean;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: boolean;
@@ -6623,7 +6782,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceResponseforwarding;
+            responseForwarding?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceResponseForwarding;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -6633,7 +6792,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceSticky;
             /**
@@ -6649,7 +6808,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface MiddlewareSpecErrorsServiceResponseforwarding {
+        export interface MiddlewareSpecErrorsServiceResponseForwarding {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -6657,7 +6816,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface MiddlewareSpecErrorsServiceSticky {
             /**
@@ -6689,9 +6848,9 @@ export namespace traefik {
         }
 
         /**
-         * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/
+         * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/forwardauth/
          */
-        export interface MiddlewareSpecForwardauth {
+        export interface MiddlewareSpecForwardAuth {
             /**
              * Address defines the authentication server address.
              */
@@ -6705,13 +6864,13 @@ export namespace traefik {
              */
             authResponseHeaders?: string[];
             /**
-             * AuthResponseHeadersRegex defines the regex to match headers to copy from the authentication server response and set on forwarded request, after stripping all headers that match the regex. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/#authresponseheadersregex
+             * AuthResponseHeadersRegex defines the regex to match headers to copy from the authentication server response and set on forwarded request, after stripping all headers that match the regex. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/forwardauth/#authresponseheadersregex
              */
             authResponseHeadersRegex?: string;
             /**
              * TLS defines the configuration used to secure the connection to the authentication server.
              */
-            tls?: outputs.traefik.v1alpha1.MiddlewareSpecForwardauthTls;
+            tls?: outputs.traefik.v1alpha1.MiddlewareSpecForwardAuthTls;
             /**
              * TrustForwardHeader defines whether to trust (ie: forward) all X-Forwarded-* headers.
              */
@@ -6721,7 +6880,7 @@ export namespace traefik {
         /**
          * TLS defines the configuration used to secure the connection to the authentication server.
          */
-        export interface MiddlewareSpecForwardauthTls {
+        export interface MiddlewareSpecForwardAuthTls {
             caOptional?: boolean;
             /**
              * CASecret is the name of the referenced Kubernetes Secret containing the CA to validate the server certificate. The CA certificate is extracted from key `tls.ca` or `ca.crt`.
@@ -6738,7 +6897,7 @@ export namespace traefik {
         }
 
         /**
-         * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/headers/#customrequestheaders
+         * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/headers/#customrequestheaders
          */
         export interface MiddlewareSpecHeaders {
             /**
@@ -6872,27 +7031,27 @@ export namespace traefik {
         }
 
         /**
-         * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/
+         * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/inflightreq/
          */
-        export interface MiddlewareSpecInflightreq {
+        export interface MiddlewareSpecInFlightReq {
             /**
              * Amount defines the maximum amount of allowed simultaneous in-flight request. The middleware responds with HTTP 429 Too Many Requests if there are already amount requests in progress (based on the same sourceCriterion strategy).
              */
             amount?: number;
             /**
-             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/#sourcecriterion
+             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/inflightreq/#sourcecriterion
              */
-            sourceCriterion?: outputs.traefik.v1alpha1.MiddlewareSpecInflightreqSourcecriterion;
+            sourceCriterion?: outputs.traefik.v1alpha1.MiddlewareSpecInFlightReqSourceCriterion;
         }
 
         /**
-         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/#sourcecriterion
+         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/inflightreq/#sourcecriterion
          */
-        export interface MiddlewareSpecInflightreqSourcecriterion {
+        export interface MiddlewareSpecInFlightReqSourceCriterion {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
              */
-            ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecInflightreqSourcecriterionIpstrategy;
+            ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecInFlightReqSourceCriterionIpStrategy;
             /**
              * RequestHeaderName defines the name of the header used to group incoming requests.
              */
@@ -6904,9 +7063,9 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
          */
-        export interface MiddlewareSpecInflightreqSourcecriterionIpstrategy {
+        export interface MiddlewareSpecInFlightReqSourceCriterionIpStrategy {
             /**
              * Depth tells Traefik to use the X-Forwarded-For header and take the IP located at the depth position (starting from the right).
              */
@@ -6918,13 +7077,13 @@ export namespace traefik {
         }
 
         /**
-         * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/
+         * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/
          */
-        export interface MiddlewareSpecIpwhitelist {
+        export interface MiddlewareSpecIpWhiteList {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
              */
-            ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecIpwhitelistIpstrategy;
+            ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecIpWhiteListIpStrategy;
             /**
              * SourceRange defines the set of allowed IPs (or ranges of allowed IPs by using CIDR notation).
              */
@@ -6932,9 +7091,9 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
          */
-        export interface MiddlewareSpecIpwhitelistIpstrategy {
+        export interface MiddlewareSpecIpWhiteListIpStrategy {
             /**
              * Depth tells Traefik to use the X-Forwarded-For header and take the IP located at the depth position (starting from the right).
              */
@@ -6946,15 +7105,15 @@ export namespace traefik {
         }
 
         /**
-         * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/passtlsclientcert/
+         * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/passtlsclientcert/
          */
-        export interface MiddlewareSpecPasstlsclientcert {
+        export interface MiddlewareSpecPassTLSClientCert {
             /**
              * Info selects the specific client certificate details you want to add to the X-Forwarded-Tls-Client-Cert-Info header.
              */
-            info?: outputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcertInfo;
+            info?: outputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfo;
             /**
-             * PEM sets the X-Forwarded-Tls-Client-Cert header with the escaped certificate.
+             * PEM sets the X-Forwarded-Tls-Client-Cert header with the certificate.
              */
             pem?: boolean;
         }
@@ -6962,11 +7121,11 @@ export namespace traefik {
         /**
          * Info selects the specific client certificate details you want to add to the X-Forwarded-Tls-Client-Cert-Info header.
          */
-        export interface MiddlewareSpecPasstlsclientcertInfo {
+        export interface MiddlewareSpecPassTLSClientCertInfo {
             /**
              * Issuer defines the client certificate issuer details to add to the X-Forwarded-Tls-Client-Cert-Info header.
              */
-            issuer?: outputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcertInfoIssuer;
+            issuer?: outputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoIssuer;
             /**
              * NotAfter defines whether to add the Not After information from the Validity part.
              */
@@ -6986,13 +7145,13 @@ export namespace traefik {
             /**
              * Subject defines the client certificate subject details to add to the X-Forwarded-Tls-Client-Cert-Info header.
              */
-            subject?: outputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcertInfoSubject;
+            subject?: outputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoSubject;
         }
 
         /**
          * Issuer defines the client certificate issuer details to add to the X-Forwarded-Tls-Client-Cert-Info header.
          */
-        export interface MiddlewareSpecPasstlsclientcertInfoIssuer {
+        export interface MiddlewareSpecPassTLSClientCertInfoIssuer {
             /**
              * CommonName defines whether to add the organizationalUnit information into the issuer.
              */
@@ -7026,7 +7185,7 @@ export namespace traefik {
         /**
          * Subject defines the client certificate subject details to add to the X-Forwarded-Tls-Client-Cert-Info header.
          */
-        export interface MiddlewareSpecPasstlsclientcertInfoSubject {
+        export interface MiddlewareSpecPassTLSClientCertInfoSubject {
             /**
              * CommonName defines whether to add the organizationalUnit information into the subject.
              */
@@ -7062,9 +7221,9 @@ export namespace traefik {
         }
 
         /**
-         * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ratelimit/
+         * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ratelimit/
          */
-        export interface MiddlewareSpecRatelimit {
+        export interface MiddlewareSpecRateLimit {
             /**
              * Average is the maximum rate, by default in requests/s, allowed for the given source. It defaults to 0, which means no rate limiting. The rate is actually defined by dividing Average by Period. So for a rate below 1req/s, one needs to define a Period larger than a second.
              */
@@ -7080,17 +7239,17 @@ export namespace traefik {
             /**
              * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the request's remote address field (as an ipStrategy).
              */
-            sourceCriterion?: outputs.traefik.v1alpha1.MiddlewareSpecRatelimitSourcecriterion;
+            sourceCriterion?: outputs.traefik.v1alpha1.MiddlewareSpecRateLimitSourceCriterion;
         }
 
         /**
          * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the request's remote address field (as an ipStrategy).
          */
-        export interface MiddlewareSpecRatelimitSourcecriterion {
+        export interface MiddlewareSpecRateLimitSourceCriterion {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
              */
-            ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecRatelimitSourcecriterionIpstrategy;
+            ipStrategy?: outputs.traefik.v1alpha1.MiddlewareSpecRateLimitSourceCriterionIpStrategy;
             /**
              * RequestHeaderName defines the name of the header used to group incoming requests.
              */
@@ -7102,9 +7261,9 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
          */
-        export interface MiddlewareSpecRatelimitSourcecriterionIpstrategy {
+        export interface MiddlewareSpecRateLimitSourceCriterionIpStrategy {
             /**
              * Depth tells Traefik to use the X-Forwarded-For header and take the IP located at the depth position (starting from the right).
              */
@@ -7116,9 +7275,9 @@ export namespace traefik {
         }
 
         /**
-         * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectregex/#regex
+         * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/redirectregex/#regex
          */
-        export interface MiddlewareSpecRedirectregex {
+        export interface MiddlewareSpecRedirectRegex {
             /**
              * Permanent defines whether the redirection is permanent (301).
              */
@@ -7134,9 +7293,9 @@ export namespace traefik {
         }
 
         /**
-         * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectscheme/
+         * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/redirectscheme/
          */
-        export interface MiddlewareSpecRedirectscheme {
+        export interface MiddlewareSpecRedirectScheme {
             /**
              * Permanent defines whether the redirection is permanent (301).
              */
@@ -7152,9 +7311,9 @@ export namespace traefik {
         }
 
         /**
-         * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepath/
+         * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/replacepath/
          */
-        export interface MiddlewareSpecReplacepath {
+        export interface MiddlewareSpecReplacePath {
             /**
              * Path defines the path to use as replacement in the request URL.
              */
@@ -7162,9 +7321,9 @@ export namespace traefik {
         }
 
         /**
-         * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepathregex/
+         * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/replacepathregex/
          */
-        export interface MiddlewareSpecReplacepathregex {
+        export interface MiddlewareSpecReplacePathRegex {
             /**
              * Regex defines the regular expression used to match and capture the path from the request URL.
              */
@@ -7176,7 +7335,7 @@ export namespace traefik {
         }
 
         /**
-         * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/retry/
+         * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/retry/
          */
         export interface MiddlewareSpecRetry {
             /**
@@ -7190,9 +7349,9 @@ export namespace traefik {
         }
 
         /**
-         * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefix/
+         * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/stripprefix/
          */
-        export interface MiddlewareSpecStripprefix {
+        export interface MiddlewareSpecStripPrefix {
             /**
              * ForceSlash ensures that the resulting stripped path is not the empty string, by replacing it with / when necessary. Default: true.
              */
@@ -7204,9 +7363,9 @@ export namespace traefik {
         }
 
         /**
-         * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefixregex/
+         * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/stripprefixregex/
          */
-        export interface MiddlewareSpecStripprefixregex {
+        export interface MiddlewareSpecStripPrefixRegex {
             /**
              * Regex defines the regular expression to match the path prefix from the request URL.
              */
@@ -7220,17 +7379,17 @@ export namespace traefik {
             /**
              * InFlightConn defines the InFlightConn middleware configuration.
              */
-            inFlightConn?: outputs.traefik.v1alpha1.MiddlewareTCPSpecInflightconn;
+            inFlightConn?: outputs.traefik.v1alpha1.MiddlewareTCPSpecInFlightConn;
             /**
              * IPWhiteList defines the IPWhiteList middleware configuration.
              */
-            ipWhiteList?: outputs.traefik.v1alpha1.MiddlewareTCPSpecIpwhitelist;
+            ipWhiteList?: outputs.traefik.v1alpha1.MiddlewareTCPSpecIpWhiteList;
         }
 
         /**
          * InFlightConn defines the InFlightConn middleware configuration.
          */
-        export interface MiddlewareTCPSpecInflightconn {
+        export interface MiddlewareTCPSpecInFlightConn {
             /**
              * Amount defines the maximum amount of allowed simultaneous connections. The middleware closes the connection if there are already amount connections opened.
              */
@@ -7240,7 +7399,7 @@ export namespace traefik {
         /**
          * IPWhiteList defines the IPWhiteList middleware configuration.
          */
-        export interface MiddlewareTCPSpecIpwhitelist {
+        export interface MiddlewareTCPSpecIpWhiteList {
             /**
              * SourceRange defines the allowed IPs (or ranges of allowed IPs by using CIDR notation).
              */
@@ -7262,7 +7421,7 @@ export namespace traefik {
             /**
              * ForwardingTimeouts defines the timeouts for requests forwarded to the backend servers.
              */
-            forwardingTimeouts?: outputs.traefik.v1alpha1.ServersTransportSpecForwardingtimeouts;
+            forwardingTimeouts?: outputs.traefik.v1alpha1.ServersTransportSpecForwardingTimeouts;
             /**
              * InsecureSkipVerify disables SSL certificate verification.
              */
@@ -7288,7 +7447,7 @@ export namespace traefik {
         /**
          * ForwardingTimeouts defines the timeouts for requests forwarded to the backend servers.
          */
-        export interface ServersTransportSpecForwardingtimeouts {
+        export interface ServersTransportSpecForwardingTimeouts {
             /**
              * DialTimeout is the amount of time to wait until a connection to a backend server can be established.
              */
@@ -7312,23 +7471,89 @@ export namespace traefik {
         }
 
         /**
+         * ServersTransportTCPSpec defines the desired state of a ServersTransportTCP.
+         */
+        export interface ServersTransportTCPSpec {
+            /**
+             * DialKeepAlive is the interval between keep-alive probes for an active network connection. If zero, keep-alive probes are sent with a default value (currently 15 seconds), if supported by the protocol and operating system. Network protocols or operating systems that do not support keep-alives ignore this field. If negative, keep-alive probes are disabled.
+             */
+            dialKeepAlive?: number | string;
+            /**
+             * DialTimeout is the amount of time to wait until a connection to a backend server can be established.
+             */
+            dialTimeout?: number | string;
+            /**
+             * TerminationDelay defines the delay to wait before fully terminating the connection, after one connected peer has closed its writing capability.
+             */
+            terminationDelay?: number | string;
+            /**
+             * TLS defines the TLS configuration
+             */
+            tls?: outputs.traefik.v1alpha1.ServersTransportTCPSpecTls;
+        }
+
+        /**
+         * TLS defines the TLS configuration
+         */
+        export interface ServersTransportTCPSpecTls {
+            /**
+             * CertificatesSecrets defines a list of secret storing client certificates for mTLS.
+             */
+            certificatesSecrets?: string[];
+            /**
+             * InsecureSkipVerify disables TLS certificate verification.
+             */
+            insecureSkipVerify?: boolean;
+            /**
+             * MaxIdleConnsPerHost controls the maximum idle (keep-alive) to keep per-host. PeerCertURI defines the peer cert URI used to match against SAN URI during the peer certificate verification.
+             */
+            peerCertURI?: string;
+            /**
+             * RootCAsSecrets defines a list of CA secret used to validate self-signed certificates.
+             */
+            rootCAsSecrets?: string[];
+            /**
+             * ServerName defines the server name used to contact the server.
+             */
+            serverName?: string;
+            /**
+             * Spiffe defines the SPIFFE configuration.
+             */
+            spiffe?: outputs.traefik.v1alpha1.ServersTransportTCPSpecTlsSpiffe;
+        }
+
+        /**
+         * Spiffe defines the SPIFFE configuration.
+         */
+        export interface ServersTransportTCPSpecTlsSpiffe {
+            /**
+             * IDs defines the allowed SPIFFE IDs (takes precedence over the SPIFFE TrustDomain).
+             */
+            ids?: string[];
+            /**
+             * TrustDomain defines the allowed SPIFFE trust domain.
+             */
+            trustDomain?: string;
+        }
+
+        /**
          * TLSOptionSpec defines the desired state of a TLSOption.
          */
         export interface TLSOptionSpec {
             /**
-             * ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#alpn-protocols
+             * ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#alpn-protocols
              */
             alpnProtocols?: string[];
             /**
-             * CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#cipher-suites
+             * CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#cipher-suites
              */
             cipherSuites?: string[];
             /**
              * ClientAuth defines the server's policy for TLS Client Authentication.
              */
-            clientAuth?: outputs.traefik.v1alpha1.TLSOptionSpecClientauth;
+            clientAuth?: outputs.traefik.v1alpha1.TLSOptionSpecClientAuth;
             /**
-             * CurvePreferences defines the preferred elliptic curves in a specific order. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#curve-preferences
+             * CurvePreferences defines the preferred elliptic curves in a specific order. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#curve-preferences
              */
             curvePreferences?: string[];
             /**
@@ -7352,7 +7577,7 @@ export namespace traefik {
         /**
          * ClientAuth defines the server's policy for TLS Client Authentication.
          */
-        export interface TLSOptionSpecClientauth {
+        export interface TLSOptionSpecClientAuth {
             /**
              * ClientAuthType defines the client authentication type to apply.
              */
@@ -7374,11 +7599,11 @@ export namespace traefik {
             /**
              * DefaultCertificate defines the default certificate configuration.
              */
-            defaultCertificate?: outputs.traefik.v1alpha1.TLSStoreSpecDefaultcertificate;
+            defaultCertificate?: outputs.traefik.v1alpha1.TLSStoreSpecDefaultCertificate;
             /**
              * DefaultGeneratedCert defines the default generated certificate configuration.
              */
-            defaultGeneratedCert?: outputs.traefik.v1alpha1.TLSStoreSpecDefaultgeneratedcert;
+            defaultGeneratedCert?: outputs.traefik.v1alpha1.TLSStoreSpecDefaultGeneratedCert;
         }
 
         /**
@@ -7394,7 +7619,7 @@ export namespace traefik {
         /**
          * DefaultCertificate defines the default certificate configuration.
          */
-        export interface TLSStoreSpecDefaultcertificate {
+        export interface TLSStoreSpecDefaultCertificate {
             /**
              * SecretName is the name of the referenced Kubernetes Secret to specify the certificate details.
              */
@@ -7404,11 +7629,11 @@ export namespace traefik {
         /**
          * DefaultGeneratedCert defines the default generated certificate configuration.
          */
-        export interface TLSStoreSpecDefaultgeneratedcert {
+        export interface TLSStoreSpecDefaultGeneratedCert {
             /**
              * Domain is the domain definition for the DefaultCertificate.
              */
-            domain?: outputs.traefik.v1alpha1.TLSStoreSpecDefaultgeneratedcertDomain;
+            domain?: outputs.traefik.v1alpha1.TLSStoreSpecDefaultGeneratedCertDomain;
             /**
              * Resolver is the name of the resolver that will be used to issue the DefaultCertificate.
              */
@@ -7418,7 +7643,7 @@ export namespace traefik {
         /**
          * Domain is the domain definition for the DefaultCertificate.
          */
-        export interface TLSStoreSpecDefaultgeneratedcertDomain {
+        export interface TLSStoreSpecDefaultGeneratedCertDomain {
             /**
              * Main defines the main domain name.
              */
@@ -7468,6 +7693,10 @@ export namespace traefik {
              */
             namespace?: string;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: boolean;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: boolean;
@@ -7478,7 +7707,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: outputs.traefik.v1alpha1.TraefikServiceSpecMirroringResponseforwarding;
+            responseForwarding?: outputs.traefik.v1alpha1.TraefikServiceSpecMirroringResponseForwarding;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -7488,7 +7717,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.TraefikServiceSpecMirroringSticky;
             /**
@@ -7518,6 +7747,10 @@ export namespace traefik {
              */
             namespace?: string;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: boolean;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: boolean;
@@ -7532,7 +7765,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: outputs.traefik.v1alpha1.TraefikServiceSpecMirroringMirrorsResponseforwarding;
+            responseForwarding?: outputs.traefik.v1alpha1.TraefikServiceSpecMirroringMirrorsResponseForwarding;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -7542,7 +7775,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.TraefikServiceSpecMirroringMirrorsSticky;
             /**
@@ -7558,7 +7791,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface TraefikServiceSpecMirroringMirrorsResponseforwarding {
+        export interface TraefikServiceSpecMirroringMirrorsResponseForwarding {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -7566,7 +7799,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecMirroringMirrorsSticky {
             /**
@@ -7600,7 +7833,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface TraefikServiceSpecMirroringResponseforwarding {
+        export interface TraefikServiceSpecMirroringResponseForwarding {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -7608,7 +7841,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecMirroringSticky {
             /**
@@ -7648,7 +7881,7 @@ export namespace traefik {
              */
             services?: outputs.traefik.v1alpha1.TraefikServiceSpecWeightedServices[];
             /**
-             * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
+             * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
              */
             sticky?: outputs.traefik.v1alpha1.TraefikServiceSpecWeightedSticky;
         }
@@ -7670,6 +7903,10 @@ export namespace traefik {
              */
             namespace?: string;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: boolean;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: boolean;
@@ -7680,7 +7917,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: outputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesResponseforwarding;
+            responseForwarding?: outputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesResponseForwarding;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -7690,7 +7927,7 @@ export namespace traefik {
              */
             serversTransport?: string;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: outputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesSticky;
             /**
@@ -7706,7 +7943,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface TraefikServiceSpecWeightedServicesResponseforwarding {
+        export interface TraefikServiceSpecWeightedServicesResponseForwarding {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -7714,7 +7951,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecWeightedServicesSticky {
             /**
@@ -7746,7 +7983,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
+         * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
          */
         export interface TraefikServiceSpecWeightedSticky {
             /**

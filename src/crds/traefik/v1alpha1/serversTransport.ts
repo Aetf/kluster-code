@@ -9,7 +9,7 @@ import * as utilities from "../../utilities";
 import {ObjectMeta} from "../../meta/v1";
 
 /**
- * ServersTransport is the CRD implementation of a ServersTransport. If no serversTransport is specified, the default@internal will be used. The default@internal serversTransport is created from the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#serverstransport_1
+ * ServersTransport is the CRD implementation of a ServersTransport. If no serversTransport is specified, the default@internal will be used. The default@internal serversTransport is created from the static configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#serverstransport_1
  */
 export class ServersTransport extends pulumi.CustomResource {
     /**
@@ -25,7 +25,7 @@ export class ServersTransport extends pulumi.CustomResource {
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.containo.us/v1alpha1:ServersTransport';
+    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:ServersTransport';
 
     /**
      * Returns true if the given object is an instance of ServersTransport.  This is designed to work even
@@ -38,7 +38,7 @@ export class ServersTransport extends pulumi.CustomResource {
         return obj['__pulumiType'] === ServersTransport.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1">;
+    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
     public readonly kind!: pulumi.Output<"ServersTransport">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
@@ -57,7 +57,7 @@ export class ServersTransport extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "traefik.containo.us/v1alpha1";
+            resourceInputs["apiVersion"] = "traefik.io/v1alpha1";
             resourceInputs["kind"] = "ServersTransport";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
@@ -76,7 +76,7 @@ export class ServersTransport extends pulumi.CustomResource {
  * The set of arguments for constructing a ServersTransport resource.
  */
 export interface ServersTransportArgs {
-    apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
     kind?: pulumi.Input<"ServersTransport">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**

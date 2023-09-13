@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "../../types/input";
+import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
 import {ObjectMeta} from "../../meta/v1";
@@ -36,8 +38,8 @@ export class HelmChart extends pulumi.CustomResource {
     public readonly apiVersion!: pulumi.Output<"helm.cattle.io/v1">;
     public readonly kind!: pulumi.Output<"HelmChart">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
-    public readonly spec!: pulumi.Output<{[key: string]: any} | undefined>;
-    public readonly status!: pulumi.Output<{[key: string]: any} | undefined>;
+    public readonly spec!: pulumi.Output<outputs.helm.v1.HelmChartSpec | undefined>;
+    public readonly status!: pulumi.Output<outputs.helm.v1.HelmChartStatus | undefined>;
 
     /**
      * Create a HelmChart resource with the given unique name, arguments, and options.
@@ -74,6 +76,6 @@ export interface HelmChartArgs {
     apiVersion?: pulumi.Input<"helm.cattle.io/v1">;
     kind?: pulumi.Input<"HelmChart">;
     metadata?: pulumi.Input<ObjectMeta>;
-    spec?: pulumi.Input<{[key: string]: any}>;
-    status?: pulumi.Input<{[key: string]: any}>;
+    spec?: pulumi.Input<inputs.helm.v1.HelmChartSpecArgs>;
+    status?: pulumi.Input<inputs.helm.v1.HelmChartStatusArgs>;
 }

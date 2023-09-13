@@ -9,7 +9,7 @@ import * as utilities from "../../utilities";
 import {ObjectMeta} from "../../meta/v1";
 
 /**
- * MiddlewareTCP is the CRD implementation of a Traefik TCP middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/overview/
+ * MiddlewareTCP is the CRD implementation of a Traefik TCP middleware. More info: https://doc.traefik.io/traefik/v2.10/middlewares/overview/
  */
 export class MiddlewareTCP extends pulumi.CustomResource {
     /**
@@ -25,7 +25,7 @@ export class MiddlewareTCP extends pulumi.CustomResource {
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.containo.us/v1alpha1:MiddlewareTCP';
+    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:MiddlewareTCP';
 
     /**
      * Returns true if the given object is an instance of MiddlewareTCP.  This is designed to work even
@@ -38,7 +38,7 @@ export class MiddlewareTCP extends pulumi.CustomResource {
         return obj['__pulumiType'] === MiddlewareTCP.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1">;
+    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
     public readonly kind!: pulumi.Output<"MiddlewareTCP">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
@@ -57,7 +57,7 @@ export class MiddlewareTCP extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "traefik.containo.us/v1alpha1";
+            resourceInputs["apiVersion"] = "traefik.io/v1alpha1";
             resourceInputs["kind"] = "MiddlewareTCP";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
@@ -76,7 +76,7 @@ export class MiddlewareTCP extends pulumi.CustomResource {
  * The set of arguments for constructing a MiddlewareTCP resource.
  */
 export interface MiddlewareTCPArgs {
-    apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
     kind?: pulumi.Input<"MiddlewareTCP">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**

@@ -9,56 +9,56 @@ import * as utilities from "../../utilities";
 import {ObjectMeta} from "../../meta/v1";
 
 /**
- * TLSStore is the CRD implementation of a Traefik TLS Store. For the time being, only the TLSStore named default is supported. This means that you cannot have two stores that are named default in different Kubernetes namespaces. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#certificates-stores
+ * ServersTransportTCP is the CRD implementation of a TCPServersTransport. If no tcpServersTransport is specified, a default one named default@internal will be used. The default@internal tcpServersTransport can be configured in the static configuration. More info: https://doc.traefik.io/traefik/v3.0/routing/services/#serverstransport_3
  */
-export class TLSStore extends pulumi.CustomResource {
+export class ServersTransportTCP extends pulumi.CustomResource {
     /**
-     * Get an existing TLSStore resource's state with the given name, ID, and optional extra
+     * Get an existing ServersTransportTCP resource's state with the given name, ID, and optional extra
      * properties used to qualify the lookup.
      *
      * @param name The _unique_ name of the resulting resource.
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
-    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): TLSStore {
-        return new TLSStore(name, undefined as any, { ...opts, id: id });
+    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): ServersTransportTCP {
+        return new ServersTransportTCP(name, undefined as any, { ...opts, id: id });
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:TLSStore';
+    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:ServersTransportTCP';
 
     /**
-     * Returns true if the given object is an instance of TLSStore.  This is designed to work even
+     * Returns true if the given object is an instance of ServersTransportTCP.  This is designed to work even
      * when multiple copies of the Pulumi SDK have been loaded into the same process.
      */
-    public static isInstance(obj: any): obj is TLSStore {
+    public static isInstance(obj: any): obj is ServersTransportTCP {
         if (obj === undefined || obj === null) {
             return false;
         }
-        return obj['__pulumiType'] === TLSStore.__pulumiType;
+        return obj['__pulumiType'] === ServersTransportTCP.__pulumiType;
     }
 
     public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
-    public readonly kind!: pulumi.Output<"TLSStore">;
+    public readonly kind!: pulumi.Output<"ServersTransportTCP">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * TLSStoreSpec defines the desired state of a TLSStore.
+     * ServersTransportTCPSpec defines the desired state of a ServersTransportTCP.
      */
-    public readonly spec!: pulumi.Output<outputs.traefik.v1alpha1.TLSStoreSpec>;
+    public readonly spec!: pulumi.Output<outputs.traefik.v1alpha1.ServersTransportTCPSpec>;
 
     /**
-     * Create a TLSStore resource with the given unique name, arguments, and options.
+     * Create a ServersTransportTCP resource with the given unique name, arguments, and options.
      *
      * @param name The _unique_ name of the resource.
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: TLSStoreArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args?: ServersTransportTCPArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
             resourceInputs["apiVersion"] = "traefik.io/v1alpha1";
-            resourceInputs["kind"] = "TLSStore";
+            resourceInputs["kind"] = "ServersTransportTCP";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
         } else {
@@ -68,19 +68,19 @@ export class TLSStore extends pulumi.CustomResource {
             resourceInputs["spec"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        super(TLSStore.__pulumiType, name, resourceInputs, opts);
+        super(ServersTransportTCP.__pulumiType, name, resourceInputs, opts);
     }
 }
 
 /**
- * The set of arguments for constructing a TLSStore resource.
+ * The set of arguments for constructing a ServersTransportTCP resource.
  */
-export interface TLSStoreArgs {
+export interface ServersTransportTCPArgs {
     apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
-    kind?: pulumi.Input<"TLSStore">;
+    kind?: pulumi.Input<"ServersTransportTCP">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * TLSStoreSpec defines the desired state of a TLSStore.
+     * ServersTransportTCPSpec defines the desired state of a ServersTransportTCP.
      */
-    spec?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecArgs>;
+    spec?: pulumi.Input<inputs.traefik.v1alpha1.ServersTransportTCPSpecArgs>;
 }

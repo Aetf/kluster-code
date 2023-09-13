@@ -35,6 +35,11 @@ export type ServersTransport = import("./serversTransport").ServersTransport;
 export const ServersTransport: typeof import("./serversTransport").ServersTransport = null as any;
 utilities.lazyLoad(exports, ["ServersTransport"], () => require("./serversTransport"));
 
+export { ServersTransportTCPArgs } from "./serversTransportTCP";
+export type ServersTransportTCP = import("./serversTransportTCP").ServersTransportTCP;
+export const ServersTransportTCP: typeof import("./serversTransportTCP").ServersTransportTCP = null as any;
+utilities.lazyLoad(exports, ["ServersTransportTCP"], () => require("./serversTransportTCP"));
+
 export { TLSOptionArgs } from "./tlsoption";
 export type TLSOption = import("./tlsoption").TLSOption;
 export const TLSOption: typeof import("./tlsoption").TLSOption = null as any;
@@ -55,27 +60,29 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
-            case "kubernetes:traefik.containo.us/v1alpha1:IngressRoute":
+            case "kubernetes:traefik.io/v1alpha1:IngressRoute":
                 return new IngressRoute(name, <any>undefined, { urn })
-            case "kubernetes:traefik.containo.us/v1alpha1:IngressRouteTCP":
+            case "kubernetes:traefik.io/v1alpha1:IngressRouteTCP":
                 return new IngressRouteTCP(name, <any>undefined, { urn })
-            case "kubernetes:traefik.containo.us/v1alpha1:IngressRouteUDP":
+            case "kubernetes:traefik.io/v1alpha1:IngressRouteUDP":
                 return new IngressRouteUDP(name, <any>undefined, { urn })
-            case "kubernetes:traefik.containo.us/v1alpha1:Middleware":
+            case "kubernetes:traefik.io/v1alpha1:Middleware":
                 return new Middleware(name, <any>undefined, { urn })
-            case "kubernetes:traefik.containo.us/v1alpha1:MiddlewareTCP":
+            case "kubernetes:traefik.io/v1alpha1:MiddlewareTCP":
                 return new MiddlewareTCP(name, <any>undefined, { urn })
-            case "kubernetes:traefik.containo.us/v1alpha1:ServersTransport":
+            case "kubernetes:traefik.io/v1alpha1:ServersTransport":
                 return new ServersTransport(name, <any>undefined, { urn })
-            case "kubernetes:traefik.containo.us/v1alpha1:TLSOption":
+            case "kubernetes:traefik.io/v1alpha1:ServersTransportTCP":
+                return new ServersTransportTCP(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:TLSOption":
                 return new TLSOption(name, <any>undefined, { urn })
-            case "kubernetes:traefik.containo.us/v1alpha1:TLSStore":
+            case "kubernetes:traefik.io/v1alpha1:TLSStore":
                 return new TLSStore(name, <any>undefined, { urn })
-            case "kubernetes:traefik.containo.us/v1alpha1:TraefikService":
+            case "kubernetes:traefik.io/v1alpha1:TraefikService":
                 return new TraefikService(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }
     },
 };
-pulumi.runtime.registerResourceModule("crds", "traefik.containo.us/v1alpha1", _module)
+pulumi.runtime.registerResourceModule("crds", "traefik.io/v1alpha1", _module)

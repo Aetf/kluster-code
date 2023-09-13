@@ -25,7 +25,7 @@ export class IngressRouteUDP extends pulumi.CustomResource {
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.containo.us/v1alpha1:IngressRouteUDP';
+    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:IngressRouteUDP';
 
     /**
      * Returns true if the given object is an instance of IngressRouteUDP.  This is designed to work even
@@ -38,7 +38,7 @@ export class IngressRouteUDP extends pulumi.CustomResource {
         return obj['__pulumiType'] === IngressRouteUDP.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1">;
+    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
     public readonly kind!: pulumi.Output<"IngressRouteUDP">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
@@ -57,7 +57,7 @@ export class IngressRouteUDP extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "traefik.containo.us/v1alpha1";
+            resourceInputs["apiVersion"] = "traefik.io/v1alpha1";
             resourceInputs["kind"] = "IngressRouteUDP";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
@@ -76,7 +76,7 @@ export class IngressRouteUDP extends pulumi.CustomResource {
  * The set of arguments for constructing a IngressRouteUDP resource.
  */
 export interface IngressRouteUDPArgs {
-    apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
     kind?: pulumi.Input<"IngressRouteUDP">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**

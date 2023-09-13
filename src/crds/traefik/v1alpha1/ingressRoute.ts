@@ -25,7 +25,7 @@ export class IngressRoute extends pulumi.CustomResource {
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.containo.us/v1alpha1:IngressRoute';
+    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:IngressRoute';
 
     /**
      * Returns true if the given object is an instance of IngressRoute.  This is designed to work even
@@ -38,7 +38,7 @@ export class IngressRoute extends pulumi.CustomResource {
         return obj['__pulumiType'] === IngressRoute.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1">;
+    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
     public readonly kind!: pulumi.Output<"IngressRoute">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
@@ -57,7 +57,7 @@ export class IngressRoute extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "traefik.containo.us/v1alpha1";
+            resourceInputs["apiVersion"] = "traefik.io/v1alpha1";
             resourceInputs["kind"] = "IngressRoute";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
@@ -76,7 +76,7 @@ export class IngressRoute extends pulumi.CustomResource {
  * The set of arguments for constructing a IngressRoute resource.
  */
 export interface IngressRouteArgs {
-    apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
     kind?: pulumi.Input<"IngressRoute">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**

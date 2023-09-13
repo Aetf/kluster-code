@@ -23,7 +23,7 @@ export namespace acme {
             /**
              * References a properly configured ACME-type Issuer which should be used to create this Challenge. If the Issuer does not exist, processing will be retried. If the Issuer is not an 'ACME' Issuer, an error will be returned and the Challenge will be marked as failed.
              */
-            issuerRef: pulumi.Input<inputs.acme.v1.ChallengeSpecIssuerrefArgs>;
+            issuerRef: pulumi.Input<inputs.acme.v1.ChallengeSpecIssuerRefArgs>;
             /**
              * The ACME challenge key for this challenge For HTTP01 challenges, this is the value that must be responded with to complete the HTTP01 challenge in the format: `<private key JWK thumbprint>.<key from acme server for challenge>`. For DNS01 challenges, this is the base64 encoded SHA256 sum of the `<private key JWK thumbprint>.<key from acme server for challenge>` text that must be set as the TXT record content.
              */
@@ -53,7 +53,7 @@ export namespace acme {
         /**
          * References a properly configured ACME-type Issuer which should be used to create this Challenge. If the Issuer does not exist, processing will be retried. If the Issuer is not an 'ACME' Issuer, an error will be returned and the Challenge will be marked as failed.
          */
-        export interface ChallengeSpecIssuerrefArgs {
+        export interface ChallengeSpecIssuerRefArgs {
             /**
              * Group of the resource being referred to.
              */
@@ -93,7 +93,7 @@ export namespace acme {
             /**
              * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
              */
-            acmeDNS?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AcmednsArgs>;
+            acmeDNS?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AcmeDNSArgs>;
             /**
              * Use the Akamai DNS zone management API to manage DNS01 challenge records.
              */
@@ -101,11 +101,11 @@ export namespace acme {
             /**
              * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
              */
-            azureDNS?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AzurednsArgs>;
+            azureDNS?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AzureDNSArgs>;
             /**
              * Use the Google Cloud DNS API to manage DNS01 challenge records.
              */
-            cloudDNS?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01ClouddnsArgs>;
+            cloudDNS?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01CloudDNSArgs>;
             /**
              * Use the Cloudflare API to manage DNS01 challenge records.
              */
@@ -135,18 +135,18 @@ export namespace acme {
         /**
          * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
          */
-        export interface ChallengeSpecSolverDns01AcmednsArgs {
+        export interface ChallengeSpecSolverDns01AcmeDNSArgs {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accountSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AcmednsAccountsecretrefArgs>;
+            accountSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AcmeDNSAccountSecretRefArgs>;
             host: pulumi.Input<string>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01AcmednsAccountsecretrefArgs {
+        export interface ChallengeSpecSolverDns01AcmeDNSAccountSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -164,22 +164,22 @@ export namespace acme {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accessTokenSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AkamaiAccesstokensecretrefArgs>;
+            accessTokenSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AkamaiAccessTokenSecretRefArgs>;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientSecretSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AkamaiClientsecretsecretrefArgs>;
+            clientSecretSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AkamaiClientSecretSecretRefArgs>;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientTokenSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AkamaiClienttokensecretrefArgs>;
+            clientTokenSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AkamaiClientTokenSecretRefArgs>;
             serviceConsumerDomain: pulumi.Input<string>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01AkamaiAccesstokensecretrefArgs {
+        export interface ChallengeSpecSolverDns01AkamaiAccessTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -193,7 +193,7 @@ export namespace acme {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01AkamaiClientsecretsecretrefArgs {
+        export interface ChallengeSpecSolverDns01AkamaiClientSecretSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -207,7 +207,7 @@ export namespace acme {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01AkamaiClienttokensecretrefArgs {
+        export interface ChallengeSpecSolverDns01AkamaiClientTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -221,7 +221,7 @@ export namespace acme {
         /**
          * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
          */
-        export interface ChallengeSpecSolverDns01AzurednsArgs {
+        export interface ChallengeSpecSolverDns01AzureDNSArgs {
             /**
              * if both this and ClientSecret are left unset MSI will be used
              */
@@ -229,7 +229,7 @@ export namespace acme {
             /**
              * if both this and ClientID are left unset MSI will be used
              */
-            clientSecretSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AzurednsClientsecretsecretrefArgs>;
+            clientSecretSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AzureDNSClientSecretSecretRefArgs>;
             /**
              * name of the Azure environment (default AzurePublicCloud)
              */
@@ -241,7 +241,7 @@ export namespace acme {
             /**
              * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
              */
-            managedIdentity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AzurednsManagedidentityArgs>;
+            managedIdentity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01AzureDNSManagedIdentityArgs>;
             /**
              * resource group the DNS zone is located in
              */
@@ -259,7 +259,7 @@ export namespace acme {
         /**
          * if both this and ClientID are left unset MSI will be used
          */
-        export interface ChallengeSpecSolverDns01AzurednsClientsecretsecretrefArgs {
+        export interface ChallengeSpecSolverDns01AzureDNSClientSecretSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -273,7 +273,7 @@ export namespace acme {
         /**
          * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
          */
-        export interface ChallengeSpecSolverDns01AzurednsManagedidentityArgs {
+        export interface ChallengeSpecSolverDns01AzureDNSManagedIdentityArgs {
             /**
              * client ID of the managed identity, can not be used at the same time as resourceID
              */
@@ -287,7 +287,7 @@ export namespace acme {
         /**
          * Use the Google Cloud DNS API to manage DNS01 challenge records.
          */
-        export interface ChallengeSpecSolverDns01ClouddnsArgs {
+        export interface ChallengeSpecSolverDns01CloudDNSArgs {
             /**
              * HostedZoneName is an optional field that tells cert-manager in which Cloud DNS zone the challenge record has to be created. If left empty cert-manager will automatically choose a zone.
              */
@@ -296,13 +296,13 @@ export namespace acme {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            serviceAccountSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01ClouddnsServiceaccountsecretrefArgs>;
+            serviceAccountSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01CloudDNSServiceAccountSecretRefArgs>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01ClouddnsServiceaccountsecretrefArgs {
+        export interface ChallengeSpecSolverDns01CloudDNSServiceAccountSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -320,11 +320,11 @@ export namespace acme {
             /**
              * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
              */
-            apiKeySecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01CloudflareApikeysecretrefArgs>;
+            apiKeySecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01CloudflareApiKeySecretRefArgs>;
             /**
              * API token used to authenticate with Cloudflare.
              */
-            apiTokenSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01CloudflareApitokensecretrefArgs>;
+            apiTokenSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01CloudflareApiTokenSecretRefArgs>;
             /**
              * Email of the account, only required when using API key based authentication.
              */
@@ -334,7 +334,7 @@ export namespace acme {
         /**
          * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
          */
-        export interface ChallengeSpecSolverDns01CloudflareApikeysecretrefArgs {
+        export interface ChallengeSpecSolverDns01CloudflareApiKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -348,7 +348,7 @@ export namespace acme {
         /**
          * API token used to authenticate with Cloudflare.
          */
-        export interface ChallengeSpecSolverDns01CloudflareApitokensecretrefArgs {
+        export interface ChallengeSpecSolverDns01CloudflareApiTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -366,13 +366,13 @@ export namespace acme {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            tokenSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01DigitaloceanTokensecretrefArgs>;
+            tokenSecretRef: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01DigitaloceanTokenSecretRefArgs>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ChallengeSpecSolverDns01DigitaloceanTokensecretrefArgs {
+        export interface ChallengeSpecSolverDns01DigitaloceanTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -402,13 +402,13 @@ export namespace acme {
             /**
              * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
              */
-            tsigSecretSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01Rfc2136TsigsecretsecretrefArgs>;
+            tsigSecretSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01Rfc2136TsigSecretSecretRefArgs>;
         }
 
         /**
          * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
          */
-        export interface ChallengeSpecSolverDns01Rfc2136TsigsecretsecretrefArgs {
+        export interface ChallengeSpecSolverDns01Rfc2136TsigSecretSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -430,7 +430,7 @@ export namespace acme {
             /**
              * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            accessKeyIDSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01Route53AccesskeyidsecretrefArgs>;
+            accessKeyIDSecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01Route53AccessKeyIDSecretRefArgs>;
             /**
              * If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
              */
@@ -446,13 +446,13 @@ export namespace acme {
             /**
              * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            secretAccessKeySecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01Route53SecretaccesskeysecretrefArgs>;
+            secretAccessKeySecretRef?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverDns01Route53SecretAccessKeySecretRefArgs>;
         }
 
         /**
          * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface ChallengeSpecSolverDns01Route53AccesskeyidsecretrefArgs {
+        export interface ChallengeSpecSolverDns01Route53AccessKeyIDSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -466,7 +466,7 @@ export namespace acme {
         /**
          * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface ChallengeSpecSolverDns01Route53SecretaccesskeysecretrefArgs {
+        export interface ChallengeSpecSolverDns01Route53SecretAccessKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -502,7 +502,7 @@ export namespace acme {
             /**
              * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
              */
-            gatewayHTTPRoute?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01GatewayhttprouteArgs>;
+            gatewayHTTPRoute?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01GatewayHTTPRouteArgs>;
             /**
              * The ingress based HTTP01 challenge solver will solve challenges by creating or modifying Ingress resources in order to route requests for '/.well-known/acme-challenge/XYZ' to 'challenge solver' pods that are provisioned by cert-manager for each Challenge to be completed.
              */
@@ -512,7 +512,7 @@ export namespace acme {
         /**
          * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
          */
-        export interface ChallengeSpecSolverHttp01GatewayhttprouteArgs {
+        export interface ChallengeSpecSolverHttp01GatewayHTTPRouteArgs {
             /**
              * Custom labels that will be applied to HTTPRoutes created by cert-manager while solving HTTP-01 challenges.
              */
@@ -520,7 +520,7 @@ export namespace acme {
             /**
              * When solving an HTTP-01 challenge, cert-manager creates an HTTPRoute. cert-manager needs to know which parentRefs should be used when creating the HTTPRoute. Usually, the parentRef references a Gateway. See: https://gateway-api.sigs.k8s.io/v1alpha2/api-types/httproute/#attaching-to-gateways
              */
-            parentRefs?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01GatewayhttprouteParentrefsArgs>[]>;
+            parentRefs?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefsArgs>[]>;
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -532,7 +532,7 @@ export namespace acme {
          *  The API object must be valid in the cluster; the Group and Kind must be registered in the cluster for this reference to be valid. 
          *  References to objects with invalid Group and Kind are not valid, and must be rejected by the implementation, with appropriate Conditions set on the containing object.
          */
-        export interface ChallengeSpecSolverHttp01GatewayhttprouteParentrefsArgs {
+        export interface ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefsArgs {
             /**
              * Group is the group of the referent. 
              *  Support: Core
@@ -563,9 +563,9 @@ export namespace acme {
             sectionName?: pulumi.Input<string>;
         }
         /**
-         * challengeSpecSolverHttp01GatewayhttprouteParentrefsArgsProvideDefaults sets the appropriate defaults for ChallengeSpecSolverHttp01GatewayhttprouteParentrefsArgs
+         * challengeSpecSolverHttp01GatewayHTTPRouteParentRefsArgsProvideDefaults sets the appropriate defaults for ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefsArgs
          */
-        export function challengeSpecSolverHttp01GatewayhttprouteParentrefsArgsProvideDefaults(val: ChallengeSpecSolverHttp01GatewayhttprouteParentrefsArgs): ChallengeSpecSolverHttp01GatewayhttprouteParentrefsArgs {
+        export function challengeSpecSolverHttp01GatewayHTTPRouteParentRefsArgsProvideDefaults(val: ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefsArgs): ChallengeSpecSolverHttp01GatewayHTTPRouteParentRefsArgs {
             return {
                 ...val,
                 group: (val.group) ?? "gateway.networking.k8s.io",
@@ -584,7 +584,7 @@ export namespace acme {
             /**
              * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
              */
-            ingressTemplate?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressIngresstemplateArgs>;
+            ingressTemplate?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressIngressTemplateArgs>;
             /**
              * The name of the ingress resource that should have ACME challenge solving routes inserted into it in order to solve HTTP01 challenges. This is typically used in conjunction with ingress controllers like ingress-gce, which maintains a 1:1 mapping between external IPs and ingress resources.
              */
@@ -592,7 +592,7 @@ export namespace acme {
             /**
              * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
              */
-            podTemplate?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateArgs>;
+            podTemplate?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateArgs>;
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -602,17 +602,17 @@ export namespace acme {
         /**
          * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
          */
-        export interface ChallengeSpecSolverHttp01IngressIngresstemplateArgs {
+        export interface ChallengeSpecSolverHttp01IngressIngressTemplateArgs {
             /**
              * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressIngresstemplateMetadataArgs>;
+            metadata?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressIngressTemplateMetadataArgs>;
         }
 
         /**
          * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface ChallengeSpecSolverHttp01IngressIngresstemplateMetadataArgs {
+        export interface ChallengeSpecSolverHttp01IngressIngressTemplateMetadataArgs {
             /**
              * Annotations that should be added to the created ACME HTTP01 solver ingress.
              */
@@ -626,21 +626,21 @@ export namespace acme {
         /**
          * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateArgs {
             /**
              * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateMetadataArgs>;
+            metadata?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateMetadataArgs>;
             /**
              * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
              */
-            spec?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecArgs>;
+            spec?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecArgs>;
         }
 
         /**
          * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateMetadataArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateMetadataArgs {
             /**
              * Annotations that should be added to the create ACME HTTP01 solver pods.
              */
@@ -654,11 +654,11 @@ export namespace acme {
         /**
          * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecArgs {
             /**
              * If specified, the pod's scheduling constraints
              */
-            affinity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityArgs>;
+            affinity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityArgs>;
             /**
              * NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
              */
@@ -674,49 +674,49 @@ export namespace acme {
             /**
              * If specified, the pod's tolerations.
              */
-            tolerations?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecTolerationsArgs>[]>;
+            tolerations?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecTolerationsArgs>[]>;
         }
 
         /**
          * If specified, the pod's scheduling constraints
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityArgs {
             /**
              * Describes node affinity scheduling rules for the pod.
              */
-            nodeAffinity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityArgs>;
+            nodeAffinity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityArgs>;
             /**
              * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAffinity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityArgs>;
+            podAffinity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityArgs>;
             /**
              * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAntiAffinity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityArgs>;
+            podAntiAffinity?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityArgs>;
         }
 
         /**
          * Describes node affinity scheduling rules for the pod.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityArgs {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node matches the corresponding matchExpressions; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionArgs>[]>;
+            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionArgs>;
+            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs>;
         }
 
         /**
          * An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * A node selector term, associated with the corresponding weight.
              */
-            preference: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceArgs>;
+            preference: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceArgs>;
             /**
              * Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
              */
@@ -726,21 +726,21 @@ export namespace acme {
         /**
          * A node selector term, associated with the corresponding weight.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceArgs {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressionsArgs>[]>;
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfieldsArgs>[]>;
+            matchFields?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFieldsArgs>[]>;
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressionsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -758,7 +758,7 @@ export namespace acme {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfieldsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFieldsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -776,31 +776,31 @@ export namespace acme {
         /**
          * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * Required. A list of node selector terms. The terms are ORed.
              */
-            nodeSelectorTerms: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsArgs>[]>;
+            nodeSelectorTerms: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsArgs>[]>;
         }
 
         /**
          * A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsArgs {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressionsArgs>[]>;
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfieldsArgs>[]>;
+            matchFields?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFieldsArgs>[]>;
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressionsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -818,7 +818,7 @@ export namespace acme {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfieldsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFieldsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -836,25 +836,25 @@ export namespace acme {
         /**
          * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityArgs {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionArgs>[]>;
+            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionArgs>[]>;
+            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs>;
+            podAffinityTerm: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs>;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -864,15 +864,15 @@ export namespace acme {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -886,11 +886,11 @@ export namespace acme {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -900,7 +900,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -918,11 +918,11 @@ export namespace acme {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -932,7 +932,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -950,15 +950,15 @@ export namespace acme {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -972,11 +972,11 @@ export namespace acme {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -986,7 +986,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1004,11 +1004,11 @@ export namespace acme {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1018,7 +1018,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1036,25 +1036,25 @@ export namespace acme {
         /**
          * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityArgs {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionArgs>[]>;
+            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
             /**
              * If the anti-affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the anti-affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionArgs>[]>;
+            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs>;
+            podAffinityTerm: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs>;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -1064,15 +1064,15 @@ export namespace acme {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -1086,11 +1086,11 @@ export namespace acme {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1100,7 +1100,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1118,11 +1118,11 @@ export namespace acme {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1132,7 +1132,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1150,15 +1150,15 @@ export namespace acme {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -1172,11 +1172,11 @@ export namespace acme {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1186,7 +1186,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1204,11 +1204,11 @@ export namespace acme {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.acme.v1.ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -1218,7 +1218,7 @@ export namespace acme {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -1236,7 +1236,7 @@ export namespace acme {
         /**
          * The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
          */
-        export interface ChallengeSpecSolverHttp01IngressPodtemplateSpecTolerationsArgs {
+        export interface ChallengeSpecSolverHttp01IngressPodTemplateSpecTolerationsArgs {
             /**
              * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
              */
@@ -1316,7 +1316,7 @@ export namespace acme {
             /**
              * IssuerRef references a properly configured ACME-type Issuer which should be used to create this Order. If the Issuer does not exist, processing will be retried. If the Issuer is not an 'ACME' Issuer, an error will be returned and the Order will be marked as failed.
              */
-            issuerRef: pulumi.Input<inputs.acme.v1.OrderSpecIssuerrefArgs>;
+            issuerRef: pulumi.Input<inputs.acme.v1.OrderSpecIssuerRefArgs>;
             /**
              * Certificate signing request bytes in DER encoding. This will be used when finalizing the order. This field must be set on the order.
              */
@@ -1326,7 +1326,7 @@ export namespace acme {
         /**
          * IssuerRef references a properly configured ACME-type Issuer which should be used to create this Order. If the Issuer does not exist, processing will be retried. If the Issuer is not an 'ACME' Issuer, an error will be returned and the Order will be marked as failed.
          */
-        export interface OrderSpecIssuerrefArgs {
+        export interface OrderSpecIssuerRefArgs {
             /**
              * Group of the resource being referred to.
              */
@@ -1524,7 +1524,7 @@ export namespace certmanager {
             /**
              * IssuerRef is a reference to the issuer for this CertificateRequest.  If the `kind` field is not set, or set to `Issuer`, an Issuer resource with the given name in the same namespace as the CertificateRequest will be used.  If the `kind` field is set to `ClusterIssuer`, a ClusterIssuer with the provided name will be used. The `name` field in this stanza is required at all times. The group field refers to the API group of the issuer which defaults to `cert-manager.io` if empty.
              */
-            issuerRef: pulumi.Input<inputs.certmanager.v1.CertificateRequestSpecIssuerrefArgs>;
+            issuerRef: pulumi.Input<inputs.certmanager.v1.CertificateRequestSpecIssuerRefArgs>;
             /**
              * The PEM-encoded x509 certificate signing request to be submitted to the CA for signing.
              */
@@ -1546,7 +1546,7 @@ export namespace certmanager {
         /**
          * IssuerRef is a reference to the issuer for this CertificateRequest.  If the `kind` field is not set, or set to `Issuer`, an Issuer resource with the given name in the same namespace as the CertificateRequest will be used.  If the `kind` field is set to `ClusterIssuer`, a ClusterIssuer with the provided name will be used. The `name` field in this stanza is required at all times. The group field refers to the API group of the issuer which defaults to `cert-manager.io` if empty.
          */
-        export interface CertificateRequestSpecIssuerrefArgs {
+        export interface CertificateRequestSpecIssuerRefArgs {
             /**
              * Group of the resource being referred to.
              */
@@ -1616,7 +1616,7 @@ export namespace certmanager {
             /**
              * AdditionalOutputFormats defines extra output formats of the private key and signed certificate chain to be written to this Certificate's target Secret. This is an Alpha Feature and is only enabled with the `--feature-gates=AdditionalCertificateOutputFormats=true` option on both the controller and webhook components.
              */
-            additionalOutputFormats?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.CertificateSpecAdditionaloutputformatsArgs>[]>;
+            additionalOutputFormats?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.CertificateSpecAdditionalOutputFormatsArgs>[]>;
             /**
              * CommonName is a common name to be used on the Certificate. The CommonName should have a length of 64 characters or fewer to avoid generating invalid CSRs. This value is ignored by TLS clients when any subject alt name is set. This is x509 behaviour: https://tools.ietf.org/html/rfc6125#section-6.4.4
              */
@@ -1648,7 +1648,7 @@ export namespace certmanager {
             /**
              * IssuerRef is a reference to the issuer for this certificate. If the `kind` field is not set, or set to `Issuer`, an Issuer resource with the given name in the same namespace as the Certificate will be used. If the `kind` field is set to `ClusterIssuer`, a ClusterIssuer with the provided name will be used. The `name` field in this stanza is required at all times.
              */
-            issuerRef: pulumi.Input<inputs.certmanager.v1.CertificateSpecIssuerrefArgs>;
+            issuerRef: pulumi.Input<inputs.certmanager.v1.CertificateSpecIssuerRefArgs>;
             /**
              * Keystores configures additional keystore output formats stored in the `secretName` Secret resource.
              */
@@ -1660,7 +1660,7 @@ export namespace certmanager {
             /**
              * Options to control private keys used for the Certificate.
              */
-            privateKey?: pulumi.Input<inputs.certmanager.v1.CertificateSpecPrivatekeyArgs>;
+            privateKey?: pulumi.Input<inputs.certmanager.v1.CertificateSpecPrivateKeyArgs>;
             /**
              * How long before the currently issued certificate's expiry cert-manager should renew the certificate. The default is 2/3 of the issued certificate's duration. Minimum accepted value is 5 minutes. Value must be in units accepted by Go time.ParseDuration https://golang.org/pkg/time/#ParseDuration
              */
@@ -1676,7 +1676,7 @@ export namespace certmanager {
             /**
              * SecretTemplate defines annotations and labels to be copied to the Certificate's Secret. Labels and annotations on the Secret will be changed as they appear on the SecretTemplate when added or removed. SecretTemplate annotations are added in conjunction with, and cannot overwrite, the base set of annotations cert-manager sets on the Certificate's Secret.
              */
-            secretTemplate?: pulumi.Input<inputs.certmanager.v1.CertificateSpecSecrettemplateArgs>;
+            secretTemplate?: pulumi.Input<inputs.certmanager.v1.CertificateSpecSecretTemplateArgs>;
             /**
              * Full X509 name specification (https://golang.org/pkg/crypto/x509/pkix/#Name).
              */
@@ -1694,7 +1694,7 @@ export namespace certmanager {
         /**
          * CertificateAdditionalOutputFormat defines an additional output format of a Certificate resource. These contain supplementary data formats of the signed certificate chain and paired private key.
          */
-        export interface CertificateSpecAdditionaloutputformatsArgs {
+        export interface CertificateSpecAdditionalOutputFormatsArgs {
             /**
              * Type is the name of the format type that should be written to the Certificate's target Secret.
              */
@@ -1704,7 +1704,7 @@ export namespace certmanager {
         /**
          * IssuerRef is a reference to the issuer for this certificate. If the `kind` field is not set, or set to `Issuer`, an Issuer resource with the given name in the same namespace as the Certificate will be used. If the `kind` field is set to `ClusterIssuer`, a ClusterIssuer with the provided name will be used. The `name` field in this stanza is required at all times.
          */
-        export interface CertificateSpecIssuerrefArgs {
+        export interface CertificateSpecIssuerRefArgs {
             /**
              * Group of the resource being referred to.
              */
@@ -1744,13 +1744,13 @@ export namespace certmanager {
             /**
              * PasswordSecretRef is a reference to a key in a Secret resource containing the password used to encrypt the JKS keystore.
              */
-            passwordSecretRef: pulumi.Input<inputs.certmanager.v1.CertificateSpecKeystoresJksPasswordsecretrefArgs>;
+            passwordSecretRef: pulumi.Input<inputs.certmanager.v1.CertificateSpecKeystoresJksPasswordSecretRefArgs>;
         }
 
         /**
          * PasswordSecretRef is a reference to a key in a Secret resource containing the password used to encrypt the JKS keystore.
          */
-        export interface CertificateSpecKeystoresJksPasswordsecretrefArgs {
+        export interface CertificateSpecKeystoresJksPasswordSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -1772,13 +1772,13 @@ export namespace certmanager {
             /**
              * PasswordSecretRef is a reference to a key in a Secret resource containing the password used to encrypt the PKCS12 keystore.
              */
-            passwordSecretRef: pulumi.Input<inputs.certmanager.v1.CertificateSpecKeystoresPkcs12PasswordsecretrefArgs>;
+            passwordSecretRef: pulumi.Input<inputs.certmanager.v1.CertificateSpecKeystoresPkcs12PasswordSecretRefArgs>;
         }
 
         /**
          * PasswordSecretRef is a reference to a key in a Secret resource containing the password used to encrypt the PKCS12 keystore.
          */
-        export interface CertificateSpecKeystoresPkcs12PasswordsecretrefArgs {
+        export interface CertificateSpecKeystoresPkcs12PasswordSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -1792,7 +1792,7 @@ export namespace certmanager {
         /**
          * Options to control private keys used for the Certificate.
          */
-        export interface CertificateSpecPrivatekeyArgs {
+        export interface CertificateSpecPrivateKeyArgs {
             /**
              * Algorithm is the private key algorithm of the corresponding private key for this certificate. If provided, allowed values are either `RSA`,`Ed25519` or `ECDSA` If `algorithm` is specified and `size` is not provided, key size of 256 will be used for `ECDSA` key algorithm and key size of 2048 will be used for `RSA` key algorithm. key size is ignored when using the `Ed25519` key algorithm.
              */
@@ -1814,7 +1814,7 @@ export namespace certmanager {
         /**
          * SecretTemplate defines annotations and labels to be copied to the Certificate's Secret. Labels and annotations on the Secret will be changed as they appear on the SecretTemplate when added or removed. SecretTemplate annotations are added in conjunction with, and cannot overwrite, the base set of annotations cert-manager sets on the Certificate's Secret.
          */
-        export interface CertificateSpecSecrettemplateArgs {
+        export interface CertificateSpecSecretTemplateArgs {
             /**
              * Annotations is a key value map to be copied to the target Kubernetes Secret.
              */
@@ -1949,7 +1949,7 @@ export namespace certmanager {
             /**
              * SelfSigned configures this issuer to 'self sign' certificates using the private key used to create the CertificateRequest object.
              */
-            selfSigned?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecSelfsignedArgs>;
+            selfSigned?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecSelfSignedArgs>;
             /**
              * Vault configures this issuer to sign certificates using a HashiCorp Vault PKI backend.
              */
@@ -1979,7 +1979,7 @@ export namespace certmanager {
             /**
              * ExternalAccountBinding is a reference to a CA external account of the ACME server. If set, upon registration cert-manager will attempt to associate the given external account credentials with the registered ACME account.
              */
-            externalAccountBinding?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeExternalaccountbindingArgs>;
+            externalAccountBinding?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeExternalAccountBindingArgs>;
             /**
              * PreferredChain is the chain to use if the ACME server outputs multiple. PreferredChain is no guarantee that this one gets delivered by the ACME endpoint. For example, for Let's Encrypt's DST crosssign you would use: "DST Root CA X3" or "ISRG Root X1" for the newer Let's Encrypt root CA. This value picks the first certificate bundle in the ACME alternative chains that has a certificate with this value as its issuer's CN
              */
@@ -1987,7 +1987,7 @@ export namespace certmanager {
             /**
              * PrivateKey is the name of a Kubernetes Secret resource that will be used to store the automatically generated ACME account private key. Optionally, a `key` may be specified to select a specific entry within the named Secret resource. If `key` is not specified, a default of `tls.key` will be used.
              */
-            privateKeySecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmePrivatekeysecretrefArgs>;
+            privateKeySecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmePrivateKeySecretRefArgs>;
             /**
              * Server is the URL used to access the ACME server's 'directory' endpoint. For example, for Let's Encrypt's staging endpoint, you would use: "https://acme-staging-v02.api.letsencrypt.org/directory". Only ACME v2 endpoints (i.e. RFC 8555) are supported.
              */
@@ -2005,7 +2005,7 @@ export namespace certmanager {
         /**
          * ExternalAccountBinding is a reference to a CA external account of the ACME server. If set, upon registration cert-manager will attempt to associate the given external account credentials with the registered ACME account.
          */
-        export interface ClusterIssuerSpecAcmeExternalaccountbindingArgs {
+        export interface ClusterIssuerSpecAcmeExternalAccountBindingArgs {
             /**
              * Deprecated: keyAlgorithm field exists for historical compatibility reasons and should not be used. The algorithm is now hardcoded to HS256 in golang/x/crypto/acme.
              */
@@ -2017,13 +2017,13 @@ export namespace certmanager {
             /**
              * keySecretRef is a Secret Key Selector referencing a data item in a Kubernetes Secret which holds the symmetric MAC key of the External Account Binding. The `key` is the index string that is paired with the key data in the Secret and should not be confused with the key data itself, or indeed with the External Account Binding keyID above. The secret key stored in the Secret **must** be un-padded, base64 URL encoded data.
              */
-            keySecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeExternalaccountbindingKeysecretrefArgs>;
+            keySecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeExternalAccountBindingKeySecretRefArgs>;
         }
 
         /**
          * keySecretRef is a Secret Key Selector referencing a data item in a Kubernetes Secret which holds the symmetric MAC key of the External Account Binding. The `key` is the index string that is paired with the key data in the Secret and should not be confused with the key data itself, or indeed with the External Account Binding keyID above. The secret key stored in the Secret **must** be un-padded, base64 URL encoded data.
          */
-        export interface ClusterIssuerSpecAcmeExternalaccountbindingKeysecretrefArgs {
+        export interface ClusterIssuerSpecAcmeExternalAccountBindingKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2037,7 +2037,7 @@ export namespace certmanager {
         /**
          * PrivateKey is the name of a Kubernetes Secret resource that will be used to store the automatically generated ACME account private key. Optionally, a `key` may be specified to select a specific entry within the named Secret resource. If `key` is not specified, a default of `tls.key` will be used.
          */
-        export interface ClusterIssuerSpecAcmePrivatekeysecretrefArgs {
+        export interface ClusterIssuerSpecAcmePrivateKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2073,7 +2073,7 @@ export namespace certmanager {
             /**
              * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
              */
-            acmeDNS?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AcmednsArgs>;
+            acmeDNS?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AcmeDNSArgs>;
             /**
              * Use the Akamai DNS zone management API to manage DNS01 challenge records.
              */
@@ -2081,11 +2081,11 @@ export namespace certmanager {
             /**
              * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
              */
-            azureDNS?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzurednsArgs>;
+            azureDNS?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzureDNSArgs>;
             /**
              * Use the Google Cloud DNS API to manage DNS01 challenge records.
              */
-            cloudDNS?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01ClouddnsArgs>;
+            cloudDNS?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudDNSArgs>;
             /**
              * Use the Cloudflare API to manage DNS01 challenge records.
              */
@@ -2115,18 +2115,18 @@ export namespace certmanager {
         /**
          * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AcmednsArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01AcmeDNSArgs {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accountSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AcmednsAccountsecretrefArgs>;
+            accountSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AcmeDNSAccountSecretRefArgs>;
             host: pulumi.Input<string>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AcmednsAccountsecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01AcmeDNSAccountSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2144,22 +2144,22 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accessTokenSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiAccesstokensecretrefArgs>;
+            accessTokenSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiAccessTokenSecretRefArgs>;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientSecretSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiClientsecretsecretrefArgs>;
+            clientSecretSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiClientSecretSecretRefArgs>;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientTokenSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiClienttokensecretrefArgs>;
+            clientTokenSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AkamaiClientTokenSecretRefArgs>;
             serviceConsumerDomain: pulumi.Input<string>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiAccesstokensecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiAccessTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2173,7 +2173,7 @@ export namespace certmanager {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiClientsecretsecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiClientSecretSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2187,7 +2187,7 @@ export namespace certmanager {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiClienttokensecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01AkamaiClientTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2201,7 +2201,7 @@ export namespace certmanager {
         /**
          * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AzurednsArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01AzureDNSArgs {
             /**
              * if both this and ClientSecret are left unset MSI will be used
              */
@@ -2209,7 +2209,7 @@ export namespace certmanager {
             /**
              * if both this and ClientID are left unset MSI will be used
              */
-            clientSecretSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzurednsClientsecretsecretrefArgs>;
+            clientSecretSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzureDNSClientSecretSecretRefArgs>;
             /**
              * name of the Azure environment (default AzurePublicCloud)
              */
@@ -2221,7 +2221,7 @@ export namespace certmanager {
             /**
              * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
              */
-            managedIdentity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzurednsManagedidentityArgs>;
+            managedIdentity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01AzureDNSManagedIdentityArgs>;
             /**
              * resource group the DNS zone is located in
              */
@@ -2239,7 +2239,7 @@ export namespace certmanager {
         /**
          * if both this and ClientID are left unset MSI will be used
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AzurednsClientsecretsecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01AzureDNSClientSecretSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2253,7 +2253,7 @@ export namespace certmanager {
         /**
          * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01AzurednsManagedidentityArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01AzureDNSManagedIdentityArgs {
             /**
              * client ID of the managed identity, can not be used at the same time as resourceID
              */
@@ -2267,7 +2267,7 @@ export namespace certmanager {
         /**
          * Use the Google Cloud DNS API to manage DNS01 challenge records.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01ClouddnsArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01CloudDNSArgs {
             /**
              * HostedZoneName is an optional field that tells cert-manager in which Cloud DNS zone the challenge record has to be created. If left empty cert-manager will automatically choose a zone.
              */
@@ -2276,13 +2276,13 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            serviceAccountSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01ClouddnsServiceaccountsecretrefArgs>;
+            serviceAccountSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudDNSServiceAccountSecretRefArgs>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01ClouddnsServiceaccountsecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01CloudDNSServiceAccountSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2300,11 +2300,11 @@ export namespace certmanager {
             /**
              * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
              */
-            apiKeySecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudflareApikeysecretrefArgs>;
+            apiKeySecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudflareApiKeySecretRefArgs>;
             /**
              * API token used to authenticate with Cloudflare.
              */
-            apiTokenSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudflareApitokensecretrefArgs>;
+            apiTokenSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01CloudflareApiTokenSecretRefArgs>;
             /**
              * Email of the account, only required when using API key based authentication.
              */
@@ -2314,7 +2314,7 @@ export namespace certmanager {
         /**
          * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01CloudflareApikeysecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01CloudflareApiKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2328,7 +2328,7 @@ export namespace certmanager {
         /**
          * API token used to authenticate with Cloudflare.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01CloudflareApitokensecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01CloudflareApiTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2346,13 +2346,13 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            tokenSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01DigitaloceanTokensecretrefArgs>;
+            tokenSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01DigitaloceanTokenSecretRefArgs>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01DigitaloceanTokensecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01DigitaloceanTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2382,13 +2382,13 @@ export namespace certmanager {
             /**
              * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
              */
-            tsigSecretSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Rfc2136TsigsecretsecretrefArgs>;
+            tsigSecretSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Rfc2136TsigSecretSecretRefArgs>;
         }
 
         /**
          * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01Rfc2136TsigsecretsecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01Rfc2136TsigSecretSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2410,7 +2410,7 @@ export namespace certmanager {
             /**
              * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            accessKeyIDSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Route53AccesskeyidsecretrefArgs>;
+            accessKeyIDSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Route53AccessKeyIDSecretRefArgs>;
             /**
              * If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
              */
@@ -2426,13 +2426,13 @@ export namespace certmanager {
             /**
              * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            secretAccessKeySecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Route53SecretaccesskeysecretrefArgs>;
+            secretAccessKeySecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversDns01Route53SecretAccessKeySecretRefArgs>;
         }
 
         /**
          * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01Route53AccesskeyidsecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01Route53AccessKeyIDSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2446,7 +2446,7 @@ export namespace certmanager {
         /**
          * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface ClusterIssuerSpecAcmeSolversDns01Route53SecretaccesskeysecretrefArgs {
+        export interface ClusterIssuerSpecAcmeSolversDns01Route53SecretAccessKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -2482,7 +2482,7 @@ export namespace certmanager {
             /**
              * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
              */
-            gatewayHTTPRoute?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteArgs>;
+            gatewayHTTPRoute?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteArgs>;
             /**
              * The ingress based HTTP01 challenge solver will solve challenges by creating or modifying Ingress resources in order to route requests for '/.well-known/acme-challenge/XYZ' to 'challenge solver' pods that are provisioned by cert-manager for each Challenge to be completed.
              */
@@ -2492,7 +2492,7 @@ export namespace certmanager {
         /**
          * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteArgs {
             /**
              * Custom labels that will be applied to HTTPRoutes created by cert-manager while solving HTTP-01 challenges.
              */
@@ -2500,7 +2500,7 @@ export namespace certmanager {
             /**
              * When solving an HTTP-01 challenge, cert-manager creates an HTTPRoute. cert-manager needs to know which parentRefs should be used when creating the HTTPRoute. Usually, the parentRef references a Gateway. See: https://gateway-api.sigs.k8s.io/v1alpha2/api-types/httproute/#attaching-to-gateways
              */
-            parentRefs?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs>[]>;
+            parentRefs?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs>[]>;
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -2512,7 +2512,7 @@ export namespace certmanager {
          *  The API object must be valid in the cluster; the Group and Kind must be registered in the cluster for this reference to be valid. 
          *  References to objects with invalid Group and Kind are not valid, and must be rejected by the implementation, with appropriate Conditions set on the containing object.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs {
             /**
              * Group is the group of the referent. 
              *  Support: Core
@@ -2543,9 +2543,9 @@ export namespace certmanager {
             sectionName?: pulumi.Input<string>;
         }
         /**
-         * clusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgsProvideDefaults sets the appropriate defaults for ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs
+         * clusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgsProvideDefaults sets the appropriate defaults for ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs
          */
-        export function clusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgsProvideDefaults(val: ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs): ClusterIssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs {
+        export function clusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgsProvideDefaults(val: ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs): ClusterIssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs {
             return {
                 ...val,
                 group: (val.group) ?? "gateway.networking.k8s.io",
@@ -2564,7 +2564,7 @@ export namespace certmanager {
             /**
              * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
              */
-            ingressTemplate?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressIngresstemplateArgs>;
+            ingressTemplate?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressIngressTemplateArgs>;
             /**
              * The name of the ingress resource that should have ACME challenge solving routes inserted into it in order to solve HTTP01 challenges. This is typically used in conjunction with ingress controllers like ingress-gce, which maintains a 1:1 mapping between external IPs and ingress resources.
              */
@@ -2572,7 +2572,7 @@ export namespace certmanager {
             /**
              * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
              */
-            podTemplate?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateArgs>;
+            podTemplate?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateArgs>;
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -2582,17 +2582,17 @@ export namespace certmanager {
         /**
          * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressIngresstemplateArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressIngressTemplateArgs {
             /**
              * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressIngresstemplateMetadataArgs>;
+            metadata?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressIngressTemplateMetadataArgs>;
         }
 
         /**
          * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressIngresstemplateMetadataArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressIngressTemplateMetadataArgs {
             /**
              * Annotations that should be added to the created ACME HTTP01 solver ingress.
              */
@@ -2606,21 +2606,21 @@ export namespace certmanager {
         /**
          * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateArgs {
             /**
              * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateMetadataArgs>;
+            metadata?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateMetadataArgs>;
             /**
              * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
              */
-            spec?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecArgs>;
+            spec?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecArgs>;
         }
 
         /**
          * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateMetadataArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateMetadataArgs {
             /**
              * Annotations that should be added to the create ACME HTTP01 solver pods.
              */
@@ -2634,11 +2634,11 @@ export namespace certmanager {
         /**
          * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecArgs {
             /**
              * If specified, the pod's scheduling constraints
              */
-            affinity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityArgs>;
+            affinity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityArgs>;
             /**
              * NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
              */
@@ -2654,49 +2654,49 @@ export namespace certmanager {
             /**
              * If specified, the pod's tolerations.
              */
-            tolerations?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecTolerationsArgs>[]>;
+            tolerations?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecTolerationsArgs>[]>;
         }
 
         /**
          * If specified, the pod's scheduling constraints
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityArgs {
             /**
              * Describes node affinity scheduling rules for the pod.
              */
-            nodeAffinity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityArgs>;
+            nodeAffinity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityArgs>;
             /**
              * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAffinity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityArgs>;
+            podAffinity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityArgs>;
             /**
              * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAntiAffinity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityArgs>;
+            podAntiAffinity?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityArgs>;
         }
 
         /**
          * Describes node affinity scheduling rules for the pod.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityArgs {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node matches the corresponding matchExpressions; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionArgs>[]>;
+            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionArgs>;
+            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs>;
         }
 
         /**
          * An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * A node selector term, associated with the corresponding weight.
              */
-            preference: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceArgs>;
+            preference: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceArgs>;
             /**
              * Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
              */
@@ -2706,21 +2706,21 @@ export namespace certmanager {
         /**
          * A node selector term, associated with the corresponding weight.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceArgs {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressionsArgs>[]>;
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfieldsArgs>[]>;
+            matchFields?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFieldsArgs>[]>;
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressionsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -2738,7 +2738,7 @@ export namespace certmanager {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfieldsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFieldsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -2756,31 +2756,31 @@ export namespace certmanager {
         /**
          * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * Required. A list of node selector terms. The terms are ORed.
              */
-            nodeSelectorTerms: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsArgs>[]>;
+            nodeSelectorTerms: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsArgs>[]>;
         }
 
         /**
          * A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsArgs {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressionsArgs>[]>;
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfieldsArgs>[]>;
+            matchFields?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFieldsArgs>[]>;
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressionsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -2798,7 +2798,7 @@ export namespace certmanager {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfieldsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFieldsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -2816,25 +2816,25 @@ export namespace certmanager {
         /**
          * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityArgs {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionArgs>[]>;
+            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionArgs>[]>;
+            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs>;
+            podAffinityTerm: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs>;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -2844,15 +2844,15 @@ export namespace certmanager {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -2866,11 +2866,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -2880,7 +2880,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -2898,11 +2898,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -2912,7 +2912,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -2930,15 +2930,15 @@ export namespace certmanager {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -2952,11 +2952,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -2966,7 +2966,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -2984,11 +2984,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -2998,7 +2998,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3016,25 +3016,25 @@ export namespace certmanager {
         /**
          * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityArgs {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionArgs>[]>;
+            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
             /**
              * If the anti-affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the anti-affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionArgs>[]>;
+            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs>;
+            podAffinityTerm: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs>;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -3044,15 +3044,15 @@ export namespace certmanager {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -3066,11 +3066,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -3080,7 +3080,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3098,11 +3098,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -3112,7 +3112,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3130,15 +3130,15 @@ export namespace certmanager {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -3152,11 +3152,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -3166,7 +3166,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3184,11 +3184,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -3198,7 +3198,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -3216,7 +3216,7 @@ export namespace certmanager {
         /**
          * The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
          */
-        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodtemplateSpecTolerationsArgs {
+        export interface ClusterIssuerSpecAcmeSolversHttp01IngressPodTemplateSpecTolerationsArgs {
             /**
              * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
              */
@@ -3278,7 +3278,7 @@ export namespace certmanager {
         /**
          * SelfSigned configures this issuer to 'self sign' certificates using the private key used to create the CertificateRequest object.
          */
-        export interface ClusterIssuerSpecSelfsignedArgs {
+        export interface ClusterIssuerSpecSelfSignedArgs {
             /**
              * The CRL distribution points is an X.509 v3 certificate extension which identifies the location of the CRL from which the revocation of this certificate can be checked. If not set certificate will be issued without CDP. Values are strings.
              */
@@ -3318,7 +3318,7 @@ export namespace certmanager {
             /**
              * AppRole authenticates with Vault using the App Role auth mechanism, with the role and secret stored in a Kubernetes Secret resource.
              */
-            appRole?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVaultAuthApproleArgs>;
+            appRole?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVaultAuthAppRoleArgs>;
             /**
              * Kubernetes authenticates with Vault by passing the ServiceAccount token stored in the named Secret resource to the Vault server.
              */
@@ -3326,13 +3326,13 @@ export namespace certmanager {
             /**
              * TokenSecretRef authenticates with Vault by presenting a token.
              */
-            tokenSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVaultAuthTokensecretrefArgs>;
+            tokenSecretRef?: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVaultAuthTokenSecretRefArgs>;
         }
 
         /**
          * AppRole authenticates with Vault using the App Role auth mechanism, with the role and secret stored in a Kubernetes Secret resource.
          */
-        export interface ClusterIssuerSpecVaultAuthApproleArgs {
+        export interface ClusterIssuerSpecVaultAuthAppRoleArgs {
             /**
              * Path where the App Role authentication backend is mounted in Vault, e.g: "approle"
              */
@@ -3344,13 +3344,13 @@ export namespace certmanager {
             /**
              * Reference to a key in a Secret that contains the App Role secret used to authenticate with Vault. The `key` field must be specified and denotes which entry within the Secret resource is used as the app role secret.
              */
-            secretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVaultAuthApproleSecretrefArgs>;
+            secretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVaultAuthAppRoleSecretRefArgs>;
         }
 
         /**
          * Reference to a key in a Secret that contains the App Role secret used to authenticate with Vault. The `key` field must be specified and denotes which entry within the Secret resource is used as the app role secret.
          */
-        export interface ClusterIssuerSpecVaultAuthApproleSecretrefArgs {
+        export interface ClusterIssuerSpecVaultAuthAppRoleSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3376,13 +3376,13 @@ export namespace certmanager {
             /**
              * The required Secret field containing a Kubernetes ServiceAccount JWT used for authenticating with Vault. Use of 'ambient credentials' is not supported.
              */
-            secretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVaultAuthKubernetesSecretrefArgs>;
+            secretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVaultAuthKubernetesSecretRefArgs>;
         }
 
         /**
          * The required Secret field containing a Kubernetes ServiceAccount JWT used for authenticating with Vault. Use of 'ambient credentials' is not supported.
          */
-        export interface ClusterIssuerSpecVaultAuthKubernetesSecretrefArgs {
+        export interface ClusterIssuerSpecVaultAuthKubernetesSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3396,7 +3396,7 @@ export namespace certmanager {
         /**
          * TokenSecretRef authenticates with Vault by presenting a token.
          */
-        export interface ClusterIssuerSpecVaultAuthTokensecretrefArgs {
+        export interface ClusterIssuerSpecVaultAuthTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3432,7 +3432,7 @@ export namespace certmanager {
             /**
              * APITokenSecretRef is a secret key selector for the Venafi Cloud API token.
              */
-            apiTokenSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVenafiCloudApitokensecretrefArgs>;
+            apiTokenSecretRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVenafiCloudApiTokenSecretRefArgs>;
             /**
              * URL is the base URL for Venafi Cloud. Defaults to "https://api.venafi.cloud/v1".
              */
@@ -3442,7 +3442,7 @@ export namespace certmanager {
         /**
          * APITokenSecretRef is a secret key selector for the Venafi Cloud API token.
          */
-        export interface ClusterIssuerSpecVenafiCloudApitokensecretrefArgs {
+        export interface ClusterIssuerSpecVenafiCloudApiTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3464,7 +3464,7 @@ export namespace certmanager {
             /**
              * CredentialsRef is a reference to a Secret containing the username and password for the TPP server. The secret must contain two keys, 'username' and 'password'.
              */
-            credentialsRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVenafiTppCredentialsrefArgs>;
+            credentialsRef: pulumi.Input<inputs.certmanager.v1.ClusterIssuerSpecVenafiTppCredentialsRefArgs>;
             /**
              * URL is the base URL for the vedsdk endpoint of the Venafi TPP instance, for example: "https://tpp.example.com/vedsdk".
              */
@@ -3474,7 +3474,7 @@ export namespace certmanager {
         /**
          * CredentialsRef is a reference to a Secret containing the username and password for the TPP server. The secret must contain two keys, 'username' and 'password'.
          */
-        export interface ClusterIssuerSpecVenafiTppCredentialsrefArgs {
+        export interface ClusterIssuerSpecVenafiTppCredentialsRefArgs {
             /**
              * Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
              */
@@ -3554,7 +3554,7 @@ export namespace certmanager {
             /**
              * SelfSigned configures this issuer to 'self sign' certificates using the private key used to create the CertificateRequest object.
              */
-            selfSigned?: pulumi.Input<inputs.certmanager.v1.IssuerSpecSelfsignedArgs>;
+            selfSigned?: pulumi.Input<inputs.certmanager.v1.IssuerSpecSelfSignedArgs>;
             /**
              * Vault configures this issuer to sign certificates using a HashiCorp Vault PKI backend.
              */
@@ -3584,7 +3584,7 @@ export namespace certmanager {
             /**
              * ExternalAccountBinding is a reference to a CA external account of the ACME server. If set, upon registration cert-manager will attempt to associate the given external account credentials with the registered ACME account.
              */
-            externalAccountBinding?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeExternalaccountbindingArgs>;
+            externalAccountBinding?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeExternalAccountBindingArgs>;
             /**
              * PreferredChain is the chain to use if the ACME server outputs multiple. PreferredChain is no guarantee that this one gets delivered by the ACME endpoint. For example, for Let's Encrypt's DST crosssign you would use: "DST Root CA X3" or "ISRG Root X1" for the newer Let's Encrypt root CA. This value picks the first certificate bundle in the ACME alternative chains that has a certificate with this value as its issuer's CN
              */
@@ -3592,7 +3592,7 @@ export namespace certmanager {
             /**
              * PrivateKey is the name of a Kubernetes Secret resource that will be used to store the automatically generated ACME account private key. Optionally, a `key` may be specified to select a specific entry within the named Secret resource. If `key` is not specified, a default of `tls.key` will be used.
              */
-            privateKeySecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmePrivatekeysecretrefArgs>;
+            privateKeySecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmePrivateKeySecretRefArgs>;
             /**
              * Server is the URL used to access the ACME server's 'directory' endpoint. For example, for Let's Encrypt's staging endpoint, you would use: "https://acme-staging-v02.api.letsencrypt.org/directory". Only ACME v2 endpoints (i.e. RFC 8555) are supported.
              */
@@ -3610,7 +3610,7 @@ export namespace certmanager {
         /**
          * ExternalAccountBinding is a reference to a CA external account of the ACME server. If set, upon registration cert-manager will attempt to associate the given external account credentials with the registered ACME account.
          */
-        export interface IssuerSpecAcmeExternalaccountbindingArgs {
+        export interface IssuerSpecAcmeExternalAccountBindingArgs {
             /**
              * Deprecated: keyAlgorithm field exists for historical compatibility reasons and should not be used. The algorithm is now hardcoded to HS256 in golang/x/crypto/acme.
              */
@@ -3622,13 +3622,13 @@ export namespace certmanager {
             /**
              * keySecretRef is a Secret Key Selector referencing a data item in a Kubernetes Secret which holds the symmetric MAC key of the External Account Binding. The `key` is the index string that is paired with the key data in the Secret and should not be confused with the key data itself, or indeed with the External Account Binding keyID above. The secret key stored in the Secret **must** be un-padded, base64 URL encoded data.
              */
-            keySecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeExternalaccountbindingKeysecretrefArgs>;
+            keySecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeExternalAccountBindingKeySecretRefArgs>;
         }
 
         /**
          * keySecretRef is a Secret Key Selector referencing a data item in a Kubernetes Secret which holds the symmetric MAC key of the External Account Binding. The `key` is the index string that is paired with the key data in the Secret and should not be confused with the key data itself, or indeed with the External Account Binding keyID above. The secret key stored in the Secret **must** be un-padded, base64 URL encoded data.
          */
-        export interface IssuerSpecAcmeExternalaccountbindingKeysecretrefArgs {
+        export interface IssuerSpecAcmeExternalAccountBindingKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3642,7 +3642,7 @@ export namespace certmanager {
         /**
          * PrivateKey is the name of a Kubernetes Secret resource that will be used to store the automatically generated ACME account private key. Optionally, a `key` may be specified to select a specific entry within the named Secret resource. If `key` is not specified, a default of `tls.key` will be used.
          */
-        export interface IssuerSpecAcmePrivatekeysecretrefArgs {
+        export interface IssuerSpecAcmePrivateKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3678,7 +3678,7 @@ export namespace certmanager {
             /**
              * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
              */
-            acmeDNS?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AcmednsArgs>;
+            acmeDNS?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AcmeDNSArgs>;
             /**
              * Use the Akamai DNS zone management API to manage DNS01 challenge records.
              */
@@ -3686,11 +3686,11 @@ export namespace certmanager {
             /**
              * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
              */
-            azureDNS?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzurednsArgs>;
+            azureDNS?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzureDNSArgs>;
             /**
              * Use the Google Cloud DNS API to manage DNS01 challenge records.
              */
-            cloudDNS?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01ClouddnsArgs>;
+            cloudDNS?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudDNSArgs>;
             /**
              * Use the Cloudflare API to manage DNS01 challenge records.
              */
@@ -3720,18 +3720,18 @@ export namespace certmanager {
         /**
          * Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage DNS01 challenge records.
          */
-        export interface IssuerSpecAcmeSolversDns01AcmednsArgs {
+        export interface IssuerSpecAcmeSolversDns01AcmeDNSArgs {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accountSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AcmednsAccountsecretrefArgs>;
+            accountSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AcmeDNSAccountSecretRefArgs>;
             host: pulumi.Input<string>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01AcmednsAccountsecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01AcmeDNSAccountSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3749,22 +3749,22 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            accessTokenSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiAccesstokensecretrefArgs>;
+            accessTokenSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiAccessTokenSecretRefArgs>;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientSecretSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiClientsecretsecretrefArgs>;
+            clientSecretSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiClientSecretSecretRefArgs>;
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            clientTokenSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiClienttokensecretrefArgs>;
+            clientTokenSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AkamaiClientTokenSecretRefArgs>;
             serviceConsumerDomain: pulumi.Input<string>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01AkamaiAccesstokensecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01AkamaiAccessTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3778,7 +3778,7 @@ export namespace certmanager {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01AkamaiClientsecretsecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01AkamaiClientSecretSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3792,7 +3792,7 @@ export namespace certmanager {
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01AkamaiClienttokensecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01AkamaiClientTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3806,7 +3806,7 @@ export namespace certmanager {
         /**
          * Use the Microsoft Azure DNS API to manage DNS01 challenge records.
          */
-        export interface IssuerSpecAcmeSolversDns01AzurednsArgs {
+        export interface IssuerSpecAcmeSolversDns01AzureDNSArgs {
             /**
              * if both this and ClientSecret are left unset MSI will be used
              */
@@ -3814,7 +3814,7 @@ export namespace certmanager {
             /**
              * if both this and ClientID are left unset MSI will be used
              */
-            clientSecretSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzurednsClientsecretsecretrefArgs>;
+            clientSecretSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzureDNSClientSecretSecretRefArgs>;
             /**
              * name of the Azure environment (default AzurePublicCloud)
              */
@@ -3826,7 +3826,7 @@ export namespace certmanager {
             /**
              * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
              */
-            managedIdentity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzurednsManagedidentityArgs>;
+            managedIdentity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01AzureDNSManagedIdentityArgs>;
             /**
              * resource group the DNS zone is located in
              */
@@ -3844,7 +3844,7 @@ export namespace certmanager {
         /**
          * if both this and ClientID are left unset MSI will be used
          */
-        export interface IssuerSpecAcmeSolversDns01AzurednsClientsecretsecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01AzureDNSClientSecretSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3858,7 +3858,7 @@ export namespace certmanager {
         /**
          * managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
          */
-        export interface IssuerSpecAcmeSolversDns01AzurednsManagedidentityArgs {
+        export interface IssuerSpecAcmeSolversDns01AzureDNSManagedIdentityArgs {
             /**
              * client ID of the managed identity, can not be used at the same time as resourceID
              */
@@ -3872,7 +3872,7 @@ export namespace certmanager {
         /**
          * Use the Google Cloud DNS API to manage DNS01 challenge records.
          */
-        export interface IssuerSpecAcmeSolversDns01ClouddnsArgs {
+        export interface IssuerSpecAcmeSolversDns01CloudDNSArgs {
             /**
              * HostedZoneName is an optional field that tells cert-manager in which Cloud DNS zone the challenge record has to be created. If left empty cert-manager will automatically choose a zone.
              */
@@ -3881,13 +3881,13 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            serviceAccountSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01ClouddnsServiceaccountsecretrefArgs>;
+            serviceAccountSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudDNSServiceAccountSecretRefArgs>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01ClouddnsServiceaccountsecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01CloudDNSServiceAccountSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3905,11 +3905,11 @@ export namespace certmanager {
             /**
              * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
              */
-            apiKeySecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudflareApikeysecretrefArgs>;
+            apiKeySecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudflareApiKeySecretRefArgs>;
             /**
              * API token used to authenticate with Cloudflare.
              */
-            apiTokenSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudflareApitokensecretrefArgs>;
+            apiTokenSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01CloudflareApiTokenSecretRefArgs>;
             /**
              * Email of the account, only required when using API key based authentication.
              */
@@ -3919,7 +3919,7 @@ export namespace certmanager {
         /**
          * API key to use to authenticate with Cloudflare. Note: using an API token to authenticate is now the recommended method as it allows greater control of permissions.
          */
-        export interface IssuerSpecAcmeSolversDns01CloudflareApikeysecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01CloudflareApiKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3933,7 +3933,7 @@ export namespace certmanager {
         /**
          * API token used to authenticate with Cloudflare.
          */
-        export interface IssuerSpecAcmeSolversDns01CloudflareApitokensecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01CloudflareApiTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3951,13 +3951,13 @@ export namespace certmanager {
             /**
              * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
              */
-            tokenSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01DigitaloceanTokensecretrefArgs>;
+            tokenSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01DigitaloceanTokenSecretRefArgs>;
         }
 
         /**
          * A reference to a specific 'key' within a Secret resource. In some instances, `key` is a required field.
          */
-        export interface IssuerSpecAcmeSolversDns01DigitaloceanTokensecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01DigitaloceanTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -3987,13 +3987,13 @@ export namespace certmanager {
             /**
              * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
              */
-            tsigSecretSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01Rfc2136TsigsecretsecretrefArgs>;
+            tsigSecretSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01Rfc2136TsigSecretSecretRefArgs>;
         }
 
         /**
          * The name of the secret containing the TSIG value. If ``tsigKeyName`` is defined, this field is required.
          */
-        export interface IssuerSpecAcmeSolversDns01Rfc2136TsigsecretsecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01Rfc2136TsigSecretSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -4015,7 +4015,7 @@ export namespace certmanager {
             /**
              * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            accessKeyIDSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01Route53AccesskeyidsecretrefArgs>;
+            accessKeyIDSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01Route53AccessKeyIDSecretRefArgs>;
             /**
              * If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
              */
@@ -4031,13 +4031,13 @@ export namespace certmanager {
             /**
              * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
              */
-            secretAccessKeySecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01Route53SecretaccesskeysecretrefArgs>;
+            secretAccessKeySecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversDns01Route53SecretAccessKeySecretRefArgs>;
         }
 
         /**
          * The SecretAccessKey is used for authentication. If set, pull the AWS access key ID from a key within a Kubernetes Secret. Cannot be set when AccessKeyID is set. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface IssuerSpecAcmeSolversDns01Route53AccesskeyidsecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01Route53AccessKeyIDSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -4051,7 +4051,7 @@ export namespace certmanager {
         /**
          * The SecretAccessKey is used for authentication. If neither the Access Key nor Key ID are set, we fall-back to using env vars, shared credentials file or AWS Instance metadata, see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
          */
-        export interface IssuerSpecAcmeSolversDns01Route53SecretaccesskeysecretrefArgs {
+        export interface IssuerSpecAcmeSolversDns01Route53SecretAccessKeySecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -4087,7 +4087,7 @@ export namespace certmanager {
             /**
              * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
              */
-            gatewayHTTPRoute?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01GatewayhttprouteArgs>;
+            gatewayHTTPRoute?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01GatewayHTTPRouteArgs>;
             /**
              * The ingress based HTTP01 challenge solver will solve challenges by creating or modifying Ingress resources in order to route requests for '/.well-known/acme-challenge/XYZ' to 'challenge solver' pods that are provisioned by cert-manager for each Challenge to be completed.
              */
@@ -4097,7 +4097,7 @@ export namespace certmanager {
         /**
          * The Gateway API is a sig-network community API that models service networking in Kubernetes (https://gateway-api.sigs.k8s.io/). The Gateway solver will create HTTPRoutes with the specified labels in the same namespace as the challenge. This solver is experimental, and fields / behaviour may change in the future.
          */
-        export interface IssuerSpecAcmeSolversHttp01GatewayhttprouteArgs {
+        export interface IssuerSpecAcmeSolversHttp01GatewayHTTPRouteArgs {
             /**
              * Custom labels that will be applied to HTTPRoutes created by cert-manager while solving HTTP-01 challenges.
              */
@@ -4105,7 +4105,7 @@ export namespace certmanager {
             /**
              * When solving an HTTP-01 challenge, cert-manager creates an HTTPRoute. cert-manager needs to know which parentRefs should be used when creating the HTTPRoute. Usually, the parentRef references a Gateway. See: https://gateway-api.sigs.k8s.io/v1alpha2/api-types/httproute/#attaching-to-gateways
              */
-            parentRefs?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs>[]>;
+            parentRefs?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs>[]>;
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -4117,7 +4117,7 @@ export namespace certmanager {
          *  The API object must be valid in the cluster; the Group and Kind must be registered in the cluster for this reference to be valid. 
          *  References to objects with invalid Group and Kind are not valid, and must be rejected by the implementation, with appropriate Conditions set on the containing object.
          */
-        export interface IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs {
+        export interface IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs {
             /**
              * Group is the group of the referent. 
              *  Support: Core
@@ -4148,9 +4148,9 @@ export namespace certmanager {
             sectionName?: pulumi.Input<string>;
         }
         /**
-         * issuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgsProvideDefaults sets the appropriate defaults for IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs
+         * issuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgsProvideDefaults sets the appropriate defaults for IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs
          */
-        export function issuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgsProvideDefaults(val: IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs): IssuerSpecAcmeSolversHttp01GatewayhttprouteParentrefsArgs {
+        export function issuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgsProvideDefaults(val: IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs): IssuerSpecAcmeSolversHttp01GatewayHTTPRouteParentRefsArgs {
             return {
                 ...val,
                 group: (val.group) ?? "gateway.networking.k8s.io",
@@ -4169,7 +4169,7 @@ export namespace certmanager {
             /**
              * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
              */
-            ingressTemplate?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressIngresstemplateArgs>;
+            ingressTemplate?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressIngressTemplateArgs>;
             /**
              * The name of the ingress resource that should have ACME challenge solving routes inserted into it in order to solve HTTP01 challenges. This is typically used in conjunction with ingress controllers like ingress-gce, which maintains a 1:1 mapping between external IPs and ingress resources.
              */
@@ -4177,7 +4177,7 @@ export namespace certmanager {
             /**
              * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
              */
-            podTemplate?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateArgs>;
+            podTemplate?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateArgs>;
             /**
              * Optional service type for Kubernetes solver service. Supported values are NodePort or ClusterIP. If unset, defaults to NodePort.
              */
@@ -4187,17 +4187,17 @@ export namespace certmanager {
         /**
          * Optional ingress template used to configure the ACME challenge solver ingress used for HTTP01 challenges.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressIngresstemplateArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressIngressTemplateArgs {
             /**
              * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressIngresstemplateMetadataArgs>;
+            metadata?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressIngressTemplateMetadataArgs>;
         }
 
         /**
          * ObjectMeta overrides for the ingress used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressIngresstemplateMetadataArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressIngressTemplateMetadataArgs {
             /**
              * Annotations that should be added to the created ACME HTTP01 solver ingress.
              */
@@ -4211,21 +4211,21 @@ export namespace certmanager {
         /**
          * Optional pod template used to configure the ACME challenge solver pods used for HTTP01 challenges.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateArgs {
             /**
              * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
              */
-            metadata?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateMetadataArgs>;
+            metadata?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateMetadataArgs>;
             /**
              * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
              */
-            spec?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecArgs>;
+            spec?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecArgs>;
         }
 
         /**
          * ObjectMeta overrides for the pod used to solve HTTP01 challenges. Only the 'labels' and 'annotations' fields may be set. If labels or annotations overlap with in-built values, the values here will override the in-built values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateMetadataArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateMetadataArgs {
             /**
              * Annotations that should be added to the create ACME HTTP01 solver pods.
              */
@@ -4239,11 +4239,11 @@ export namespace certmanager {
         /**
          * PodSpec defines overrides for the HTTP01 challenge solver pod. Only the 'priorityClassName', 'nodeSelector', 'affinity', 'serviceAccountName' and 'tolerations' fields are supported currently. All other fields will be ignored.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecArgs {
             /**
              * If specified, the pod's scheduling constraints
              */
-            affinity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityArgs>;
+            affinity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityArgs>;
             /**
              * NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
              */
@@ -4259,49 +4259,49 @@ export namespace certmanager {
             /**
              * If specified, the pod's tolerations.
              */
-            tolerations?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecTolerationsArgs>[]>;
+            tolerations?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecTolerationsArgs>[]>;
         }
 
         /**
          * If specified, the pod's scheduling constraints
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityArgs {
             /**
              * Describes node affinity scheduling rules for the pod.
              */
-            nodeAffinity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityArgs>;
+            nodeAffinity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityArgs>;
             /**
              * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAffinity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityArgs>;
+            podAffinity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityArgs>;
             /**
              * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
              */
-            podAntiAffinity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityArgs>;
+            podAntiAffinity?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityArgs>;
         }
 
         /**
          * Describes node affinity scheduling rules for the pod.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityArgs {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node matches the corresponding matchExpressions; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionArgs>[]>;
+            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionArgs>;
+            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs>;
         }
 
         /**
          * An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * A node selector term, associated with the corresponding weight.
              */
-            preference: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceArgs>;
+            preference: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceArgs>;
             /**
              * Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
              */
@@ -4311,21 +4311,21 @@ export namespace certmanager {
         /**
          * A node selector term, associated with the corresponding weight.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceArgs {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressionsArgs>[]>;
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfieldsArgs>[]>;
+            matchFields?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFieldsArgs>[]>;
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressionsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -4343,7 +4343,7 @@ export namespace certmanager {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityPreferredduringschedulingignoredduringexecutionPreferenceMatchfieldsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFieldsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -4361,31 +4361,31 @@ export namespace certmanager {
         /**
          * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * Required. A list of node selector terms. The terms are ORed.
              */
-            nodeSelectorTerms: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsArgs>[]>;
+            nodeSelectorTerms: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsArgs>[]>;
         }
 
         /**
          * A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsArgs {
             /**
              * A list of node selector requirements by node's labels.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressionsArgs>[]>;
             /**
              * A list of node selector requirements by node's fields.
              */
-            matchFields?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfieldsArgs>[]>;
+            matchFields?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFieldsArgs>[]>;
         }
 
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressionsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -4403,7 +4403,7 @@ export namespace certmanager {
         /**
          * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityNodeaffinityRequiredduringschedulingignoredduringexecutionNodeselectortermsMatchfieldsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFieldsArgs {
             /**
              * The label key that the selector applies to.
              */
@@ -4421,25 +4421,25 @@ export namespace certmanager {
         /**
          * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityArgs {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionArgs>[]>;
+            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
             /**
              * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionArgs>[]>;
+            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs>;
+            podAffinityTerm: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs>;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -4449,15 +4449,15 @@ export namespace certmanager {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -4471,11 +4471,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4485,7 +4485,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4503,11 +4503,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4517,7 +4517,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4535,15 +4535,15 @@ export namespace certmanager {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -4557,11 +4557,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4571,7 +4571,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4589,11 +4589,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4603,7 +4603,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4621,25 +4621,25 @@ export namespace certmanager {
         /**
          * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityArgs {
             /**
              * The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
              */
-            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionArgs>[]>;
+            preferredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
             /**
              * If the anti-affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the anti-affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
              */
-            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionArgs>[]>;
+            requiredDuringSchedulingIgnoredDuringExecution?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs>[]>;
         }
 
         /**
          * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * Required. A pod affinity term, associated with the corresponding weight.
              */
-            podAffinityTerm: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs>;
+            podAffinityTerm: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs>;
             /**
              * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
              */
@@ -4649,15 +4649,15 @@ export namespace certmanager {
         /**
          * Required. A pod affinity term, associated with the corresponding weight.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -4671,11 +4671,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4685,7 +4685,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermLabelselectorMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4703,11 +4703,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4717,7 +4717,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityPreferredduringschedulingignoredduringexecutionPodaffinitytermNamespaceselectorMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4735,15 +4735,15 @@ export namespace certmanager {
         /**
          * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionArgs {
             /**
              * A label query over a set of resources, in this case pods.
              */
-            labelSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs>;
+            labelSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs>;
             /**
              * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
              */
-            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs>;
+            namespaceSelector?: pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs>;
             /**
              * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
              */
@@ -4757,11 +4757,11 @@ export namespace certmanager {
         /**
          * A label query over a set of resources, in this case pods.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4771,7 +4771,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionLabelselectorMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4789,11 +4789,11 @@ export namespace certmanager {
         /**
          * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorArgs {
             /**
              * matchExpressions is a list of label selector requirements. The requirements are ANDed.
              */
-            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs>[]>;
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.certmanager.v1.IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs>[]>;
             /**
              * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
              */
@@ -4803,7 +4803,7 @@ export namespace certmanager {
         /**
          * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecAffinityPodantiaffinityRequiredduringschedulingignoredduringexecutionNamespaceselectorMatchexpressionsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressionsArgs {
             /**
              * key is the label key that the selector applies to.
              */
@@ -4821,7 +4821,7 @@ export namespace certmanager {
         /**
          * The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
          */
-        export interface IssuerSpecAcmeSolversHttp01IngressPodtemplateSpecTolerationsArgs {
+        export interface IssuerSpecAcmeSolversHttp01IngressPodTemplateSpecTolerationsArgs {
             /**
              * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
              */
@@ -4883,7 +4883,7 @@ export namespace certmanager {
         /**
          * SelfSigned configures this issuer to 'self sign' certificates using the private key used to create the CertificateRequest object.
          */
-        export interface IssuerSpecSelfsignedArgs {
+        export interface IssuerSpecSelfSignedArgs {
             /**
              * The CRL distribution points is an X.509 v3 certificate extension which identifies the location of the CRL from which the revocation of this certificate can be checked. If not set certificate will be issued without CDP. Values are strings.
              */
@@ -4923,7 +4923,7 @@ export namespace certmanager {
             /**
              * AppRole authenticates with Vault using the App Role auth mechanism, with the role and secret stored in a Kubernetes Secret resource.
              */
-            appRole?: pulumi.Input<inputs.certmanager.v1.IssuerSpecVaultAuthApproleArgs>;
+            appRole?: pulumi.Input<inputs.certmanager.v1.IssuerSpecVaultAuthAppRoleArgs>;
             /**
              * Kubernetes authenticates with Vault by passing the ServiceAccount token stored in the named Secret resource to the Vault server.
              */
@@ -4931,13 +4931,13 @@ export namespace certmanager {
             /**
              * TokenSecretRef authenticates with Vault by presenting a token.
              */
-            tokenSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecVaultAuthTokensecretrefArgs>;
+            tokenSecretRef?: pulumi.Input<inputs.certmanager.v1.IssuerSpecVaultAuthTokenSecretRefArgs>;
         }
 
         /**
          * AppRole authenticates with Vault using the App Role auth mechanism, with the role and secret stored in a Kubernetes Secret resource.
          */
-        export interface IssuerSpecVaultAuthApproleArgs {
+        export interface IssuerSpecVaultAuthAppRoleArgs {
             /**
              * Path where the App Role authentication backend is mounted in Vault, e.g: "approle"
              */
@@ -4949,13 +4949,13 @@ export namespace certmanager {
             /**
              * Reference to a key in a Secret that contains the App Role secret used to authenticate with Vault. The `key` field must be specified and denotes which entry within the Secret resource is used as the app role secret.
              */
-            secretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecVaultAuthApproleSecretrefArgs>;
+            secretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecVaultAuthAppRoleSecretRefArgs>;
         }
 
         /**
          * Reference to a key in a Secret that contains the App Role secret used to authenticate with Vault. The `key` field must be specified and denotes which entry within the Secret resource is used as the app role secret.
          */
-        export interface IssuerSpecVaultAuthApproleSecretrefArgs {
+        export interface IssuerSpecVaultAuthAppRoleSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -4981,13 +4981,13 @@ export namespace certmanager {
             /**
              * The required Secret field containing a Kubernetes ServiceAccount JWT used for authenticating with Vault. Use of 'ambient credentials' is not supported.
              */
-            secretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecVaultAuthKubernetesSecretrefArgs>;
+            secretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecVaultAuthKubernetesSecretRefArgs>;
         }
 
         /**
          * The required Secret field containing a Kubernetes ServiceAccount JWT used for authenticating with Vault. Use of 'ambient credentials' is not supported.
          */
-        export interface IssuerSpecVaultAuthKubernetesSecretrefArgs {
+        export interface IssuerSpecVaultAuthKubernetesSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -5001,7 +5001,7 @@ export namespace certmanager {
         /**
          * TokenSecretRef authenticates with Vault by presenting a token.
          */
-        export interface IssuerSpecVaultAuthTokensecretrefArgs {
+        export interface IssuerSpecVaultAuthTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -5037,7 +5037,7 @@ export namespace certmanager {
             /**
              * APITokenSecretRef is a secret key selector for the Venafi Cloud API token.
              */
-            apiTokenSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecVenafiCloudApitokensecretrefArgs>;
+            apiTokenSecretRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecVenafiCloudApiTokenSecretRefArgs>;
             /**
              * URL is the base URL for Venafi Cloud. Defaults to "https://api.venafi.cloud/v1".
              */
@@ -5047,7 +5047,7 @@ export namespace certmanager {
         /**
          * APITokenSecretRef is a secret key selector for the Venafi Cloud API token.
          */
-        export interface IssuerSpecVenafiCloudApitokensecretrefArgs {
+        export interface IssuerSpecVenafiCloudApiTokenSecretRefArgs {
             /**
              * The key of the entry in the Secret resource's `data` field to be used. Some instances of this field may be defaulted, in others it may be required.
              */
@@ -5069,7 +5069,7 @@ export namespace certmanager {
             /**
              * CredentialsRef is a reference to a Secret containing the username and password for the TPP server. The secret must contain two keys, 'username' and 'password'.
              */
-            credentialsRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecVenafiTppCredentialsrefArgs>;
+            credentialsRef: pulumi.Input<inputs.certmanager.v1.IssuerSpecVenafiTppCredentialsRefArgs>;
             /**
              * URL is the base URL for the vedsdk endpoint of the Venafi TPP instance, for example: "https://tpp.example.com/vedsdk".
              */
@@ -5079,7 +5079,7 @@ export namespace certmanager {
         /**
          * CredentialsRef is a reference to a Secret containing the username and password for the TPP server. The secret must contain two keys, 'username' and 'password'.
          */
-        export interface IssuerSpecVenafiTppCredentialsrefArgs {
+        export interface IssuerSpecVenafiTppCredentialsRefArgs {
             /**
              * Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
              */
@@ -5173,7 +5173,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.DlbDevicePluginStatusControlleddaemonsetArgs>;
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.DlbDevicePluginStatusControlledDaemonSetArgs>;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5191,7 +5191,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface DlbDevicePluginStatusControlleddaemonsetArgs {
+        export interface DlbDevicePluginStatusControlledDaemonSetArgs {
             /**
              * API version of the referent.
              */
@@ -5259,7 +5259,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.DsaDevicePluginStatusControlleddaemonsetArgs>;
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.DsaDevicePluginStatusControlledDaemonSetArgs>;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5277,7 +5277,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface DsaDevicePluginStatusControlleddaemonsetArgs {
+        export interface DsaDevicePluginStatusControlledDaemonSetArgs {
             /**
              * API version of the referent.
              */
@@ -5341,7 +5341,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.FpgaDevicePluginStatusControlleddaemonsetArgs>;
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.FpgaDevicePluginStatusControlledDaemonSetArgs>;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5359,7 +5359,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface FpgaDevicePluginStatusControlleddaemonsetArgs {
+        export interface FpgaDevicePluginStatusControlledDaemonSetArgs {
             /**
              * API version of the referent.
              */
@@ -5435,7 +5435,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.GpuDevicePluginStatusControlleddaemonsetArgs>;
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.GpuDevicePluginStatusControlledDaemonSetArgs>;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5453,7 +5453,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface GpuDevicePluginStatusControlleddaemonsetArgs {
+        export interface GpuDevicePluginStatusControlledDaemonSetArgs {
             /**
              * API version of the referent.
              */
@@ -5521,7 +5521,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.IaaDevicePluginStatusControlleddaemonsetArgs>;
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.IaaDevicePluginStatusControlledDaemonSetArgs>;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5539,7 +5539,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface IaaDevicePluginStatusControlleddaemonsetArgs {
+        export interface IaaDevicePluginStatusControlledDaemonSetArgs {
             /**
              * API version of the referent.
              */
@@ -5606,6 +5606,10 @@ export namespace deviceplugin {
              * PreferredAllocationPolicy sets the mode of allocating QAT devices on a node. See documentation for detailed description of the policies.
              */
             preferredAllocationPolicy?: pulumi.Input<string>;
+            /**
+             * ProvisioningConfig is a ConfigMap used to pass the configuration of QAT devices into qat initcontainer.
+             */
+            provisioningConfig?: pulumi.Input<string>;
         }
 
         /**
@@ -5615,7 +5619,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.QatDevicePluginStatusControlleddaemonsetArgs>;
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.QatDevicePluginStatusControlledDaemonSetArgs>;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5633,7 +5637,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface QatDevicePluginStatusControlleddaemonsetArgs {
+        export interface QatDevicePluginStatusControlledDaemonSetArgs {
             /**
              * API version of the referent.
              */
@@ -5701,7 +5705,7 @@ export namespace deviceplugin {
             /**
              * ControlledDaemoSet references the DaemonSet controlled by the operator.
              */
-            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.SgxDevicePluginStatusControlleddaemonsetArgs>;
+            controlledDaemonSet?: pulumi.Input<inputs.deviceplugin.v1.SgxDevicePluginStatusControlledDaemonSetArgs>;
             /**
              * The total number of nodes that should be running the device plugin pod (including nodes correctly running the device plugin pod).
              */
@@ -5719,7 +5723,7 @@ export namespace deviceplugin {
         /**
          * ControlledDaemoSet references the DaemonSet controlled by the operator.
          */
-        export interface SgxDevicePluginStatusControlleddaemonsetArgs {
+        export interface SgxDevicePluginStatusControlledDaemonSetArgs {
             /**
              * API version of the referent.
              */
@@ -5775,11 +5779,56 @@ export namespace fpga {
 
 export namespace helm {
     export namespace v1 {
+        export interface HelmChartConfigSpecArgs {
+            failurePolicy?: pulumi.Input<string>;
+            valuesContent?: pulumi.Input<string>;
+        }
+
+        export interface HelmChartSpecArgs {
+            authPassCredentials?: pulumi.Input<boolean>;
+            authSecret?: pulumi.Input<inputs.helm.v1.HelmChartSpecAuthSecretArgs>;
+            bootstrap?: pulumi.Input<boolean>;
+            chart?: pulumi.Input<string>;
+            chartContent?: pulumi.Input<string>;
+            createNamespace?: pulumi.Input<boolean>;
+            dockerRegistrySecret?: pulumi.Input<inputs.helm.v1.HelmChartSpecDockerRegistrySecretArgs>;
+            failurePolicy?: pulumi.Input<string>;
+            helmVersion?: pulumi.Input<string>;
+            jobImage?: pulumi.Input<string>;
+            repo?: pulumi.Input<string>;
+            repoCA?: pulumi.Input<string>;
+            repoCAConfigMap?: pulumi.Input<inputs.helm.v1.HelmChartSpecRepoCAConfigMapArgs>;
+            set?: pulumi.Input<{[key: string]: pulumi.Input<number | string>}>;
+            targetNamespace?: pulumi.Input<string>;
+            timeout?: pulumi.Input<string>;
+            valuesContent?: pulumi.Input<string>;
+            version?: pulumi.Input<string>;
+        }
+
+        export interface HelmChartSpecAuthSecretArgs {
+            name?: pulumi.Input<string>;
+        }
+
+        export interface HelmChartSpecDockerRegistrySecretArgs {
+            name?: pulumi.Input<string>;
+        }
+
+        export interface HelmChartSpecRepoCAConfigMapArgs {
+            name?: pulumi.Input<string>;
+        }
+
+        export interface HelmChartStatusArgs {
+            jobName?: pulumi.Input<string>;
+        }
     }
 }
 
 export namespace k3s {
     export namespace v1 {
+        export interface AddonSpecArgs {
+            checksum?: pulumi.Input<string>;
+            source?: pulumi.Input<string>;
+        }
     }
 }
 
@@ -5800,6 +5849,10 @@ export namespace nfd {
          */
         export interface NodeFeatureRuleSpecRulesArgs {
             /**
+             * ExtendedResources to create if the rule matches.
+             */
+            extendedResources?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+            /**
              * Labels to create if the rule matches.
              */
             labels?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
@@ -5810,15 +5863,19 @@ export namespace nfd {
             /**
              * MatchAny specifies a list of matchers one of which must match.
              */
-            matchAny?: pulumi.Input<pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchanyArgs>[]>;
+            matchAny?: pulumi.Input<pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchAnyArgs>[]>;
             /**
              * MatchFeatures specifies a set of matcher terms all of which must match.
              */
-            matchFeatures?: pulumi.Input<pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchfeaturesArgs>[]>;
+            matchFeatures?: pulumi.Input<pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchFeaturesArgs>[]>;
             /**
              * Name of the rule.
              */
             name: pulumi.Input<string>;
+            /**
+             * Taints to create if the rule matches.
+             */
+            taints?: pulumi.Input<pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesTaintsArgs>[]>;
             /**
              * Vars is the variables to store if the rule matches. Variables do not directly inflict any changes in the node object. However, they can be referenced from other rules enabling more complex rule hierarchies, without exposing intermediary output values as labels.
              */
@@ -5832,29 +5889,30 @@ export namespace nfd {
         /**
          * MatchAnyElem specifies one sub-matcher of MatchAny.
          */
-        export interface NodeFeatureRuleSpecRulesMatchanyArgs {
+        export interface NodeFeatureRuleSpecRulesMatchAnyArgs {
             /**
              * MatchFeatures specifies a set of matcher terms all of which must match.
              */
-            matchFeatures: pulumi.Input<pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchanyMatchfeaturesArgs>[]>;
+            matchFeatures: pulumi.Input<pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchAnyMatchFeaturesArgs>[]>;
         }
 
         /**
          * FeatureMatcherTerm defines requirements against one feature set. All requirements (specified as MatchExpressions) are evaluated against each element in the feature set.
          */
-        export interface NodeFeatureRuleSpecRulesMatchanyMatchfeaturesArgs {
+        export interface NodeFeatureRuleSpecRulesMatchAnyMatchFeaturesArgs {
             feature: pulumi.Input<string>;
             /**
              * MatchExpressionSet contains a set of MatchExpressions, each of which is evaluated against a set of input values.
              */
-            matchExpressions: pulumi.Input<{[key: string]: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchanyMatchfeaturesMatchexpressionsArgs>}>;
+            matchExpressions: pulumi.Input<{[key: string]: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchAnyMatchFeaturesMatchExpressionsArgs>}>;
         }
 
         /**
          * MatchExpression specifies an expression to evaluate against a set of input values. It contains an operator that is applied when matching the input and an array of values that the operator evaluates the input against. 
-         *  NB: CreateMatchExpression or MustCreateMatchExpression() should be used for     creating new instances. NB: Validate() must be called if Op or Value fields are modified or if a new     instance is created from scratch without using the helper functions.
+         *  NB: CreateMatchExpression or MustCreateMatchExpression() should be used for creating new instances. 
+         *  NB: Validate() must be called if Op or Value fields are modified or if a new instance is created from scratch without using the helper functions.
          */
-        export interface NodeFeatureRuleSpecRulesMatchanyMatchfeaturesMatchexpressionsArgs {
+        export interface NodeFeatureRuleSpecRulesMatchAnyMatchFeaturesMatchExpressionsArgs {
             /**
              * Op is the operator to be applied.
              */
@@ -5868,19 +5926,20 @@ export namespace nfd {
         /**
          * FeatureMatcherTerm defines requirements against one feature set. All requirements (specified as MatchExpressions) are evaluated against each element in the feature set.
          */
-        export interface NodeFeatureRuleSpecRulesMatchfeaturesArgs {
+        export interface NodeFeatureRuleSpecRulesMatchFeaturesArgs {
             feature: pulumi.Input<string>;
             /**
              * MatchExpressionSet contains a set of MatchExpressions, each of which is evaluated against a set of input values.
              */
-            matchExpressions: pulumi.Input<{[key: string]: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchfeaturesMatchexpressionsArgs>}>;
+            matchExpressions: pulumi.Input<{[key: string]: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchFeaturesMatchExpressionsArgs>}>;
         }
 
         /**
          * MatchExpression specifies an expression to evaluate against a set of input values. It contains an operator that is applied when matching the input and an array of values that the operator evaluates the input against. 
-         *  NB: CreateMatchExpression or MustCreateMatchExpression() should be used for     creating new instances. NB: Validate() must be called if Op or Value fields are modified or if a new     instance is created from scratch without using the helper functions.
+         *  NB: CreateMatchExpression or MustCreateMatchExpression() should be used for creating new instances. 
+         *  NB: Validate() must be called if Op or Value fields are modified or if a new instance is created from scratch without using the helper functions.
          */
-        export interface NodeFeatureRuleSpecRulesMatchfeaturesMatchexpressionsArgs {
+        export interface NodeFeatureRuleSpecRulesMatchFeaturesMatchExpressionsArgs {
             /**
              * Op is the operator to be applied.
              */
@@ -5889,6 +5948,88 @@ export namespace nfd {
              * Value is the list of values that the operand evaluates the input against. Value should be empty if the operator is Exists, DoesNotExist, IsTrue or IsFalse. Value should contain exactly one element if the operator is Gt or Lt and exactly two elements if the operator is GtLt. In other cases Value should contain at least one element.
              */
             value?: pulumi.Input<pulumi.Input<string>[]>;
+        }
+
+        /**
+         * The node this Taint is attached to has the "effect" on any pod that does not tolerate the Taint.
+         */
+        export interface NodeFeatureRuleSpecRulesTaintsArgs {
+            /**
+             * Required. The effect of the taint on pods that do not tolerate the taint. Valid effects are NoSchedule, PreferNoSchedule and NoExecute.
+             */
+            effect: pulumi.Input<string>;
+            /**
+             * Required. The taint key to be applied to a node.
+             */
+            key: pulumi.Input<string>;
+            /**
+             * TimeAdded represents the time at which the taint was added. It is only written for NoExecute taints.
+             */
+            timeAdded?: pulumi.Input<string>;
+            /**
+             * The taint value corresponding to the taint key.
+             */
+            value?: pulumi.Input<string>;
+        }
+
+        /**
+         * NodeFeatureSpec describes a NodeFeature object.
+         */
+        export interface NodeFeatureSpecArgs {
+            /**
+             * Features is the full "raw" features data that has been discovered.
+             */
+            features?: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureSpecFeaturesArgs>;
+            /**
+             * Labels is the set of node labels that are requested to be created.
+             */
+            labels?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+        }
+
+        /**
+         * Features is the full "raw" features data that has been discovered.
+         */
+        export interface NodeFeatureSpecFeaturesArgs {
+            /**
+             * Attributes contains all the attribute-type features of the node.
+             */
+            attributes?: pulumi.Input<{[key: string]: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureSpecFeaturesAttributesArgs>}>;
+            /**
+             * Flags contains all the flag-type features of the node.
+             */
+            flags?: pulumi.Input<{[key: string]: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureSpecFeaturesFlagsArgs>}>;
+            /**
+             * Instances contains all the instance-type features of the node.
+             */
+            instances?: pulumi.Input<{[key: string]: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureSpecFeaturesInstancesArgs>}>;
+        }
+
+        /**
+         * AttributeFeatureSet is a set of features having string value.
+         */
+        export interface NodeFeatureSpecFeaturesAttributesArgs {
+            elements: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+        }
+
+        /**
+         * FlagFeatureSet is a set of simple features only containing names without values.
+         */
+        export interface NodeFeatureSpecFeaturesFlagsArgs {
+            elements: pulumi.Input<{[key: string]: pulumi.Input<{[key: string]: any}>}>;
+        }
+
+        /**
+         * InstanceFeatureSet is a set of features each of which is an instance having multiple attributes.
+         */
+        export interface NodeFeatureSpecFeaturesInstancesArgs {
+            elements: pulumi.Input<pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureSpecFeaturesInstancesElementsArgs>[]>;
+        }
+
+        /**
+         * InstanceFeature represents one instance of a complex features, e.g. a device.
+         */
+        export interface NodeFeatureSpecFeaturesInstancesElementsArgs {
+            attributes: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
         }
 
     }
@@ -5901,7 +6042,7 @@ export namespace traefik {
          */
         export interface IngressRouteSpecArgs {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/entrypoints/ Default: all.
              */
             entryPoints?: pulumi.Input<pulumi.Input<string>[]>;
             /**
@@ -5909,7 +6050,7 @@ export namespace traefik {
              */
             routes: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecRoutesArgs>[]>;
             /**
-             * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls
+             * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#tls
              */
             tls?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecTlsArgs>;
         }
@@ -5923,15 +6064,15 @@ export namespace traefik {
              */
             kind: pulumi.Input<string>;
             /**
-             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#rule
+             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#rule
              */
             match: pulumi.Input<string>;
             /**
-             * Middlewares defines the list of references to Middleware resources. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-middleware
+             * Middlewares defines the list of references to Middleware resources. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-middleware
              */
             middlewares?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecRoutesMiddlewaresArgs>[]>;
             /**
-             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#priority
+             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#priority
              */
             priority?: pulumi.Input<number>;
             /**
@@ -5971,6 +6112,10 @@ export namespace traefik {
              */
             namespace?: pulumi.Input<string>;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: pulumi.Input<boolean>;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: pulumi.Input<boolean>;
@@ -5981,7 +6126,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecRoutesServicesResponseforwardingArgs>;
+            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecRoutesServicesResponseForwardingArgs>;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -5991,7 +6136,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecRoutesServicesStickyArgs>;
             /**
@@ -6007,7 +6152,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface IngressRouteSpecRoutesServicesResponseforwardingArgs {
+        export interface IngressRouteSpecRoutesServicesResponseForwardingArgs {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -6015,7 +6160,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface IngressRouteSpecRoutesServicesStickyArgs {
             /**
@@ -6047,19 +6192,19 @@ export namespace traefik {
         }
 
         /**
-         * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls
+         * TLS defines the TLS configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#tls
          */
         export interface IngressRouteSpecTlsArgs {
             /**
-             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/https/acme/#certificate-resolvers
+             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/https/acme/#certificate-resolvers
              */
             certResolver?: pulumi.Input<string>;
             /**
-             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#domains
+             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#domains
              */
             domains?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecTlsDomainsArgs>[]>;
             /**
-             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
+             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
              */
             options?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteSpecTlsOptionsArgs>;
             /**
@@ -6087,15 +6232,15 @@ export namespace traefik {
         }
 
         /**
-         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
+         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
          */
         export interface IngressRouteSpecTlsOptionsArgs {
             /**
-             * Name defines the name of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsoption
+             * Name defines the name of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-tlsoption
              */
             name: pulumi.Input<string>;
             /**
-             * Namespace defines the namespace of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsoption
+             * Namespace defines the namespace of the referenced TLSOption. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-tlsoption
              */
             namespace?: pulumi.Input<string>;
         }
@@ -6105,11 +6250,11 @@ export namespace traefik {
          */
         export interface IngressRouteSpecTlsStoreArgs {
             /**
-             * Name defines the name of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsstore
+             * Name defines the name of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-tlsstore
              */
             name: pulumi.Input<string>;
             /**
-             * Namespace defines the namespace of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#kind-tlsstore
+             * Namespace defines the namespace of the referenced TLSStore. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#kind-tlsstore
              */
             namespace?: pulumi.Input<string>;
         }
@@ -6119,7 +6264,7 @@ export namespace traefik {
          */
         export interface IngressRouteTCPSpecArgs {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/entrypoints/ Default: all.
              */
             entryPoints?: pulumi.Input<pulumi.Input<string>[]>;
             /**
@@ -6127,7 +6272,7 @@ export namespace traefik {
              */
             routes: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesArgs>[]>;
             /**
-             * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls_1
+             * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#tls_1
              */
             tls?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecTlsArgs>;
         }
@@ -6137,7 +6282,7 @@ export namespace traefik {
          */
         export interface IngressRouteTCPSpecRoutesArgs {
             /**
-             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#rule_1
+             * Match defines the router's rule. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#rule_1
              */
             match: pulumi.Input<string>;
             /**
@@ -6145,7 +6290,7 @@ export namespace traefik {
              */
             middlewares?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesMiddlewaresArgs>[]>;
             /**
-             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#priority_1
+             * Priority defines the router's priority. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#priority_1
              */
             priority?: pulumi.Input<number>;
             /**
@@ -6181,13 +6326,17 @@ export namespace traefik {
              */
             namespace?: pulumi.Input<string>;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: pulumi.Input<boolean>;
+            /**
              * Port defines the port of a Kubernetes Service. This can be a reference to a named port.
              */
             port: pulumi.Input<number | string>;
             /**
-             * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#proxy-protocol
+             * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#proxy-protocol
              */
-            proxyProtocol?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesServicesProxyprotocolArgs>;
+            proxyProtocol?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecRoutesServicesProxyProtocolArgs>;
             /**
              * TerminationDelay defines the deadline that the proxy sets, after one of its connected peers indicates it has closed the writing capability of its connection, to close the reading capability as well, hence fully terminating the connection. It is a duration in milliseconds, defaulting to 100. A negative value means an infinite deadline (i.e. the reading capability is never closed).
              */
@@ -6199,9 +6348,9 @@ export namespace traefik {
         }
 
         /**
-         * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#proxy-protocol
+         * ProxyProtocol defines the PROXY protocol configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#proxy-protocol
          */
-        export interface IngressRouteTCPSpecRoutesServicesProxyprotocolArgs {
+        export interface IngressRouteTCPSpecRoutesServicesProxyProtocolArgs {
             /**
              * Version defines the PROXY Protocol version to use.
              */
@@ -6209,19 +6358,19 @@ export namespace traefik {
         }
 
         /**
-         * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#tls_1
+         * TLS defines the TLS configuration on a layer 4 / TCP Route. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#tls_1
          */
         export interface IngressRouteTCPSpecTlsArgs {
             /**
-             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/https/acme/#certificate-resolvers
+             * CertResolver defines the name of the certificate resolver to use. Cert resolvers have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/https/acme/#certificate-resolvers
              */
             certResolver?: pulumi.Input<string>;
             /**
-             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.9/routing/routers/#domains
+             * Domains defines the list of domains that will be used to issue certificates. More info: https://doc.traefik.io/traefik/v2.10/routing/routers/#domains
              */
             domains?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecTlsDomainsArgs>[]>;
             /**
-             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
+             * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
              */
             options?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteTCPSpecTlsOptionsArgs>;
             /**
@@ -6253,7 +6402,7 @@ export namespace traefik {
         }
 
         /**
-         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
+         * Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection. If not defined, the `default` TLSOption is used. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
          */
         export interface IngressRouteTCPSpecTlsOptionsArgs {
             /**
@@ -6285,7 +6434,7 @@ export namespace traefik {
          */
         export interface IngressRouteUDPSpecArgs {
             /**
-             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/ Default: all.
+             * EntryPoints defines the list of entry point names to bind to. Entry points have to be configured in the static configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/entrypoints/ Default: all.
              */
             entryPoints?: pulumi.Input<pulumi.Input<string>[]>;
             /**
@@ -6317,6 +6466,10 @@ export namespace traefik {
              */
             namespace?: pulumi.Input<string>;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: pulumi.Input<boolean>;
+            /**
              * Port defines the port of a Kubernetes Service. This can be a reference to a named port.
              */
             port: pulumi.Input<number | string>;
@@ -6331,103 +6484,103 @@ export namespace traefik {
          */
         export interface MiddlewareSpecArgs {
             /**
-             * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/addprefix/
+             * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/addprefix/
              */
-            addPrefix?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecAddprefixArgs>;
+            addPrefix?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecAddPrefixArgs>;
             /**
-             * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/
+             * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/basicauth/
              */
-            basicAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecBasicauthArgs>;
+            basicAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecBasicAuthArgs>;
             /**
-             * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#maxrequestbodybytes
+             * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/buffering/#maxrequestbodybytes
              */
             buffering?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecBufferingArgs>;
             /**
-             * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/chain/
+             * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/chain/
              */
             chain?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecChainArgs>;
             /**
              * CircuitBreaker holds the circuit breaker configuration.
              */
-            circuitBreaker?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecCircuitbreakerArgs>;
+            circuitBreaker?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecCircuitBreakerArgs>;
             /**
-             * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/compress/
+             * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/compress/
              */
             compress?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecCompressArgs>;
             /**
              * ContentType holds the content-type middleware configuration. This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
              */
-            contentType?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecContenttypeArgs>;
+            contentType?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecContentTypeArgs>;
             /**
-             * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/digestauth/
+             * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/digestauth/
              */
-            digestAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecDigestauthArgs>;
+            digestAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecDigestAuthArgs>;
             /**
-             * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/
+             * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/errorpages/
              */
             errors?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsArgs>;
             /**
-             * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/
+             * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/forwardauth/
              */
-            forwardAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecForwardauthArgs>;
+            forwardAuth?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecForwardAuthArgs>;
             /**
-             * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/headers/#customrequestheaders
+             * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/headers/#customrequestheaders
              */
             headers?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecHeadersArgs>;
             /**
-             * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/
+             * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/inflightreq/
              */
-            inFlightReq?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInflightreqArgs>;
+            inFlightReq?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInFlightReqArgs>;
             /**
-             * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/
+             * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/
              */
-            ipWhiteList?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecIpwhitelistArgs>;
+            ipWhiteList?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecIpWhiteListArgs>;
             /**
-             * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/passtlsclientcert/
+             * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/passtlsclientcert/
              */
-            passTLSClientCert?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcertArgs>;
+            passTLSClientCert?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertArgs>;
             /**
              * Plugin defines the middleware plugin configuration. More info: https://doc.traefik.io/traefik/plugins/
              */
             plugin?: pulumi.Input<{[key: string]: pulumi.Input<{[key: string]: any}>}>;
             /**
-             * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ratelimit/
+             * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ratelimit/
              */
-            rateLimit?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRatelimitArgs>;
+            rateLimit?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRateLimitArgs>;
             /**
-             * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectregex/#regex
+             * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/redirectregex/#regex
              */
-            redirectRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRedirectregexArgs>;
+            redirectRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRedirectRegexArgs>;
             /**
-             * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectscheme/
+             * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/redirectscheme/
              */
-            redirectScheme?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRedirectschemeArgs>;
+            redirectScheme?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRedirectSchemeArgs>;
             /**
-             * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepath/
+             * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/replacepath/
              */
-            replacePath?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecReplacepathArgs>;
+            replacePath?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecReplacePathArgs>;
             /**
-             * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepathregex/
+             * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/replacepathregex/
              */
-            replacePathRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecReplacepathregexArgs>;
+            replacePathRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecReplacePathRegexArgs>;
             /**
-             * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/retry/
+             * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/retry/
              */
             retry?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRetryArgs>;
             /**
-             * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefix/
+             * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/stripprefix/
              */
-            stripPrefix?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecStripprefixArgs>;
+            stripPrefix?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecStripPrefixArgs>;
             /**
-             * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefixregex/
+             * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/stripprefixregex/
              */
-            stripPrefixRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecStripprefixregexArgs>;
+            stripPrefixRegex?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecStripPrefixRegexArgs>;
         }
 
         /**
-         * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/addprefix/
+         * AddPrefix holds the add prefix middleware configuration. This middleware updates the path of a request before forwarding it. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/addprefix/
          */
-        export interface MiddlewareSpecAddprefixArgs {
+        export interface MiddlewareSpecAddPrefixArgs {
             /**
              * Prefix is the string to add before the current path in the requested URL. It should include a leading slash (/).
              */
@@ -6435,11 +6588,11 @@ export namespace traefik {
         }
 
         /**
-         * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/
+         * BasicAuth holds the basic auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/basicauth/
          */
-        export interface MiddlewareSpecBasicauthArgs {
+        export interface MiddlewareSpecBasicAuthArgs {
             /**
-             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/#headerfield
+             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/basicauth/#headerfield
              */
             headerField?: pulumi.Input<string>;
             /**
@@ -6457,7 +6610,7 @@ export namespace traefik {
         }
 
         /**
-         * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#maxrequestbodybytes
+         * Buffering holds the buffering middleware configuration. This middleware retries or limits the size of requests that can be forwarded to backends. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/buffering/#maxrequestbodybytes
          */
         export interface MiddlewareSpecBufferingArgs {
             /**
@@ -6477,13 +6630,13 @@ export namespace traefik {
              */
             memResponseBodyBytes?: pulumi.Input<number>;
             /**
-             * RetryExpression defines the retry conditions. It is a logical combination of functions with operators AND (&&) and OR (||). More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/buffering/#retryexpression
+             * RetryExpression defines the retry conditions. It is a logical combination of functions with operators AND (&&) and OR (||). More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/buffering/#retryexpression
              */
             retryExpression?: pulumi.Input<string>;
         }
 
         /**
-         * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/chain/
+         * Chain holds the configuration of the chain middleware. This middleware enables to define reusable combinations of other pieces of middleware. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/chain/
          */
         export interface MiddlewareSpecChainArgs {
             /**
@@ -6509,7 +6662,7 @@ export namespace traefik {
         /**
          * CircuitBreaker holds the circuit breaker configuration.
          */
-        export interface MiddlewareSpecCircuitbreakerArgs {
+        export interface MiddlewareSpecCircuitBreakerArgs {
             /**
              * CheckPeriod is the interval between successive checks of the circuit breaker condition (when in standby state).
              */
@@ -6529,7 +6682,7 @@ export namespace traefik {
         }
 
         /**
-         * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/compress/
+         * Compress holds the compress middleware configuration. This middleware compresses responses before sending them to the client, using gzip compression. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/compress/
          */
         export interface MiddlewareSpecCompressArgs {
             /**
@@ -6545,7 +6698,7 @@ export namespace traefik {
         /**
          * ContentType holds the content-type middleware configuration. This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
          */
-        export interface MiddlewareSpecContenttypeArgs {
+        export interface MiddlewareSpecContentTypeArgs {
             /**
              * AutoDetect specifies whether to let the `Content-Type` header, if it has not been set by the backend, be automatically set to a value derived from the contents of the response. As a proxy, the default behavior should be to leave the header alone, regardless of what the backend did with it. However, the historic default was to always auto-detect and set the header if it was nil, and it is going to be kept that way in order to support users currently relying on it.
              */
@@ -6553,11 +6706,11 @@ export namespace traefik {
         }
 
         /**
-         * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/digestauth/
+         * DigestAuth holds the digest auth middleware configuration. This middleware restricts access to your services to known users. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/digestauth/
          */
-        export interface MiddlewareSpecDigestauthArgs {
+        export interface MiddlewareSpecDigestAuthArgs {
             /**
-             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/basicauth/#headerfield
+             * HeaderField defines a header field to store the authenticated user. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/basicauth/#headerfield
              */
             headerField?: pulumi.Input<string>;
             /**
@@ -6575,7 +6728,7 @@ export namespace traefik {
         }
 
         /**
-         * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/
+         * ErrorPage holds the custom error middleware configuration. This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/errorpages/
          */
         export interface MiddlewareSpecErrorsArgs {
             /**
@@ -6583,7 +6736,7 @@ export namespace traefik {
              */
             query?: pulumi.Input<string>;
             /**
-             * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/#service
+             * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/errorpages/#service
              */
             service?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceArgs>;
             /**
@@ -6593,7 +6746,7 @@ export namespace traefik {
         }
 
         /**
-         * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/errorpages/#service
+         * Service defines the reference to a Kubernetes Service that will serve the error page. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/errorpages/#service
          */
         export interface MiddlewareSpecErrorsServiceArgs {
             /**
@@ -6609,6 +6762,10 @@ export namespace traefik {
              */
             namespace?: pulumi.Input<string>;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: pulumi.Input<boolean>;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: pulumi.Input<boolean>;
@@ -6619,7 +6776,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceResponseforwardingArgs>;
+            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceResponseForwardingArgs>;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -6629,7 +6786,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecErrorsServiceStickyArgs>;
             /**
@@ -6645,7 +6802,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface MiddlewareSpecErrorsServiceResponseforwardingArgs {
+        export interface MiddlewareSpecErrorsServiceResponseForwardingArgs {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -6653,7 +6810,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface MiddlewareSpecErrorsServiceStickyArgs {
             /**
@@ -6685,9 +6842,9 @@ export namespace traefik {
         }
 
         /**
-         * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/
+         * ForwardAuth holds the forward auth middleware configuration. This middleware delegates the request authentication to a Service. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/forwardauth/
          */
-        export interface MiddlewareSpecForwardauthArgs {
+        export interface MiddlewareSpecForwardAuthArgs {
             /**
              * Address defines the authentication server address.
              */
@@ -6701,13 +6858,13 @@ export namespace traefik {
              */
             authResponseHeaders?: pulumi.Input<pulumi.Input<string>[]>;
             /**
-             * AuthResponseHeadersRegex defines the regex to match headers to copy from the authentication server response and set on forwarded request, after stripping all headers that match the regex. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/forwardauth/#authresponseheadersregex
+             * AuthResponseHeadersRegex defines the regex to match headers to copy from the authentication server response and set on forwarded request, after stripping all headers that match the regex. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/forwardauth/#authresponseheadersregex
              */
             authResponseHeadersRegex?: pulumi.Input<string>;
             /**
              * TLS defines the configuration used to secure the connection to the authentication server.
              */
-            tls?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecForwardauthTlsArgs>;
+            tls?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecForwardAuthTlsArgs>;
             /**
              * TrustForwardHeader defines whether to trust (ie: forward) all X-Forwarded-* headers.
              */
@@ -6717,7 +6874,7 @@ export namespace traefik {
         /**
          * TLS defines the configuration used to secure the connection to the authentication server.
          */
-        export interface MiddlewareSpecForwardauthTlsArgs {
+        export interface MiddlewareSpecForwardAuthTlsArgs {
             caOptional?: pulumi.Input<boolean>;
             /**
              * CASecret is the name of the referenced Kubernetes Secret containing the CA to validate the server certificate. The CA certificate is extracted from key `tls.ca` or `ca.crt`.
@@ -6734,7 +6891,7 @@ export namespace traefik {
         }
 
         /**
-         * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/headers/#customrequestheaders
+         * Headers holds the headers middleware configuration. This middleware manages the requests and responses headers. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/headers/#customrequestheaders
          */
         export interface MiddlewareSpecHeadersArgs {
             /**
@@ -6868,27 +7025,27 @@ export namespace traefik {
         }
 
         /**
-         * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/
+         * InFlightReq holds the in-flight request middleware configuration. This middleware limits the number of requests being processed and served concurrently. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/inflightreq/
          */
-        export interface MiddlewareSpecInflightreqArgs {
+        export interface MiddlewareSpecInFlightReqArgs {
             /**
              * Amount defines the maximum amount of allowed simultaneous in-flight request. The middleware responds with HTTP 429 Too Many Requests if there are already amount requests in progress (based on the same sourceCriterion strategy).
              */
             amount?: pulumi.Input<number>;
             /**
-             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/#sourcecriterion
+             * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/inflightreq/#sourcecriterion
              */
-            sourceCriterion?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInflightreqSourcecriterionArgs>;
+            sourceCriterion?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInFlightReqSourceCriterionArgs>;
         }
 
         /**
-         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/inflightreq/#sourcecriterion
+         * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the requestHost. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/inflightreq/#sourcecriterion
          */
-        export interface MiddlewareSpecInflightreqSourcecriterionArgs {
+        export interface MiddlewareSpecInFlightReqSourceCriterionArgs {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
              */
-            ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInflightreqSourcecriterionIpstrategyArgs>;
+            ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecInFlightReqSourceCriterionIpStrategyArgs>;
             /**
              * RequestHeaderName defines the name of the header used to group incoming requests.
              */
@@ -6900,9 +7057,9 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
          */
-        export interface MiddlewareSpecInflightreqSourcecriterionIpstrategyArgs {
+        export interface MiddlewareSpecInFlightReqSourceCriterionIpStrategyArgs {
             /**
              * Depth tells Traefik to use the X-Forwarded-For header and take the IP located at the depth position (starting from the right).
              */
@@ -6914,13 +7071,13 @@ export namespace traefik {
         }
 
         /**
-         * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/
+         * IPWhiteList holds the IP whitelist middleware configuration. This middleware accepts / refuses requests based on the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/
          */
-        export interface MiddlewareSpecIpwhitelistArgs {
+        export interface MiddlewareSpecIpWhiteListArgs {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
              */
-            ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecIpwhitelistIpstrategyArgs>;
+            ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecIpWhiteListIpStrategyArgs>;
             /**
              * SourceRange defines the set of allowed IPs (or ranges of allowed IPs by using CIDR notation).
              */
@@ -6928,9 +7085,9 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
          */
-        export interface MiddlewareSpecIpwhitelistIpstrategyArgs {
+        export interface MiddlewareSpecIpWhiteListIpStrategyArgs {
             /**
              * Depth tells Traefik to use the X-Forwarded-For header and take the IP located at the depth position (starting from the right).
              */
@@ -6942,15 +7099,15 @@ export namespace traefik {
         }
 
         /**
-         * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/passtlsclientcert/
+         * PassTLSClientCert holds the pass TLS client cert middleware configuration. This middleware adds the selected data from the passed client TLS certificate to a header. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/passtlsclientcert/
          */
-        export interface MiddlewareSpecPasstlsclientcertArgs {
+        export interface MiddlewareSpecPassTLSClientCertArgs {
             /**
              * Info selects the specific client certificate details you want to add to the X-Forwarded-Tls-Client-Cert-Info header.
              */
-            info?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcertInfoArgs>;
+            info?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoArgs>;
             /**
-             * PEM sets the X-Forwarded-Tls-Client-Cert header with the escaped certificate.
+             * PEM sets the X-Forwarded-Tls-Client-Cert header with the certificate.
              */
             pem?: pulumi.Input<boolean>;
         }
@@ -6958,11 +7115,11 @@ export namespace traefik {
         /**
          * Info selects the specific client certificate details you want to add to the X-Forwarded-Tls-Client-Cert-Info header.
          */
-        export interface MiddlewareSpecPasstlsclientcertInfoArgs {
+        export interface MiddlewareSpecPassTLSClientCertInfoArgs {
             /**
              * Issuer defines the client certificate issuer details to add to the X-Forwarded-Tls-Client-Cert-Info header.
              */
-            issuer?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcertInfoIssuerArgs>;
+            issuer?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoIssuerArgs>;
             /**
              * NotAfter defines whether to add the Not After information from the Validity part.
              */
@@ -6982,13 +7139,13 @@ export namespace traefik {
             /**
              * Subject defines the client certificate subject details to add to the X-Forwarded-Tls-Client-Cert-Info header.
              */
-            subject?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPasstlsclientcertInfoSubjectArgs>;
+            subject?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecPassTLSClientCertInfoSubjectArgs>;
         }
 
         /**
          * Issuer defines the client certificate issuer details to add to the X-Forwarded-Tls-Client-Cert-Info header.
          */
-        export interface MiddlewareSpecPasstlsclientcertInfoIssuerArgs {
+        export interface MiddlewareSpecPassTLSClientCertInfoIssuerArgs {
             /**
              * CommonName defines whether to add the organizationalUnit information into the issuer.
              */
@@ -7022,7 +7179,7 @@ export namespace traefik {
         /**
          * Subject defines the client certificate subject details to add to the X-Forwarded-Tls-Client-Cert-Info header.
          */
-        export interface MiddlewareSpecPasstlsclientcertInfoSubjectArgs {
+        export interface MiddlewareSpecPassTLSClientCertInfoSubjectArgs {
             /**
              * CommonName defines whether to add the organizationalUnit information into the subject.
              */
@@ -7058,9 +7215,9 @@ export namespace traefik {
         }
 
         /**
-         * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ratelimit/
+         * RateLimit holds the rate limit configuration. This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ratelimit/
          */
-        export interface MiddlewareSpecRatelimitArgs {
+        export interface MiddlewareSpecRateLimitArgs {
             /**
              * Average is the maximum rate, by default in requests/s, allowed for the given source. It defaults to 0, which means no rate limiting. The rate is actually defined by dividing Average by Period. So for a rate below 1req/s, one needs to define a Period larger than a second.
              */
@@ -7076,17 +7233,17 @@ export namespace traefik {
             /**
              * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the request's remote address field (as an ipStrategy).
              */
-            sourceCriterion?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRatelimitSourcecriterionArgs>;
+            sourceCriterion?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRateLimitSourceCriterionArgs>;
         }
 
         /**
          * SourceCriterion defines what criterion is used to group requests as originating from a common source. If several strategies are defined at the same time, an error will be raised. If none are set, the default is to use the request's remote address field (as an ipStrategy).
          */
-        export interface MiddlewareSpecRatelimitSourcecriterionArgs {
+        export interface MiddlewareSpecRateLimitSourceCriterionArgs {
             /**
-             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+             * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
              */
-            ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRatelimitSourcecriterionIpstrategyArgs>;
+            ipStrategy?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareSpecRateLimitSourceCriterionIpStrategyArgs>;
             /**
              * RequestHeaderName defines the name of the header used to group incoming requests.
              */
@@ -7098,9 +7255,9 @@ export namespace traefik {
         }
 
         /**
-         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/ipwhitelist/#ipstrategy
+         * IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/ipwhitelist/#ipstrategy
          */
-        export interface MiddlewareSpecRatelimitSourcecriterionIpstrategyArgs {
+        export interface MiddlewareSpecRateLimitSourceCriterionIpStrategyArgs {
             /**
              * Depth tells Traefik to use the X-Forwarded-For header and take the IP located at the depth position (starting from the right).
              */
@@ -7112,9 +7269,9 @@ export namespace traefik {
         }
 
         /**
-         * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectregex/#regex
+         * RedirectRegex holds the redirect regex middleware configuration. This middleware redirects a request using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/redirectregex/#regex
          */
-        export interface MiddlewareSpecRedirectregexArgs {
+        export interface MiddlewareSpecRedirectRegexArgs {
             /**
              * Permanent defines whether the redirection is permanent (301).
              */
@@ -7130,9 +7287,9 @@ export namespace traefik {
         }
 
         /**
-         * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/redirectscheme/
+         * RedirectScheme holds the redirect scheme middleware configuration. This middleware redirects requests from a scheme/port to another. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/redirectscheme/
          */
-        export interface MiddlewareSpecRedirectschemeArgs {
+        export interface MiddlewareSpecRedirectSchemeArgs {
             /**
              * Permanent defines whether the redirection is permanent (301).
              */
@@ -7148,9 +7305,9 @@ export namespace traefik {
         }
 
         /**
-         * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepath/
+         * ReplacePath holds the replace path middleware configuration. This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/replacepath/
          */
-        export interface MiddlewareSpecReplacepathArgs {
+        export interface MiddlewareSpecReplacePathArgs {
             /**
              * Path defines the path to use as replacement in the request URL.
              */
@@ -7158,9 +7315,9 @@ export namespace traefik {
         }
 
         /**
-         * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/replacepathregex/
+         * ReplacePathRegex holds the replace path regex middleware configuration. This middleware replaces the path of a URL using regex matching and replacement. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/replacepathregex/
          */
-        export interface MiddlewareSpecReplacepathregexArgs {
+        export interface MiddlewareSpecReplacePathRegexArgs {
             /**
              * Regex defines the regular expression used to match and capture the path from the request URL.
              */
@@ -7172,7 +7329,7 @@ export namespace traefik {
         }
 
         /**
-         * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/retry/
+         * Retry holds the retry middleware configuration. This middleware reissues requests a given number of times to a backend server if that server does not reply. As soon as the server answers, the middleware stops retrying, regardless of the response status. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/retry/
          */
         export interface MiddlewareSpecRetryArgs {
             /**
@@ -7186,9 +7343,9 @@ export namespace traefik {
         }
 
         /**
-         * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefix/
+         * StripPrefix holds the strip prefix middleware configuration. This middleware removes the specified prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/stripprefix/
          */
-        export interface MiddlewareSpecStripprefixArgs {
+        export interface MiddlewareSpecStripPrefixArgs {
             /**
              * ForceSlash ensures that the resulting stripped path is not the empty string, by replacing it with / when necessary. Default: true.
              */
@@ -7200,9 +7357,9 @@ export namespace traefik {
         }
 
         /**
-         * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/stripprefixregex/
+         * StripPrefixRegex holds the strip prefix regex middleware configuration. This middleware removes the matching prefixes from the URL path. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/stripprefixregex/
          */
-        export interface MiddlewareSpecStripprefixregexArgs {
+        export interface MiddlewareSpecStripPrefixRegexArgs {
             /**
              * Regex defines the regular expression to match the path prefix from the request URL.
              */
@@ -7216,17 +7373,17 @@ export namespace traefik {
             /**
              * InFlightConn defines the InFlightConn middleware configuration.
              */
-            inFlightConn?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareTCPSpecInflightconnArgs>;
+            inFlightConn?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareTCPSpecInFlightConnArgs>;
             /**
              * IPWhiteList defines the IPWhiteList middleware configuration.
              */
-            ipWhiteList?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareTCPSpecIpwhitelistArgs>;
+            ipWhiteList?: pulumi.Input<inputs.traefik.v1alpha1.MiddlewareTCPSpecIpWhiteListArgs>;
         }
 
         /**
          * InFlightConn defines the InFlightConn middleware configuration.
          */
-        export interface MiddlewareTCPSpecInflightconnArgs {
+        export interface MiddlewareTCPSpecInFlightConnArgs {
             /**
              * Amount defines the maximum amount of allowed simultaneous connections. The middleware closes the connection if there are already amount connections opened.
              */
@@ -7236,7 +7393,7 @@ export namespace traefik {
         /**
          * IPWhiteList defines the IPWhiteList middleware configuration.
          */
-        export interface MiddlewareTCPSpecIpwhitelistArgs {
+        export interface MiddlewareTCPSpecIpWhiteListArgs {
             /**
              * SourceRange defines the allowed IPs (or ranges of allowed IPs by using CIDR notation).
              */
@@ -7258,7 +7415,7 @@ export namespace traefik {
             /**
              * ForwardingTimeouts defines the timeouts for requests forwarded to the backend servers.
              */
-            forwardingTimeouts?: pulumi.Input<inputs.traefik.v1alpha1.ServersTransportSpecForwardingtimeoutsArgs>;
+            forwardingTimeouts?: pulumi.Input<inputs.traefik.v1alpha1.ServersTransportSpecForwardingTimeoutsArgs>;
             /**
              * InsecureSkipVerify disables SSL certificate verification.
              */
@@ -7284,7 +7441,7 @@ export namespace traefik {
         /**
          * ForwardingTimeouts defines the timeouts for requests forwarded to the backend servers.
          */
-        export interface ServersTransportSpecForwardingtimeoutsArgs {
+        export interface ServersTransportSpecForwardingTimeoutsArgs {
             /**
              * DialTimeout is the amount of time to wait until a connection to a backend server can be established.
              */
@@ -7308,23 +7465,89 @@ export namespace traefik {
         }
 
         /**
+         * ServersTransportTCPSpec defines the desired state of a ServersTransportTCP.
+         */
+        export interface ServersTransportTCPSpecArgs {
+            /**
+             * DialKeepAlive is the interval between keep-alive probes for an active network connection. If zero, keep-alive probes are sent with a default value (currently 15 seconds), if supported by the protocol and operating system. Network protocols or operating systems that do not support keep-alives ignore this field. If negative, keep-alive probes are disabled.
+             */
+            dialKeepAlive?: pulumi.Input<number | string>;
+            /**
+             * DialTimeout is the amount of time to wait until a connection to a backend server can be established.
+             */
+            dialTimeout?: pulumi.Input<number | string>;
+            /**
+             * TerminationDelay defines the delay to wait before fully terminating the connection, after one connected peer has closed its writing capability.
+             */
+            terminationDelay?: pulumi.Input<number | string>;
+            /**
+             * TLS defines the TLS configuration
+             */
+            tls?: pulumi.Input<inputs.traefik.v1alpha1.ServersTransportTCPSpecTlsArgs>;
+        }
+
+        /**
+         * TLS defines the TLS configuration
+         */
+        export interface ServersTransportTCPSpecTlsArgs {
+            /**
+             * CertificatesSecrets defines a list of secret storing client certificates for mTLS.
+             */
+            certificatesSecrets?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * InsecureSkipVerify disables TLS certificate verification.
+             */
+            insecureSkipVerify?: pulumi.Input<boolean>;
+            /**
+             * MaxIdleConnsPerHost controls the maximum idle (keep-alive) to keep per-host. PeerCertURI defines the peer cert URI used to match against SAN URI during the peer certificate verification.
+             */
+            peerCertURI?: pulumi.Input<string>;
+            /**
+             * RootCAsSecrets defines a list of CA secret used to validate self-signed certificates.
+             */
+            rootCAsSecrets?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * ServerName defines the server name used to contact the server.
+             */
+            serverName?: pulumi.Input<string>;
+            /**
+             * Spiffe defines the SPIFFE configuration.
+             */
+            spiffe?: pulumi.Input<inputs.traefik.v1alpha1.ServersTransportTCPSpecTlsSpiffeArgs>;
+        }
+
+        /**
+         * Spiffe defines the SPIFFE configuration.
+         */
+        export interface ServersTransportTCPSpecTlsSpiffeArgs {
+            /**
+             * IDs defines the allowed SPIFFE IDs (takes precedence over the SPIFFE TrustDomain).
+             */
+            ids?: pulumi.Input<pulumi.Input<string>[]>;
+            /**
+             * TrustDomain defines the allowed SPIFFE trust domain.
+             */
+            trustDomain?: pulumi.Input<string>;
+        }
+
+        /**
          * TLSOptionSpec defines the desired state of a TLSOption.
          */
         export interface TLSOptionSpecArgs {
             /**
-             * ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#alpn-protocols
+             * ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#alpn-protocols
              */
             alpnProtocols?: pulumi.Input<pulumi.Input<string>[]>;
             /**
-             * CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#cipher-suites
+             * CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#cipher-suites
              */
             cipherSuites?: pulumi.Input<pulumi.Input<string>[]>;
             /**
              * ClientAuth defines the server's policy for TLS Client Authentication.
              */
-            clientAuth?: pulumi.Input<inputs.traefik.v1alpha1.TLSOptionSpecClientauthArgs>;
+            clientAuth?: pulumi.Input<inputs.traefik.v1alpha1.TLSOptionSpecClientAuthArgs>;
             /**
-             * CurvePreferences defines the preferred elliptic curves in a specific order. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#curve-preferences
+             * CurvePreferences defines the preferred elliptic curves in a specific order. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#curve-preferences
              */
             curvePreferences?: pulumi.Input<pulumi.Input<string>[]>;
             /**
@@ -7348,7 +7571,7 @@ export namespace traefik {
         /**
          * ClientAuth defines the server's policy for TLS Client Authentication.
          */
-        export interface TLSOptionSpecClientauthArgs {
+        export interface TLSOptionSpecClientAuthArgs {
             /**
              * ClientAuthType defines the client authentication type to apply.
              */
@@ -7370,11 +7593,11 @@ export namespace traefik {
             /**
              * DefaultCertificate defines the default certificate configuration.
              */
-            defaultCertificate?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecDefaultcertificateArgs>;
+            defaultCertificate?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecDefaultCertificateArgs>;
             /**
              * DefaultGeneratedCert defines the default generated certificate configuration.
              */
-            defaultGeneratedCert?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecDefaultgeneratedcertArgs>;
+            defaultGeneratedCert?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecDefaultGeneratedCertArgs>;
         }
 
         /**
@@ -7390,7 +7613,7 @@ export namespace traefik {
         /**
          * DefaultCertificate defines the default certificate configuration.
          */
-        export interface TLSStoreSpecDefaultcertificateArgs {
+        export interface TLSStoreSpecDefaultCertificateArgs {
             /**
              * SecretName is the name of the referenced Kubernetes Secret to specify the certificate details.
              */
@@ -7400,11 +7623,11 @@ export namespace traefik {
         /**
          * DefaultGeneratedCert defines the default generated certificate configuration.
          */
-        export interface TLSStoreSpecDefaultgeneratedcertArgs {
+        export interface TLSStoreSpecDefaultGeneratedCertArgs {
             /**
              * Domain is the domain definition for the DefaultCertificate.
              */
-            domain?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecDefaultgeneratedcertDomainArgs>;
+            domain?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecDefaultGeneratedCertDomainArgs>;
             /**
              * Resolver is the name of the resolver that will be used to issue the DefaultCertificate.
              */
@@ -7414,7 +7637,7 @@ export namespace traefik {
         /**
          * Domain is the domain definition for the DefaultCertificate.
          */
-        export interface TLSStoreSpecDefaultgeneratedcertDomainArgs {
+        export interface TLSStoreSpecDefaultGeneratedCertDomainArgs {
             /**
              * Main defines the main domain name.
              */
@@ -7464,6 +7687,10 @@ export namespace traefik {
              */
             namespace?: pulumi.Input<string>;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: pulumi.Input<boolean>;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: pulumi.Input<boolean>;
@@ -7474,7 +7701,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecMirroringResponseforwardingArgs>;
+            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecMirroringResponseForwardingArgs>;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -7484,7 +7711,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecMirroringStickyArgs>;
             /**
@@ -7514,6 +7741,10 @@ export namespace traefik {
              */
             namespace?: pulumi.Input<string>;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: pulumi.Input<boolean>;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: pulumi.Input<boolean>;
@@ -7528,7 +7759,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecMirroringMirrorsResponseforwardingArgs>;
+            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecMirroringMirrorsResponseForwardingArgs>;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -7538,7 +7769,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecMirroringMirrorsStickyArgs>;
             /**
@@ -7554,7 +7785,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface TraefikServiceSpecMirroringMirrorsResponseforwardingArgs {
+        export interface TraefikServiceSpecMirroringMirrorsResponseForwardingArgs {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -7562,7 +7793,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecMirroringMirrorsStickyArgs {
             /**
@@ -7596,7 +7827,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface TraefikServiceSpecMirroringResponseforwardingArgs {
+        export interface TraefikServiceSpecMirroringResponseForwardingArgs {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -7604,7 +7835,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecMirroringStickyArgs {
             /**
@@ -7644,7 +7875,7 @@ export namespace traefik {
              */
             services?: pulumi.Input<pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesArgs>[]>;
             /**
-             * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
+             * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecWeightedStickyArgs>;
         }
@@ -7666,6 +7897,10 @@ export namespace traefik {
              */
             namespace?: pulumi.Input<string>;
             /**
+             * NativeLB controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. The Kubernetes Service itself does load-balance to the pods. By default, NativeLB is false.
+             */
+            nativeLB?: pulumi.Input<boolean>;
+            /**
              * PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service. By default, passHostHeader is true.
              */
             passHostHeader?: pulumi.Input<boolean>;
@@ -7676,7 +7911,7 @@ export namespace traefik {
             /**
              * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
              */
-            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesResponseforwardingArgs>;
+            responseForwarding?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesResponseForwardingArgs>;
             /**
              * Scheme defines the scheme to use for the request to the upstream Kubernetes Service. It defaults to https when Kubernetes Service port is 443, http otherwise.
              */
@@ -7686,7 +7921,7 @@ export namespace traefik {
              */
             serversTransport?: pulumi.Input<string>;
             /**
-             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+             * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
              */
             sticky?: pulumi.Input<inputs.traefik.v1alpha1.TraefikServiceSpecWeightedServicesStickyArgs>;
             /**
@@ -7702,7 +7937,7 @@ export namespace traefik {
         /**
          * ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
          */
-        export interface TraefikServiceSpecWeightedServicesResponseforwardingArgs {
+        export interface TraefikServiceSpecWeightedServicesResponseForwardingArgs {
             /**
              * FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body. A negative value means to flush immediately after each write to the client. This configuration is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. Default: 100ms
              */
@@ -7710,7 +7945,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.9/routing/services/#sticky-sessions
+         * Sticky defines the sticky sessions configuration. More info: https://doc.traefik.io/traefik/v2.10/routing/services/#sticky-sessions
          */
         export interface TraefikServiceSpecWeightedServicesStickyArgs {
             /**
@@ -7742,7 +7977,7 @@ export namespace traefik {
         }
 
         /**
-         * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.9/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
+         * Sticky defines whether sticky sessions are enabled. More info: https://doc.traefik.io/traefik/v2.10/routing/providers/kubernetes-crd/#stickiness-and-load-balancing
          */
         export interface TraefikServiceSpecWeightedStickyArgs {
             /**

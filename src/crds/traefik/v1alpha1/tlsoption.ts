@@ -9,7 +9,7 @@ import * as utilities from "../../utilities";
 import {ObjectMeta} from "../../meta/v1";
 
 /**
- * TLSOption is the CRD implementation of a Traefik TLS Option, allowing to configure some parameters of the TLS connection. More info: https://doc.traefik.io/traefik/v2.9/https/tls/#tls-options
+ * TLSOption is the CRD implementation of a Traefik TLS Option, allowing to configure some parameters of the TLS connection. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
  */
 export class TLSOption extends pulumi.CustomResource {
     /**
@@ -25,7 +25,7 @@ export class TLSOption extends pulumi.CustomResource {
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.containo.us/v1alpha1:TLSOption';
+    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:TLSOption';
 
     /**
      * Returns true if the given object is an instance of TLSOption.  This is designed to work even
@@ -38,7 +38,7 @@ export class TLSOption extends pulumi.CustomResource {
         return obj['__pulumiType'] === TLSOption.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1">;
+    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
     public readonly kind!: pulumi.Output<"TLSOption">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
@@ -57,7 +57,7 @@ export class TLSOption extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "traefik.containo.us/v1alpha1";
+            resourceInputs["apiVersion"] = "traefik.io/v1alpha1";
             resourceInputs["kind"] = "TLSOption";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
@@ -76,7 +76,7 @@ export class TLSOption extends pulumi.CustomResource {
  * The set of arguments for constructing a TLSOption resource.
  */
 export interface TLSOptionArgs {
-    apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
     kind?: pulumi.Input<"TLSOption">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**

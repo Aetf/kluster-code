@@ -9,7 +9,7 @@ import * as utilities from "../../utilities";
 import {ObjectMeta} from "../../meta/v1";
 
 /**
- * Middleware is the CRD implementation of a Traefik Middleware. More info: https://doc.traefik.io/traefik/v2.9/middlewares/http/overview/
+ * Middleware is the CRD implementation of a Traefik Middleware. More info: https://doc.traefik.io/traefik/v2.10/middlewares/http/overview/
  */
 export class Middleware extends pulumi.CustomResource {
     /**
@@ -25,7 +25,7 @@ export class Middleware extends pulumi.CustomResource {
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:traefik.containo.us/v1alpha1:Middleware';
+    public static readonly __pulumiType = 'kubernetes:traefik.io/v1alpha1:Middleware';
 
     /**
      * Returns true if the given object is an instance of Middleware.  This is designed to work even
@@ -38,7 +38,7 @@ export class Middleware extends pulumi.CustomResource {
         return obj['__pulumiType'] === Middleware.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.containo.us/v1alpha1">;
+    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
     public readonly kind!: pulumi.Output<"Middleware">;
     public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
@@ -57,7 +57,7 @@ export class Middleware extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "traefik.containo.us/v1alpha1";
+            resourceInputs["apiVersion"] = "traefik.io/v1alpha1";
             resourceInputs["kind"] = "Middleware";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
@@ -76,7 +76,7 @@ export class Middleware extends pulumi.CustomResource {
  * The set of arguments for constructing a Middleware resource.
  */
 export interface MiddlewareArgs {
-    apiVersion?: pulumi.Input<"traefik.containo.us/v1alpha1">;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
     kind?: pulumi.Input<"Middleware">;
     metadata?: pulumi.Input<ObjectMeta>;
     /**

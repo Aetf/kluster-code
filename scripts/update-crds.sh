@@ -61,8 +61,8 @@ main() {
     mv "$output" "${output}.bak"
     kubectl get crds -o yaml \
         | awk '/^-/ { print "---"; sub(/^- /, ""); print } /^ / { sub(/  /, ""); print } ' \
-        | "${crd2pulumi}" -n --nodejsPath "${output}" -
-    rm -rf "${output}.bak"
+        | "${crd2pulumi}" -n --nodejsPath "${output}" - \
+    && rm -rf "${output}.bak"
 
     popd >/dev/null
 
