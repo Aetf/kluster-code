@@ -74,10 +74,18 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                 node: {
                     resources: {
                         requests: {
+                            cpu: '50m',
+                            memory: '512Mi',
+                        },
+                        limits: {
                             cpu: '256m',
                             memory: '1Gi',
                         }
-                    }
+                    },
+                    storageClassShareMount: true,
+                    // Use a new Priorityclass for Mount Pod to not preempt other pods.
+                    // See: https://juicefs.com/docs/csi/guide/resource-optimization#set-non-preempting-priorityclass-for-mount-pod
+                    mountPodNonPreempting: true,
                 }
             }
         }, opts);
@@ -88,7 +96,10 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                 provisioner: 'csi.juicefs.com',
                 volumeBindingMode: "Immediate",
                 reclaimPolicy: "Retain",
+                allowVolumeExpansion: true,
                 parameters: {
+                    "csi.storage.k8s.io/controller-expand-secret-name": secret_md.name!,
+                    "csi.storage.k8s.io/controller-expand-secret-namespace": namespace,
                     "csi.storage.k8s.io/provisioner-secret-name": secret_md.name!,
                     "csi.storage.k8s.io/provisioner-secret-namespace": namespace,
                     "csi.storage.k8s.io/node-publish-secret-name": secret_md.name!,
@@ -163,3 +174,5 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
         }, { parent: this });
     }
 }
+
+
