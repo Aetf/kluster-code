@@ -6,7 +6,10 @@ k3s uses a config file `k3s-kluster.yml`, this file needs to be copied to `/etc/
 
 ## Use pulumi to deploy the configurations
 
-`pulumi up`
+```
+$ secret-tool lookup xdg:service pulumi | read -r PULUMI_CONFIG_PASSPHRASE; export PULUMI_CONFIG_PASSPHRASE
+$ pulumi up
+```
 
 ## Per Pod Cert for mTLS
 This is done by bootstraping a self-signed CA in the cluster using cert-manager,

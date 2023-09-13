@@ -12,7 +12,7 @@ interface McArgs {
 }
 
 export class Mc extends pulumi.ComponentResource<McArgs> {
-    public readonly chart: HelmChart;
+    public readonly chart?: HelmChart;
     private readonly namespace: pulumi.Output<string>;
 
     constructor(name: string, args: McArgs, opts?: pulumi.ComponentResourceOptions) {
@@ -40,7 +40,7 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                     storage: "12Gi"
                 }
             }
-        }, { parent: this, });
+        }, { parent: this, retainOnDelete: true, protect: false });
 
         const backupPvc = args.base.createLocalStoragePVC(`${name}-backup`, {
             storageClassName: args.base.jfsStorageClass.metadata.name,
@@ -49,9 +49,10 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                     storage: "50Gi"
                 }
             }
-        }, { parent: this });
+        }, { parent: this, retainOnDelete: true, protect: false });
 
         this.namespace = pvc.metadata.namespace;
+        return;
         this.chart = new HelmChart(name, {
             namespace: this.namespace,
             chart: "minecraft",

@@ -5,3 +5,4 @@ config:
     secure: v1:+V43BCWXufREi2V+:4GWjNe3g5XS7GsqamNdMQd4TxgkmzLoVajn4bUbUKy4=
   kluster-code:staging: "false"
   kubernetes:enableServerSideApply: "true"
+  kluster-code:enableMc: "false"

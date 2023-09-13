@@ -201,15 +201,17 @@ function setup() {
     });
 
     // Minecraft server
-    const mc = new Mc("mc", {
-        base: cluster,
-        externalIPs: [
-            "45.77.144.92",
-            "192.168.70.85",
-        ]
-    }, {
-        provider: namespaced("mc")
-    });
+    if (config.requireBoolean("enableMc")) {
+        const mc = new Mc("mc", {
+            base: cluster,
+            externalIPs: [
+                "45.77.144.92",
+                "192.168.70.85",
+            ]
+        }, {
+            provider: namespaced("mc"),
+        });
+    }
 
     // All media goes in one namespace because otherwise they can not share the
     // NodePV
