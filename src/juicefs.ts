@@ -96,10 +96,12 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                 provisioner: 'csi.juicefs.com',
                 volumeBindingMode: "Immediate",
                 reclaimPolicy: "Retain",
-                allowVolumeExpansion: true,
+                // TODO(kluster-code#6) Can't add this without recreating all PV
+                // allowVolumeExpansion: true,
                 parameters: {
-                    "csi.storage.k8s.io/controller-expand-secret-name": secret_md.name!,
-                    "csi.storage.k8s.io/controller-expand-secret-namespace": namespace,
+                    // TODO(kluster-code#6) Can't add this without recreating all PV
+                    // "csi.storage.k8s.io/controller-expand-secret-name": secret_md.name!,
+                    // "csi.storage.k8s.io/controller-expand-secret-namespace": namespace,
                     "csi.storage.k8s.io/provisioner-secret-name": secret_md.name!,
                     "csi.storage.k8s.io/provisioner-secret-namespace": namespace,
                     "csi.storage.k8s.io/node-publish-secret-name": secret_md.name!,
@@ -174,5 +176,4 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
         }, { parent: this });
     }
 }
-
 
