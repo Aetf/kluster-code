@@ -8,6 +8,8 @@ import { BaseCluster } from "./base";
 
 export type ClusterCertificateSpecArgs = Omit<crds.types.input.certmanager.v1.CertificateSpecArgs, 'issuerRef' | 'secretName'> & {
     secretName?: pulumi.Input<string>,
+    secretLabels?: Record<string, pulumi.Input<string>>,
+    secretAnnotations?: Record<string, pulumi.Input<string>>,
     issuer: crds.certmanager.v1.ClusterIssuer | crds.certmanager.v1.Issuer
 };
 export type ClusterCertificateArgs = Omit<crds.certmanager.v1.CertificateArgs, 'spec'> & {
@@ -24,8 +26,10 @@ export class ClusterCertificate extends crds.certmanager.v1.Certificate {
                 secretName: certName,
                 secretTemplate: {
                     annotations: {
-                        "reloader.stakater.com/match": "true"
-                    }
+                        "reloader.stakater.com/match": "true",
+                        ...args.spec.secretAnnotations || {},
+                    },
+                    labels: args.spec.secretLabels,
                 },
                 issuerRef: {
                     name: pulumi.output(args.spec.issuer.metadata).apply(md => md.name!),
@@ -65,6 +69,8 @@ export class ClusterCertificate extends crds.certmanager.v1.Certificate {
 
 export interface BackendCertificateArgs {
     namespace: pulumi.Input<string>,
+    secretLabels?: Record<string, pulumi.Input<string>>,
+    secretAnnotations?: Record<string, pulumi.Input<string>>,
     base?: BaseCluster,
 }
 
@@ -80,6 +86,8 @@ export class BackendCertificate extends ClusterCertificate {
             spec: {
                 dnsNames: [pulumi.interpolate`${name}.${args.namespace}`],
                 issuer: args.base.rootIssuer,
+                secretLabels: args.secretLabels,
+                secretAnnotations: args.secretAnnotations,
             }
         }, opts);
     }
