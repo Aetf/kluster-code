@@ -20,6 +20,7 @@ import * as fpga from "./fpga";
 import * as helm from "./helm";
 import * as k3s from "./k3s";
 import * as nfd from "./nfd";
+import * as postgresql from "./postgresql";
 import * as traefik from "./traefik";
 import * as types from "./types";
 
@@ -32,6 +33,7 @@ export {
     helm,
     k3s,
     nfd,
+    postgresql,
     traefik,
     types,
 };

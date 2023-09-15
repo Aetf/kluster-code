@@ -19,6 +19,7 @@ import { IntelDevicePlugins } from "./base-cluster/intel-gpu";
 import { Jellyfin } from "./jellyfin";
 import { Shoko } from "./shoko";
 import { Dufs } from "./dav";
+import { CloudNativePg } from "./postgresql";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -167,6 +168,11 @@ function setup() {
         provider: namespaced("dav")
     });
 
+    // Database infrastructure
+    const cnpg = new CloudNativePg("cnpg", {}, {
+        provider: namespaced("cnpg-system"),
+    });
+
     // nextcloud
     /* const nextcloud = new Nextcloud("nextcloud", {
         serving,
@@ -247,3 +253,4 @@ function setup() {
 }
 
 setup();
+

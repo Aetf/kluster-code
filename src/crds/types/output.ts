@@ -6041,6 +6041,9743 @@ export namespace nfd {
     }
 }
 
+export namespace postgresql {
+    export namespace v1 {
+        /**
+         * Specification of the desired behavior of the backup. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface BackupSpec {
+            /**
+             * The cluster to backup
+             */
+            cluster?: outputs.postgresql.v1.BackupSpecCluster;
+            /**
+             * The policy to decide which instance should perform this backup. If empty, it defaults to `cluster.spec.backup.target`. Available options are empty string, `primary` and `prefer-standby`. `primary` to have backups run always on primary instances, `prefer-standby` to have backups run preferably on the most updated standby, if available.
+             */
+            target?: string;
+        }
+
+        /**
+         * The cluster to backup
+         */
+        export interface BackupSpecCluster {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * Most recently observed status of the backup. This data may not be up to date. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface BackupStatus {
+            /**
+             * The credentials to use to upload data to Azure Blob Storage
+             */
+            azureCredentials?: outputs.postgresql.v1.BackupStatusAzureCredentials;
+            /**
+             * The ID of the Barman backup
+             */
+            backupId?: string;
+            /**
+             * The Name of the Barman backup
+             */
+            backupName?: string;
+            /**
+             * The starting xlog
+             */
+            beginLSN?: string;
+            /**
+             * The starting WAL
+             */
+            beginWal?: string;
+            /**
+             * The backup command output in case of error
+             */
+            commandError?: string;
+            /**
+             * Unused. Retained for compatibility with old versions.
+             */
+            commandOutput?: string;
+            /**
+             * The path where to store the backup (i.e. s3://bucket/path/to/folder) this path, with different destination folders, will be used for WALs and for data. This may not be populated in case of errors.
+             */
+            destinationPath?: string;
+            /**
+             * Encryption method required to S3 API
+             */
+            encryption?: string;
+            /**
+             * The ending xlog
+             */
+            endLSN?: string;
+            /**
+             * The ending WAL
+             */
+            endWal?: string;
+            /**
+             * EndpointCA store the CA bundle of the barman endpoint. Useful when using self-signed certificates to avoid errors with certificate issuer and barman-cloud-wal-archive.
+             */
+            endpointCA?: outputs.postgresql.v1.BackupStatusEndpointCA;
+            /**
+             * Endpoint to be used to upload data to the cloud, overriding the automatic endpoint discovery
+             */
+            endpointURL?: string;
+            /**
+             * The detected error
+             */
+            error?: string;
+            /**
+             * The credentials to use to upload data to Google Cloud Storage
+             */
+            googleCredentials?: outputs.postgresql.v1.BackupStatusGoogleCredentials;
+            /**
+             * Information to identify the instance where the backup has been taken from
+             */
+            instanceID?: outputs.postgresql.v1.BackupStatusInstanceID;
+            /**
+             * The last backup status
+             */
+            phase?: string;
+            /**
+             * The credentials to use to upload data to S3
+             */
+            s3Credentials?: outputs.postgresql.v1.BackupStatusS3Credentials;
+            /**
+             * The server name on S3, the cluster name is used if this parameter is omitted
+             */
+            serverName?: string;
+            /**
+             * When the backup was started
+             */
+            startedAt?: string;
+            /**
+             * When the backup was terminated
+             */
+            stoppedAt?: string;
+        }
+
+        /**
+         * The credentials to use to upload data to Azure Blob Storage
+         */
+        export interface BackupStatusAzureCredentials {
+            /**
+             * The connection string to be used
+             */
+            connectionString?: outputs.postgresql.v1.BackupStatusAzureCredentialsConnectionString;
+            /**
+             * Use the Azure AD based authentication without providing explicitly the keys.
+             */
+            inheritFromAzureAD?: boolean;
+            /**
+             * The storage account where to upload data
+             */
+            storageAccount?: outputs.postgresql.v1.BackupStatusAzureCredentialsStorageAccount;
+            /**
+             * The storage account key to be used in conjunction with the storage account name
+             */
+            storageKey?: outputs.postgresql.v1.BackupStatusAzureCredentialsStorageKey;
+            /**
+             * A shared-access-signature to be used in conjunction with the storage account name
+             */
+            storageSasToken?: outputs.postgresql.v1.BackupStatusAzureCredentialsStorageSasToken;
+        }
+
+        /**
+         * The connection string to be used
+         */
+        export interface BackupStatusAzureCredentialsConnectionString {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The storage account where to upload data
+         */
+        export interface BackupStatusAzureCredentialsStorageAccount {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The storage account key to be used in conjunction with the storage account name
+         */
+        export interface BackupStatusAzureCredentialsStorageKey {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * A shared-access-signature to be used in conjunction with the storage account name
+         */
+        export interface BackupStatusAzureCredentialsStorageSasToken {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * EndpointCA store the CA bundle of the barman endpoint. Useful when using self-signed certificates to avoid errors with certificate issuer and barman-cloud-wal-archive.
+         */
+        export interface BackupStatusEndpointCA {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The credentials to use to upload data to Google Cloud Storage
+         */
+        export interface BackupStatusGoogleCredentials {
+            /**
+             * The secret containing the Google Cloud Storage JSON file with the credentials
+             */
+            applicationCredentials?: outputs.postgresql.v1.BackupStatusGoogleCredentialsApplicationCredentials;
+            /**
+             * If set to true, will presume that it's running inside a GKE environment, default to false.
+             */
+            gkeEnvironment?: boolean;
+        }
+
+        /**
+         * The secret containing the Google Cloud Storage JSON file with the credentials
+         */
+        export interface BackupStatusGoogleCredentialsApplicationCredentials {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * Information to identify the instance where the backup has been taken from
+         */
+        export interface BackupStatusInstanceID {
+            /**
+             * The container ID
+             */
+            ContainerID?: string;
+            /**
+             * The pod name
+             */
+            podName?: string;
+        }
+
+        /**
+         * The credentials to use to upload data to S3
+         */
+        export interface BackupStatusS3Credentials {
+            /**
+             * The reference to the access key id
+             */
+            accessKeyId?: outputs.postgresql.v1.BackupStatusS3CredentialsAccessKeyId;
+            /**
+             * Use the role based authentication without providing explicitly the keys.
+             */
+            inheritFromIAMRole?: boolean;
+            /**
+             * The reference to the secret containing the region name
+             */
+            region?: outputs.postgresql.v1.BackupStatusS3CredentialsRegion;
+            /**
+             * The reference to the secret access key
+             */
+            secretAccessKey?: outputs.postgresql.v1.BackupStatusS3CredentialsSecretAccessKey;
+            /**
+             * The references to the session key
+             */
+            sessionToken?: outputs.postgresql.v1.BackupStatusS3CredentialsSessionToken;
+        }
+
+        /**
+         * The reference to the access key id
+         */
+        export interface BackupStatusS3CredentialsAccessKeyId {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the secret containing the region name
+         */
+        export interface BackupStatusS3CredentialsRegion {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the secret access key
+         */
+        export interface BackupStatusS3CredentialsSecretAccessKey {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The references to the session key
+         */
+        export interface BackupStatusS3CredentialsSessionToken {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * Specification of the desired behavior of the cluster. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ClusterSpec {
+            /**
+             * Affinity/Anti-affinity rules for Pods
+             */
+            affinity?: outputs.postgresql.v1.ClusterSpecAffinity;
+            /**
+             * The configuration to be used for backups
+             */
+            backup?: outputs.postgresql.v1.ClusterSpecBackup;
+            /**
+             * Instructions to bootstrap this cluster
+             */
+            bootstrap?: outputs.postgresql.v1.ClusterSpecBootstrap;
+            /**
+             * The configuration for the CA and related certificates
+             */
+            certificates?: outputs.postgresql.v1.ClusterSpecCertificates;
+            /**
+             * Description of this PostgreSQL cluster
+             */
+            description?: string;
+            /**
+             * When this option is enabled, the operator will use the `SuperuserSecret` to update the `postgres` user password (if the secret is not present, the operator will automatically create one). When this option is disabled, the operator will ignore the `SuperuserSecret` content, delete it when automatically created, and then blank the password of the `postgres` user by setting it to `NULL`. Enabled by default.
+             */
+            enableSuperuserAccess?: boolean;
+            /**
+             * Env follows the Env format to pass environment variables to the pods created in the cluster
+             */
+            env?: outputs.postgresql.v1.ClusterSpecEnv[];
+            /**
+             * EnvFrom follows the EnvFrom format to pass environment variables sources to the pods to be used by Env
+             */
+            envFrom?: outputs.postgresql.v1.ClusterSpecEnvFrom[];
+            /**
+             * The list of external clusters which are used in the configuration
+             */
+            externalClusters?: outputs.postgresql.v1.ClusterSpecExternalClusters[];
+            /**
+             * The amount of time (in seconds) to wait before triggering a failover after the primary PostgreSQL instance in the cluster was detected to be unhealthy
+             */
+            failoverDelay?: number;
+            /**
+             * Name of the container image, supporting both tags (`<image>:<tag>`) and digests for deterministic and repeatable deployments (`<image>:<tag>@sha256:<digestValue>`)
+             */
+            imageName?: string;
+            /**
+             * Image pull policy. One of `Always`, `Never` or `IfNotPresent`. If not defined, it defaults to `IfNotPresent`. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
+             */
+            imagePullPolicy?: string;
+            /**
+             * The list of pull secrets to be used to pull the images
+             */
+            imagePullSecrets?: outputs.postgresql.v1.ClusterSpecImagePullSecrets[];
+            /**
+             * Metadata that will be inherited by all objects related to the Cluster
+             */
+            inheritedMetadata?: outputs.postgresql.v1.ClusterSpecInheritedMetadata;
+            /**
+             * Number of instances required in the cluster
+             */
+            instances: number;
+            /**
+             * The instances' log level, one of the following values: error, warning, info (default), debug, trace
+             */
+            logLevel?: string;
+            /**
+             * The configuration that is used by the portions of PostgreSQL that are managed by the instance manager
+             */
+            managed?: outputs.postgresql.v1.ClusterSpecManaged;
+            /**
+             * The target value for the synchronous replication quorum, that can be decreased if the number of ready standbys is lower than this. Undefined or 0 disable synchronous replication.
+             */
+            maxSyncReplicas?: number;
+            /**
+             * Minimum number of instances required in synchronous replication with the primary. Undefined or 0 allow writes to complete when no standby is available.
+             */
+            minSyncReplicas?: number;
+            /**
+             * The configuration of the monitoring infrastructure of this cluster
+             */
+            monitoring?: outputs.postgresql.v1.ClusterSpecMonitoring;
+            /**
+             * Define a maintenance window for the Kubernetes nodes
+             */
+            nodeMaintenanceWindow?: outputs.postgresql.v1.ClusterSpecNodeMaintenanceWindow;
+            /**
+             * The GID of the `postgres` user inside the image, defaults to `26`
+             */
+            postgresGID?: number;
+            /**
+             * The UID of the `postgres` user inside the image, defaults to `26`
+             */
+            postgresUID?: number;
+            /**
+             * Configuration of the PostgreSQL server
+             */
+            postgresql?: outputs.postgresql.v1.ClusterSpecPostgresql;
+            /**
+             * Method to follow to upgrade the primary server during a rolling update procedure, after all replicas have been successfully updated: it can be with a switchover (`switchover`) or in-place (`restart` - default)
+             */
+            primaryUpdateMethod?: string;
+            /**
+             * Deployment strategy to follow to upgrade the primary server during a rolling update procedure, after all replicas have been successfully updated: it can be automated (`unsupervised` - default) or manual (`supervised`)
+             */
+            primaryUpdateStrategy?: string;
+            /**
+             * Name of the priority class which will be used in every generated Pod, if the PriorityClass specified does not exist, the pod will not be able to schedule.  Please refer to https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass for more information
+             */
+            priorityClassName?: string;
+            /**
+             * Template to be used to define projected volumes, projected volumes will be mounted under `/projected` base folder
+             */
+            projectedVolumeTemplate?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplate;
+            /**
+             * Replica cluster configuration
+             */
+            replica?: outputs.postgresql.v1.ClusterSpecReplica;
+            /**
+             * Replication slots management configuration
+             */
+            replicationSlots?: outputs.postgresql.v1.ClusterSpecReplicationSlots;
+            /**
+             * Resources requirements of every generated Pod. Please refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ for more information.
+             */
+            resources?: outputs.postgresql.v1.ClusterSpecResources;
+            /**
+             * If specified, the pod will be dispatched by specified Kubernetes scheduler. If not specified, the pod will be dispatched by the default scheduler. More info: https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/
+             */
+            schedulerName?: string;
+            /**
+             * The SeccompProfile applied to every Pod and Container. Defaults to: `RuntimeDefault`
+             */
+            seccompProfile?: outputs.postgresql.v1.ClusterSpecSeccompProfile;
+            /**
+             * Configure the generation of the service account
+             */
+            serviceAccountTemplate?: outputs.postgresql.v1.ClusterSpecServiceAccountTemplate;
+            /**
+             * The time in seconds that is allowed for a PostgreSQL instance to successfully start up (default 30)
+             */
+            startDelay?: number;
+            /**
+             * The time in seconds that is allowed for a PostgreSQL instance to gracefully shutdown (default 30)
+             */
+            stopDelay?: number;
+            /**
+             * Configuration of the storage of the instances
+             */
+            storage?: outputs.postgresql.v1.ClusterSpecStorage;
+            /**
+             * The secret containing the superuser password. If not defined a new secret will be created with a randomly generated password
+             */
+            superuserSecret?: outputs.postgresql.v1.ClusterSpecSuperuserSecret;
+            /**
+             * The time in seconds that is allowed for a primary PostgreSQL instance to gracefully shutdown during a switchover. Default value is 40000000, greater than one year in seconds, big enough to simulate an infinite delay
+             */
+            switchoverDelay?: number;
+            /**
+             * TopologySpreadConstraints specifies how to spread matching pods among the given topology. More info: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+             */
+            topologySpreadConstraints?: outputs.postgresql.v1.ClusterSpecTopologySpreadConstraints[];
+            /**
+             * Configuration of the storage for PostgreSQL WAL (Write-Ahead Log)
+             */
+            walStorage?: outputs.postgresql.v1.ClusterSpecWalStorage;
+        }
+        /**
+         * clusterSpecProvideDefaults sets the appropriate defaults for ClusterSpec
+         */
+        export function clusterSpecProvideDefaults(val: ClusterSpec): ClusterSpec {
+            return {
+                ...val,
+                backup: (val.backup ? outputs.postgresql.v1.clusterSpecBackupProvideDefaults(val.backup) : undefined),
+                bootstrap: (val.bootstrap ? outputs.postgresql.v1.clusterSpecBootstrapProvideDefaults(val.bootstrap) : undefined),
+                enableSuperuserAccess: (val.enableSuperuserAccess) ?? true,
+                failoverDelay: (val.failoverDelay) ?? 0,
+                instances: (val.instances) ?? 1,
+                logLevel: (val.logLevel) ?? "info",
+                maxSyncReplicas: (val.maxSyncReplicas) ?? 0,
+                minSyncReplicas: (val.minSyncReplicas) ?? 0,
+                monitoring: (val.monitoring ? outputs.postgresql.v1.clusterSpecMonitoringProvideDefaults(val.monitoring) : undefined),
+                nodeMaintenanceWindow: (val.nodeMaintenanceWindow ? outputs.postgresql.v1.clusterSpecNodeMaintenanceWindowProvideDefaults(val.nodeMaintenanceWindow) : undefined),
+                postgresGID: (val.postgresGID) ?? 26,
+                postgresUID: (val.postgresUID) ?? 26,
+                primaryUpdateMethod: (val.primaryUpdateMethod) ?? "restart",
+                primaryUpdateStrategy: (val.primaryUpdateStrategy) ?? "unsupervised",
+                replicationSlots: (val.replicationSlots ? outputs.postgresql.v1.clusterSpecReplicationSlotsProvideDefaults(val.replicationSlots) : undefined),
+                startDelay: (val.startDelay) ?? 30,
+                stopDelay: (val.stopDelay) ?? 30,
+                storage: (val.storage ? outputs.postgresql.v1.clusterSpecStorageProvideDefaults(val.storage) : undefined),
+                switchoverDelay: (val.switchoverDelay) ?? 40000000,
+                walStorage: (val.walStorage ? outputs.postgresql.v1.clusterSpecWalStorageProvideDefaults(val.walStorage) : undefined),
+            };
+        }
+
+        /**
+         * Affinity/Anti-affinity rules for Pods
+         */
+        export interface ClusterSpecAffinity {
+            /**
+             * AdditionalPodAffinity allows to specify pod affinity terms to be passed to all the cluster's pods.
+             */
+            additionalPodAffinity?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinity;
+            /**
+             * AdditionalPodAntiAffinity allows to specify pod anti-affinity terms to be added to the ones generated by the operator if EnablePodAntiAffinity is set to true (default) or to be used exclusively if set to false.
+             */
+            additionalPodAntiAffinity?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinity;
+            /**
+             * Activates anti-affinity for the pods. The operator will define pods anti-affinity unless this field is explicitly set to false
+             */
+            enablePodAntiAffinity?: boolean;
+            /**
+             * NodeAffinity describes node affinity scheduling rules for the pod. More info: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
+             */
+            nodeAffinity?: outputs.postgresql.v1.ClusterSpecAffinityNodeAffinity;
+            /**
+             * NodeSelector is map of key-value pairs used to define the nodes on which the pods can run. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+             */
+            nodeSelector?: {[key: string]: string};
+            /**
+             * PodAntiAffinityType allows the user to decide whether pod anti-affinity between cluster instance has to be considered a strong requirement during scheduling or not. Allowed values are: "preferred" (default if empty) or "required". Setting it to "required", could lead to instances remaining pending until new kubernetes nodes are added if all the existing nodes don't match the required pod anti-affinity rule. More info: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+             */
+            podAntiAffinityType?: string;
+            /**
+             * Tolerations is a list of Tolerations that should be set for all the pods, in order to allow them to run on tainted nodes. More info: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+             */
+            tolerations?: outputs.postgresql.v1.ClusterSpecAffinityTolerations[];
+            /**
+             * TopologyKey to use for anti-affinity configuration. See k8s documentation for more info on that
+             */
+            topologyKey?: string;
+        }
+
+        /**
+         * AdditionalPodAffinity allows to specify pod affinity terms to be passed to all the cluster's pods.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinity {
+            /**
+             * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
+             */
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
+            /**
+             * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
+             */
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
+        }
+
+        /**
+         * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * Required. A pod affinity term, associated with the corresponding weight.
+             */
+            podAffinityTerm: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
+            /**
+             * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
+             */
+            weight: number;
+        }
+
+        /**
+         * Required. A pod affinity term, associated with the corresponding weight.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
+            /**
+             * A label query over a set of resources, in this case pods.
+             */
+            labelSelector?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
+            /**
+             * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+             */
+            namespaceSelector?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
+            /**
+             * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+             */
+            namespaces?: string[];
+            /**
+             * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+             */
+            topologyKey: string;
+        }
+
+        /**
+         * A label query over a set of resources, in this case pods.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * A label query over a set of resources, in this case pods.
+             */
+            labelSelector?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
+            /**
+             * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+             */
+            namespaceSelector?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
+            /**
+             * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+             */
+            namespaces?: string[];
+            /**
+             * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+             */
+            topologyKey: string;
+        }
+
+        /**
+         * A label query over a set of resources, in this case pods.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * AdditionalPodAntiAffinity allows to specify pod anti-affinity terms to be added to the ones generated by the operator if EnablePodAntiAffinity is set to true (default) or to be used exclusively if set to false.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinity {
+            /**
+             * The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
+             */
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
+            /**
+             * If the anti-affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the anti-affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
+             */
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
+        }
+
+        /**
+         * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * Required. A pod affinity term, associated with the corresponding weight.
+             */
+            podAffinityTerm: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
+            /**
+             * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
+             */
+            weight: number;
+        }
+
+        /**
+         * Required. A pod affinity term, associated with the corresponding weight.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
+            /**
+             * A label query over a set of resources, in this case pods.
+             */
+            labelSelector?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
+            /**
+             * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+             */
+            namespaceSelector?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
+            /**
+             * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+             */
+            namespaces?: string[];
+            /**
+             * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+             */
+            topologyKey: string;
+        }
+
+        /**
+         * A label query over a set of resources, in this case pods.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * A label query over a set of resources, in this case pods.
+             */
+            labelSelector?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
+            /**
+             * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+             */
+            namespaceSelector?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
+            /**
+             * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+             */
+            namespaces?: string[];
+            /**
+             * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+             */
+            topologyKey: string;
+        }
+
+        /**
+         * A label query over a set of resources, in this case pods.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityAdditionalPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * NodeAffinity describes node affinity scheduling rules for the pod. More info: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
+         */
+        export interface ClusterSpecAffinityNodeAffinity {
+            /**
+             * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node matches the corresponding matchExpressions; the node(s) with the highest sum are the most preferred.
+             */
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.ClusterSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
+            /**
+             * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
+             */
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.ClusterSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution;
+        }
+
+        /**
+         * An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
+         */
+        export interface ClusterSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * A node selector term, associated with the corresponding weight.
+             */
+            preference: outputs.postgresql.v1.ClusterSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference;
+            /**
+             * Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
+             */
+            weight: number;
+        }
+
+        /**
+         * A node selector term, associated with the corresponding weight.
+         */
+        export interface ClusterSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference {
+            /**
+             * A list of node selector requirements by node's labels.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions[];
+            /**
+             * A list of node selector requirements by node's fields.
+             */
+            matchFields?: outputs.postgresql.v1.ClusterSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields[];
+        }
+
+        /**
+         * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions {
+            /**
+             * The label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+             */
+            operator: string;
+            /**
+             * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields {
+            /**
+             * The label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+             */
+            operator: string;
+            /**
+             * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
+         */
+        export interface ClusterSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * Required. A list of node selector terms. The terms are ORed.
+             */
+            nodeSelectorTerms: outputs.postgresql.v1.ClusterSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms[];
+        }
+
+        /**
+         * A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
+         */
+        export interface ClusterSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms {
+            /**
+             * A list of node selector requirements by node's labels.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions[];
+            /**
+             * A list of node selector requirements by node's fields.
+             */
+            matchFields?: outputs.postgresql.v1.ClusterSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields[];
+        }
+
+        /**
+         * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions {
+            /**
+             * The label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+             */
+            operator: string;
+            /**
+             * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields {
+            /**
+             * The label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+             */
+            operator: string;
+            /**
+             * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
+         */
+        export interface ClusterSpecAffinityTolerations {
+            /**
+             * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+             */
+            effect?: string;
+            /**
+             * Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+             */
+            key?: string;
+            /**
+             * Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
+             */
+            operator?: string;
+            /**
+             * TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
+             */
+            tolerationSeconds?: number;
+            /**
+             * Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
+             */
+            value?: string;
+        }
+
+        /**
+         * The configuration to be used for backups
+         */
+        export interface ClusterSpecBackup {
+            /**
+             * The configuration for the barman-cloud tool suite
+             */
+            barmanObjectStore?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStore;
+            /**
+             * RetentionPolicy is the retention policy to be used for backups and WALs (i.e. '60d'). The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months.
+             */
+            retentionPolicy?: string;
+            /**
+             * The policy to decide which instance should perform backups. Available options are empty string, which will default to `prefer-standby` policy, `primary` to have backups run always on primary instances, `prefer-standby` to have backups run preferably on the most updated standby, if available.
+             */
+            target?: string;
+        }
+        /**
+         * clusterSpecBackupProvideDefaults sets the appropriate defaults for ClusterSpecBackup
+         */
+        export function clusterSpecBackupProvideDefaults(val: ClusterSpecBackup): ClusterSpecBackup {
+            return {
+                ...val,
+                target: (val.target) ?? "prefer-standby",
+            };
+        }
+
+        /**
+         * The configuration for the barman-cloud tool suite
+         */
+        export interface ClusterSpecBackupBarmanObjectStore {
+            /**
+             * The credentials to use to upload data to Azure Blob Storage
+             */
+            azureCredentials?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreAzureCredentials;
+            /**
+             * The configuration to be used to backup the data files When not defined, base backups files will be stored uncompressed and may be unencrypted in the object store, according to the bucket default policy.
+             */
+            data?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreData;
+            /**
+             * The path where to store the backup (i.e. s3://bucket/path/to/folder) this path, with different destination folders, will be used for WALs and for data
+             */
+            destinationPath: string;
+            /**
+             * EndpointCA store the CA bundle of the barman endpoint. Useful when using self-signed certificates to avoid errors with certificate issuer and barman-cloud-wal-archive
+             */
+            endpointCA?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreEndpointCA;
+            /**
+             * Endpoint to be used to upload data to the cloud, overriding the automatic endpoint discovery
+             */
+            endpointURL?: string;
+            /**
+             * The credentials to use to upload data to Google Cloud Storage
+             */
+            googleCredentials?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreGoogleCredentials;
+            /**
+             * HistoryTags is a list of key value pairs that will be passed to the Barman --history-tags option.
+             */
+            historyTags?: {[key: string]: string};
+            /**
+             * The credentials to use to upload data to S3
+             */
+            s3Credentials?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreS3Credentials;
+            /**
+             * The server name on S3, the cluster name is used if this parameter is omitted
+             */
+            serverName?: string;
+            /**
+             * Tags is a list of key value pairs that will be passed to the Barman --tags option.
+             */
+            tags?: {[key: string]: string};
+            /**
+             * The configuration for the backup of the WAL stream. When not defined, WAL files will be stored uncompressed and may be unencrypted in the object store, according to the bucket default policy.
+             */
+            wal?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreWal;
+        }
+
+        /**
+         * The credentials to use to upload data to Azure Blob Storage
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreAzureCredentials {
+            /**
+             * The connection string to be used
+             */
+            connectionString?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreAzureCredentialsConnectionString;
+            /**
+             * Use the Azure AD based authentication without providing explicitly the keys.
+             */
+            inheritFromAzureAD?: boolean;
+            /**
+             * The storage account where to upload data
+             */
+            storageAccount?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreAzureCredentialsStorageAccount;
+            /**
+             * The storage account key to be used in conjunction with the storage account name
+             */
+            storageKey?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreAzureCredentialsStorageKey;
+            /**
+             * A shared-access-signature to be used in conjunction with the storage account name
+             */
+            storageSasToken?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreAzureCredentialsStorageSasToken;
+        }
+
+        /**
+         * The connection string to be used
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreAzureCredentialsConnectionString {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The storage account where to upload data
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreAzureCredentialsStorageAccount {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The storage account key to be used in conjunction with the storage account name
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreAzureCredentialsStorageKey {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * A shared-access-signature to be used in conjunction with the storage account name
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreAzureCredentialsStorageSasToken {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The configuration to be used to backup the data files When not defined, base backups files will be stored uncompressed and may be unencrypted in the object store, according to the bucket default policy.
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreData {
+            /**
+             * Compress a backup file (a tar file per tablespace) while streaming it to the object store. Available options are empty string (no compression, default), `gzip`, `bzip2` or `snappy`.
+             */
+            compression?: string;
+            /**
+             * Whenever to force the encryption of files (if the bucket is not already configured for that). Allowed options are empty string (use the bucket policy, default), `AES256` and `aws:kms`
+             */
+            encryption?: string;
+            /**
+             * Control whether the I/O workload for the backup initial checkpoint will be limited, according to the `checkpoint_completion_target` setting on the PostgreSQL server. If set to true, an immediate checkpoint will be used, meaning PostgreSQL will complete the checkpoint as soon as possible. `false` by default.
+             */
+            immediateCheckpoint?: boolean;
+            /**
+             * The number of parallel jobs to be used to upload the backup, defaults to 2
+             */
+            jobs?: number;
+        }
+
+        /**
+         * EndpointCA store the CA bundle of the barman endpoint. Useful when using self-signed certificates to avoid errors with certificate issuer and barman-cloud-wal-archive
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreEndpointCA {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The credentials to use to upload data to Google Cloud Storage
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreGoogleCredentials {
+            /**
+             * The secret containing the Google Cloud Storage JSON file with the credentials
+             */
+            applicationCredentials?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreGoogleCredentialsApplicationCredentials;
+            /**
+             * If set to true, will presume that it's running inside a GKE environment, default to false.
+             */
+            gkeEnvironment?: boolean;
+        }
+
+        /**
+         * The secret containing the Google Cloud Storage JSON file with the credentials
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreGoogleCredentialsApplicationCredentials {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The credentials to use to upload data to S3
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreS3Credentials {
+            /**
+             * The reference to the access key id
+             */
+            accessKeyId?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreS3CredentialsAccessKeyId;
+            /**
+             * Use the role based authentication without providing explicitly the keys.
+             */
+            inheritFromIAMRole?: boolean;
+            /**
+             * The reference to the secret containing the region name
+             */
+            region?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreS3CredentialsRegion;
+            /**
+             * The reference to the secret access key
+             */
+            secretAccessKey?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreS3CredentialsSecretAccessKey;
+            /**
+             * The references to the session key
+             */
+            sessionToken?: outputs.postgresql.v1.ClusterSpecBackupBarmanObjectStoreS3CredentialsSessionToken;
+        }
+
+        /**
+         * The reference to the access key id
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreS3CredentialsAccessKeyId {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the secret containing the region name
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreS3CredentialsRegion {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the secret access key
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreS3CredentialsSecretAccessKey {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The references to the session key
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreS3CredentialsSessionToken {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The configuration for the backup of the WAL stream. When not defined, WAL files will be stored uncompressed and may be unencrypted in the object store, according to the bucket default policy.
+         */
+        export interface ClusterSpecBackupBarmanObjectStoreWal {
+            /**
+             * Compress a WAL file before sending it to the object store. Available options are empty string (no compression, default), `gzip`, `bzip2` or `snappy`.
+             */
+            compression?: string;
+            /**
+             * Whenever to force the encryption of files (if the bucket is not already configured for that). Allowed options are empty string (use the bucket policy, default), `AES256` and `aws:kms`
+             */
+            encryption?: string;
+            /**
+             * Number of WAL files to be either archived in parallel (when the PostgreSQL instance is archiving to a backup object store) or restored in parallel (when a PostgreSQL standby is fetching WAL files from a recovery object store). If not specified, WAL files will be processed one at a time. It accepts a positive integer as a value - with 1 being the minimum accepted value.
+             */
+            maxParallel?: number;
+        }
+
+        /**
+         * Instructions to bootstrap this cluster
+         */
+        export interface ClusterSpecBootstrap {
+            /**
+             * Bootstrap the cluster via initdb
+             */
+            initdb?: outputs.postgresql.v1.ClusterSpecBootstrapInitdb;
+            /**
+             * Bootstrap the cluster taking a physical backup of another compatible PostgreSQL instance
+             */
+            pg_basebackup?: outputs.postgresql.v1.ClusterSpecBootstrapPgBasebackup;
+            /**
+             * Bootstrap the cluster from a backup
+             */
+            recovery?: outputs.postgresql.v1.ClusterSpecBootstrapRecovery;
+        }
+        /**
+         * clusterSpecBootstrapProvideDefaults sets the appropriate defaults for ClusterSpecBootstrap
+         */
+        export function clusterSpecBootstrapProvideDefaults(val: ClusterSpecBootstrap): ClusterSpecBootstrap {
+            return {
+                ...val,
+                initdb: (val.initdb ? outputs.postgresql.v1.clusterSpecBootstrapInitdbProvideDefaults(val.initdb) : undefined),
+            };
+        }
+
+        /**
+         * Bootstrap the cluster via initdb
+         */
+        export interface ClusterSpecBootstrapInitdb {
+            /**
+             * Whether the `-k` option should be passed to initdb, enabling checksums on data pages (default: `false`)
+             */
+            dataChecksums?: boolean;
+            /**
+             * Name of the database used by the application. Default: `app`.
+             */
+            database?: string;
+            /**
+             * The value to be passed as option `--encoding` for initdb (default:`UTF8`)
+             */
+            encoding?: string;
+            /**
+             * Bootstraps the new cluster by importing data from an existing PostgreSQL instance using logical backup (`pg_dump` and `pg_restore`)
+             */
+            import?: outputs.postgresql.v1.ClusterSpecBootstrapInitdbImport;
+            /**
+             * The value to be passed as option `--lc-ctype` for initdb (default:`C`)
+             */
+            localeCType?: string;
+            /**
+             * The value to be passed as option `--lc-collate` for initdb (default:`C`)
+             */
+            localeCollate?: string;
+            /**
+             * The list of options that must be passed to initdb when creating the cluster. Deprecated: This could lead to inconsistent configurations, please use the explicit provided parameters instead. If defined, explicit values will be ignored.
+             */
+            options?: string[];
+            /**
+             * Name of the owner of the database in the instance to be used by applications. Defaults to the value of the `database` key.
+             */
+            owner?: string;
+            /**
+             * List of SQL queries to be executed as a superuser in the application database right after is created - to be used with extreme care (by default empty)
+             */
+            postInitApplicationSQL?: string[];
+            /**
+             * PostInitApplicationSQLRefs points references to ConfigMaps or Secrets which contain SQL files, the general implementation order to these references is from all Secrets to all ConfigMaps, and inside Secrets or ConfigMaps, the implementation order is same as the order of each array (by default empty)
+             */
+            postInitApplicationSQLRefs?: outputs.postgresql.v1.ClusterSpecBootstrapInitdbPostInitApplicationSQLRefs;
+            /**
+             * List of SQL queries to be executed as a superuser immediately after the cluster has been created - to be used with extreme care (by default empty)
+             */
+            postInitSQL?: string[];
+            /**
+             * List of SQL queries to be executed as a superuser in the `template1` after the cluster has been created - to be used with extreme care (by default empty)
+             */
+            postInitTemplateSQL?: string[];
+            /**
+             * Name of the secret containing the initial credentials for the owner of the user database. If empty a new secret will be created from scratch
+             */
+            secret?: outputs.postgresql.v1.ClusterSpecBootstrapInitdbSecret;
+            /**
+             * The value in megabytes (1 to 1024) to be passed to the `--wal-segsize` option for initdb (default: empty, resulting in PostgreSQL default: 16MB)
+             */
+            walSegmentSize?: number;
+        }
+        /**
+         * clusterSpecBootstrapInitdbProvideDefaults sets the appropriate defaults for ClusterSpecBootstrapInitdb
+         */
+        export function clusterSpecBootstrapInitdbProvideDefaults(val: ClusterSpecBootstrapInitdb): ClusterSpecBootstrapInitdb {
+            return {
+                ...val,
+                import: (val.import ? outputs.postgresql.v1.clusterSpecBootstrapInitdbImportProvideDefaults(val.import) : undefined),
+            };
+        }
+
+        /**
+         * Bootstraps the new cluster by importing data from an existing PostgreSQL instance using logical backup (`pg_dump` and `pg_restore`)
+         */
+        export interface ClusterSpecBootstrapInitdbImport {
+            /**
+             * The databases to import
+             */
+            databases: string[];
+            /**
+             * List of SQL queries to be executed as a superuser in the application database right after is imported - to be used with extreme care (by default empty). Only available in microservice type.
+             */
+            postImportApplicationSQL?: string[];
+            /**
+             * The roles to import
+             */
+            roles?: string[];
+            /**
+             * When set to true, only the `pre-data` and `post-data` sections of `pg_restore` are invoked, avoiding data import. Default: `false`.
+             */
+            schemaOnly?: boolean;
+            /**
+             * The source of the import
+             */
+            source: outputs.postgresql.v1.ClusterSpecBootstrapInitdbImportSource;
+            /**
+             * The import type. Can be `microservice` or `monolith`.
+             */
+            type: string;
+        }
+        /**
+         * clusterSpecBootstrapInitdbImportProvideDefaults sets the appropriate defaults for ClusterSpecBootstrapInitdbImport
+         */
+        export function clusterSpecBootstrapInitdbImportProvideDefaults(val: ClusterSpecBootstrapInitdbImport): ClusterSpecBootstrapInitdbImport {
+            return {
+                ...val,
+                schemaOnly: (val.schemaOnly) ?? false,
+            };
+        }
+
+        /**
+         * The source of the import
+         */
+        export interface ClusterSpecBootstrapInitdbImportSource {
+            /**
+             * The name of the externalCluster used for import
+             */
+            externalCluster: string;
+        }
+
+        /**
+         * PostInitApplicationSQLRefs points references to ConfigMaps or Secrets which contain SQL files, the general implementation order to these references is from all Secrets to all ConfigMaps, and inside Secrets or ConfigMaps, the implementation order is same as the order of each array (by default empty)
+         */
+        export interface ClusterSpecBootstrapInitdbPostInitApplicationSQLRefs {
+            /**
+             * ConfigMapRefs holds a list of references to ConfigMaps
+             */
+            configMapRefs?: outputs.postgresql.v1.ClusterSpecBootstrapInitdbPostInitApplicationSQLRefsConfigMapRefs[];
+            /**
+             * SecretRefs holds a list of references to Secrets
+             */
+            secretRefs?: outputs.postgresql.v1.ClusterSpecBootstrapInitdbPostInitApplicationSQLRefsSecretRefs[];
+        }
+
+        /**
+         * ConfigMapKeySelector contains enough information to let you locate the key of a ConfigMap
+         */
+        export interface ClusterSpecBootstrapInitdbPostInitApplicationSQLRefsConfigMapRefs {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * SecretKeySelector contains enough information to let you locate the key of a Secret
+         */
+        export interface ClusterSpecBootstrapInitdbPostInitApplicationSQLRefsSecretRefs {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * Name of the secret containing the initial credentials for the owner of the user database. If empty a new secret will be created from scratch
+         */
+        export interface ClusterSpecBootstrapInitdbSecret {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * Bootstrap the cluster taking a physical backup of another compatible PostgreSQL instance
+         */
+        export interface ClusterSpecBootstrapPgBasebackup {
+            /**
+             * Name of the database used by the application. Default: `app`.
+             */
+            database?: string;
+            /**
+             * Name of the owner of the database in the instance to be used by applications. Defaults to the value of the `database` key.
+             */
+            owner?: string;
+            /**
+             * Name of the secret containing the initial credentials for the owner of the user database. If empty a new secret will be created from scratch
+             */
+            secret?: outputs.postgresql.v1.ClusterSpecBootstrapPgBasebackupSecret;
+            /**
+             * The name of the server of which we need to take a physical backup
+             */
+            source: string;
+        }
+
+        /**
+         * Name of the secret containing the initial credentials for the owner of the user database. If empty a new secret will be created from scratch
+         */
+        export interface ClusterSpecBootstrapPgBasebackupSecret {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * Bootstrap the cluster from a backup
+         */
+        export interface ClusterSpecBootstrapRecovery {
+            /**
+             * The backup object containing the physical base backup from which to initiate the recovery procedure. Mutually exclusive with `source` and `volumeSnapshots`.
+             */
+            backup?: outputs.postgresql.v1.ClusterSpecBootstrapRecoveryBackup;
+            /**
+             * Name of the database used by the application. Default: `app`.
+             */
+            database?: string;
+            /**
+             * Name of the owner of the database in the instance to be used by applications. Defaults to the value of the `database` key.
+             */
+            owner?: string;
+            /**
+             * By default, the recovery process applies all the available WAL files in the archive (full recovery). However, you can also end the recovery as soon as a consistent state is reached or recover to a point-in-time (PITR) by specifying a `RecoveryTarget` object, as expected by PostgreSQL (i.e., timestamp, transaction Id, LSN, ...). More info: https://www.postgresql.org/docs/current/runtime-config-wal.html#RUNTIME-CONFIG-WAL-RECOVERY-TARGET
+             */
+            recoveryTarget?: outputs.postgresql.v1.ClusterSpecBootstrapRecoveryRecoveryTarget;
+            /**
+             * Name of the secret containing the initial credentials for the owner of the user database. If empty a new secret will be created from scratch
+             */
+            secret?: outputs.postgresql.v1.ClusterSpecBootstrapRecoverySecret;
+            /**
+             * The external cluster whose backup we will restore. This is also used as the name of the folder under which the backup is stored, so it must be set to the name of the source cluster Mutually exclusive with `backup` and `volumeSnapshots`.
+             */
+            source?: string;
+            /**
+             * The static PVC data source(s) from which to initiate the recovery procedure. Currently supporting `VolumeSnapshot` and `PersistentVolumeClaim` resources that map an existing PVC group, compatible with CloudNativePG, and taken with a cold backup copy on a fenced Postgres instance (limitation which will be removed in the future when online backup will be implemented). Mutually exclusive with `backup` and `source`.
+             */
+            volumeSnapshots?: outputs.postgresql.v1.ClusterSpecBootstrapRecoveryVolumeSnapshots;
+        }
+
+        /**
+         * The backup object containing the physical base backup from which to initiate the recovery procedure. Mutually exclusive with `source` and `volumeSnapshots`.
+         */
+        export interface ClusterSpecBootstrapRecoveryBackup {
+            /**
+             * EndpointCA store the CA bundle of the barman endpoint. Useful when using self-signed certificates to avoid errors with certificate issuer and barman-cloud-wal-archive.
+             */
+            endpointCA?: outputs.postgresql.v1.ClusterSpecBootstrapRecoveryBackupEndpointCA;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * EndpointCA store the CA bundle of the barman endpoint. Useful when using self-signed certificates to avoid errors with certificate issuer and barman-cloud-wal-archive.
+         */
+        export interface ClusterSpecBootstrapRecoveryBackupEndpointCA {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * By default, the recovery process applies all the available WAL files in the archive (full recovery). However, you can also end the recovery as soon as a consistent state is reached or recover to a point-in-time (PITR) by specifying a `RecoveryTarget` object, as expected by PostgreSQL (i.e., timestamp, transaction Id, LSN, ...). More info: https://www.postgresql.org/docs/current/runtime-config-wal.html#RUNTIME-CONFIG-WAL-RECOVERY-TARGET
+         */
+        export interface ClusterSpecBootstrapRecoveryRecoveryTarget {
+            /**
+             * The ID of the backup from which to start the recovery process. If empty (default) the operator will automatically detect the backup based on targetTime or targetLSN if specified. Otherwise use the latest available backup in chronological order.
+             */
+            backupID?: string;
+            /**
+             * Set the target to be exclusive. If omitted, defaults to false, so that in Postgres, `recovery_target_inclusive` will be true
+             */
+            exclusive?: boolean;
+            /**
+             * End recovery as soon as a consistent state is reached
+             */
+            targetImmediate?: boolean;
+            /**
+             * The target LSN (Log Sequence Number)
+             */
+            targetLSN?: string;
+            /**
+             * The target name (to be previously created with `pg_create_restore_point`)
+             */
+            targetName?: string;
+            /**
+             * The target timeline ("latest" or a positive integer)
+             */
+            targetTLI?: string;
+            /**
+             * The target time as a timestamp in the RFC3339 standard
+             */
+            targetTime?: string;
+            /**
+             * The target transaction ID
+             */
+            targetXID?: string;
+        }
+
+        /**
+         * Name of the secret containing the initial credentials for the owner of the user database. If empty a new secret will be created from scratch
+         */
+        export interface ClusterSpecBootstrapRecoverySecret {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The static PVC data source(s) from which to initiate the recovery procedure. Currently supporting `VolumeSnapshot` and `PersistentVolumeClaim` resources that map an existing PVC group, compatible with CloudNativePG, and taken with a cold backup copy on a fenced Postgres instance (limitation which will be removed in the future when online backup will be implemented). Mutually exclusive with `backup` and `source`.
+         */
+        export interface ClusterSpecBootstrapRecoveryVolumeSnapshots {
+            /**
+             * Configuration of the storage of the instances
+             */
+            storage: outputs.postgresql.v1.ClusterSpecBootstrapRecoveryVolumeSnapshotsStorage;
+            /**
+             * Configuration of the storage for PostgreSQL WAL (Write-Ahead Log)
+             */
+            walStorage?: outputs.postgresql.v1.ClusterSpecBootstrapRecoveryVolumeSnapshotsWalStorage;
+        }
+
+        /**
+         * Configuration of the storage of the instances
+         */
+        export interface ClusterSpecBootstrapRecoveryVolumeSnapshotsStorage {
+            /**
+             * APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.
+             */
+            apiGroup?: string;
+            /**
+             * Kind is the type of resource being referenced
+             */
+            kind: string;
+            /**
+             * Name is the name of resource being referenced
+             */
+            name: string;
+        }
+
+        /**
+         * Configuration of the storage for PostgreSQL WAL (Write-Ahead Log)
+         */
+        export interface ClusterSpecBootstrapRecoveryVolumeSnapshotsWalStorage {
+            /**
+             * APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.
+             */
+            apiGroup?: string;
+            /**
+             * Kind is the type of resource being referenced
+             */
+            kind: string;
+            /**
+             * Name is the name of resource being referenced
+             */
+            name: string;
+        }
+
+        /**
+         * The configuration for the CA and related certificates
+         */
+        export interface ClusterSpecCertificates {
+            /**
+             * The secret containing the Client CA certificate. If not defined, a new secret will be created with a self-signed CA and will be used to generate all the client certificates.<br /> <br /> Contains:<br /> <br /> - `ca.crt`: CA that should be used to validate the client certificates, used as `ssl_ca_file` of all the instances.<br /> - `ca.key`: key used to generate client certificates, if ReplicationTLSSecret is provided, this can be omitted.<br />
+             */
+            clientCASecret?: string;
+            /**
+             * The secret of type kubernetes.io/tls containing the client certificate to authenticate as the `streaming_replica` user. If not defined, ClientCASecret must provide also `ca.key`, and a new secret will be created using the provided CA.
+             */
+            replicationTLSSecret?: string;
+            /**
+             * The list of the server alternative DNS names to be added to the generated server TLS certificates, when required.
+             */
+            serverAltDNSNames?: string[];
+            /**
+             * The secret containing the Server CA certificate. If not defined, a new secret will be created with a self-signed CA and will be used to generate the TLS certificate ServerTLSSecret.<br /> <br /> Contains:<br /> <br /> - `ca.crt`: CA that should be used to validate the server certificate, used as `sslrootcert` in client connection strings.<br /> - `ca.key`: key used to generate Server SSL certs, if ServerTLSSecret is provided, this can be omitted.<br />
+             */
+            serverCASecret?: string;
+            /**
+             * The secret of type kubernetes.io/tls containing the server TLS certificate and key that will be set as `ssl_cert_file` and `ssl_key_file` so that clients can connect to postgres securely. If not defined, ServerCASecret must provide also `ca.key` and a new secret will be created using the provided CA.
+             */
+            serverTLSSecret?: string;
+        }
+
+        /**
+         * EnvVar represents an environment variable present in a Container.
+         */
+        export interface ClusterSpecEnv {
+            /**
+             * Name of the environment variable. Must be a C_IDENTIFIER.
+             */
+            name: string;
+            /**
+             * Variable references $(VAR_NAME) are expanded using the previously defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".
+             */
+            value?: string;
+            /**
+             * Source for the environment variable's value. Cannot be used if value is not empty.
+             */
+            valueFrom?: outputs.postgresql.v1.ClusterSpecEnvValueFrom;
+        }
+
+        /**
+         * EnvFromSource represents the source of a set of ConfigMaps
+         */
+        export interface ClusterSpecEnvFrom {
+            /**
+             * The ConfigMap to select from
+             */
+            configMapRef?: outputs.postgresql.v1.ClusterSpecEnvFromConfigMapRef;
+            /**
+             * An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+             */
+            prefix?: string;
+            /**
+             * The Secret to select from
+             */
+            secretRef?: outputs.postgresql.v1.ClusterSpecEnvFromSecretRef;
+        }
+
+        /**
+         * The ConfigMap to select from
+         */
+        export interface ClusterSpecEnvFromConfigMapRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the ConfigMap must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * The Secret to select from
+         */
+        export interface ClusterSpecEnvFromSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Source for the environment variable's value. Cannot be used if value is not empty.
+         */
+        export interface ClusterSpecEnvValueFrom {
+            /**
+             * Selects a key of a ConfigMap.
+             */
+            configMapKeyRef?: outputs.postgresql.v1.ClusterSpecEnvValueFromConfigMapKeyRef;
+            /**
+             * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+             */
+            fieldRef?: outputs.postgresql.v1.ClusterSpecEnvValueFromFieldRef;
+            /**
+             * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+             */
+            resourceFieldRef?: outputs.postgresql.v1.ClusterSpecEnvValueFromResourceFieldRef;
+            /**
+             * Selects a key of a secret in the pod's namespace
+             */
+            secretKeyRef?: outputs.postgresql.v1.ClusterSpecEnvValueFromSecretKeyRef;
+        }
+
+        /**
+         * Selects a key of a ConfigMap.
+         */
+        export interface ClusterSpecEnvValueFromConfigMapKeyRef {
+            /**
+             * The key to select.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the ConfigMap or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+         */
+        export interface ClusterSpecEnvValueFromFieldRef {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion?: string;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath: string;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+         */
+        export interface ClusterSpecEnvValueFromResourceFieldRef {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName?: string;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor?: number | string;
+            /**
+             * Required: resource to select
+             */
+            resource: string;
+        }
+
+        /**
+         * Selects a key of a secret in the pod's namespace
+         */
+        export interface ClusterSpecEnvValueFromSecretKeyRef {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * ExternalCluster represents the connection parameters to an external cluster which is used in the other sections of the configuration
+         */
+        export interface ClusterSpecExternalClusters {
+            /**
+             * The configuration for the barman-cloud tool suite
+             */
+            barmanObjectStore?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStore;
+            /**
+             * The list of connection parameters, such as dbname, host, username, etc
+             */
+            connectionParameters?: {[key: string]: string};
+            /**
+             * The server name, required
+             */
+            name: string;
+            /**
+             * The reference to the password to be used to connect to the server
+             */
+            password?: outputs.postgresql.v1.ClusterSpecExternalClustersPassword;
+            /**
+             * The reference to an SSL certificate to be used to connect to this instance
+             */
+            sslCert?: outputs.postgresql.v1.ClusterSpecExternalClustersSslCert;
+            /**
+             * The reference to an SSL private key to be used to connect to this instance
+             */
+            sslKey?: outputs.postgresql.v1.ClusterSpecExternalClustersSslKey;
+            /**
+             * The reference to an SSL CA public key to be used to connect to this instance
+             */
+            sslRootCert?: outputs.postgresql.v1.ClusterSpecExternalClustersSslRootCert;
+        }
+
+        /**
+         * The configuration for the barman-cloud tool suite
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStore {
+            /**
+             * The credentials to use to upload data to Azure Blob Storage
+             */
+            azureCredentials?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreAzureCredentials;
+            /**
+             * The configuration to be used to backup the data files When not defined, base backups files will be stored uncompressed and may be unencrypted in the object store, according to the bucket default policy.
+             */
+            data?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreData;
+            /**
+             * The path where to store the backup (i.e. s3://bucket/path/to/folder) this path, with different destination folders, will be used for WALs and for data
+             */
+            destinationPath: string;
+            /**
+             * EndpointCA store the CA bundle of the barman endpoint. Useful when using self-signed certificates to avoid errors with certificate issuer and barman-cloud-wal-archive
+             */
+            endpointCA?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreEndpointCA;
+            /**
+             * Endpoint to be used to upload data to the cloud, overriding the automatic endpoint discovery
+             */
+            endpointURL?: string;
+            /**
+             * The credentials to use to upload data to Google Cloud Storage
+             */
+            googleCredentials?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreGoogleCredentials;
+            /**
+             * HistoryTags is a list of key value pairs that will be passed to the Barman --history-tags option.
+             */
+            historyTags?: {[key: string]: string};
+            /**
+             * The credentials to use to upload data to S3
+             */
+            s3Credentials?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreS3Credentials;
+            /**
+             * The server name on S3, the cluster name is used if this parameter is omitted
+             */
+            serverName?: string;
+            /**
+             * Tags is a list of key value pairs that will be passed to the Barman --tags option.
+             */
+            tags?: {[key: string]: string};
+            /**
+             * The configuration for the backup of the WAL stream. When not defined, WAL files will be stored uncompressed and may be unencrypted in the object store, according to the bucket default policy.
+             */
+            wal?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreWal;
+        }
+
+        /**
+         * The credentials to use to upload data to Azure Blob Storage
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreAzureCredentials {
+            /**
+             * The connection string to be used
+             */
+            connectionString?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreAzureCredentialsConnectionString;
+            /**
+             * Use the Azure AD based authentication without providing explicitly the keys.
+             */
+            inheritFromAzureAD?: boolean;
+            /**
+             * The storage account where to upload data
+             */
+            storageAccount?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreAzureCredentialsStorageAccount;
+            /**
+             * The storage account key to be used in conjunction with the storage account name
+             */
+            storageKey?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreAzureCredentialsStorageKey;
+            /**
+             * A shared-access-signature to be used in conjunction with the storage account name
+             */
+            storageSasToken?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreAzureCredentialsStorageSasToken;
+        }
+
+        /**
+         * The connection string to be used
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreAzureCredentialsConnectionString {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The storage account where to upload data
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreAzureCredentialsStorageAccount {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The storage account key to be used in conjunction with the storage account name
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreAzureCredentialsStorageKey {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * A shared-access-signature to be used in conjunction with the storage account name
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreAzureCredentialsStorageSasToken {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The configuration to be used to backup the data files When not defined, base backups files will be stored uncompressed and may be unencrypted in the object store, according to the bucket default policy.
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreData {
+            /**
+             * Compress a backup file (a tar file per tablespace) while streaming it to the object store. Available options are empty string (no compression, default), `gzip`, `bzip2` or `snappy`.
+             */
+            compression?: string;
+            /**
+             * Whenever to force the encryption of files (if the bucket is not already configured for that). Allowed options are empty string (use the bucket policy, default), `AES256` and `aws:kms`
+             */
+            encryption?: string;
+            /**
+             * Control whether the I/O workload for the backup initial checkpoint will be limited, according to the `checkpoint_completion_target` setting on the PostgreSQL server. If set to true, an immediate checkpoint will be used, meaning PostgreSQL will complete the checkpoint as soon as possible. `false` by default.
+             */
+            immediateCheckpoint?: boolean;
+            /**
+             * The number of parallel jobs to be used to upload the backup, defaults to 2
+             */
+            jobs?: number;
+        }
+
+        /**
+         * EndpointCA store the CA bundle of the barman endpoint. Useful when using self-signed certificates to avoid errors with certificate issuer and barman-cloud-wal-archive
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreEndpointCA {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The credentials to use to upload data to Google Cloud Storage
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreGoogleCredentials {
+            /**
+             * The secret containing the Google Cloud Storage JSON file with the credentials
+             */
+            applicationCredentials?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreGoogleCredentialsApplicationCredentials;
+            /**
+             * If set to true, will presume that it's running inside a GKE environment, default to false.
+             */
+            gkeEnvironment?: boolean;
+        }
+
+        /**
+         * The secret containing the Google Cloud Storage JSON file with the credentials
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreGoogleCredentialsApplicationCredentials {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The credentials to use to upload data to S3
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreS3Credentials {
+            /**
+             * The reference to the access key id
+             */
+            accessKeyId?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreS3CredentialsAccessKeyId;
+            /**
+             * Use the role based authentication without providing explicitly the keys.
+             */
+            inheritFromIAMRole?: boolean;
+            /**
+             * The reference to the secret containing the region name
+             */
+            region?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreS3CredentialsRegion;
+            /**
+             * The reference to the secret access key
+             */
+            secretAccessKey?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreS3CredentialsSecretAccessKey;
+            /**
+             * The references to the session key
+             */
+            sessionToken?: outputs.postgresql.v1.ClusterSpecExternalClustersBarmanObjectStoreS3CredentialsSessionToken;
+        }
+
+        /**
+         * The reference to the access key id
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreS3CredentialsAccessKeyId {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the secret containing the region name
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreS3CredentialsRegion {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the secret access key
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreS3CredentialsSecretAccessKey {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The references to the session key
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreS3CredentialsSessionToken {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The configuration for the backup of the WAL stream. When not defined, WAL files will be stored uncompressed and may be unencrypted in the object store, according to the bucket default policy.
+         */
+        export interface ClusterSpecExternalClustersBarmanObjectStoreWal {
+            /**
+             * Compress a WAL file before sending it to the object store. Available options are empty string (no compression, default), `gzip`, `bzip2` or `snappy`.
+             */
+            compression?: string;
+            /**
+             * Whenever to force the encryption of files (if the bucket is not already configured for that). Allowed options are empty string (use the bucket policy, default), `AES256` and `aws:kms`
+             */
+            encryption?: string;
+            /**
+             * Number of WAL files to be either archived in parallel (when the PostgreSQL instance is archiving to a backup object store) or restored in parallel (when a PostgreSQL standby is fetching WAL files from a recovery object store). If not specified, WAL files will be processed one at a time. It accepts a positive integer as a value - with 1 being the minimum accepted value.
+             */
+            maxParallel?: number;
+        }
+
+        /**
+         * The reference to the password to be used to connect to the server
+         */
+        export interface ClusterSpecExternalClustersPassword {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * The reference to an SSL certificate to be used to connect to this instance
+         */
+        export interface ClusterSpecExternalClustersSslCert {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * The reference to an SSL private key to be used to connect to this instance
+         */
+        export interface ClusterSpecExternalClustersSslKey {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * The reference to an SSL CA public key to be used to connect to this instance
+         */
+        export interface ClusterSpecExternalClustersSslRootCert {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * LocalObjectReference contains enough information to let you locate a local object with a known type inside the same namespace
+         */
+        export interface ClusterSpecImagePullSecrets {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * Metadata that will be inherited by all objects related to the Cluster
+         */
+        export interface ClusterSpecInheritedMetadata {
+            annotations?: {[key: string]: string};
+            labels?: {[key: string]: string};
+        }
+
+        /**
+         * The configuration that is used by the portions of PostgreSQL that are managed by the instance manager
+         */
+        export interface ClusterSpecManaged {
+            /**
+             * Database roles managed by the `Cluster`
+             */
+            roles?: outputs.postgresql.v1.ClusterSpecManagedRoles[];
+        }
+
+        /**
+         * RoleConfiguration is the representation, in Kubernetes, of a PostgreSQL role with the additional field Ensure specifying whether to ensure the presence or absence of the role in the database 
+         *  The defaults of the CREATE ROLE command are applied Reference: https://www.postgresql.org/docs/current/sql-createrole.html
+         */
+        export interface ClusterSpecManagedRoles {
+            /**
+             * Whether a role bypasses every row-level security (RLS) policy. Default is `false`.
+             */
+            bypassrls?: boolean;
+            /**
+             * Description of the role
+             */
+            comment?: string;
+            /**
+             * If the role can log in, this specifies how many concurrent connections the role can make. `-1` (the default) means no limit.
+             */
+            connectionLimit?: number;
+            /**
+             * When set to `true`, the role being defined will be allowed to create new databases. Specifying `false` (default) will deny a role the ability to create databases.
+             */
+            createdb?: boolean;
+            /**
+             * Whether the role will be permitted to create, alter, drop, comment on, change the security label for, and grant or revoke membership in other roles. Default is `false`.
+             */
+            createrole?: boolean;
+            /**
+             * DisablePassword indicates that a role's password should be set to NULL in Postgres
+             */
+            disablePassword?: boolean;
+            /**
+             * Ensure the role is `present` or `absent` - defaults to "present"
+             */
+            ensure?: string;
+            /**
+             * List of one or more existing roles to which this role will be immediately added as a new member. Default empty.
+             */
+            inRoles?: string[];
+            /**
+             * Whether a role "inherits" the privileges of roles it is a member of. Defaults is `true`.
+             */
+            inherit?: boolean;
+            /**
+             * Whether the role is allowed to log in. A role having the `login` attribute can be thought of as a user. Roles without this attribute are useful for managing database privileges, but are not users in the usual sense of the word. Default is `false`.
+             */
+            login?: boolean;
+            /**
+             * Name of the role
+             */
+            name: string;
+            /**
+             * Secret containing the password of the role (if present) If null, the password will be ignored unless DisablePassword is set
+             */
+            passwordSecret?: outputs.postgresql.v1.ClusterSpecManagedRolesPasswordSecret;
+            /**
+             * Whether a role is a replication role. A role must have this attribute (or be a superuser) in order to be able to connect to the server in replication mode (physical or logical replication) and in order to be able to create or drop replication slots. A role having the `replication` attribute is a very highly privileged role, and should only be used on roles actually used for replication. Default is `false`.
+             */
+            replication?: boolean;
+            /**
+             * Whether the role is a `superuser` who can override all access restrictions within the database - superuser status is dangerous and should be used only when really needed. You must yourself be a superuser to create a new superuser. Defaults is `false`.
+             */
+            superuser?: boolean;
+            /**
+             * Date and time after which the role's password is no longer valid. When omitted, the password will never expire (default).
+             */
+            validUntil?: string;
+        }
+        /**
+         * clusterSpecManagedRolesProvideDefaults sets the appropriate defaults for ClusterSpecManagedRoles
+         */
+        export function clusterSpecManagedRolesProvideDefaults(val: ClusterSpecManagedRoles): ClusterSpecManagedRoles {
+            return {
+                ...val,
+                connectionLimit: (val.connectionLimit) ?? -1,
+                ensure: (val.ensure) ?? "present",
+                inherit: (val.inherit) ?? true,
+            };
+        }
+
+        /**
+         * Secret containing the password of the role (if present) If null, the password will be ignored unless DisablePassword is set
+         */
+        export interface ClusterSpecManagedRolesPasswordSecret {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The configuration of the monitoring infrastructure of this cluster
+         */
+        export interface ClusterSpecMonitoring {
+            /**
+             * The list of config maps containing the custom queries
+             */
+            customQueriesConfigMap?: outputs.postgresql.v1.ClusterSpecMonitoringCustomQueriesConfigMap[];
+            /**
+             * The list of secrets containing the custom queries
+             */
+            customQueriesSecret?: outputs.postgresql.v1.ClusterSpecMonitoringCustomQueriesSecret[];
+            /**
+             * Whether the default queries should be injected. Set it to `true` if you don't want to inject default queries into the cluster. Default: false.
+             */
+            disableDefaultQueries?: boolean;
+            /**
+             * Enable or disable the `PodMonitor`
+             */
+            enablePodMonitor?: boolean;
+        }
+        /**
+         * clusterSpecMonitoringProvideDefaults sets the appropriate defaults for ClusterSpecMonitoring
+         */
+        export function clusterSpecMonitoringProvideDefaults(val: ClusterSpecMonitoring): ClusterSpecMonitoring {
+            return {
+                ...val,
+                disableDefaultQueries: (val.disableDefaultQueries) ?? false,
+                enablePodMonitor: (val.enablePodMonitor) ?? false,
+            };
+        }
+
+        /**
+         * ConfigMapKeySelector contains enough information to let you locate the key of a ConfigMap
+         */
+        export interface ClusterSpecMonitoringCustomQueriesConfigMap {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * SecretKeySelector contains enough information to let you locate the key of a Secret
+         */
+        export interface ClusterSpecMonitoringCustomQueriesSecret {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * Define a maintenance window for the Kubernetes nodes
+         */
+        export interface ClusterSpecNodeMaintenanceWindow {
+            /**
+             * Is there a node maintenance activity in progress?
+             */
+            inProgress: boolean;
+            /**
+             * Reuse the existing PVC (wait for the node to come up again) or not (recreate it elsewhere - when `instances` >1)
+             */
+            reusePVC?: boolean;
+        }
+        /**
+         * clusterSpecNodeMaintenanceWindowProvideDefaults sets the appropriate defaults for ClusterSpecNodeMaintenanceWindow
+         */
+        export function clusterSpecNodeMaintenanceWindowProvideDefaults(val: ClusterSpecNodeMaintenanceWindow): ClusterSpecNodeMaintenanceWindow {
+            return {
+                ...val,
+                inProgress: (val.inProgress) ?? false,
+                reusePVC: (val.reusePVC) ?? true,
+            };
+        }
+
+        /**
+         * Configuration of the PostgreSQL server
+         */
+        export interface ClusterSpecPostgresql {
+            /**
+             * Options to specify LDAP configuration
+             */
+            ldap?: outputs.postgresql.v1.ClusterSpecPostgresqlLdap;
+            /**
+             * PostgreSQL configuration options (postgresql.conf)
+             */
+            parameters?: {[key: string]: string};
+            /**
+             * PostgreSQL Host Based Authentication rules (lines to be appended to the pg_hba.conf file)
+             */
+            pg_hba?: string[];
+            /**
+             * Specifies the maximum number of seconds to wait when promoting an instance to primary. Default value is 40000000, greater than one year in seconds, big enough to simulate an infinite timeout
+             */
+            promotionTimeout?: number;
+            /**
+             * Lists of shared preload libraries to add to the default ones
+             */
+            shared_preload_libraries?: string[];
+            /**
+             * Requirements to be met by sync replicas. This will affect how the "synchronous_standby_names" parameter will be set up.
+             */
+            syncReplicaElectionConstraint?: outputs.postgresql.v1.ClusterSpecPostgresqlSyncReplicaElectionConstraint;
+        }
+
+        /**
+         * Options to specify LDAP configuration
+         */
+        export interface ClusterSpecPostgresqlLdap {
+            /**
+             * Bind as authentication configuration
+             */
+            bindAsAuth?: outputs.postgresql.v1.ClusterSpecPostgresqlLdapBindAsAuth;
+            /**
+             * Bind+Search authentication configuration
+             */
+            bindSearchAuth?: outputs.postgresql.v1.ClusterSpecPostgresqlLdapBindSearchAuth;
+            /**
+             * LDAP server port
+             */
+            port?: number;
+            /**
+             * LDAP schema to be used, possible options are `ldap` and `ldaps`
+             */
+            scheme?: string;
+            /**
+             * LDAP hostname or IP address
+             */
+            server?: string;
+            /**
+             * Set to 'true' to enable LDAP over TLS. 'false' is default
+             */
+            tls?: boolean;
+        }
+
+        /**
+         * Bind as authentication configuration
+         */
+        export interface ClusterSpecPostgresqlLdapBindAsAuth {
+            /**
+             * Prefix for the bind authentication option
+             */
+            prefix?: string;
+            /**
+             * Suffix for the bind authentication option
+             */
+            suffix?: string;
+        }
+
+        /**
+         * Bind+Search authentication configuration
+         */
+        export interface ClusterSpecPostgresqlLdapBindSearchAuth {
+            /**
+             * Root DN to begin the user search
+             */
+            baseDN?: string;
+            /**
+             * DN of the user to bind to the directory
+             */
+            bindDN?: string;
+            /**
+             * Secret with the password for the user to bind to the directory
+             */
+            bindPassword?: outputs.postgresql.v1.ClusterSpecPostgresqlLdapBindSearchAuthBindPassword;
+            /**
+             * Attribute to match against the username
+             */
+            searchAttribute?: string;
+            /**
+             * Search filter to use when doing the search+bind authentication
+             */
+            searchFilter?: string;
+        }
+
+        /**
+         * Secret with the password for the user to bind to the directory
+         */
+        export interface ClusterSpecPostgresqlLdapBindSearchAuthBindPassword {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Requirements to be met by sync replicas. This will affect how the "synchronous_standby_names" parameter will be set up.
+         */
+        export interface ClusterSpecPostgresqlSyncReplicaElectionConstraint {
+            /**
+             * This flag enables the constraints for sync replicas
+             */
+            enabled: boolean;
+            /**
+             * A list of node labels values to extract and compare to evaluate if the pods reside in the same topology or not
+             */
+            nodeLabelsAntiAffinity?: string[];
+        }
+
+        /**
+         * Template to be used to define projected volumes, projected volumes will be mounted under `/projected` base folder
+         */
+        export interface ClusterSpecProjectedVolumeTemplate {
+            /**
+             * defaultMode are the mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            defaultMode?: number;
+            /**
+             * sources is the list of volume projections
+             */
+            sources?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSources[];
+        }
+
+        /**
+         * Projection that may be projected along with other supported volume types
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSources {
+            /**
+             * configMap information about the configMap data to project
+             */
+            configMap?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSourcesConfigMap;
+            /**
+             * downwardAPI information about the downwardAPI data to project
+             */
+            downwardAPI?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSourcesDownwardAPI;
+            /**
+             * secret information about the secret data to project
+             */
+            secret?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSourcesSecret;
+            /**
+             * serviceAccountToken is information about the serviceAccountToken data to project
+             */
+            serviceAccountToken?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSourcesServiceAccountToken;
+        }
+
+        /**
+         * configMap information about the configMap data to project
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSourcesConfigMap {
+            /**
+             * items if unspecified, each key-value pair in the Data field of the referenced ConfigMap will be projected into the volume as a file whose name is the key and content is the value. If specified, the listed keys will be projected into the specified paths, and unlisted keys will not be present. If a key is specified which is not present in the ConfigMap, the volume setup will error unless it is marked optional. Paths must be relative and may not contain the '..' path or start with '..'.
+             */
+            items?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSourcesConfigMapItems[];
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * optional specify whether the ConfigMap or its keys must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Maps a string key to a path within a volume.
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSourcesConfigMapItems {
+            /**
+             * key is the key to project.
+             */
+            key: string;
+            /**
+             * mode is Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            mode?: number;
+            /**
+             * path is the relative path of the file to map the key to. May not be an absolute path. May not contain the path element '..'. May not start with the string '..'.
+             */
+            path: string;
+        }
+
+        /**
+         * downwardAPI information about the downwardAPI data to project
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSourcesDownwardAPI {
+            /**
+             * Items is a list of DownwardAPIVolume file
+             */
+            items?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSourcesDownwardAPIItems[];
+        }
+
+        /**
+         * DownwardAPIVolumeFile represents information to create the file containing the pod field
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSourcesDownwardAPIItems {
+            /**
+             * Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
+             */
+            fieldRef?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSourcesDownwardAPIItemsFieldRef;
+            /**
+             * Optional: mode bits used to set permissions on this file, must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            mode?: number;
+            /**
+             * Required: Path is  the relative path name of the file to be created. Must not be absolute or contain the '..' path. Must be utf-8 encoded. The first item of the relative path must not start with '..'
+             */
+            path: string;
+            /**
+             * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
+             */
+            resourceFieldRef?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSourcesDownwardAPIItemsResourceFieldRef;
+        }
+
+        /**
+         * Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSourcesDownwardAPIItemsFieldRef {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion?: string;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath: string;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSourcesDownwardAPIItemsResourceFieldRef {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName?: string;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor?: number | string;
+            /**
+             * Required: resource to select
+             */
+            resource: string;
+        }
+
+        /**
+         * secret information about the secret data to project
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSourcesSecret {
+            /**
+             * items if unspecified, each key-value pair in the Data field of the referenced Secret will be projected into the volume as a file whose name is the key and content is the value. If specified, the listed keys will be projected into the specified paths, and unlisted keys will not be present. If a key is specified which is not present in the Secret, the volume setup will error unless it is marked optional. Paths must be relative and may not contain the '..' path or start with '..'.
+             */
+            items?: outputs.postgresql.v1.ClusterSpecProjectedVolumeTemplateSourcesSecretItems[];
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * optional field specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Maps a string key to a path within a volume.
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSourcesSecretItems {
+            /**
+             * key is the key to project.
+             */
+            key: string;
+            /**
+             * mode is Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            mode?: number;
+            /**
+             * path is the relative path of the file to map the key to. May not be an absolute path. May not contain the path element '..'. May not start with the string '..'.
+             */
+            path: string;
+        }
+
+        /**
+         * serviceAccountToken is information about the serviceAccountToken data to project
+         */
+        export interface ClusterSpecProjectedVolumeTemplateSourcesServiceAccountToken {
+            /**
+             * audience is the intended audience of the token. A recipient of a token must identify itself with an identifier specified in the audience of the token, and otherwise should reject the token. The audience defaults to the identifier of the apiserver.
+             */
+            audience?: string;
+            /**
+             * expirationSeconds is the requested duration of validity of the service account token. As the token approaches expiration, the kubelet volume plugin will proactively rotate the service account token. The kubelet will start trying to rotate the token if the token is older than 80 percent of its time to live or if the token is older than 24 hours.Defaults to 1 hour and must be at least 10 minutes.
+             */
+            expirationSeconds?: number;
+            /**
+             * path is the path relative to the mount point of the file to project the token into.
+             */
+            path: string;
+        }
+
+        /**
+         * Replica cluster configuration
+         */
+        export interface ClusterSpecReplica {
+            /**
+             * If replica mode is enabled, this cluster will be a replica of an existing cluster. Replica cluster can be created from a recovery object store or via streaming through pg_basebackup. Refer to the Replication page of the documentation for more information.
+             */
+            enabled?: boolean;
+            /**
+             * The name of the external cluster which is the replication origin
+             */
+            source: string;
+        }
+
+        /**
+         * Replication slots management configuration
+         */
+        export interface ClusterSpecReplicationSlots {
+            /**
+             * Replication slots for high availability configuration
+             */
+            highAvailability?: outputs.postgresql.v1.ClusterSpecReplicationSlotsHighAvailability;
+            /**
+             * Standby will update the status of the local replication slots every `updateInterval` seconds (default 30).
+             */
+            updateInterval?: number;
+        }
+        /**
+         * clusterSpecReplicationSlotsProvideDefaults sets the appropriate defaults for ClusterSpecReplicationSlots
+         */
+        export function clusterSpecReplicationSlotsProvideDefaults(val: ClusterSpecReplicationSlots): ClusterSpecReplicationSlots {
+            return {
+                ...val,
+                highAvailability: (val.highAvailability ? outputs.postgresql.v1.clusterSpecReplicationSlotsHighAvailabilityProvideDefaults(val.highAvailability) : undefined),
+                updateInterval: (val.updateInterval) ?? 30,
+            };
+        }
+
+        /**
+         * Replication slots for high availability configuration
+         */
+        export interface ClusterSpecReplicationSlotsHighAvailability {
+            /**
+             * If enabled, the operator will automatically manage replication slots on the primary instance and use them in streaming replication connections with all the standby instances that are part of the HA cluster. If disabled (default), the operator will not take advantage of replication slots in streaming connections with the replicas. This feature also controls replication slots in replica cluster, from the designated primary to its cascading replicas. This can only be set at creation time.
+             */
+            enabled?: boolean;
+            /**
+             * Prefix for replication slots managed by the operator for HA. It may only contain lower case letters, numbers, and the underscore character. This can only be set at creation time. By default set to `_cnpg_`.
+             */
+            slotPrefix?: string;
+        }
+        /**
+         * clusterSpecReplicationSlotsHighAvailabilityProvideDefaults sets the appropriate defaults for ClusterSpecReplicationSlotsHighAvailability
+         */
+        export function clusterSpecReplicationSlotsHighAvailabilityProvideDefaults(val: ClusterSpecReplicationSlotsHighAvailability): ClusterSpecReplicationSlotsHighAvailability {
+            return {
+                ...val,
+                enabled: (val.enabled) ?? false,
+                slotPrefix: (val.slotPrefix) ?? "_cnpg_",
+            };
+        }
+
+        /**
+         * Resources requirements of every generated Pod. Please refer to https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ for more information.
+         */
+        export interface ClusterSpecResources {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. 
+             *  This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. 
+             *  This field is immutable. It can only be set for containers.
+             */
+            claims?: outputs.postgresql.v1.ClusterSpecResourcesClaims[];
+            /**
+             * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits?: {[key: string]: number | string};
+            /**
+             * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests?: {[key: string]: number | string};
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface ClusterSpecResourcesClaims {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+             */
+            name: string;
+        }
+
+        /**
+         * The SeccompProfile applied to every Pod and Container. Defaults to: `RuntimeDefault`
+         */
+        export interface ClusterSpecSeccompProfile {
+            /**
+             * localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is "Localhost".
+             */
+            localhostProfile?: string;
+            /**
+             * type indicates which kind of seccomp profile will be applied. Valid options are: 
+             *  Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied.
+             */
+            type: string;
+        }
+
+        /**
+         * Configure the generation of the service account
+         */
+        export interface ClusterSpecServiceAccountTemplate {
+            /**
+             * Metadata are the metadata to be used for the generated service account
+             */
+            metadata: outputs.postgresql.v1.ClusterSpecServiceAccountTemplateMetadata;
+        }
+
+        /**
+         * Metadata are the metadata to be used for the generated service account
+         */
+        export interface ClusterSpecServiceAccountTemplateMetadata {
+            /**
+             * Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations
+             */
+            annotations?: {[key: string]: string};
+            /**
+             * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
+             */
+            labels?: {[key: string]: string};
+        }
+
+        /**
+         * Configuration of the storage of the instances
+         */
+        export interface ClusterSpecStorage {
+            /**
+             * Template to be used to generate the Persistent Volume Claim
+             */
+            pvcTemplate?: outputs.postgresql.v1.ClusterSpecStoragePvcTemplate;
+            /**
+             * Resize existent PVCs, defaults to true
+             */
+            resizeInUseVolumes?: boolean;
+            /**
+             * Size of the storage. Required if not already specified in the PVC template. Changes to this field are automatically reapplied to the created PVCs. Size cannot be decreased.
+             */
+            size?: string;
+            /**
+             * StorageClass to use for database data (`PGDATA`). Applied after evaluating the PVC template, if available. If not specified, generated PVCs will be satisfied by the default storage class
+             */
+            storageClass?: string;
+        }
+        /**
+         * clusterSpecStorageProvideDefaults sets the appropriate defaults for ClusterSpecStorage
+         */
+        export function clusterSpecStorageProvideDefaults(val: ClusterSpecStorage): ClusterSpecStorage {
+            return {
+                ...val,
+                resizeInUseVolumes: (val.resizeInUseVolumes) ?? true,
+            };
+        }
+
+        /**
+         * Template to be used to generate the Persistent Volume Claim
+         */
+        export interface ClusterSpecStoragePvcTemplate {
+            /**
+             * accessModes contains the desired access modes the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
+             */
+            accessModes?: string[];
+            /**
+             * dataSource field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source. When the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified. If the namespace is specified, then dataSourceRef will not be copied to dataSource.
+             */
+            dataSource?: outputs.postgresql.v1.ClusterSpecStoragePvcTemplateDataSource;
+            /**
+             * dataSourceRef specifies the object from which to populate the volume with data, if a non-empty volume is desired. This may be any object from a non-empty API group (non core object) or a PersistentVolumeClaim object. When this field is specified, volume binding will only succeed if the type of the specified object matches some installed volume populator or dynamic provisioner. This field will replace the functionality of the dataSource field and as such if both fields are non-empty, they must have the same value. For backwards compatibility, when namespace isn't specified in dataSourceRef, both fields (dataSource and dataSourceRef) will be set to the same value automatically if one of them is empty and the other is non-empty. When namespace is specified in dataSourceRef, dataSource isn't set to the same value and must be empty. There are three important differences between dataSource and dataSourceRef: * While dataSource only allows two specific types of objects, dataSourceRef allows any non-core object, as well as PersistentVolumeClaim objects. * While dataSource ignores disallowed values (dropping them), dataSourceRef preserves all values, and generates an error if a disallowed value is specified. * While dataSource only allows local objects, dataSourceRef allows objects in any namespaces. (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled. (Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+             */
+            dataSourceRef?: outputs.postgresql.v1.ClusterSpecStoragePvcTemplateDataSourceRef;
+            /**
+             * resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+             */
+            resources?: outputs.postgresql.v1.ClusterSpecStoragePvcTemplateResources;
+            /**
+             * selector is a label query over volumes to consider for binding.
+             */
+            selector?: outputs.postgresql.v1.ClusterSpecStoragePvcTemplateSelector;
+            /**
+             * storageClassName is the name of the StorageClass required by the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1
+             */
+            storageClassName?: string;
+            /**
+             * volumeMode defines what type of volume is required by the claim. Value of Filesystem is implied when not included in claim spec.
+             */
+            volumeMode?: string;
+            /**
+             * volumeName is the binding reference to the PersistentVolume backing this claim.
+             */
+            volumeName?: string;
+        }
+
+        /**
+         * dataSource field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source. When the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified. If the namespace is specified, then dataSourceRef will not be copied to dataSource.
+         */
+        export interface ClusterSpecStoragePvcTemplateDataSource {
+            /**
+             * APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.
+             */
+            apiGroup?: string;
+            /**
+             * Kind is the type of resource being referenced
+             */
+            kind: string;
+            /**
+             * Name is the name of resource being referenced
+             */
+            name: string;
+        }
+
+        /**
+         * dataSourceRef specifies the object from which to populate the volume with data, if a non-empty volume is desired. This may be any object from a non-empty API group (non core object) or a PersistentVolumeClaim object. When this field is specified, volume binding will only succeed if the type of the specified object matches some installed volume populator or dynamic provisioner. This field will replace the functionality of the dataSource field and as such if both fields are non-empty, they must have the same value. For backwards compatibility, when namespace isn't specified in dataSourceRef, both fields (dataSource and dataSourceRef) will be set to the same value automatically if one of them is empty and the other is non-empty. When namespace is specified in dataSourceRef, dataSource isn't set to the same value and must be empty. There are three important differences between dataSource and dataSourceRef: * While dataSource only allows two specific types of objects, dataSourceRef allows any non-core object, as well as PersistentVolumeClaim objects. * While dataSource ignores disallowed values (dropping them), dataSourceRef preserves all values, and generates an error if a disallowed value is specified. * While dataSource only allows local objects, dataSourceRef allows objects in any namespaces. (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled. (Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+         */
+        export interface ClusterSpecStoragePvcTemplateDataSourceRef {
+            /**
+             * APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.
+             */
+            apiGroup?: string;
+            /**
+             * Kind is the type of resource being referenced
+             */
+            kind: string;
+            /**
+             * Name is the name of resource being referenced
+             */
+            name: string;
+            /**
+             * Namespace is the namespace of resource being referenced Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required in the referent namespace to allow that namespace's owner to accept the reference. See the ReferenceGrant documentation for details. (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+             */
+            namespace?: string;
+        }
+
+        /**
+         * resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+         */
+        export interface ClusterSpecStoragePvcTemplateResources {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. 
+             *  This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. 
+             *  This field is immutable. It can only be set for containers.
+             */
+            claims?: outputs.postgresql.v1.ClusterSpecStoragePvcTemplateResourcesClaims[];
+            /**
+             * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits?: {[key: string]: number | string};
+            /**
+             * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests?: {[key: string]: number | string};
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface ClusterSpecStoragePvcTemplateResourcesClaims {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+             */
+            name: string;
+        }
+
+        /**
+         * selector is a label query over volumes to consider for binding.
+         */
+        export interface ClusterSpecStoragePvcTemplateSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecStoragePvcTemplateSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecStoragePvcTemplateSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * The secret containing the superuser password. If not defined a new secret will be created with a randomly generated password
+         */
+        export interface ClusterSpecSuperuserSecret {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * TopologySpreadConstraint specifies how to spread matching pods among the given topology.
+         */
+        export interface ClusterSpecTopologySpreadConstraints {
+            /**
+             * LabelSelector is used to find matching pods. Pods that match this label selector are counted to determine the number of pods in their corresponding topology domain.
+             */
+            labelSelector?: outputs.postgresql.v1.ClusterSpecTopologySpreadConstraintsLabelSelector;
+            /**
+             * MatchLabelKeys is a set of pod label keys to select the pods over which spreading will be calculated. The keys are used to lookup values from the incoming pod labels, those key-value labels are ANDed with labelSelector to select the group of existing pods over which spreading will be calculated for the incoming pod. The same key is forbidden to exist in both MatchLabelKeys and LabelSelector. MatchLabelKeys cannot be set when LabelSelector isn't set. Keys that don't exist in the incoming pod labels will be ignored. A null or empty list means only match against labelSelector. 
+             *  This is a beta field and requires the MatchLabelKeysInPodTopologySpread feature gate to be enabled (enabled by default).
+             */
+            matchLabelKeys?: string[];
+            /**
+             * MaxSkew describes the degree to which pods may be unevenly distributed. When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference between the number of matching pods in the target topology and the global minimum. The global minimum is the minimum number of matching pods in an eligible domain or zero if the number of eligible domains is less than MinDomains. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 2/2/1: In this case, the global minimum is 1. | zone1 | zone2 | zone3 | |  P P  |  P P  |   P   | - if MaxSkew is 1, incoming pod can only be scheduled to zone3 to become 2/2/2; scheduling it onto zone1(zone2) would make the ActualSkew(3-1) on zone1(zone2) violate MaxSkew(1). - if MaxSkew is 2, incoming pod can be scheduled onto any zone. When `whenUnsatisfiable=ScheduleAnyway`, it is used to give higher precedence to topologies that satisfy it. It's a required field. Default value is 1 and 0 is not allowed.
+             */
+            maxSkew: number;
+            /**
+             * MinDomains indicates a minimum number of eligible domains. When the number of eligible domains with matching topology keys is less than minDomains, Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed. And when the number of eligible domains with matching topology keys equals or greater than minDomains, this value has no effect on scheduling. As a result, when the number of eligible domains is less than minDomains, scheduler won't schedule more than maxSkew Pods to those domains. If value is nil, the constraint behaves as if MinDomains is equal to 1. Valid values are integers greater than 0. When value is not nil, WhenUnsatisfiable must be DoNotSchedule. 
+             *  For example, in a 3-zone cluster, MaxSkew is set to 2, MinDomains is set to 5 and pods with the same labelSelector spread as 2/2/2: | zone1 | zone2 | zone3 | |  P P  |  P P  |  P P  | The number of domains is less than 5(MinDomains), so "global minimum" is treated as 0. In this situation, new pod with the same labelSelector cannot be scheduled, because computed skew will be 3(3 - 0) if new Pod is scheduled to any of the three zones, it will violate MaxSkew. 
+             *  This is a beta field and requires the MinDomainsInPodTopologySpread feature gate to be enabled (enabled by default).
+             */
+            minDomains?: number;
+            /**
+             * NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector when calculating pod topology spread skew. Options are: - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations. - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations. 
+             *  If this value is nil, the behavior is equivalent to the Honor policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
+             */
+            nodeAffinityPolicy?: string;
+            /**
+             * NodeTaintsPolicy indicates how we will treat node taints when calculating pod topology spread skew. Options are: - Honor: nodes without taints, along with tainted nodes for which the incoming pod has a toleration, are included. - Ignore: node taints are ignored. All nodes are included. 
+             *  If this value is nil, the behavior is equivalent to the Ignore policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
+             */
+            nodeTaintsPolicy?: string;
+            /**
+             * TopologyKey is the key of node labels. Nodes that have a label with this key and identical values are considered to be in the same topology. We consider each <key, value> as a "bucket", and try to put balanced number of pods into each bucket. We define a domain as a particular instance of a topology. Also, we define an eligible domain as a domain whose nodes meet the requirements of nodeAffinityPolicy and nodeTaintsPolicy. e.g. If TopologyKey is "kubernetes.io/hostname", each Node is a domain of that topology. And, if TopologyKey is "topology.kubernetes.io/zone", each zone is a domain of that topology. It's a required field.
+             */
+            topologyKey: string;
+            /**
+             * WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy the spread constraint. - DoNotSchedule (default) tells the scheduler not to schedule it. - ScheduleAnyway tells the scheduler to schedule the pod in any location, but giving higher precedence to topologies that would help reduce the skew. A constraint is considered "Unsatisfiable" for an incoming pod if and only if every possible node assignment for that pod would violate "MaxSkew" on some topology. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 3/1/1: | zone1 | zone2 | zone3 | | P P P |   P   |   P   | If WhenUnsatisfiable is set to DoNotSchedule, incoming pod can only be scheduled to zone2(zone3) to become 3/2/1(3/1/2) as ActualSkew(2-1) on zone2(zone3) satisfies MaxSkew(1). In other words, the cluster can still be imbalanced, but scheduler won't make it *more* imbalanced. It's a required field.
+             */
+            whenUnsatisfiable: string;
+        }
+
+        /**
+         * LabelSelector is used to find matching pods. Pods that match this label selector are counted to determine the number of pods in their corresponding topology domain.
+         */
+        export interface ClusterSpecTopologySpreadConstraintsLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecTopologySpreadConstraintsLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecTopologySpreadConstraintsLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * Configuration of the storage for PostgreSQL WAL (Write-Ahead Log)
+         */
+        export interface ClusterSpecWalStorage {
+            /**
+             * Template to be used to generate the Persistent Volume Claim
+             */
+            pvcTemplate?: outputs.postgresql.v1.ClusterSpecWalStoragePvcTemplate;
+            /**
+             * Resize existent PVCs, defaults to true
+             */
+            resizeInUseVolumes?: boolean;
+            /**
+             * Size of the storage. Required if not already specified in the PVC template. Changes to this field are automatically reapplied to the created PVCs. Size cannot be decreased.
+             */
+            size?: string;
+            /**
+             * StorageClass to use for database data (`PGDATA`). Applied after evaluating the PVC template, if available. If not specified, generated PVCs will be satisfied by the default storage class
+             */
+            storageClass?: string;
+        }
+        /**
+         * clusterSpecWalStorageProvideDefaults sets the appropriate defaults for ClusterSpecWalStorage
+         */
+        export function clusterSpecWalStorageProvideDefaults(val: ClusterSpecWalStorage): ClusterSpecWalStorage {
+            return {
+                ...val,
+                resizeInUseVolumes: (val.resizeInUseVolumes) ?? true,
+            };
+        }
+
+        /**
+         * Template to be used to generate the Persistent Volume Claim
+         */
+        export interface ClusterSpecWalStoragePvcTemplate {
+            /**
+             * accessModes contains the desired access modes the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
+             */
+            accessModes?: string[];
+            /**
+             * dataSource field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source. When the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified. If the namespace is specified, then dataSourceRef will not be copied to dataSource.
+             */
+            dataSource?: outputs.postgresql.v1.ClusterSpecWalStoragePvcTemplateDataSource;
+            /**
+             * dataSourceRef specifies the object from which to populate the volume with data, if a non-empty volume is desired. This may be any object from a non-empty API group (non core object) or a PersistentVolumeClaim object. When this field is specified, volume binding will only succeed if the type of the specified object matches some installed volume populator or dynamic provisioner. This field will replace the functionality of the dataSource field and as such if both fields are non-empty, they must have the same value. For backwards compatibility, when namespace isn't specified in dataSourceRef, both fields (dataSource and dataSourceRef) will be set to the same value automatically if one of them is empty and the other is non-empty. When namespace is specified in dataSourceRef, dataSource isn't set to the same value and must be empty. There are three important differences between dataSource and dataSourceRef: * While dataSource only allows two specific types of objects, dataSourceRef allows any non-core object, as well as PersistentVolumeClaim objects. * While dataSource ignores disallowed values (dropping them), dataSourceRef preserves all values, and generates an error if a disallowed value is specified. * While dataSource only allows local objects, dataSourceRef allows objects in any namespaces. (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled. (Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+             */
+            dataSourceRef?: outputs.postgresql.v1.ClusterSpecWalStoragePvcTemplateDataSourceRef;
+            /**
+             * resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+             */
+            resources?: outputs.postgresql.v1.ClusterSpecWalStoragePvcTemplateResources;
+            /**
+             * selector is a label query over volumes to consider for binding.
+             */
+            selector?: outputs.postgresql.v1.ClusterSpecWalStoragePvcTemplateSelector;
+            /**
+             * storageClassName is the name of the StorageClass required by the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1
+             */
+            storageClassName?: string;
+            /**
+             * volumeMode defines what type of volume is required by the claim. Value of Filesystem is implied when not included in claim spec.
+             */
+            volumeMode?: string;
+            /**
+             * volumeName is the binding reference to the PersistentVolume backing this claim.
+             */
+            volumeName?: string;
+        }
+
+        /**
+         * dataSource field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source. When the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified. If the namespace is specified, then dataSourceRef will not be copied to dataSource.
+         */
+        export interface ClusterSpecWalStoragePvcTemplateDataSource {
+            /**
+             * APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.
+             */
+            apiGroup?: string;
+            /**
+             * Kind is the type of resource being referenced
+             */
+            kind: string;
+            /**
+             * Name is the name of resource being referenced
+             */
+            name: string;
+        }
+
+        /**
+         * dataSourceRef specifies the object from which to populate the volume with data, if a non-empty volume is desired. This may be any object from a non-empty API group (non core object) or a PersistentVolumeClaim object. When this field is specified, volume binding will only succeed if the type of the specified object matches some installed volume populator or dynamic provisioner. This field will replace the functionality of the dataSource field and as such if both fields are non-empty, they must have the same value. For backwards compatibility, when namespace isn't specified in dataSourceRef, both fields (dataSource and dataSourceRef) will be set to the same value automatically if one of them is empty and the other is non-empty. When namespace is specified in dataSourceRef, dataSource isn't set to the same value and must be empty. There are three important differences between dataSource and dataSourceRef: * While dataSource only allows two specific types of objects, dataSourceRef allows any non-core object, as well as PersistentVolumeClaim objects. * While dataSource ignores disallowed values (dropping them), dataSourceRef preserves all values, and generates an error if a disallowed value is specified. * While dataSource only allows local objects, dataSourceRef allows objects in any namespaces. (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled. (Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+         */
+        export interface ClusterSpecWalStoragePvcTemplateDataSourceRef {
+            /**
+             * APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.
+             */
+            apiGroup?: string;
+            /**
+             * Kind is the type of resource being referenced
+             */
+            kind: string;
+            /**
+             * Name is the name of resource being referenced
+             */
+            name: string;
+            /**
+             * Namespace is the namespace of resource being referenced Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required in the referent namespace to allow that namespace's owner to accept the reference. See the ReferenceGrant documentation for details. (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+             */
+            namespace?: string;
+        }
+
+        /**
+         * resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+         */
+        export interface ClusterSpecWalStoragePvcTemplateResources {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. 
+             *  This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. 
+             *  This field is immutable. It can only be set for containers.
+             */
+            claims?: outputs.postgresql.v1.ClusterSpecWalStoragePvcTemplateResourcesClaims[];
+            /**
+             * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits?: {[key: string]: number | string};
+            /**
+             * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests?: {[key: string]: number | string};
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface ClusterSpecWalStoragePvcTemplateResourcesClaims {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+             */
+            name: string;
+        }
+
+        /**
+         * selector is a label query over volumes to consider for binding.
+         */
+        export interface ClusterSpecWalStoragePvcTemplateSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.ClusterSpecWalStoragePvcTemplateSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface ClusterSpecWalStoragePvcTemplateSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * Most recently observed status of the cluster. This data may not be up to date. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ClusterStatus {
+            /**
+             * AzurePVCUpdateEnabled shows if the PVC online upgrade is enabled for this cluster
+             */
+            azurePVCUpdateEnabled?: boolean;
+            /**
+             * The configuration for the CA and related certificates, initialized with defaults.
+             */
+            certificates?: outputs.postgresql.v1.ClusterStatusCertificates;
+            /**
+             * The commit hash number of which this operator running
+             */
+            cloudNativePGCommitHash?: string;
+            /**
+             * The hash of the binary of the operator
+             */
+            cloudNativePGOperatorHash?: string;
+            /**
+             * Conditions for cluster object
+             */
+            conditions?: outputs.postgresql.v1.ClusterStatusConditions[];
+            /**
+             * The list of resource versions of the configmaps, managed by the operator. Every change here is done in the interest of the instance manager, which will refresh the configmap data
+             */
+            configMapResourceVersion?: outputs.postgresql.v1.ClusterStatusConfigMapResourceVersion;
+            /**
+             * Current primary instance
+             */
+            currentPrimary?: string;
+            /**
+             * The timestamp when the primary was detected to be unhealthy This field is reported when spec.failoverDelay is populated or during online upgrades
+             */
+            currentPrimaryFailingSinceTimestamp?: string;
+            /**
+             * The timestamp when the last actual promotion to primary has occurred
+             */
+            currentPrimaryTimestamp?: string;
+            /**
+             * List of all the PVCs created by this cluster and still available which are not attached to a Pod
+             */
+            danglingPVC?: string[];
+            /**
+             * The first recoverability point, stored as a date in RFC3339 format
+             */
+            firstRecoverabilityPoint?: string;
+            /**
+             * List of all the PVCs not dangling nor initializing
+             */
+            healthyPVC?: string[];
+            /**
+             * List of all the PVCs that are being initialized by this cluster
+             */
+            initializingPVC?: string[];
+            /**
+             * List of instance names in the cluster
+             */
+            instanceNames?: string[];
+            /**
+             * The total number of PVC Groups detected in the cluster. It may differ from the number of existing instance pods.
+             */
+            instances?: number;
+            /**
+             * The reported state of the instances during the last reconciliation loop
+             */
+            instancesReportedState?: {[key: string]: outputs.postgresql.v1.ClusterStatusInstancesReportedState};
+            /**
+             * InstancesStatus indicates in which status the instances are
+             */
+            instancesStatus?: {[key: string]: string[]};
+            /**
+             * How many Jobs have been created by this cluster
+             */
+            jobCount?: number;
+            /**
+             * Stored as a date in RFC3339 format
+             */
+            lastFailedBackup?: string;
+            /**
+             * Stored as a date in RFC3339 format
+             */
+            lastSuccessfulBackup?: string;
+            /**
+             * ID of the latest generated node (used to avoid node name clashing)
+             */
+            latestGeneratedNode?: number;
+            /**
+             * ManagedRolesStatus reports the state of the managed roles in the cluster
+             */
+            managedRolesStatus?: outputs.postgresql.v1.ClusterStatusManagedRolesStatus;
+            /**
+             * OnlineUpdateEnabled shows if the online upgrade is enabled inside the cluster
+             */
+            onlineUpdateEnabled?: boolean;
+            /**
+             * Current phase of the cluster
+             */
+            phase?: string;
+            /**
+             * Reason for the current phase
+             */
+            phaseReason?: string;
+            /**
+             * The integration needed by poolers referencing the cluster
+             */
+            poolerIntegrations?: outputs.postgresql.v1.ClusterStatusPoolerIntegrations;
+            /**
+             * How many PVCs have been created by this cluster
+             */
+            pvcCount?: number;
+            /**
+             * Current list of read pods
+             */
+            readService?: string;
+            /**
+             * The total number of ready instances in the cluster. It is equal to the number of ready instance pods.
+             */
+            readyInstances?: number;
+            /**
+             * List of all the PVCs that have ResizingPVC condition.
+             */
+            resizingPVC?: string[];
+            /**
+             * The list of resource versions of the secrets managed by the operator. Every change here is done in the interest of the instance manager, which will refresh the secret data
+             */
+            secretsResourceVersion?: outputs.postgresql.v1.ClusterStatusSecretsResourceVersion;
+            /**
+             * Target primary instance, this is different from the previous one during a switchover or a failover
+             */
+            targetPrimary?: string;
+            /**
+             * The timestamp when the last request for a new primary has occurred
+             */
+            targetPrimaryTimestamp?: string;
+            /**
+             * The timeline of the Postgres cluster
+             */
+            timelineID?: number;
+            /**
+             * Instances topology.
+             */
+            topology?: outputs.postgresql.v1.ClusterStatusTopology;
+            /**
+             * List of all the PVCs that are unusable because another PVC is missing
+             */
+            unusablePVC?: string[];
+            /**
+             * Current write pod
+             */
+            writeService?: string;
+        }
+
+        /**
+         * The configuration for the CA and related certificates, initialized with defaults.
+         */
+        export interface ClusterStatusCertificates {
+            /**
+             * The secret containing the Client CA certificate. If not defined, a new secret will be created with a self-signed CA and will be used to generate all the client certificates.<br /> <br /> Contains:<br /> <br /> - `ca.crt`: CA that should be used to validate the client certificates, used as `ssl_ca_file` of all the instances.<br /> - `ca.key`: key used to generate client certificates, if ReplicationTLSSecret is provided, this can be omitted.<br />
+             */
+            clientCASecret?: string;
+            /**
+             * Expiration dates for all certificates.
+             */
+            expirations?: {[key: string]: string};
+            /**
+             * The secret of type kubernetes.io/tls containing the client certificate to authenticate as the `streaming_replica` user. If not defined, ClientCASecret must provide also `ca.key`, and a new secret will be created using the provided CA.
+             */
+            replicationTLSSecret?: string;
+            /**
+             * The list of the server alternative DNS names to be added to the generated server TLS certificates, when required.
+             */
+            serverAltDNSNames?: string[];
+            /**
+             * The secret containing the Server CA certificate. If not defined, a new secret will be created with a self-signed CA and will be used to generate the TLS certificate ServerTLSSecret.<br /> <br /> Contains:<br /> <br /> - `ca.crt`: CA that should be used to validate the server certificate, used as `sslrootcert` in client connection strings.<br /> - `ca.key`: key used to generate Server SSL certs, if ServerTLSSecret is provided, this can be omitted.<br />
+             */
+            serverCASecret?: string;
+            /**
+             * The secret of type kubernetes.io/tls containing the server TLS certificate and key that will be set as `ssl_cert_file` and `ssl_key_file` so that clients can connect to postgres securely. If not defined, ServerCASecret must provide also `ca.key` and a new secret will be created using the provided CA.
+             */
+            serverTLSSecret?: string;
+        }
+
+        /**
+         * Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+         *  type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: "Available", "Progressing", and "Degraded" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"` 
+         *  // other fields }
+         */
+        export interface ClusterStatusConditions {
+            /**
+             * lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+             */
+            lastTransitionTime: string;
+            /**
+             * message is a human readable message indicating details about the transition. This may be an empty string.
+             */
+            message: string;
+            /**
+             * observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.
+             */
+            observedGeneration?: number;
+            /**
+             * reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.
+             */
+            reason: string;
+            /**
+             * status of the condition, one of True, False, Unknown.
+             */
+            status: string;
+            /**
+             * type of condition in CamelCase or in foo.example.com/CamelCase. --- Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+             */
+            type: string;
+        }
+
+        /**
+         * The list of resource versions of the configmaps, managed by the operator. Every change here is done in the interest of the instance manager, which will refresh the configmap data
+         */
+        export interface ClusterStatusConfigMapResourceVersion {
+            /**
+             * A map with the versions of all the config maps used to pass metrics. Map keys are the config map names, map values are the versions
+             */
+            metrics?: {[key: string]: string};
+        }
+
+        /**
+         * InstanceReportedState describes the last reported state of an instance during a reconciliation loop
+         */
+        export interface ClusterStatusInstancesReportedState {
+            /**
+             * indicates if an instance is the primary one
+             */
+            isPrimary: boolean;
+            /**
+             * indicates on which TimelineId the instance is
+             */
+            timeLineID?: number;
+        }
+
+        /**
+         * ManagedRolesStatus reports the state of the managed roles in the cluster
+         */
+        export interface ClusterStatusManagedRolesStatus {
+            /**
+             * ByStatus gives the list of roles in each state
+             */
+            byStatus?: {[key: string]: string[]};
+            /**
+             * CannotReconcile lists roles that cannot be reconciled in PostgreSQL, with an explanation of the cause
+             */
+            cannotReconcile?: {[key: string]: string[]};
+            /**
+             * PasswordStatus gives the last transaction id and password secret version for each managed role
+             */
+            passwordStatus?: {[key: string]: outputs.postgresql.v1.ClusterStatusManagedRolesStatusPasswordStatus};
+        }
+
+        /**
+         * PasswordState represents the state of the password of a managed RoleConfiguration
+         */
+        export interface ClusterStatusManagedRolesStatusPasswordStatus {
+            /**
+             * the resource version of the password secret
+             */
+            resourceVersion?: string;
+            /**
+             * the last transaction ID to affect the role definition in PostgreSQL
+             */
+            transactionID?: number;
+        }
+
+        /**
+         * The integration needed by poolers referencing the cluster
+         */
+        export interface ClusterStatusPoolerIntegrations {
+            /**
+             * PgBouncerIntegrationStatus encapsulates the needed integration for the pgbouncer poolers referencing the cluster
+             */
+            pgBouncerIntegration?: outputs.postgresql.v1.ClusterStatusPoolerIntegrationsPgBouncerIntegration;
+        }
+
+        /**
+         * PgBouncerIntegrationStatus encapsulates the needed integration for the pgbouncer poolers referencing the cluster
+         */
+        export interface ClusterStatusPoolerIntegrationsPgBouncerIntegration {
+            secrets?: string[];
+        }
+
+        /**
+         * The list of resource versions of the secrets managed by the operator. Every change here is done in the interest of the instance manager, which will refresh the secret data
+         */
+        export interface ClusterStatusSecretsResourceVersion {
+            /**
+             * The resource version of the "app" user secret
+             */
+            applicationSecretVersion?: string;
+            /**
+             * The resource version of the Barman Endpoint CA if provided
+             */
+            barmanEndpointCA?: string;
+            /**
+             * Unused. Retained for compatibility with old versions.
+             */
+            caSecretVersion?: string;
+            /**
+             * The resource version of the PostgreSQL client-side CA secret version
+             */
+            clientCaSecretVersion?: string;
+            /**
+             * The resource versions of the managed roles secrets
+             */
+            managedRoleSecretVersion?: {[key: string]: string};
+            /**
+             * A map with the versions of all the secrets used to pass metrics. Map keys are the secret names, map values are the versions
+             */
+            metrics?: {[key: string]: string};
+            /**
+             * The resource version of the "streaming_replica" user secret
+             */
+            replicationSecretVersion?: string;
+            /**
+             * The resource version of the PostgreSQL server-side CA secret version
+             */
+            serverCaSecretVersion?: string;
+            /**
+             * The resource version of the PostgreSQL server-side secret version
+             */
+            serverSecretVersion?: string;
+            /**
+             * The resource version of the "postgres" user secret
+             */
+            superuserSecretVersion?: string;
+        }
+
+        /**
+         * Instances topology.
+         */
+        export interface ClusterStatusTopology {
+            /**
+             * Instances contains the pod topology of the instances
+             */
+            instances?: {[key: string]: {[key: string]: string}};
+            /**
+             * NodesUsed represents the count of distinct nodes accommodating the instances. A value of '1' suggests that all instances are hosted on a single node, implying the absence of High Availability (HA). Ideally, this value should be the same as the number of instances in the Postgres HA cluster, implying shared nothing architecture on the compute side.
+             */
+            nodesUsed?: number;
+            /**
+             * SuccessfullyExtracted indicates if the topology data was extract. It is useful to enact fallback behaviors in synchronous replica election in case of failures
+             */
+            successfullyExtracted?: boolean;
+        }
+
+        /**
+         * PoolerSpec defines the desired state of Pooler
+         */
+        export interface PoolerSpec {
+            /**
+             * This is the cluster reference on which the Pooler will work. Pooler name should never match with any cluster name within the same namespace.
+             */
+            cluster: outputs.postgresql.v1.PoolerSpecCluster;
+            /**
+             * The deployment strategy to use for pgbouncer to replace existing pods with new ones
+             */
+            deploymentStrategy?: outputs.postgresql.v1.PoolerSpecDeploymentStrategy;
+            /**
+             * The number of replicas we want
+             */
+            instances: number;
+            /**
+             * The configuration of the monitoring infrastructure of this pooler.
+             */
+            monitoring?: outputs.postgresql.v1.PoolerSpecMonitoring;
+            /**
+             * The PgBouncer configuration
+             */
+            pgbouncer: outputs.postgresql.v1.PoolerSpecPgbouncer;
+            /**
+             * The template of the Pod to be created
+             */
+            template?: outputs.postgresql.v1.PoolerSpecTemplate;
+            /**
+             * Which instances we must forward traffic to?
+             */
+            type: string;
+        }
+        /**
+         * poolerSpecProvideDefaults sets the appropriate defaults for PoolerSpec
+         */
+        export function poolerSpecProvideDefaults(val: PoolerSpec): PoolerSpec {
+            return {
+                ...val,
+                instances: (val.instances) ?? 1,
+                monitoring: (val.monitoring ? outputs.postgresql.v1.poolerSpecMonitoringProvideDefaults(val.monitoring) : undefined),
+                pgbouncer: outputs.postgresql.v1.poolerSpecPgbouncerProvideDefaults(val.pgbouncer),
+                type: (val.type) ?? "rw",
+            };
+        }
+
+        /**
+         * This is the cluster reference on which the Pooler will work. Pooler name should never match with any cluster name within the same namespace.
+         */
+        export interface PoolerSpecCluster {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The deployment strategy to use for pgbouncer to replace existing pods with new ones
+         */
+        export interface PoolerSpecDeploymentStrategy {
+            /**
+             * Rolling update config params. Present only if DeploymentStrategyType = RollingUpdate. --- TODO: Update this to follow our convention for oneOf, whatever we decide it to be.
+             */
+            rollingUpdate?: outputs.postgresql.v1.PoolerSpecDeploymentStrategyRollingUpdate;
+            /**
+             * Type of deployment. Can be "Recreate" or "RollingUpdate". Default is RollingUpdate.
+             */
+            type?: string;
+        }
+
+        /**
+         * Rolling update config params. Present only if DeploymentStrategyType = RollingUpdate. --- TODO: Update this to follow our convention for oneOf, whatever we decide it to be.
+         */
+        export interface PoolerSpecDeploymentStrategyRollingUpdate {
+            /**
+             * The maximum number of pods that can be scheduled above the desired number of pods. Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%). This can not be 0 if MaxUnavailable is 0. Absolute number is calculated from percentage by rounding up. Defaults to 25%. Example: when this is set to 30%, the new ReplicaSet can be scaled up immediately when the rolling update starts, such that the total number of old and new pods do not exceed 130% of desired pods. Once old pods have been killed, new ReplicaSet can be scaled up further, ensuring that total number of pods running at any time during the update is at most 130% of desired pods.
+             */
+            maxSurge?: number | string;
+            /**
+             * The maximum number of pods that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%). Absolute number is calculated from percentage by rounding down. This can not be 0 if MaxSurge is 0. Defaults to 25%. Example: when this is set to 30%, the old ReplicaSet can be scaled down to 70% of desired pods immediately when the rolling update starts. Once new pods are ready, old ReplicaSet can be scaled down further, followed by scaling up the new ReplicaSet, ensuring that the total number of pods available at all times during the update is at least 70% of desired pods.
+             */
+            maxUnavailable?: number | string;
+        }
+
+        /**
+         * The configuration of the monitoring infrastructure of this pooler.
+         */
+        export interface PoolerSpecMonitoring {
+            /**
+             * Enable or disable the `PodMonitor`
+             */
+            enablePodMonitor?: boolean;
+        }
+        /**
+         * poolerSpecMonitoringProvideDefaults sets the appropriate defaults for PoolerSpecMonitoring
+         */
+        export function poolerSpecMonitoringProvideDefaults(val: PoolerSpecMonitoring): PoolerSpecMonitoring {
+            return {
+                ...val,
+                enablePodMonitor: (val.enablePodMonitor) ?? false,
+            };
+        }
+
+        /**
+         * The PgBouncer configuration
+         */
+        export interface PoolerSpecPgbouncer {
+            /**
+             * The query that will be used to download the hash of the password of a certain user. Default: "SELECT usename, passwd FROM user_search($1)". In case it is specified, also an AuthQuerySecret has to be specified and no automatic CNPG Cluster integration will be triggered.
+             */
+            authQuery?: string;
+            /**
+             * The credentials of the user that need to be used for the authentication query. In case it is specified, also an AuthQuery (e.g. "SELECT usename, passwd FROM pg_shadow WHERE usename=$1") has to be specified and no automatic CNPG Cluster integration will be triggered.
+             */
+            authQuerySecret?: outputs.postgresql.v1.PoolerSpecPgbouncerAuthQuerySecret;
+            /**
+             * Additional parameters to be passed to PgBouncer - please check the CNPG documentation for a list of options you can configure
+             */
+            parameters?: {[key: string]: string};
+            /**
+             * When set to `true`, PgBouncer will disconnect from the PostgreSQL server, first waiting for all queries to complete, and pause all new client connections until this value is set to `false` (default). Internally, the operator calls PgBouncer's `PAUSE` and `RESUME` commands.
+             */
+            paused?: boolean;
+            /**
+             * PostgreSQL Host Based Authentication rules (lines to be appended to the pg_hba.conf file)
+             */
+            pg_hba?: string[];
+            /**
+             * The pool mode
+             */
+            poolMode: string;
+        }
+        /**
+         * poolerSpecPgbouncerProvideDefaults sets the appropriate defaults for PoolerSpecPgbouncer
+         */
+        export function poolerSpecPgbouncerProvideDefaults(val: PoolerSpecPgbouncer): PoolerSpecPgbouncer {
+            return {
+                ...val,
+                paused: (val.paused) ?? false,
+                poolMode: (val.poolMode) ?? "session",
+            };
+        }
+
+        /**
+         * The credentials of the user that need to be used for the authentication query. In case it is specified, also an AuthQuery (e.g. "SELECT usename, passwd FROM pg_shadow WHERE usename=$1") has to be specified and no automatic CNPG Cluster integration will be triggered.
+         */
+        export interface PoolerSpecPgbouncerAuthQuerySecret {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The template of the Pod to be created
+         */
+        export interface PoolerSpecTemplate {
+            /**
+             * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+             */
+            metadata?: outputs.postgresql.v1.PoolerSpecTemplateMetadata;
+            /**
+             * Specification of the desired behavior of the pod. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+             */
+            spec?: outputs.postgresql.v1.PoolerSpecTemplateSpec;
+        }
+
+        /**
+         * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+         */
+        export interface PoolerSpecTemplateMetadata {
+            /**
+             * Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations
+             */
+            annotations?: {[key: string]: string};
+            /**
+             * Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels
+             */
+            labels?: {[key: string]: string};
+        }
+
+        /**
+         * Specification of the desired behavior of the pod. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface PoolerSpecTemplateSpec {
+            /**
+             * Optional duration in seconds the pod may be active on the node relative to StartTime before the system will actively try to mark it failed and kill associated containers. Value must be a positive integer.
+             */
+            activeDeadlineSeconds?: number;
+            /**
+             * If specified, the pod's scheduling constraints
+             */
+            affinity?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinity;
+            /**
+             * AutomountServiceAccountToken indicates whether a service account token should be automatically mounted.
+             */
+            automountServiceAccountToken?: boolean;
+            /**
+             * List of containers belonging to the pod. Containers cannot currently be added or removed. There must be at least one container in a Pod. Cannot be updated.
+             */
+            containers: outputs.postgresql.v1.PoolerSpecTemplateSpecContainers[];
+            /**
+             * Specifies the DNS parameters of a pod. Parameters specified here will be merged to the generated DNS configuration based on DNSPolicy.
+             */
+            dnsConfig?: outputs.postgresql.v1.PoolerSpecTemplateSpecDnsConfig;
+            /**
+             * Set DNS policy for the pod. Defaults to "ClusterFirst". Valid values are 'ClusterFirstWithHostNet', 'ClusterFirst', 'Default' or 'None'. DNS parameters given in DNSConfig will be merged with the policy selected with DNSPolicy. To have DNS options set along with hostNetwork, you have to specify DNS policy explicitly to 'ClusterFirstWithHostNet'.
+             */
+            dnsPolicy?: string;
+            /**
+             * EnableServiceLinks indicates whether information about services should be injected into pod's environment variables, matching the syntax of Docker links. Optional: Defaults to true.
+             */
+            enableServiceLinks?: boolean;
+            /**
+             * List of ephemeral containers run in this pod. Ephemeral containers may be run in an existing pod to perform user-initiated actions such as debugging. This list cannot be specified when creating a pod, and it cannot be modified by updating the pod spec. In order to add an ephemeral container to an existing pod, use the pod's ephemeralcontainers subresource.
+             */
+            ephemeralContainers?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainers[];
+            /**
+             * HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts file if specified. This is only valid for non-hostNetwork pods.
+             */
+            hostAliases?: outputs.postgresql.v1.PoolerSpecTemplateSpecHostAliases[];
+            /**
+             * Use the host's ipc namespace. Optional: Default to false.
+             */
+            hostIPC?: boolean;
+            /**
+             * Host networking requested for this pod. Use the host's network namespace. If this option is set, the ports that will be used must be specified. Default to false.
+             */
+            hostNetwork?: boolean;
+            /**
+             * Use the host's pid namespace. Optional: Default to false.
+             */
+            hostPID?: boolean;
+            /**
+             * Use the host's user namespace. Optional: Default to true. If set to true or not present, the pod will be run in the host user namespace, useful for when the pod needs a feature only available to the host user namespace, such as loading a kernel module with CAP_SYS_MODULE. When set to false, a new userns is created for the pod. Setting false is useful for mitigating container breakout vulnerabilities even allowing users to run their containers as root without actually having root privileges on the host. This field is alpha-level and is only honored by servers that enable the UserNamespacesSupport feature.
+             */
+            hostUsers?: boolean;
+            /**
+             * Specifies the hostname of the Pod If not specified, the pod's hostname will be set to a system-defined value.
+             */
+            hostname?: string;
+            /**
+             * ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec. If specified, these secrets will be passed to individual puller implementations for them to use. More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+             */
+            imagePullSecrets?: outputs.postgresql.v1.PoolerSpecTemplateSpecImagePullSecrets[];
+            /**
+             * List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started. If any init container fails, the pod is considered to have failed and is handled according to its restartPolicy. The name for an init container or normal container must be unique among all containers. Init containers may not have Lifecycle actions, Readiness probes, Liveness probes, or Startup probes. The resourceRequirements of an init container are taken into account during scheduling by finding the highest request/limit for each resource type, and then using the max of of that value or the sum of the normal containers. Limits are applied to init containers in a similar fashion. Init containers cannot currently be added or removed. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+             */
+            initContainers?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainers[];
+            /**
+             * NodeName is a request to schedule this pod onto a specific node. If it is non-empty, the scheduler simply schedules this pod onto that node, assuming that it fits resource requirements.
+             */
+            nodeName?: string;
+            /**
+             * NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+             */
+            nodeSelector?: {[key: string]: string};
+            /**
+             * Specifies the OS of the containers in the pod. Some pod and container fields are restricted if this is set. 
+             *  If the OS field is set to linux, the following fields must be unset: -securityContext.windowsOptions 
+             *  If the OS field is set to windows, following fields must be unset: - spec.hostPID - spec.hostIPC - spec.hostUsers - spec.securityContext.seLinuxOptions - spec.securityContext.seccompProfile - spec.securityContext.fsGroup - spec.securityContext.fsGroupChangePolicy - spec.securityContext.sysctls - spec.shareProcessNamespace - spec.securityContext.runAsUser - spec.securityContext.runAsGroup - spec.securityContext.supplementalGroups - spec.containers[*].securityContext.seLinuxOptions - spec.containers[*].securityContext.seccompProfile - spec.containers[*].securityContext.capabilities - spec.containers[*].securityContext.readOnlyRootFilesystem - spec.containers[*].securityContext.privileged - spec.containers[*].securityContext.allowPrivilegeEscalation - spec.containers[*].securityContext.procMount - spec.containers[*].securityContext.runAsUser - spec.containers[*].securityContext.runAsGroup
+             */
+            os?: outputs.postgresql.v1.PoolerSpecTemplateSpecOs;
+            /**
+             * Overhead represents the resource overhead associated with running a pod for a given RuntimeClass. This field will be autopopulated at admission time by the RuntimeClass admission controller. If the RuntimeClass admission controller is enabled, overhead must not be set in Pod create requests. The RuntimeClass admission controller will reject Pod create requests which have the overhead already set. If RuntimeClass is configured and selected in the PodSpec, Overhead will be set to the value defined in the corresponding RuntimeClass, otherwise it will remain unset and treated as zero. More info: https://git.k8s.io/enhancements/keps/sig-node/688-pod-overhead/README.md
+             */
+            overhead?: {[key: string]: number | string};
+            /**
+             * PreemptionPolicy is the Policy for preempting pods with lower priority. One of Never, PreemptLowerPriority. Defaults to PreemptLowerPriority if unset.
+             */
+            preemptionPolicy?: string;
+            /**
+             * The priority value. Various system components use this field to find the priority of the pod. When Priority Admission Controller is enabled, it prevents users from setting this field. The admission controller populates this field from PriorityClassName. The higher the value, the higher the priority.
+             */
+            priority?: number;
+            /**
+             * If specified, indicates the pod's priority. "system-node-critical" and "system-cluster-critical" are two special keywords which indicate the highest priorities with the former being the highest priority. Any other name must be defined by creating a PriorityClass object with that name. If not specified, the pod priority will be default or zero if there is no default.
+             */
+            priorityClassName?: string;
+            /**
+             * If specified, all readiness gates will be evaluated for pod readiness. A pod is ready when all its containers are ready AND all conditions specified in the readiness gates have status equal to "True" More info: https://git.k8s.io/enhancements/keps/sig-network/580-pod-readiness-gates
+             */
+            readinessGates?: outputs.postgresql.v1.PoolerSpecTemplateSpecReadinessGates[];
+            /**
+             * ResourceClaims defines which ResourceClaims must be allocated and reserved before the Pod is allowed to start. The resources will be made available to those containers which consume them by name. 
+             *  This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. 
+             *  This field is immutable.
+             */
+            resourceClaims?: outputs.postgresql.v1.PoolerSpecTemplateSpecResourceClaims[];
+            /**
+             * Restart policy for all containers within the pod. One of Always, OnFailure, Never. In some contexts, only a subset of those values may be permitted. Default to Always. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#restart-policy
+             */
+            restartPolicy?: string;
+            /**
+             * RuntimeClassName refers to a RuntimeClass object in the node.k8s.io group, which should be used to run this pod.  If no RuntimeClass resource matches the named class, the pod will not be run. If unset or empty, the "legacy" RuntimeClass will be used, which is an implicit class with an empty definition that uses the default runtime handler. More info: https://git.k8s.io/enhancements/keps/sig-node/585-runtime-class
+             */
+            runtimeClassName?: string;
+            /**
+             * If specified, the pod will be dispatched by specified scheduler. If not specified, the pod will be dispatched by default scheduler.
+             */
+            schedulerName?: string;
+            /**
+             * SchedulingGates is an opaque list of values that if specified will block scheduling the pod. If schedulingGates is not empty, the pod will stay in the SchedulingGated state and the scheduler will not attempt to schedule the pod. 
+             *  SchedulingGates can only be set at pod creation time, and be removed only afterwards. 
+             *  This is a beta feature enabled by the PodSchedulingReadiness feature gate.
+             */
+            schedulingGates?: outputs.postgresql.v1.PoolerSpecTemplateSpecSchedulingGates[];
+            /**
+             * SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.
+             */
+            securityContext?: outputs.postgresql.v1.PoolerSpecTemplateSpecSecurityContext;
+            /**
+             * DeprecatedServiceAccount is a depreciated alias for ServiceAccountName. Deprecated: Use serviceAccountName instead.
+             */
+            serviceAccount?: string;
+            /**
+             * ServiceAccountName is the name of the ServiceAccount to use to run this pod. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+             */
+            serviceAccountName?: string;
+            /**
+             * If true the pod's hostname will be configured as the pod's FQDN, rather than the leaf name (the default). In Linux containers, this means setting the FQDN in the hostname field of the kernel (the nodename field of struct utsname). In Windows containers, this means setting the registry value of hostname for the registry key HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters to FQDN. If a pod does not have FQDN, this has no effect. Default to false.
+             */
+            setHostnameAsFQDN?: boolean;
+            /**
+             * Share a single process namespace between all of the containers in a pod. When this is set containers will be able to view and signal processes from other containers in the same pod, and the first process in each container will not be assigned PID 1. HostPID and ShareProcessNamespace cannot both be set. Optional: Default to false.
+             */
+            shareProcessNamespace?: boolean;
+            /**
+             * If specified, the fully qualified Pod hostname will be "<hostname>.<subdomain>.<pod namespace>.svc.<cluster domain>". If not specified, the pod will not have a domainname at all.
+             */
+            subdomain?: string;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully. May be decreased in delete request. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). If this value is nil, the default grace period will be used instead. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. Defaults to 30 seconds.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * If specified, the pod's tolerations.
+             */
+            tolerations?: outputs.postgresql.v1.PoolerSpecTemplateSpecTolerations[];
+            /**
+             * TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. All topologySpreadConstraints are ANDed.
+             */
+            topologySpreadConstraints?: outputs.postgresql.v1.PoolerSpecTemplateSpecTopologySpreadConstraints[];
+            /**
+             * List of volumes that can be mounted by containers belonging to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes
+             */
+            volumes?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumes[];
+        }
+
+        /**
+         * If specified, the pod's scheduling constraints
+         */
+        export interface PoolerSpecTemplateSpecAffinity {
+            /**
+             * Describes node affinity scheduling rules for the pod.
+             */
+            nodeAffinity?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityNodeAffinity;
+            /**
+             * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
+             */
+            podAffinity?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinity;
+            /**
+             * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
+             */
+            podAntiAffinity?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinity;
+        }
+
+        /**
+         * Describes node affinity scheduling rules for the pod.
+         */
+        export interface PoolerSpecTemplateSpecAffinityNodeAffinity {
+            /**
+             * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node matches the corresponding matchExpressions; the node(s) with the highest sum are the most preferred.
+             */
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
+            /**
+             * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
+             */
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution;
+        }
+
+        /**
+         * An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
+         */
+        export interface PoolerSpecTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * A node selector term, associated with the corresponding weight.
+             */
+            preference: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference;
+            /**
+             * Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
+             */
+            weight: number;
+        }
+
+        /**
+         * A node selector term, associated with the corresponding weight.
+         */
+        export interface PoolerSpecTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreference {
+            /**
+             * A list of node selector requirements by node's labels.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions[];
+            /**
+             * A list of node selector requirements by node's fields.
+             */
+            matchFields?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields[];
+        }
+
+        /**
+         * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchExpressions {
+            /**
+             * The label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+             */
+            operator: string;
+            /**
+             * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityNodeAffinityPreferredDuringSchedulingIgnoredDuringExecutionPreferenceMatchFields {
+            /**
+             * The label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+             */
+            operator: string;
+            /**
+             * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
+         */
+        export interface PoolerSpecTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * Required. A list of node selector terms. The terms are ORed.
+             */
+            nodeSelectorTerms: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms[];
+        }
+
+        /**
+         * A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
+         */
+        export interface PoolerSpecTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTerms {
+            /**
+             * A list of node selector requirements by node's labels.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions[];
+            /**
+             * A list of node selector requirements by node's fields.
+             */
+            matchFields?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields[];
+        }
+
+        /**
+         * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchExpressions {
+            /**
+             * The label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+             */
+            operator: string;
+            /**
+             * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityNodeAffinityRequiredDuringSchedulingIgnoredDuringExecutionNodeSelectorTermsMatchFields {
+            /**
+             * The label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+             */
+            operator: string;
+            /**
+             * An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinity {
+            /**
+             * The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
+             */
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
+            /**
+             * If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
+             */
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
+        }
+
+        /**
+         * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * Required. A pod affinity term, associated with the corresponding weight.
+             */
+            podAffinityTerm: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
+            /**
+             * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
+             */
+            weight: number;
+        }
+
+        /**
+         * Required. A pod affinity term, associated with the corresponding weight.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
+            /**
+             * A label query over a set of resources, in this case pods.
+             */
+            labelSelector?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
+            /**
+             * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+             */
+            namespaceSelector?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
+            /**
+             * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+             */
+            namespaces?: string[];
+            /**
+             * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+             */
+            topologyKey: string;
+        }
+
+        /**
+         * A label query over a set of resources, in this case pods.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * A label query over a set of resources, in this case pods.
+             */
+            labelSelector?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
+            /**
+             * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+             */
+            namespaceSelector?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
+            /**
+             * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+             */
+            namespaces?: string[];
+            /**
+             * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+             */
+            topologyKey: string;
+        }
+
+        /**
+         * A label query over a set of resources, in this case pods.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinity {
+            /**
+             * The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
+             */
+            preferredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution[];
+            /**
+             * If the anti-affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the anti-affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
+             */
+            requiredDuringSchedulingIgnoredDuringExecution?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution[];
+        }
+
+        /**
+         * The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * Required. A pod affinity term, associated with the corresponding weight.
+             */
+            podAffinityTerm: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm;
+            /**
+             * weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
+             */
+            weight: number;
+        }
+
+        /**
+         * Required. A pod affinity term, associated with the corresponding weight.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTerm {
+            /**
+             * A label query over a set of resources, in this case pods.
+             */
+            labelSelector?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector;
+            /**
+             * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+             */
+            namespaceSelector?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector;
+            /**
+             * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+             */
+            namespaces?: string[];
+            /**
+             * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+             */
+            topologyKey: string;
+        }
+
+        /**
+         * A label query over a set of resources, in this case pods.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityPreferredDuringSchedulingIgnoredDuringExecutionPodAffinityTermNamespaceSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecution {
+            /**
+             * A label query over a set of resources, in this case pods.
+             */
+            labelSelector?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector;
+            /**
+             * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+             */
+            namespaceSelector?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector;
+            /**
+             * namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+             */
+            namespaces?: string[];
+            /**
+             * This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+             */
+            topologyKey: string;
+        }
+
+        /**
+         * A label query over a set of resources, in this case pods.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecAffinityPodAntiAffinityRequiredDuringSchedulingIgnoredDuringExecutionNamespaceSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * A single application container that you want to run within a pod.
+         */
+        export interface PoolerSpecTemplateSpecContainers {
+            /**
+             * Arguments to the entrypoint. The container image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+             */
+            args?: string[];
+            /**
+             * Entrypoint array. Not executed within a shell. The container image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+             */
+            command?: string[];
+            /**
+             * List of environment variables to set in the container. Cannot be updated.
+             */
+            env?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersEnv[];
+            /**
+             * List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.
+             */
+            envFrom?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersEnvFrom[];
+            /**
+             * Container image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.
+             */
+            image?: string;
+            /**
+             * Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
+             */
+            imagePullPolicy?: string;
+            /**
+             * Actions that the management system should take in response to container lifecycle events. Cannot be updated.
+             */
+            lifecycle?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecycle;
+            /**
+             * Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            livenessProbe?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLivenessProbe;
+            /**
+             * Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.
+             */
+            name: string;
+            /**
+             * List of ports to expose from the container. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Modifying this array with strategic merge patch may corrupt the data. For more information See https://github.com/kubernetes/kubernetes/issues/108255. Cannot be updated.
+             */
+            ports?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersPorts[];
+            /**
+             * Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            readinessProbe?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersReadinessProbe;
+            /**
+             * Resources resize policy for the container.
+             */
+            resizePolicy?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersResizePolicy[];
+            /**
+             * Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            resources?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersResources;
+            /**
+             * SecurityContext defines the security options the container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext. More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+             */
+            securityContext?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersSecurityContext;
+            /**
+             * StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            startupProbe?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersStartupProbe;
+            /**
+             * Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false.
+             */
+            stdin?: boolean;
+            /**
+             * Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, a container processes that reads from stdin will never receive an EOF. Default is false
+             */
+            stdinOnce?: boolean;
+            /**
+             * Optional: Path at which the file to which the container's termination message will be written is mounted into the container's filesystem. Message written is intended to be brief final status, such as an assertion failure message. Will be truncated by the node if greater than 4096 bytes. The total message length across all containers will be limited to 12kb. Defaults to /dev/termination-log. Cannot be updated.
+             */
+            terminationMessagePath?: string;
+            /**
+             * Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated.
+             */
+            terminationMessagePolicy?: string;
+            /**
+             * Whether this container should allocate a TTY for itself, also requires 'stdin' to be true. Default is false.
+             */
+            tty?: boolean;
+            /**
+             * volumeDevices is the list of block devices to be used by the container.
+             */
+            volumeDevices?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersVolumeDevices[];
+            /**
+             * Pod volumes to mount into the container's filesystem. Cannot be updated.
+             */
+            volumeMounts?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersVolumeMounts[];
+            /**
+             * Container's working directory. If not specified, the container runtime's default will be used, which might be configured in the container image. Cannot be updated.
+             */
+            workingDir?: string;
+        }
+
+        /**
+         * EnvVar represents an environment variable present in a Container.
+         */
+        export interface PoolerSpecTemplateSpecContainersEnv {
+            /**
+             * Name of the environment variable. Must be a C_IDENTIFIER.
+             */
+            name: string;
+            /**
+             * Variable references $(VAR_NAME) are expanded using the previously defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".
+             */
+            value?: string;
+            /**
+             * Source for the environment variable's value. Cannot be used if value is not empty.
+             */
+            valueFrom?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersEnvValueFrom;
+        }
+
+        /**
+         * EnvFromSource represents the source of a set of ConfigMaps
+         */
+        export interface PoolerSpecTemplateSpecContainersEnvFrom {
+            /**
+             * The ConfigMap to select from
+             */
+            configMapRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersEnvFromConfigMapRef;
+            /**
+             * An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+             */
+            prefix?: string;
+            /**
+             * The Secret to select from
+             */
+            secretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersEnvFromSecretRef;
+        }
+
+        /**
+         * The ConfigMap to select from
+         */
+        export interface PoolerSpecTemplateSpecContainersEnvFromConfigMapRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the ConfigMap must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * The Secret to select from
+         */
+        export interface PoolerSpecTemplateSpecContainersEnvFromSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Source for the environment variable's value. Cannot be used if value is not empty.
+         */
+        export interface PoolerSpecTemplateSpecContainersEnvValueFrom {
+            /**
+             * Selects a key of a ConfigMap.
+             */
+            configMapKeyRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersEnvValueFromConfigMapKeyRef;
+            /**
+             * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+             */
+            fieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersEnvValueFromFieldRef;
+            /**
+             * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+             */
+            resourceFieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersEnvValueFromResourceFieldRef;
+            /**
+             * Selects a key of a secret in the pod's namespace
+             */
+            secretKeyRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersEnvValueFromSecretKeyRef;
+        }
+
+        /**
+         * Selects a key of a ConfigMap.
+         */
+        export interface PoolerSpecTemplateSpecContainersEnvValueFromConfigMapKeyRef {
+            /**
+             * The key to select.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the ConfigMap or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+         */
+        export interface PoolerSpecTemplateSpecContainersEnvValueFromFieldRef {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion?: string;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath: string;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+         */
+        export interface PoolerSpecTemplateSpecContainersEnvValueFromResourceFieldRef {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName?: string;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor?: number | string;
+            /**
+             * Required: resource to select
+             */
+            resource: string;
+        }
+
+        /**
+         * Selects a key of a secret in the pod's namespace
+         */
+        export interface PoolerSpecTemplateSpecContainersEnvValueFromSecretKeyRef {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Actions that the management system should take in response to container lifecycle events. Cannot be updated.
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecycle {
+            /**
+             * PostStart is called immediately after a container is created. If the handler fails, the container is terminated and restarted according to its restart policy. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             */
+            postStart?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePostStart;
+            /**
+             * PreStop is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc. The handler is not called if the container crashes or exits. The Pod's termination grace period countdown begins before the PreStop hook is executed. Regardless of the outcome of the handler, the container will eventually terminate within the Pod's termination grace period (unless delayed by finalizers). Other management of the container blocks until the hook completes or until the termination grace period is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             */
+            preStop?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePreStop;
+        }
+
+        /**
+         * PostStart is called immediately after a container is created. If the handler fails, the container is terminated and restarted according to its restart policy. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePostStart {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePostStartExec;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePostStartHttpGet;
+            /**
+             * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePostStartTcpSocket;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePostStartExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePostStartHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePostStartHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePostStartHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePostStartTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * PreStop is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc. The handler is not called if the container crashes or exits. The Pod's termination grace period countdown begins before the PreStop hook is executed. Regardless of the outcome of the handler, the container will eventually terminate within the Pod's termination grace period (unless delayed by finalizers). Other management of the container blocks until the hook completes or until the termination grace period is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePreStop {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePreStopExec;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePreStopHttpGet;
+            /**
+             * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePreStopTcpSocket;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePreStopExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePreStopHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLifecyclePreStopHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePreStopHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+         */
+        export interface PoolerSpecTemplateSpecContainersLifecyclePreStopTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+         */
+        export interface PoolerSpecTemplateSpecContainersLivenessProbe {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLivenessProbeExec;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
+            /**
+             * GRPC specifies an action involving a GRPC port.
+             */
+            grpc?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLivenessProbeGrpc;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLivenessProbeHttpGet;
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * TCPSocket specifies an action involving a TCP port.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLivenessProbeTcpSocket;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecContainersLivenessProbeExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * GRPC specifies an action involving a GRPC port.
+         */
+        export interface PoolerSpecTemplateSpecContainersLivenessProbeGrpc {
+            /**
+             * Port number of the gRPC service. Number must be in the range 1 to 65535.
+             */
+            port: number;
+            /**
+             * Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). 
+             *  If this is not specified, the default behavior is defined by gRPC.
+             */
+            service?: string;
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecContainersLivenessProbeHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersLivenessProbeHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecContainersLivenessProbeHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * TCPSocket specifies an action involving a TCP port.
+         */
+        export interface PoolerSpecTemplateSpecContainersLivenessProbeTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * ContainerPort represents a network port in a single container.
+         */
+        export interface PoolerSpecTemplateSpecContainersPorts {
+            /**
+             * Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.
+             */
+            containerPort: number;
+            /**
+             * What host IP to bind the external port to.
+             */
+            hostIP?: string;
+            /**
+             * Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.
+             */
+            hostPort?: number;
+            /**
+             * If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. Name for the port that can be referred to by services.
+             */
+            name?: string;
+            /**
+             * Protocol for port. Must be UDP, TCP, or SCTP. Defaults to "TCP".
+             */
+            protocol?: string;
+        }
+        /**
+         * poolerSpecTemplateSpecContainersPortsProvideDefaults sets the appropriate defaults for PoolerSpecTemplateSpecContainersPorts
+         */
+        export function poolerSpecTemplateSpecContainersPortsProvideDefaults(val: PoolerSpecTemplateSpecContainersPorts): PoolerSpecTemplateSpecContainersPorts {
+            return {
+                ...val,
+                protocol: (val.protocol) ?? "TCP",
+            };
+        }
+
+        /**
+         * Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+         */
+        export interface PoolerSpecTemplateSpecContainersReadinessProbe {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersReadinessProbeExec;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
+            /**
+             * GRPC specifies an action involving a GRPC port.
+             */
+            grpc?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersReadinessProbeGrpc;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersReadinessProbeHttpGet;
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * TCPSocket specifies an action involving a TCP port.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersReadinessProbeTcpSocket;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecContainersReadinessProbeExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * GRPC specifies an action involving a GRPC port.
+         */
+        export interface PoolerSpecTemplateSpecContainersReadinessProbeGrpc {
+            /**
+             * Port number of the gRPC service. Number must be in the range 1 to 65535.
+             */
+            port: number;
+            /**
+             * Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). 
+             *  If this is not specified, the default behavior is defined by gRPC.
+             */
+            service?: string;
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecContainersReadinessProbeHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersReadinessProbeHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecContainersReadinessProbeHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * TCPSocket specifies an action involving a TCP port.
+         */
+        export interface PoolerSpecTemplateSpecContainersReadinessProbeTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * ContainerResizePolicy represents resource resize policy for the container.
+         */
+        export interface PoolerSpecTemplateSpecContainersResizePolicy {
+            /**
+             * Name of the resource to which this resource resize policy applies. Supported values: cpu, memory.
+             */
+            resourceName: string;
+            /**
+             * Restart policy to apply when specified resource is resized. If not specified, it defaults to NotRequired.
+             */
+            restartPolicy: string;
+        }
+
+        /**
+         * Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+         */
+        export interface PoolerSpecTemplateSpecContainersResources {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. 
+             *  This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. 
+             *  This field is immutable. It can only be set for containers.
+             */
+            claims?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersResourcesClaims[];
+            /**
+             * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits?: {[key: string]: number | string};
+            /**
+             * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests?: {[key: string]: number | string};
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface PoolerSpecTemplateSpecContainersResourcesClaims {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+             */
+            name: string;
+        }
+
+        /**
+         * SecurityContext defines the security options the container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext. More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+         */
+        export interface PoolerSpecTemplateSpecContainersSecurityContext {
+            /**
+             * AllowPrivilegeEscalation controls whether a process can gain more privileges than its parent process. This bool directly controls if the no_new_privs flag will be set on the container process. AllowPrivilegeEscalation is true always when the container is: 1) run as Privileged 2) has CAP_SYS_ADMIN Note that this field cannot be set when spec.os.name is windows.
+             */
+            allowPrivilegeEscalation?: boolean;
+            /**
+             * The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime. Note that this field cannot be set when spec.os.name is windows.
+             */
+            capabilities?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersSecurityContextCapabilities;
+            /**
+             * Run container in privileged mode. Processes in privileged containers are essentially equivalent to root on the host. Defaults to false. Note that this field cannot be set when spec.os.name is windows.
+             */
+            privileged?: boolean;
+            /**
+             * procMount denotes the type of proc mount to use for the containers. The default is DefaultProcMount which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled. Note that this field cannot be set when spec.os.name is windows.
+             */
+            procMount?: string;
+            /**
+             * Whether this container has a read-only root filesystem. Default is false. Note that this field cannot be set when spec.os.name is windows.
+             */
+            readOnlyRootFilesystem?: boolean;
+            /**
+             * The GID to run the entrypoint of the container process. Uses runtime default if unset. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+             */
+            runAsGroup?: number;
+            /**
+             * Indicates that the container must run as a non-root user. If true, the Kubelet will validate the image at runtime to ensure that it does not run as UID 0 (root) and fail to start the container if it does. If unset or false, no such validation will be performed. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             */
+            runAsNonRoot?: boolean;
+            /**
+             * The UID to run the entrypoint of the container process. Defaults to user specified in image metadata if unspecified. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+             */
+            runAsUser?: number;
+            /**
+             * The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+             */
+            seLinuxOptions?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersSecurityContextSeLinuxOptions;
+            /**
+             * The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options. Note that this field cannot be set when spec.os.name is windows.
+             */
+            seccompProfile?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersSecurityContextSeccompProfile;
+            /**
+             * The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.
+             */
+            windowsOptions?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersSecurityContextWindowsOptions;
+        }
+
+        /**
+         * The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecContainersSecurityContextCapabilities {
+            /**
+             * Added capabilities
+             */
+            add?: string[];
+            /**
+             * Removed capabilities
+             */
+            drop?: string[];
+        }
+
+        /**
+         * The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecContainersSecurityContextSeLinuxOptions {
+            /**
+             * Level is SELinux level label that applies to the container.
+             */
+            level?: string;
+            /**
+             * Role is a SELinux role label that applies to the container.
+             */
+            role?: string;
+            /**
+             * Type is a SELinux type label that applies to the container.
+             */
+            type?: string;
+            /**
+             * User is a SELinux user label that applies to the container.
+             */
+            user?: string;
+        }
+
+        /**
+         * The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecContainersSecurityContextSeccompProfile {
+            /**
+             * localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is "Localhost".
+             */
+            localhostProfile?: string;
+            /**
+             * type indicates which kind of seccomp profile will be applied. Valid options are: 
+             *  Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied.
+             */
+            type: string;
+        }
+
+        /**
+         * The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.
+         */
+        export interface PoolerSpecTemplateSpecContainersSecurityContextWindowsOptions {
+            /**
+             * GMSACredentialSpec is where the GMSA admission webhook (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the GMSA credential spec named by the GMSACredentialSpecName field.
+             */
+            gmsaCredentialSpec?: string;
+            /**
+             * GMSACredentialSpecName is the name of the GMSA credential spec to use.
+             */
+            gmsaCredentialSpecName?: string;
+            /**
+             * HostProcess determines if a container should be run as a 'Host Process' container. This field is alpha-level and will only be honored by components that enable the WindowsHostProcessContainers feature flag. Setting this field without the feature flag will result in errors when validating the Pod. All of a Pod's containers must have the same effective HostProcess value (it is not allowed to have a mix of HostProcess containers and non-HostProcess containers).  In addition, if HostProcess is true then HostNetwork must also be set to true.
+             */
+            hostProcess?: boolean;
+            /**
+             * The UserName in Windows to run the entrypoint of the container process. Defaults to the user specified in image metadata if unspecified. May also be set in PodSecurityContext. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             */
+            runAsUserName?: string;
+        }
+
+        /**
+         * StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+         */
+        export interface PoolerSpecTemplateSpecContainersStartupProbe {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersStartupProbeExec;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
+            /**
+             * GRPC specifies an action involving a GRPC port.
+             */
+            grpc?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersStartupProbeGrpc;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersStartupProbeHttpGet;
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * TCPSocket specifies an action involving a TCP port.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersStartupProbeTcpSocket;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecContainersStartupProbeExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * GRPC specifies an action involving a GRPC port.
+         */
+        export interface PoolerSpecTemplateSpecContainersStartupProbeGrpc {
+            /**
+             * Port number of the gRPC service. Number must be in the range 1 to 65535.
+             */
+            port: number;
+            /**
+             * Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). 
+             *  If this is not specified, the default behavior is defined by gRPC.
+             */
+            service?: string;
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecContainersStartupProbeHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecContainersStartupProbeHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecContainersStartupProbeHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * TCPSocket specifies an action involving a TCP port.
+         */
+        export interface PoolerSpecTemplateSpecContainersStartupProbeTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * volumeDevice describes a mapping of a raw block device within a container.
+         */
+        export interface PoolerSpecTemplateSpecContainersVolumeDevices {
+            /**
+             * devicePath is the path inside of the container that the device will be mapped to.
+             */
+            devicePath: string;
+            /**
+             * name must match the name of a persistentVolumeClaim in the pod
+             */
+            name: string;
+        }
+
+        /**
+         * VolumeMount describes a mounting of a Volume within a container.
+         */
+        export interface PoolerSpecTemplateSpecContainersVolumeMounts {
+            /**
+             * Path within the container at which the volume should be mounted.  Must not contain ':'.
+             */
+            mountPath: string;
+            /**
+             * mountPropagation determines how mounts are propagated from the host to container and the other way around. When not set, MountPropagationNone is used. This field is beta in 1.10.
+             */
+            mountPropagation?: string;
+            /**
+             * This must match the Name of a Volume.
+             */
+            name: string;
+            /**
+             * Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false.
+             */
+            readOnly?: boolean;
+            /**
+             * Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root).
+             */
+            subPath?: string;
+            /**
+             * Expanded path within the volume from which the container's volume should be mounted. Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment. Defaults to "" (volume's root). SubPathExpr and SubPath are mutually exclusive.
+             */
+            subPathExpr?: string;
+        }
+
+        /**
+         * Specifies the DNS parameters of a pod. Parameters specified here will be merged to the generated DNS configuration based on DNSPolicy.
+         */
+        export interface PoolerSpecTemplateSpecDnsConfig {
+            /**
+             * A list of DNS name server IP addresses. This will be appended to the base nameservers generated from DNSPolicy. Duplicated nameservers will be removed.
+             */
+            nameservers?: string[];
+            /**
+             * A list of DNS resolver options. This will be merged with the base options generated from DNSPolicy. Duplicated entries will be removed. Resolution options given in Options will override those that appear in the base DNSPolicy.
+             */
+            options?: outputs.postgresql.v1.PoolerSpecTemplateSpecDnsConfigOptions[];
+            /**
+             * A list of DNS search domains for host-name lookup. This will be appended to the base search paths generated from DNSPolicy. Duplicated search paths will be removed.
+             */
+            searches?: string[];
+        }
+
+        /**
+         * PodDNSConfigOption defines DNS resolver options of a pod.
+         */
+        export interface PoolerSpecTemplateSpecDnsConfigOptions {
+            /**
+             * Required.
+             */
+            name?: string;
+            value?: string;
+        }
+
+        /**
+         * An EphemeralContainer is a temporary container that you may add to an existing Pod for user-initiated activities such as debugging. Ephemeral containers have no resource or scheduling guarantees, and they will not be restarted when they exit or when a Pod is removed or restarted. The kubelet may evict a Pod if an ephemeral container causes the Pod to exceed its resource allocation. 
+         *  To add an ephemeral container, use the ephemeralcontainers subresource of an existing Pod. Ephemeral containers may not be removed or restarted.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainers {
+            /**
+             * Arguments to the entrypoint. The image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+             */
+            args?: string[];
+            /**
+             * Entrypoint array. Not executed within a shell. The image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+             */
+            command?: string[];
+            /**
+             * List of environment variables to set in the container. Cannot be updated.
+             */
+            env?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersEnv[];
+            /**
+             * List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.
+             */
+            envFrom?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersEnvFrom[];
+            /**
+             * Container image name. More info: https://kubernetes.io/docs/concepts/containers/images
+             */
+            image?: string;
+            /**
+             * Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
+             */
+            imagePullPolicy?: string;
+            /**
+             * Lifecycle is not allowed for ephemeral containers.
+             */
+            lifecycle?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecycle;
+            /**
+             * Probes are not allowed for ephemeral containers.
+             */
+            livenessProbe?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLivenessProbe;
+            /**
+             * Name of the ephemeral container specified as a DNS_LABEL. This name must be unique among all containers, init containers and ephemeral containers.
+             */
+            name: string;
+            /**
+             * Ports are not allowed for ephemeral containers.
+             */
+            ports?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersPorts[];
+            /**
+             * Probes are not allowed for ephemeral containers.
+             */
+            readinessProbe?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersReadinessProbe;
+            /**
+             * Resources resize policy for the container.
+             */
+            resizePolicy?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersResizePolicy[];
+            /**
+             * Resources are not allowed for ephemeral containers. Ephemeral containers use spare resources already allocated to the pod.
+             */
+            resources?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersResources;
+            /**
+             * Optional: SecurityContext defines the security options the ephemeral container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext.
+             */
+            securityContext?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersSecurityContext;
+            /**
+             * Probes are not allowed for ephemeral containers.
+             */
+            startupProbe?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersStartupProbe;
+            /**
+             * Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false.
+             */
+            stdin?: boolean;
+            /**
+             * Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, a container processes that reads from stdin will never receive an EOF. Default is false
+             */
+            stdinOnce?: boolean;
+            /**
+             * If set, the name of the container from PodSpec that this ephemeral container targets. The ephemeral container will be run in the namespaces (IPC, PID, etc) of this container. If not set then the ephemeral container uses the namespaces configured in the Pod spec. 
+             *  The container runtime must implement support for this feature. If the runtime does not support namespace targeting then the result of setting this field is undefined.
+             */
+            targetContainerName?: string;
+            /**
+             * Optional: Path at which the file to which the container's termination message will be written is mounted into the container's filesystem. Message written is intended to be brief final status, such as an assertion failure message. Will be truncated by the node if greater than 4096 bytes. The total message length across all containers will be limited to 12kb. Defaults to /dev/termination-log. Cannot be updated.
+             */
+            terminationMessagePath?: string;
+            /**
+             * Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated.
+             */
+            terminationMessagePolicy?: string;
+            /**
+             * Whether this container should allocate a TTY for itself, also requires 'stdin' to be true. Default is false.
+             */
+            tty?: boolean;
+            /**
+             * volumeDevices is the list of block devices to be used by the container.
+             */
+            volumeDevices?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersVolumeDevices[];
+            /**
+             * Pod volumes to mount into the container's filesystem. Subpath mounts are not allowed for ephemeral containers. Cannot be updated.
+             */
+            volumeMounts?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersVolumeMounts[];
+            /**
+             * Container's working directory. If not specified, the container runtime's default will be used, which might be configured in the container image. Cannot be updated.
+             */
+            workingDir?: string;
+        }
+
+        /**
+         * EnvVar represents an environment variable present in a Container.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersEnv {
+            /**
+             * Name of the environment variable. Must be a C_IDENTIFIER.
+             */
+            name: string;
+            /**
+             * Variable references $(VAR_NAME) are expanded using the previously defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".
+             */
+            value?: string;
+            /**
+             * Source for the environment variable's value. Cannot be used if value is not empty.
+             */
+            valueFrom?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersEnvValueFrom;
+        }
+
+        /**
+         * EnvFromSource represents the source of a set of ConfigMaps
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersEnvFrom {
+            /**
+             * The ConfigMap to select from
+             */
+            configMapRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersEnvFromConfigMapRef;
+            /**
+             * An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+             */
+            prefix?: string;
+            /**
+             * The Secret to select from
+             */
+            secretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersEnvFromSecretRef;
+        }
+
+        /**
+         * The ConfigMap to select from
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersEnvFromConfigMapRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the ConfigMap must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * The Secret to select from
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersEnvFromSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Source for the environment variable's value. Cannot be used if value is not empty.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersEnvValueFrom {
+            /**
+             * Selects a key of a ConfigMap.
+             */
+            configMapKeyRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersEnvValueFromConfigMapKeyRef;
+            /**
+             * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+             */
+            fieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersEnvValueFromFieldRef;
+            /**
+             * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+             */
+            resourceFieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersEnvValueFromResourceFieldRef;
+            /**
+             * Selects a key of a secret in the pod's namespace
+             */
+            secretKeyRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersEnvValueFromSecretKeyRef;
+        }
+
+        /**
+         * Selects a key of a ConfigMap.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersEnvValueFromConfigMapKeyRef {
+            /**
+             * The key to select.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the ConfigMap or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersEnvValueFromFieldRef {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion?: string;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath: string;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersEnvValueFromResourceFieldRef {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName?: string;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor?: number | string;
+            /**
+             * Required: resource to select
+             */
+            resource: string;
+        }
+
+        /**
+         * Selects a key of a secret in the pod's namespace
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersEnvValueFromSecretKeyRef {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Lifecycle is not allowed for ephemeral containers.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecycle {
+            /**
+             * PostStart is called immediately after a container is created. If the handler fails, the container is terminated and restarted according to its restart policy. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             */
+            postStart?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStart;
+            /**
+             * PreStop is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc. The handler is not called if the container crashes or exits. The Pod's termination grace period countdown begins before the PreStop hook is executed. Regardless of the outcome of the handler, the container will eventually terminate within the Pod's termination grace period (unless delayed by finalizers). Other management of the container blocks until the hook completes or until the termination grace period is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             */
+            preStop?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStop;
+        }
+
+        /**
+         * PostStart is called immediately after a container is created. If the handler fails, the container is terminated and restarted according to its restart policy. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStart {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStartExec;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStartHttpGet;
+            /**
+             * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStartTcpSocket;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStartExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStartHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStartHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStartHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePostStartTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * PreStop is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc. The handler is not called if the container crashes or exits. The Pod's termination grace period countdown begins before the PreStop hook is executed. Regardless of the outcome of the handler, the container will eventually terminate within the Pod's termination grace period (unless delayed by finalizers). Other management of the container blocks until the hook completes or until the termination grace period is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStop {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStopExec;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStopHttpGet;
+            /**
+             * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStopTcpSocket;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStopExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStopHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStopHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStopHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLifecyclePreStopTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * Probes are not allowed for ephemeral containers.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLivenessProbe {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLivenessProbeExec;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
+            /**
+             * GRPC specifies an action involving a GRPC port.
+             */
+            grpc?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLivenessProbeGrpc;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLivenessProbeHttpGet;
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * TCPSocket specifies an action involving a TCP port.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLivenessProbeTcpSocket;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLivenessProbeExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * GRPC specifies an action involving a GRPC port.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLivenessProbeGrpc {
+            /**
+             * Port number of the gRPC service. Number must be in the range 1 to 65535.
+             */
+            port: number;
+            /**
+             * Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). 
+             *  If this is not specified, the default behavior is defined by gRPC.
+             */
+            service?: string;
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLivenessProbeHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersLivenessProbeHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLivenessProbeHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * TCPSocket specifies an action involving a TCP port.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersLivenessProbeTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * ContainerPort represents a network port in a single container.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersPorts {
+            /**
+             * Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.
+             */
+            containerPort: number;
+            /**
+             * What host IP to bind the external port to.
+             */
+            hostIP?: string;
+            /**
+             * Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.
+             */
+            hostPort?: number;
+            /**
+             * If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. Name for the port that can be referred to by services.
+             */
+            name?: string;
+            /**
+             * Protocol for port. Must be UDP, TCP, or SCTP. Defaults to "TCP".
+             */
+            protocol?: string;
+        }
+        /**
+         * poolerSpecTemplateSpecEphemeralContainersPortsProvideDefaults sets the appropriate defaults for PoolerSpecTemplateSpecEphemeralContainersPorts
+         */
+        export function poolerSpecTemplateSpecEphemeralContainersPortsProvideDefaults(val: PoolerSpecTemplateSpecEphemeralContainersPorts): PoolerSpecTemplateSpecEphemeralContainersPorts {
+            return {
+                ...val,
+                protocol: (val.protocol) ?? "TCP",
+            };
+        }
+
+        /**
+         * Probes are not allowed for ephemeral containers.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersReadinessProbe {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersReadinessProbeExec;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
+            /**
+             * GRPC specifies an action involving a GRPC port.
+             */
+            grpc?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersReadinessProbeGrpc;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersReadinessProbeHttpGet;
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * TCPSocket specifies an action involving a TCP port.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersReadinessProbeTcpSocket;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersReadinessProbeExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * GRPC specifies an action involving a GRPC port.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersReadinessProbeGrpc {
+            /**
+             * Port number of the gRPC service. Number must be in the range 1 to 65535.
+             */
+            port: number;
+            /**
+             * Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). 
+             *  If this is not specified, the default behavior is defined by gRPC.
+             */
+            service?: string;
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersReadinessProbeHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersReadinessProbeHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersReadinessProbeHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * TCPSocket specifies an action involving a TCP port.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersReadinessProbeTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * ContainerResizePolicy represents resource resize policy for the container.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersResizePolicy {
+            /**
+             * Name of the resource to which this resource resize policy applies. Supported values: cpu, memory.
+             */
+            resourceName: string;
+            /**
+             * Restart policy to apply when specified resource is resized. If not specified, it defaults to NotRequired.
+             */
+            restartPolicy: string;
+        }
+
+        /**
+         * Resources are not allowed for ephemeral containers. Ephemeral containers use spare resources already allocated to the pod.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersResources {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. 
+             *  This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. 
+             *  This field is immutable. It can only be set for containers.
+             */
+            claims?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersResourcesClaims[];
+            /**
+             * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits?: {[key: string]: number | string};
+            /**
+             * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests?: {[key: string]: number | string};
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersResourcesClaims {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+             */
+            name: string;
+        }
+
+        /**
+         * Optional: SecurityContext defines the security options the ephemeral container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersSecurityContext {
+            /**
+             * AllowPrivilegeEscalation controls whether a process can gain more privileges than its parent process. This bool directly controls if the no_new_privs flag will be set on the container process. AllowPrivilegeEscalation is true always when the container is: 1) run as Privileged 2) has CAP_SYS_ADMIN Note that this field cannot be set when spec.os.name is windows.
+             */
+            allowPrivilegeEscalation?: boolean;
+            /**
+             * The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime. Note that this field cannot be set when spec.os.name is windows.
+             */
+            capabilities?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersSecurityContextCapabilities;
+            /**
+             * Run container in privileged mode. Processes in privileged containers are essentially equivalent to root on the host. Defaults to false. Note that this field cannot be set when spec.os.name is windows.
+             */
+            privileged?: boolean;
+            /**
+             * procMount denotes the type of proc mount to use for the containers. The default is DefaultProcMount which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled. Note that this field cannot be set when spec.os.name is windows.
+             */
+            procMount?: string;
+            /**
+             * Whether this container has a read-only root filesystem. Default is false. Note that this field cannot be set when spec.os.name is windows.
+             */
+            readOnlyRootFilesystem?: boolean;
+            /**
+             * The GID to run the entrypoint of the container process. Uses runtime default if unset. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+             */
+            runAsGroup?: number;
+            /**
+             * Indicates that the container must run as a non-root user. If true, the Kubelet will validate the image at runtime to ensure that it does not run as UID 0 (root) and fail to start the container if it does. If unset or false, no such validation will be performed. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             */
+            runAsNonRoot?: boolean;
+            /**
+             * The UID to run the entrypoint of the container process. Defaults to user specified in image metadata if unspecified. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+             */
+            runAsUser?: number;
+            /**
+             * The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+             */
+            seLinuxOptions?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersSecurityContextSeLinuxOptions;
+            /**
+             * The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options. Note that this field cannot be set when spec.os.name is windows.
+             */
+            seccompProfile?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersSecurityContextSeccompProfile;
+            /**
+             * The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.
+             */
+            windowsOptions?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersSecurityContextWindowsOptions;
+        }
+
+        /**
+         * The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersSecurityContextCapabilities {
+            /**
+             * Added capabilities
+             */
+            add?: string[];
+            /**
+             * Removed capabilities
+             */
+            drop?: string[];
+        }
+
+        /**
+         * The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersSecurityContextSeLinuxOptions {
+            /**
+             * Level is SELinux level label that applies to the container.
+             */
+            level?: string;
+            /**
+             * Role is a SELinux role label that applies to the container.
+             */
+            role?: string;
+            /**
+             * Type is a SELinux type label that applies to the container.
+             */
+            type?: string;
+            /**
+             * User is a SELinux user label that applies to the container.
+             */
+            user?: string;
+        }
+
+        /**
+         * The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersSecurityContextSeccompProfile {
+            /**
+             * localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is "Localhost".
+             */
+            localhostProfile?: string;
+            /**
+             * type indicates which kind of seccomp profile will be applied. Valid options are: 
+             *  Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied.
+             */
+            type: string;
+        }
+
+        /**
+         * The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersSecurityContextWindowsOptions {
+            /**
+             * GMSACredentialSpec is where the GMSA admission webhook (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the GMSA credential spec named by the GMSACredentialSpecName field.
+             */
+            gmsaCredentialSpec?: string;
+            /**
+             * GMSACredentialSpecName is the name of the GMSA credential spec to use.
+             */
+            gmsaCredentialSpecName?: string;
+            /**
+             * HostProcess determines if a container should be run as a 'Host Process' container. This field is alpha-level and will only be honored by components that enable the WindowsHostProcessContainers feature flag. Setting this field without the feature flag will result in errors when validating the Pod. All of a Pod's containers must have the same effective HostProcess value (it is not allowed to have a mix of HostProcess containers and non-HostProcess containers).  In addition, if HostProcess is true then HostNetwork must also be set to true.
+             */
+            hostProcess?: boolean;
+            /**
+             * The UserName in Windows to run the entrypoint of the container process. Defaults to the user specified in image metadata if unspecified. May also be set in PodSecurityContext. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             */
+            runAsUserName?: string;
+        }
+
+        /**
+         * Probes are not allowed for ephemeral containers.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersStartupProbe {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersStartupProbeExec;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
+            /**
+             * GRPC specifies an action involving a GRPC port.
+             */
+            grpc?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersStartupProbeGrpc;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersStartupProbeHttpGet;
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * TCPSocket specifies an action involving a TCP port.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersStartupProbeTcpSocket;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersStartupProbeExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * GRPC specifies an action involving a GRPC port.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersStartupProbeGrpc {
+            /**
+             * Port number of the gRPC service. Number must be in the range 1 to 65535.
+             */
+            port: number;
+            /**
+             * Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). 
+             *  If this is not specified, the default behavior is defined by gRPC.
+             */
+            service?: string;
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersStartupProbeHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecEphemeralContainersStartupProbeHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersStartupProbeHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * TCPSocket specifies an action involving a TCP port.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersStartupProbeTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * volumeDevice describes a mapping of a raw block device within a container.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersVolumeDevices {
+            /**
+             * devicePath is the path inside of the container that the device will be mapped to.
+             */
+            devicePath: string;
+            /**
+             * name must match the name of a persistentVolumeClaim in the pod
+             */
+            name: string;
+        }
+
+        /**
+         * VolumeMount describes a mounting of a Volume within a container.
+         */
+        export interface PoolerSpecTemplateSpecEphemeralContainersVolumeMounts {
+            /**
+             * Path within the container at which the volume should be mounted.  Must not contain ':'.
+             */
+            mountPath: string;
+            /**
+             * mountPropagation determines how mounts are propagated from the host to container and the other way around. When not set, MountPropagationNone is used. This field is beta in 1.10.
+             */
+            mountPropagation?: string;
+            /**
+             * This must match the Name of a Volume.
+             */
+            name: string;
+            /**
+             * Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false.
+             */
+            readOnly?: boolean;
+            /**
+             * Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root).
+             */
+            subPath?: string;
+            /**
+             * Expanded path within the volume from which the container's volume should be mounted. Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment. Defaults to "" (volume's root). SubPathExpr and SubPath are mutually exclusive.
+             */
+            subPathExpr?: string;
+        }
+
+        /**
+         * HostAlias holds the mapping between IP and hostnames that will be injected as an entry in the pod's hosts file.
+         */
+        export interface PoolerSpecTemplateSpecHostAliases {
+            /**
+             * Hostnames for the above IP address.
+             */
+            hostnames?: string[];
+            /**
+             * IP address of the host file entry.
+             */
+            ip?: string;
+        }
+
+        /**
+         * LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.
+         */
+        export interface PoolerSpecTemplateSpecImagePullSecrets {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+        }
+
+        /**
+         * A single application container that you want to run within a pod.
+         */
+        export interface PoolerSpecTemplateSpecInitContainers {
+            /**
+             * Arguments to the entrypoint. The container image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+             */
+            args?: string[];
+            /**
+             * Entrypoint array. Not executed within a shell. The container image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+             */
+            command?: string[];
+            /**
+             * List of environment variables to set in the container. Cannot be updated.
+             */
+            env?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersEnv[];
+            /**
+             * List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.
+             */
+            envFrom?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersEnvFrom[];
+            /**
+             * Container image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.
+             */
+            image?: string;
+            /**
+             * Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
+             */
+            imagePullPolicy?: string;
+            /**
+             * Actions that the management system should take in response to container lifecycle events. Cannot be updated.
+             */
+            lifecycle?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecycle;
+            /**
+             * Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            livenessProbe?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLivenessProbe;
+            /**
+             * Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.
+             */
+            name: string;
+            /**
+             * List of ports to expose from the container. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Modifying this array with strategic merge patch may corrupt the data. For more information See https://github.com/kubernetes/kubernetes/issues/108255. Cannot be updated.
+             */
+            ports?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersPorts[];
+            /**
+             * Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            readinessProbe?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersReadinessProbe;
+            /**
+             * Resources resize policy for the container.
+             */
+            resizePolicy?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersResizePolicy[];
+            /**
+             * Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            resources?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersResources;
+            /**
+             * SecurityContext defines the security options the container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext. More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+             */
+            securityContext?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersSecurityContext;
+            /**
+             * StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            startupProbe?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersStartupProbe;
+            /**
+             * Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false.
+             */
+            stdin?: boolean;
+            /**
+             * Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, a container processes that reads from stdin will never receive an EOF. Default is false
+             */
+            stdinOnce?: boolean;
+            /**
+             * Optional: Path at which the file to which the container's termination message will be written is mounted into the container's filesystem. Message written is intended to be brief final status, such as an assertion failure message. Will be truncated by the node if greater than 4096 bytes. The total message length across all containers will be limited to 12kb. Defaults to /dev/termination-log. Cannot be updated.
+             */
+            terminationMessagePath?: string;
+            /**
+             * Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated.
+             */
+            terminationMessagePolicy?: string;
+            /**
+             * Whether this container should allocate a TTY for itself, also requires 'stdin' to be true. Default is false.
+             */
+            tty?: boolean;
+            /**
+             * volumeDevices is the list of block devices to be used by the container.
+             */
+            volumeDevices?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersVolumeDevices[];
+            /**
+             * Pod volumes to mount into the container's filesystem. Cannot be updated.
+             */
+            volumeMounts?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersVolumeMounts[];
+            /**
+             * Container's working directory. If not specified, the container runtime's default will be used, which might be configured in the container image. Cannot be updated.
+             */
+            workingDir?: string;
+        }
+
+        /**
+         * EnvVar represents an environment variable present in a Container.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersEnv {
+            /**
+             * Name of the environment variable. Must be a C_IDENTIFIER.
+             */
+            name: string;
+            /**
+             * Variable references $(VAR_NAME) are expanded using the previously defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Defaults to "".
+             */
+            value?: string;
+            /**
+             * Source for the environment variable's value. Cannot be used if value is not empty.
+             */
+            valueFrom?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersEnvValueFrom;
+        }
+
+        /**
+         * EnvFromSource represents the source of a set of ConfigMaps
+         */
+        export interface PoolerSpecTemplateSpecInitContainersEnvFrom {
+            /**
+             * The ConfigMap to select from
+             */
+            configMapRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersEnvFromConfigMapRef;
+            /**
+             * An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+             */
+            prefix?: string;
+            /**
+             * The Secret to select from
+             */
+            secretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersEnvFromSecretRef;
+        }
+
+        /**
+         * The ConfigMap to select from
+         */
+        export interface PoolerSpecTemplateSpecInitContainersEnvFromConfigMapRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the ConfigMap must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * The Secret to select from
+         */
+        export interface PoolerSpecTemplateSpecInitContainersEnvFromSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Source for the environment variable's value. Cannot be used if value is not empty.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersEnvValueFrom {
+            /**
+             * Selects a key of a ConfigMap.
+             */
+            configMapKeyRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersEnvValueFromConfigMapKeyRef;
+            /**
+             * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+             */
+            fieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersEnvValueFromFieldRef;
+            /**
+             * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+             */
+            resourceFieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersEnvValueFromResourceFieldRef;
+            /**
+             * Selects a key of a secret in the pod's namespace
+             */
+            secretKeyRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersEnvValueFromSecretKeyRef;
+        }
+
+        /**
+         * Selects a key of a ConfigMap.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersEnvValueFromConfigMapKeyRef {
+            /**
+             * The key to select.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the ConfigMap or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`, spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersEnvValueFromFieldRef {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion?: string;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath: string;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersEnvValueFromResourceFieldRef {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName?: string;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor?: number | string;
+            /**
+             * Required: resource to select
+             */
+            resource: string;
+        }
+
+        /**
+         * Selects a key of a secret in the pod's namespace
+         */
+        export interface PoolerSpecTemplateSpecInitContainersEnvValueFromSecretKeyRef {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Actions that the management system should take in response to container lifecycle events. Cannot be updated.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecycle {
+            /**
+             * PostStart is called immediately after a container is created. If the handler fails, the container is terminated and restarted according to its restart policy. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             */
+            postStart?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePostStart;
+            /**
+             * PreStop is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc. The handler is not called if the container crashes or exits. The Pod's termination grace period countdown begins before the PreStop hook is executed. Regardless of the outcome of the handler, the container will eventually terminate within the Pod's termination grace period (unless delayed by finalizers). Other management of the container blocks until the hook completes or until the termination grace period is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+             */
+            preStop?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePreStop;
+        }
+
+        /**
+         * PostStart is called immediately after a container is created. If the handler fails, the container is terminated and restarted according to its restart policy. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePostStart {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePostStartExec;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePostStartHttpGet;
+            /**
+             * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePostStartTcpSocket;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePostStartExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePostStartHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePostStartHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePostStartHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePostStartTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * PreStop is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc. The handler is not called if the container crashes or exits. The Pod's termination grace period countdown begins before the PreStop hook is executed. Regardless of the outcome of the handler, the container will eventually terminate within the Pod's termination grace period (unless delayed by finalizers). Other management of the container blocks until the hook completes or until the termination grace period is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePreStop {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePreStopExec;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePreStopHttpGet;
+            /**
+             * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePreStopTcpSocket;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePreStopExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePreStopHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLifecyclePreStopHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePreStopHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLifecyclePreStopTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLivenessProbe {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLivenessProbeExec;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
+            /**
+             * GRPC specifies an action involving a GRPC port.
+             */
+            grpc?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLivenessProbeGrpc;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLivenessProbeHttpGet;
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * TCPSocket specifies an action involving a TCP port.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLivenessProbeTcpSocket;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLivenessProbeExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * GRPC specifies an action involving a GRPC port.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLivenessProbeGrpc {
+            /**
+             * Port number of the gRPC service. Number must be in the range 1 to 65535.
+             */
+            port: number;
+            /**
+             * Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). 
+             *  If this is not specified, the default behavior is defined by gRPC.
+             */
+            service?: string;
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLivenessProbeHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersLivenessProbeHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLivenessProbeHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * TCPSocket specifies an action involving a TCP port.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersLivenessProbeTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * ContainerPort represents a network port in a single container.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersPorts {
+            /**
+             * Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.
+             */
+            containerPort: number;
+            /**
+             * What host IP to bind the external port to.
+             */
+            hostIP?: string;
+            /**
+             * Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.
+             */
+            hostPort?: number;
+            /**
+             * If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. Name for the port that can be referred to by services.
+             */
+            name?: string;
+            /**
+             * Protocol for port. Must be UDP, TCP, or SCTP. Defaults to "TCP".
+             */
+            protocol?: string;
+        }
+        /**
+         * poolerSpecTemplateSpecInitContainersPortsProvideDefaults sets the appropriate defaults for PoolerSpecTemplateSpecInitContainersPorts
+         */
+        export function poolerSpecTemplateSpecInitContainersPortsProvideDefaults(val: PoolerSpecTemplateSpecInitContainersPorts): PoolerSpecTemplateSpecInitContainersPorts {
+            return {
+                ...val,
+                protocol: (val.protocol) ?? "TCP",
+            };
+        }
+
+        /**
+         * Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+         */
+        export interface PoolerSpecTemplateSpecInitContainersReadinessProbe {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersReadinessProbeExec;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
+            /**
+             * GRPC specifies an action involving a GRPC port.
+             */
+            grpc?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersReadinessProbeGrpc;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersReadinessProbeHttpGet;
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * TCPSocket specifies an action involving a TCP port.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersReadinessProbeTcpSocket;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersReadinessProbeExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * GRPC specifies an action involving a GRPC port.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersReadinessProbeGrpc {
+            /**
+             * Port number of the gRPC service. Number must be in the range 1 to 65535.
+             */
+            port: number;
+            /**
+             * Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). 
+             *  If this is not specified, the default behavior is defined by gRPC.
+             */
+            service?: string;
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersReadinessProbeHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersReadinessProbeHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecInitContainersReadinessProbeHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * TCPSocket specifies an action involving a TCP port.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersReadinessProbeTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * ContainerResizePolicy represents resource resize policy for the container.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersResizePolicy {
+            /**
+             * Name of the resource to which this resource resize policy applies. Supported values: cpu, memory.
+             */
+            resourceName: string;
+            /**
+             * Restart policy to apply when specified resource is resized. If not specified, it defaults to NotRequired.
+             */
+            restartPolicy: string;
+        }
+
+        /**
+         * Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+         */
+        export interface PoolerSpecTemplateSpecInitContainersResources {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. 
+             *  This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. 
+             *  This field is immutable. It can only be set for containers.
+             */
+            claims?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersResourcesClaims[];
+            /**
+             * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits?: {[key: string]: number | string};
+            /**
+             * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests?: {[key: string]: number | string};
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersResourcesClaims {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+             */
+            name: string;
+        }
+
+        /**
+         * SecurityContext defines the security options the container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext. More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+         */
+        export interface PoolerSpecTemplateSpecInitContainersSecurityContext {
+            /**
+             * AllowPrivilegeEscalation controls whether a process can gain more privileges than its parent process. This bool directly controls if the no_new_privs flag will be set on the container process. AllowPrivilegeEscalation is true always when the container is: 1) run as Privileged 2) has CAP_SYS_ADMIN Note that this field cannot be set when spec.os.name is windows.
+             */
+            allowPrivilegeEscalation?: boolean;
+            /**
+             * The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime. Note that this field cannot be set when spec.os.name is windows.
+             */
+            capabilities?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersSecurityContextCapabilities;
+            /**
+             * Run container in privileged mode. Processes in privileged containers are essentially equivalent to root on the host. Defaults to false. Note that this field cannot be set when spec.os.name is windows.
+             */
+            privileged?: boolean;
+            /**
+             * procMount denotes the type of proc mount to use for the containers. The default is DefaultProcMount which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled. Note that this field cannot be set when spec.os.name is windows.
+             */
+            procMount?: string;
+            /**
+             * Whether this container has a read-only root filesystem. Default is false. Note that this field cannot be set when spec.os.name is windows.
+             */
+            readOnlyRootFilesystem?: boolean;
+            /**
+             * The GID to run the entrypoint of the container process. Uses runtime default if unset. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+             */
+            runAsGroup?: number;
+            /**
+             * Indicates that the container must run as a non-root user. If true, the Kubelet will validate the image at runtime to ensure that it does not run as UID 0 (root) and fail to start the container if it does. If unset or false, no such validation will be performed. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             */
+            runAsNonRoot?: boolean;
+            /**
+             * The UID to run the entrypoint of the container process. Defaults to user specified in image metadata if unspecified. May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+             */
+            runAsUser?: number;
+            /**
+             * The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+             */
+            seLinuxOptions?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersSecurityContextSeLinuxOptions;
+            /**
+             * The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options. Note that this field cannot be set when spec.os.name is windows.
+             */
+            seccompProfile?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersSecurityContextSeccompProfile;
+            /**
+             * The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.
+             */
+            windowsOptions?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersSecurityContextWindowsOptions;
+        }
+
+        /**
+         * The capabilities to add/drop when running containers. Defaults to the default set of capabilities granted by the container runtime. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersSecurityContextCapabilities {
+            /**
+             * Added capabilities
+             */
+            add?: string[];
+            /**
+             * Removed capabilities
+             */
+            drop?: string[];
+        }
+
+        /**
+         * The SELinux context to be applied to the container. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in PodSecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersSecurityContextSeLinuxOptions {
+            /**
+             * Level is SELinux level label that applies to the container.
+             */
+            level?: string;
+            /**
+             * Role is a SELinux role label that applies to the container.
+             */
+            role?: string;
+            /**
+             * Type is a SELinux type label that applies to the container.
+             */
+            type?: string;
+            /**
+             * User is a SELinux user label that applies to the container.
+             */
+            user?: string;
+        }
+
+        /**
+         * The seccomp options to use by this container. If seccomp options are provided at both the pod & container level, the container options override the pod options. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersSecurityContextSeccompProfile {
+            /**
+             * localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is "Localhost".
+             */
+            localhostProfile?: string;
+            /**
+             * type indicates which kind of seccomp profile will be applied. Valid options are: 
+             *  Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied.
+             */
+            type: string;
+        }
+
+        /**
+         * The Windows specific settings applied to all containers. If unspecified, the options from the PodSecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersSecurityContextWindowsOptions {
+            /**
+             * GMSACredentialSpec is where the GMSA admission webhook (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the GMSA credential spec named by the GMSACredentialSpecName field.
+             */
+            gmsaCredentialSpec?: string;
+            /**
+             * GMSACredentialSpecName is the name of the GMSA credential spec to use.
+             */
+            gmsaCredentialSpecName?: string;
+            /**
+             * HostProcess determines if a container should be run as a 'Host Process' container. This field is alpha-level and will only be honored by components that enable the WindowsHostProcessContainers feature flag. Setting this field without the feature flag will result in errors when validating the Pod. All of a Pod's containers must have the same effective HostProcess value (it is not allowed to have a mix of HostProcess containers and non-HostProcess containers).  In addition, if HostProcess is true then HostNetwork must also be set to true.
+             */
+            hostProcess?: boolean;
+            /**
+             * The UserName in Windows to run the entrypoint of the container process. Defaults to the user specified in image metadata if unspecified. May also be set in PodSecurityContext. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             */
+            runAsUserName?: string;
+        }
+
+        /**
+         * StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+         */
+        export interface PoolerSpecTemplateSpecInitContainersStartupProbe {
+            /**
+             * Exec specifies the action to take.
+             */
+            exec?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersStartupProbeExec;
+            /**
+             * Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.
+             */
+            failureThreshold?: number;
+            /**
+             * GRPC specifies an action involving a GRPC port.
+             */
+            grpc?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersStartupProbeGrpc;
+            /**
+             * HTTPGet specifies the http request to perform.
+             */
+            httpGet?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersStartupProbeHttpGet;
+            /**
+             * Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            initialDelaySeconds?: number;
+            /**
+             * How often (in seconds) to perform the probe. Default to 10 seconds. Minimum value is 1.
+             */
+            periodSeconds?: number;
+            /**
+             * Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+             */
+            successThreshold?: number;
+            /**
+             * TCPSocket specifies an action involving a TCP port.
+             */
+            tcpSocket?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersStartupProbeTcpSocket;
+            /**
+             * Optional duration in seconds the pod needs to terminate gracefully upon probe failure. The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal. Set this value longer than the expected cleanup time for your process. If this value is nil, the pod's terminationGracePeriodSeconds will be used. Otherwise, this value overrides the value provided by the pod spec. Value must be non-negative integer. The value zero indicates stop immediately via the kill signal (no opportunity to shut down). This is a beta field and requires enabling ProbeTerminationGracePeriod feature gate. Minimum value is 1. spec.terminationGracePeriodSeconds is used if unset.
+             */
+            terminationGracePeriodSeconds?: number;
+            /**
+             * Number of seconds after which the probe times out. Defaults to 1 second. Minimum value is 1. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+             */
+            timeoutSeconds?: number;
+        }
+
+        /**
+         * Exec specifies the action to take.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersStartupProbeExec {
+            /**
+             * Command is the command line to execute inside the container, the working directory for the command  is root ('/') in the container's filesystem. The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use a shell, you need to explicitly call out to that shell. Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+             */
+            command?: string[];
+        }
+
+        /**
+         * GRPC specifies an action involving a GRPC port.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersStartupProbeGrpc {
+            /**
+             * Port number of the gRPC service. Number must be in the range 1 to 65535.
+             */
+            port: number;
+            /**
+             * Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). 
+             *  If this is not specified, the default behavior is defined by gRPC.
+             */
+            service?: string;
+        }
+
+        /**
+         * HTTPGet specifies the http request to perform.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersStartupProbeHttpGet {
+            /**
+             * Host name to connect to, defaults to the pod IP. You probably want to set "Host" in httpHeaders instead.
+             */
+            host?: string;
+            /**
+             * Custom headers to set in the request. HTTP allows repeated headers.
+             */
+            httpHeaders?: outputs.postgresql.v1.PoolerSpecTemplateSpecInitContainersStartupProbeHttpGetHttpHeaders[];
+            /**
+             * Path to access on the HTTP server.
+             */
+            path?: string;
+            /**
+             * Name or number of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+            /**
+             * Scheme to use for connecting to the host. Defaults to HTTP.
+             */
+            scheme?: string;
+        }
+
+        /**
+         * HTTPHeader describes a custom header to be used in HTTP probes
+         */
+        export interface PoolerSpecTemplateSpecInitContainersStartupProbeHttpGetHttpHeaders {
+            /**
+             * The header field name. This will be canonicalized upon output, so case-variant names will be understood as the same header.
+             */
+            name: string;
+            /**
+             * The header field value
+             */
+            value: string;
+        }
+
+        /**
+         * TCPSocket specifies an action involving a TCP port.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersStartupProbeTcpSocket {
+            /**
+             * Optional: Host name to connect to, defaults to the pod IP.
+             */
+            host?: string;
+            /**
+             * Number or name of the port to access on the container. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+             */
+            port: number | string;
+        }
+
+        /**
+         * volumeDevice describes a mapping of a raw block device within a container.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersVolumeDevices {
+            /**
+             * devicePath is the path inside of the container that the device will be mapped to.
+             */
+            devicePath: string;
+            /**
+             * name must match the name of a persistentVolumeClaim in the pod
+             */
+            name: string;
+        }
+
+        /**
+         * VolumeMount describes a mounting of a Volume within a container.
+         */
+        export interface PoolerSpecTemplateSpecInitContainersVolumeMounts {
+            /**
+             * Path within the container at which the volume should be mounted.  Must not contain ':'.
+             */
+            mountPath: string;
+            /**
+             * mountPropagation determines how mounts are propagated from the host to container and the other way around. When not set, MountPropagationNone is used. This field is beta in 1.10.
+             */
+            mountPropagation?: string;
+            /**
+             * This must match the Name of a Volume.
+             */
+            name: string;
+            /**
+             * Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false.
+             */
+            readOnly?: boolean;
+            /**
+             * Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root).
+             */
+            subPath?: string;
+            /**
+             * Expanded path within the volume from which the container's volume should be mounted. Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment. Defaults to "" (volume's root). SubPathExpr and SubPath are mutually exclusive.
+             */
+            subPathExpr?: string;
+        }
+
+        /**
+         * Specifies the OS of the containers in the pod. Some pod and container fields are restricted if this is set. 
+         *  If the OS field is set to linux, the following fields must be unset: -securityContext.windowsOptions 
+         *  If the OS field is set to windows, following fields must be unset: - spec.hostPID - spec.hostIPC - spec.hostUsers - spec.securityContext.seLinuxOptions - spec.securityContext.seccompProfile - spec.securityContext.fsGroup - spec.securityContext.fsGroupChangePolicy - spec.securityContext.sysctls - spec.shareProcessNamespace - spec.securityContext.runAsUser - spec.securityContext.runAsGroup - spec.securityContext.supplementalGroups - spec.containers[*].securityContext.seLinuxOptions - spec.containers[*].securityContext.seccompProfile - spec.containers[*].securityContext.capabilities - spec.containers[*].securityContext.readOnlyRootFilesystem - spec.containers[*].securityContext.privileged - spec.containers[*].securityContext.allowPrivilegeEscalation - spec.containers[*].securityContext.procMount - spec.containers[*].securityContext.runAsUser - spec.containers[*].securityContext.runAsGroup
+         */
+        export interface PoolerSpecTemplateSpecOs {
+            /**
+             * Name is the name of the operating system. The currently supported values are linux and windows. Additional value may be defined in future and can be one of: https://github.com/opencontainers/runtime-spec/blob/master/config.md#platform-specific-configuration Clients should expect to handle additional values and treat unrecognized values in this field as os: null
+             */
+            name: string;
+        }
+
+        /**
+         * PodReadinessGate contains the reference to a pod condition
+         */
+        export interface PoolerSpecTemplateSpecReadinessGates {
+            /**
+             * ConditionType refers to a condition in the pod's condition list with matching type.
+             */
+            conditionType: string;
+        }
+
+        /**
+         * PodResourceClaim references exactly one ResourceClaim through a ClaimSource. It adds a name to it that uniquely identifies the ResourceClaim inside the Pod. Containers that need access to the ResourceClaim reference it with this name.
+         */
+        export interface PoolerSpecTemplateSpecResourceClaims {
+            /**
+             * Name uniquely identifies this resource claim inside the pod. This must be a DNS_LABEL.
+             */
+            name: string;
+            /**
+             * Source describes where to find the ResourceClaim.
+             */
+            source?: outputs.postgresql.v1.PoolerSpecTemplateSpecResourceClaimsSource;
+        }
+
+        /**
+         * Source describes where to find the ResourceClaim.
+         */
+        export interface PoolerSpecTemplateSpecResourceClaimsSource {
+            /**
+             * ResourceClaimName is the name of a ResourceClaim object in the same namespace as this pod.
+             */
+            resourceClaimName?: string;
+            /**
+             * ResourceClaimTemplateName is the name of a ResourceClaimTemplate object in the same namespace as this pod. 
+             *  The template will be used to create a new ResourceClaim, which will be bound to this pod. When this pod is deleted, the ResourceClaim will also be deleted. The name of the ResourceClaim will be <pod name>-<resource name>, where <resource name> is the PodResourceClaim.Name. Pod validation will reject the pod if the concatenated name is not valid for a ResourceClaim (e.g. too long). 
+             *  An existing ResourceClaim with that name that is not owned by the pod will not be used for the pod to avoid using an unrelated resource by mistake. Scheduling and pod startup are then blocked until the unrelated ResourceClaim is removed. 
+             *  This field is immutable and no changes will be made to the corresponding ResourceClaim by the control plane after creating the ResourceClaim.
+             */
+            resourceClaimTemplateName?: string;
+        }
+
+        /**
+         * PodSchedulingGate is associated to a Pod to guard its scheduling.
+         */
+        export interface PoolerSpecTemplateSpecSchedulingGates {
+            /**
+             * Name of the scheduling gate. Each scheduling gate must have a unique name field.
+             */
+            name: string;
+        }
+
+        /**
+         * SecurityContext holds pod-level security attributes and common container settings. Optional: Defaults to empty.  See type description for default values of each field.
+         */
+        export interface PoolerSpecTemplateSpecSecurityContext {
+            /**
+             * A special supplemental group that applies to all containers in a pod. Some volume types allow the Kubelet to change the ownership of that volume to be owned by the pod: 
+             *  1. The owning GID will be the FSGroup 2. The setgid bit is set (new files created in the volume will be owned by FSGroup) 3. The permission bits are OR'd with rw-rw---- 
+             *  If unset, the Kubelet will not modify the ownership and permissions of any volume. Note that this field cannot be set when spec.os.name is windows.
+             */
+            fsGroup?: number;
+            /**
+             * fsGroupChangePolicy defines behavior of changing ownership and permission of the volume before being exposed inside Pod. This field will only apply to volume types which support fsGroup based ownership(and permissions). It will have no effect on ephemeral volume types such as: secret, configmaps and emptydir. Valid values are "OnRootMismatch" and "Always". If not specified, "Always" is used. Note that this field cannot be set when spec.os.name is windows.
+             */
+            fsGroupChangePolicy?: string;
+            /**
+             * The GID to run the entrypoint of the container process. Uses runtime default if unset. May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence for that container. Note that this field cannot be set when spec.os.name is windows.
+             */
+            runAsGroup?: number;
+            /**
+             * Indicates that the container must run as a non-root user. If true, the Kubelet will validate the image at runtime to ensure that it does not run as UID 0 (root) and fail to start the container if it does. If unset or false, no such validation will be performed. May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             */
+            runAsNonRoot?: boolean;
+            /**
+             * The UID to run the entrypoint of the container process. Defaults to user specified in image metadata if unspecified. May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence for that container. Note that this field cannot be set when spec.os.name is windows.
+             */
+            runAsUser?: number;
+            /**
+             * The SELinux context to be applied to all containers. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence for that container. Note that this field cannot be set when spec.os.name is windows.
+             */
+            seLinuxOptions?: outputs.postgresql.v1.PoolerSpecTemplateSpecSecurityContextSeLinuxOptions;
+            /**
+             * The seccomp options to use by the containers in this pod. Note that this field cannot be set when spec.os.name is windows.
+             */
+            seccompProfile?: outputs.postgresql.v1.PoolerSpecTemplateSpecSecurityContextSeccompProfile;
+            /**
+             * A list of groups applied to the first process run in each container, in addition to the container's primary GID, the fsGroup (if specified), and group memberships defined in the container image for the uid of the container process. If unspecified, no additional groups are added to any container. Note that group memberships defined in the container image for the uid of the container process are still effective, even if they are not included in this list. Note that this field cannot be set when spec.os.name is windows.
+             */
+            supplementalGroups?: number[];
+            /**
+             * Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported sysctls (by the container runtime) might fail to launch. Note that this field cannot be set when spec.os.name is windows.
+             */
+            sysctls?: outputs.postgresql.v1.PoolerSpecTemplateSpecSecurityContextSysctls[];
+            /**
+             * The Windows specific settings applied to all containers. If unspecified, the options within a container's SecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.
+             */
+            windowsOptions?: outputs.postgresql.v1.PoolerSpecTemplateSpecSecurityContextWindowsOptions;
+        }
+
+        /**
+         * The SELinux context to be applied to all containers. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence for that container. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecSecurityContextSeLinuxOptions {
+            /**
+             * Level is SELinux level label that applies to the container.
+             */
+            level?: string;
+            /**
+             * Role is a SELinux role label that applies to the container.
+             */
+            role?: string;
+            /**
+             * Type is a SELinux type label that applies to the container.
+             */
+            type?: string;
+            /**
+             * User is a SELinux user label that applies to the container.
+             */
+            user?: string;
+        }
+
+        /**
+         * The seccomp options to use by the containers in this pod. Note that this field cannot be set when spec.os.name is windows.
+         */
+        export interface PoolerSpecTemplateSpecSecurityContextSeccompProfile {
+            /**
+             * localhostProfile indicates a profile defined in a file on the node should be used. The profile must be preconfigured on the node to work. Must be a descending path, relative to the kubelet's configured seccomp profile location. Must only be set if type is "Localhost".
+             */
+            localhostProfile?: string;
+            /**
+             * type indicates which kind of seccomp profile will be applied. Valid options are: 
+             *  Localhost - a profile defined in a file on the node should be used. RuntimeDefault - the container runtime default profile should be used. Unconfined - no profile should be applied.
+             */
+            type: string;
+        }
+
+        /**
+         * Sysctl defines a kernel parameter to be set
+         */
+        export interface PoolerSpecTemplateSpecSecurityContextSysctls {
+            /**
+             * Name of a property to set
+             */
+            name: string;
+            /**
+             * Value of a property to set
+             */
+            value: string;
+        }
+
+        /**
+         * The Windows specific settings applied to all containers. If unspecified, the options within a container's SecurityContext will be used. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence. Note that this field cannot be set when spec.os.name is linux.
+         */
+        export interface PoolerSpecTemplateSpecSecurityContextWindowsOptions {
+            /**
+             * GMSACredentialSpec is where the GMSA admission webhook (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the GMSA credential spec named by the GMSACredentialSpecName field.
+             */
+            gmsaCredentialSpec?: string;
+            /**
+             * GMSACredentialSpecName is the name of the GMSA credential spec to use.
+             */
+            gmsaCredentialSpecName?: string;
+            /**
+             * HostProcess determines if a container should be run as a 'Host Process' container. This field is alpha-level and will only be honored by components that enable the WindowsHostProcessContainers feature flag. Setting this field without the feature flag will result in errors when validating the Pod. All of a Pod's containers must have the same effective HostProcess value (it is not allowed to have a mix of HostProcess containers and non-HostProcess containers).  In addition, if HostProcess is true then HostNetwork must also be set to true.
+             */
+            hostProcess?: boolean;
+            /**
+             * The UserName in Windows to run the entrypoint of the container process. Defaults to the user specified in image metadata if unspecified. May also be set in PodSecurityContext. If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+             */
+            runAsUserName?: string;
+        }
+
+        /**
+         * The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
+         */
+        export interface PoolerSpecTemplateSpecTolerations {
+            /**
+             * Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+             */
+            effect?: string;
+            /**
+             * Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+             */
+            key?: string;
+            /**
+             * Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
+             */
+            operator?: string;
+            /**
+             * TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
+             */
+            tolerationSeconds?: number;
+            /**
+             * Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
+             */
+            value?: string;
+        }
+
+        /**
+         * TopologySpreadConstraint specifies how to spread matching pods among the given topology.
+         */
+        export interface PoolerSpecTemplateSpecTopologySpreadConstraints {
+            /**
+             * LabelSelector is used to find matching pods. Pods that match this label selector are counted to determine the number of pods in their corresponding topology domain.
+             */
+            labelSelector?: outputs.postgresql.v1.PoolerSpecTemplateSpecTopologySpreadConstraintsLabelSelector;
+            /**
+             * MatchLabelKeys is a set of pod label keys to select the pods over which spreading will be calculated. The keys are used to lookup values from the incoming pod labels, those key-value labels are ANDed with labelSelector to select the group of existing pods over which spreading will be calculated for the incoming pod. The same key is forbidden to exist in both MatchLabelKeys and LabelSelector. MatchLabelKeys cannot be set when LabelSelector isn't set. Keys that don't exist in the incoming pod labels will be ignored. A null or empty list means only match against labelSelector. 
+             *  This is a beta field and requires the MatchLabelKeysInPodTopologySpread feature gate to be enabled (enabled by default).
+             */
+            matchLabelKeys?: string[];
+            /**
+             * MaxSkew describes the degree to which pods may be unevenly distributed. When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference between the number of matching pods in the target topology and the global minimum. The global minimum is the minimum number of matching pods in an eligible domain or zero if the number of eligible domains is less than MinDomains. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 2/2/1: In this case, the global minimum is 1. | zone1 | zone2 | zone3 | |  P P  |  P P  |   P   | - if MaxSkew is 1, incoming pod can only be scheduled to zone3 to become 2/2/2; scheduling it onto zone1(zone2) would make the ActualSkew(3-1) on zone1(zone2) violate MaxSkew(1). - if MaxSkew is 2, incoming pod can be scheduled onto any zone. When `whenUnsatisfiable=ScheduleAnyway`, it is used to give higher precedence to topologies that satisfy it. It's a required field. Default value is 1 and 0 is not allowed.
+             */
+            maxSkew: number;
+            /**
+             * MinDomains indicates a minimum number of eligible domains. When the number of eligible domains with matching topology keys is less than minDomains, Pod Topology Spread treats "global minimum" as 0, and then the calculation of Skew is performed. And when the number of eligible domains with matching topology keys equals or greater than minDomains, this value has no effect on scheduling. As a result, when the number of eligible domains is less than minDomains, scheduler won't schedule more than maxSkew Pods to those domains. If value is nil, the constraint behaves as if MinDomains is equal to 1. Valid values are integers greater than 0. When value is not nil, WhenUnsatisfiable must be DoNotSchedule. 
+             *  For example, in a 3-zone cluster, MaxSkew is set to 2, MinDomains is set to 5 and pods with the same labelSelector spread as 2/2/2: | zone1 | zone2 | zone3 | |  P P  |  P P  |  P P  | The number of domains is less than 5(MinDomains), so "global minimum" is treated as 0. In this situation, new pod with the same labelSelector cannot be scheduled, because computed skew will be 3(3 - 0) if new Pod is scheduled to any of the three zones, it will violate MaxSkew. 
+             *  This is a beta field and requires the MinDomainsInPodTopologySpread feature gate to be enabled (enabled by default).
+             */
+            minDomains?: number;
+            /**
+             * NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector when calculating pod topology spread skew. Options are: - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations. - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations. 
+             *  If this value is nil, the behavior is equivalent to the Honor policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
+             */
+            nodeAffinityPolicy?: string;
+            /**
+             * NodeTaintsPolicy indicates how we will treat node taints when calculating pod topology spread skew. Options are: - Honor: nodes without taints, along with tainted nodes for which the incoming pod has a toleration, are included. - Ignore: node taints are ignored. All nodes are included. 
+             *  If this value is nil, the behavior is equivalent to the Ignore policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
+             */
+            nodeTaintsPolicy?: string;
+            /**
+             * TopologyKey is the key of node labels. Nodes that have a label with this key and identical values are considered to be in the same topology. We consider each <key, value> as a "bucket", and try to put balanced number of pods into each bucket. We define a domain as a particular instance of a topology. Also, we define an eligible domain as a domain whose nodes meet the requirements of nodeAffinityPolicy and nodeTaintsPolicy. e.g. If TopologyKey is "kubernetes.io/hostname", each Node is a domain of that topology. And, if TopologyKey is "topology.kubernetes.io/zone", each zone is a domain of that topology. It's a required field.
+             */
+            topologyKey: string;
+            /**
+             * WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy the spread constraint. - DoNotSchedule (default) tells the scheduler not to schedule it. - ScheduleAnyway tells the scheduler to schedule the pod in any location, but giving higher precedence to topologies that would help reduce the skew. A constraint is considered "Unsatisfiable" for an incoming pod if and only if every possible node assignment for that pod would violate "MaxSkew" on some topology. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 3/1/1: | zone1 | zone2 | zone3 | | P P P |   P   |   P   | If WhenUnsatisfiable is set to DoNotSchedule, incoming pod can only be scheduled to zone2(zone3) to become 3/2/1(3/1/2) as ActualSkew(2-1) on zone2(zone3) satisfies MaxSkew(1). In other words, the cluster can still be imbalanced, but scheduler won't make it *more* imbalanced. It's a required field.
+             */
+            whenUnsatisfiable: string;
+        }
+
+        /**
+         * LabelSelector is used to find matching pods. Pods that match this label selector are counted to determine the number of pods in their corresponding topology domain.
+         */
+        export interface PoolerSpecTemplateSpecTopologySpreadConstraintsLabelSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecTopologySpreadConstraintsLabelSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecTopologySpreadConstraintsLabelSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * Volume represents a named volume in a pod that may be accessed by any container in the pod.
+         */
+        export interface PoolerSpecTemplateSpecVolumes {
+            /**
+             * awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+             */
+            awsElasticBlockStore?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesAwsElasticBlockStore;
+            /**
+             * azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
+             */
+            azureDisk?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesAzureDisk;
+            /**
+             * azureFile represents an Azure File Service mount on the host and bind mount to the pod.
+             */
+            azureFile?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesAzureFile;
+            /**
+             * cephFS represents a Ceph FS mount on the host that shares a pod's lifetime
+             */
+            cephfs?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesCephfs;
+            /**
+             * cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+             */
+            cinder?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesCinder;
+            /**
+             * configMap represents a configMap that should populate this volume
+             */
+            configMap?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesConfigMap;
+            /**
+             * csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).
+             */
+            csi?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesCsi;
+            /**
+             * downwardAPI represents downward API about the pod that should populate this volume
+             */
+            downwardAPI?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesDownwardAPI;
+            /**
+             * emptyDir represents a temporary directory that shares a pod's lifetime. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
+             */
+            emptyDir?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEmptyDir;
+            /**
+             * ephemeral represents a volume that is handled by a cluster storage driver. The volume's lifecycle is tied to the pod that defines it - it will be created before the pod starts, and deleted when the pod is removed. 
+             *  Use this if: a) the volume is only needed while the pod runs, b) features of normal volumes like restoring from snapshot or capacity tracking are needed, c) the storage driver is specified through a storage class, and d) the storage driver supports dynamic volume provisioning through a PersistentVolumeClaim (see EphemeralVolumeSource for more information on the connection between this volume type and PersistentVolumeClaim). 
+             *  Use PersistentVolumeClaim or one of the vendor-specific APIs for volumes that persist for longer than the lifecycle of an individual pod. 
+             *  Use CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information. 
+             *  A pod can use both types of ephemeral volumes and persistent volumes at the same time.
+             */
+            ephemeral?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEphemeral;
+            /**
+             * fc represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
+             */
+            fc?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesFc;
+            /**
+             * flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.
+             */
+            flexVolume?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesFlexVolume;
+            /**
+             * flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running
+             */
+            flocker?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesFlocker;
+            /**
+             * gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+             */
+            gcePersistentDisk?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesGcePersistentDisk;
+            /**
+             * gitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.
+             */
+            gitRepo?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesGitRepo;
+            /**
+             * glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/glusterfs/README.md
+             */
+            glusterfs?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesGlusterfs;
+            /**
+             * hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath --- TODO(jonesdl) We need to restrict who can use host directory mounts and who can/can not mount host directories as read/write.
+             */
+            hostPath?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesHostPath;
+            /**
+             * iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md
+             */
+            iscsi?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesIscsi;
+            /**
+             * name of the volume. Must be a DNS_LABEL and unique within the pod. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name: string;
+            /**
+             * nfs represents an NFS mount on the host that shares a pod's lifetime More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+             */
+            nfs?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesNfs;
+            /**
+             * persistentVolumeClaimVolumeSource represents a reference to a PersistentVolumeClaim in the same namespace. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+             */
+            persistentVolumeClaim?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesPersistentVolumeClaim;
+            /**
+             * photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
+             */
+            photonPersistentDisk?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesPhotonPersistentDisk;
+            /**
+             * portworxVolume represents a portworx volume attached and mounted on kubelets host machine
+             */
+            portworxVolume?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesPortworxVolume;
+            /**
+             * projected items for all in one resources secrets, configmaps, and downward API
+             */
+            projected?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjected;
+            /**
+             * quobyte represents a Quobyte mount on the host that shares a pod's lifetime
+             */
+            quobyte?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesQuobyte;
+            /**
+             * rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md
+             */
+            rbd?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesRbd;
+            /**
+             * scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
+             */
+            scaleIO?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesScaleIO;
+            /**
+             * secret represents a secret that should populate this volume. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
+             */
+            secret?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesSecret;
+            /**
+             * storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.
+             */
+            storageos?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesStorageos;
+            /**
+             * vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
+             */
+            vsphereVolume?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesVsphereVolume;
+        }
+
+        /**
+         * awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+         */
+        export interface PoolerSpecTemplateSpecVolumesAwsElasticBlockStore {
+            /**
+             * fsType is the filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore TODO: how do we prevent errors in the filesystem from compromising the machine
+             */
+            fsType?: string;
+            /**
+             * partition is the partition in the volume that you want to mount. If omitted, the default is to mount by volume name. Examples: For volume /dev/sda1, you specify the partition as "1". Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
+             */
+            partition?: number;
+            /**
+             * readOnly value true will force the readOnly setting in VolumeMounts. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+             */
+            readOnly?: boolean;
+            /**
+             * volumeID is unique ID of the persistent disk resource in AWS (Amazon EBS volume). More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+             */
+            volumeID: string;
+        }
+
+        /**
+         * azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
+         */
+        export interface PoolerSpecTemplateSpecVolumesAzureDisk {
+            /**
+             * cachingMode is the Host Caching mode: None, Read Only, Read Write.
+             */
+            cachingMode?: string;
+            /**
+             * diskName is the Name of the data disk in the blob storage
+             */
+            diskName: string;
+            /**
+             * diskURI is the URI of data disk in the blob storage
+             */
+            diskURI: string;
+            /**
+             * fsType is Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+             */
+            fsType?: string;
+            /**
+             * kind expected values are Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared
+             */
+            kind?: string;
+            /**
+             * readOnly Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
+             */
+            readOnly?: boolean;
+        }
+
+        /**
+         * azureFile represents an Azure File Service mount on the host and bind mount to the pod.
+         */
+        export interface PoolerSpecTemplateSpecVolumesAzureFile {
+            /**
+             * readOnly defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
+             */
+            readOnly?: boolean;
+            /**
+             * secretName is the  name of secret that contains Azure Storage Account Name and Key
+             */
+            secretName: string;
+            /**
+             * shareName is the azure share Name
+             */
+            shareName: string;
+        }
+
+        /**
+         * cephFS represents a Ceph FS mount on the host that shares a pod's lifetime
+         */
+        export interface PoolerSpecTemplateSpecVolumesCephfs {
+            /**
+             * monitors is Required: Monitors is a collection of Ceph monitors More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+             */
+            monitors: string[];
+            /**
+             * path is Optional: Used as the mounted root, rather than the full Ceph tree, default is /
+             */
+            path?: string;
+            /**
+             * readOnly is Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+             */
+            readOnly?: boolean;
+            /**
+             * secretFile is Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+             */
+            secretFile?: string;
+            /**
+             * secretRef is Optional: SecretRef is reference to the authentication secret for User, default is empty. More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+             */
+            secretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesCephfsSecretRef;
+            /**
+             * user is optional: User is the rados user name, default is admin More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+             */
+            user?: string;
+        }
+
+        /**
+         * secretRef is Optional: SecretRef is reference to the authentication secret for User, default is empty. More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+         */
+        export interface PoolerSpecTemplateSpecVolumesCephfsSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+        }
+
+        /**
+         * cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+         */
+        export interface PoolerSpecTemplateSpecVolumesCinder {
+            /**
+             * fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+             */
+            fsType?: string;
+            /**
+             * readOnly defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts. More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+             */
+            readOnly?: boolean;
+            /**
+             * secretRef is optional: points to a secret object containing parameters used to connect to OpenStack.
+             */
+            secretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesCinderSecretRef;
+            /**
+             * volumeID used to identify the volume in cinder. More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+             */
+            volumeID: string;
+        }
+
+        /**
+         * secretRef is optional: points to a secret object containing parameters used to connect to OpenStack.
+         */
+        export interface PoolerSpecTemplateSpecVolumesCinderSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+        }
+
+        /**
+         * configMap represents a configMap that should populate this volume
+         */
+        export interface PoolerSpecTemplateSpecVolumesConfigMap {
+            /**
+             * defaultMode is optional: mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            defaultMode?: number;
+            /**
+             * items if unspecified, each key-value pair in the Data field of the referenced ConfigMap will be projected into the volume as a file whose name is the key and content is the value. If specified, the listed keys will be projected into the specified paths, and unlisted keys will not be present. If a key is specified which is not present in the ConfigMap, the volume setup will error unless it is marked optional. Paths must be relative and may not contain the '..' path or start with '..'.
+             */
+            items?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesConfigMapItems[];
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * optional specify whether the ConfigMap or its keys must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Maps a string key to a path within a volume.
+         */
+        export interface PoolerSpecTemplateSpecVolumesConfigMapItems {
+            /**
+             * key is the key to project.
+             */
+            key: string;
+            /**
+             * mode is Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            mode?: number;
+            /**
+             * path is the relative path of the file to map the key to. May not be an absolute path. May not contain the path element '..'. May not start with the string '..'.
+             */
+            path: string;
+        }
+
+        /**
+         * csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).
+         */
+        export interface PoolerSpecTemplateSpecVolumesCsi {
+            /**
+             * driver is the name of the CSI driver that handles this volume. Consult with your admin for the correct name as registered in the cluster.
+             */
+            driver: string;
+            /**
+             * fsType to mount. Ex. "ext4", "xfs", "ntfs". If not provided, the empty value is passed to the associated CSI driver which will determine the default filesystem to apply.
+             */
+            fsType?: string;
+            /**
+             * nodePublishSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodePublishVolume and NodeUnpublishVolume calls. This field is optional, and  may be empty if no secret is required. If the secret object contains more than one secret, all secret references are passed.
+             */
+            nodePublishSecretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesCsiNodePublishSecretRef;
+            /**
+             * readOnly specifies a read-only configuration for the volume. Defaults to false (read/write).
+             */
+            readOnly?: boolean;
+            /**
+             * volumeAttributes stores driver-specific properties that are passed to the CSI driver. Consult your driver's documentation for supported values.
+             */
+            volumeAttributes?: {[key: string]: string};
+        }
+
+        /**
+         * nodePublishSecretRef is a reference to the secret object containing sensitive information to pass to the CSI driver to complete the CSI NodePublishVolume and NodeUnpublishVolume calls. This field is optional, and  may be empty if no secret is required. If the secret object contains more than one secret, all secret references are passed.
+         */
+        export interface PoolerSpecTemplateSpecVolumesCsiNodePublishSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+        }
+
+        /**
+         * downwardAPI represents downward API about the pod that should populate this volume
+         */
+        export interface PoolerSpecTemplateSpecVolumesDownwardAPI {
+            /**
+             * Optional: mode bits to use on created files by default. Must be a Optional: mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            defaultMode?: number;
+            /**
+             * Items is a list of downward API volume file
+             */
+            items?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesDownwardAPIItems[];
+        }
+
+        /**
+         * DownwardAPIVolumeFile represents information to create the file containing the pod field
+         */
+        export interface PoolerSpecTemplateSpecVolumesDownwardAPIItems {
+            /**
+             * Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
+             */
+            fieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesDownwardAPIItemsFieldRef;
+            /**
+             * Optional: mode bits used to set permissions on this file, must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            mode?: number;
+            /**
+             * Required: Path is  the relative path name of the file to be created. Must not be absolute or contain the '..' path. Must be utf-8 encoded. The first item of the relative path must not start with '..'
+             */
+            path: string;
+            /**
+             * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
+             */
+            resourceFieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesDownwardAPIItemsResourceFieldRef;
+        }
+
+        /**
+         * Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
+         */
+        export interface PoolerSpecTemplateSpecVolumesDownwardAPIItemsFieldRef {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion?: string;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath: string;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
+         */
+        export interface PoolerSpecTemplateSpecVolumesDownwardAPIItemsResourceFieldRef {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName?: string;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor?: number | string;
+            /**
+             * Required: resource to select
+             */
+            resource: string;
+        }
+
+        /**
+         * emptyDir represents a temporary directory that shares a pod's lifetime. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
+         */
+        export interface PoolerSpecTemplateSpecVolumesEmptyDir {
+            /**
+             * medium represents what type of storage medium should back this directory. The default is "" which means to use the node's default medium. Must be an empty string (default) or Memory. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
+             */
+            medium?: string;
+            /**
+             * sizeLimit is the total amount of local storage required for this EmptyDir volume. The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. The default is nil which means that the limit is undefined. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
+             */
+            sizeLimit?: number | string;
+        }
+
+        /**
+         * ephemeral represents a volume that is handled by a cluster storage driver. The volume's lifecycle is tied to the pod that defines it - it will be created before the pod starts, and deleted when the pod is removed. 
+         *  Use this if: a) the volume is only needed while the pod runs, b) features of normal volumes like restoring from snapshot or capacity tracking are needed, c) the storage driver is specified through a storage class, and d) the storage driver supports dynamic volume provisioning through a PersistentVolumeClaim (see EphemeralVolumeSource for more information on the connection between this volume type and PersistentVolumeClaim). 
+         *  Use PersistentVolumeClaim or one of the vendor-specific APIs for volumes that persist for longer than the lifecycle of an individual pod. 
+         *  Use CSI for light-weight local ephemeral volumes if the CSI driver is meant to be used that way - see the documentation of the driver for more information. 
+         *  A pod can use both types of ephemeral volumes and persistent volumes at the same time.
+         */
+        export interface PoolerSpecTemplateSpecVolumesEphemeral {
+            /**
+             * Will be used to create a stand-alone PVC to provision the volume. The pod in which this EphemeralVolumeSource is embedded will be the owner of the PVC, i.e. the PVC will be deleted together with the pod.  The name of the PVC will be `<pod name>-<volume name>` where `<volume name>` is the name from the `PodSpec.Volumes` array entry. Pod validation will reject the pod if the concatenated name is not valid for a PVC (for example, too long). 
+             *  An existing PVC with that name that is not owned by the pod will *not* be used for the pod to avoid using an unrelated volume by mistake. Starting the pod is then blocked until the unrelated PVC is removed. If such a pre-created PVC is meant to be used by the pod, the PVC has to updated with an owner reference to the pod once the pod exists. Normally this should not be necessary, but it may be useful when manually reconstructing a broken cluster. 
+             *  This field is read-only and no changes will be made by Kubernetes to the PVC after it has been created. 
+             *  Required, must not be nil.
+             */
+            volumeClaimTemplate?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplate;
+        }
+
+        /**
+         * Will be used to create a stand-alone PVC to provision the volume. The pod in which this EphemeralVolumeSource is embedded will be the owner of the PVC, i.e. the PVC will be deleted together with the pod.  The name of the PVC will be `<pod name>-<volume name>` where `<volume name>` is the name from the `PodSpec.Volumes` array entry. Pod validation will reject the pod if the concatenated name is not valid for a PVC (for example, too long). 
+         *  An existing PVC with that name that is not owned by the pod will *not* be used for the pod to avoid using an unrelated volume by mistake. Starting the pod is then blocked until the unrelated PVC is removed. If such a pre-created PVC is meant to be used by the pod, the PVC has to updated with an owner reference to the pod once the pod exists. Normally this should not be necessary, but it may be useful when manually reconstructing a broken cluster. 
+         *  This field is read-only and no changes will be made by Kubernetes to the PVC after it has been created. 
+         *  Required, must not be nil.
+         */
+        export interface PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplate {
+            /**
+             * May contain labels and annotations that will be copied into the PVC when creating it. No other fields are allowed and will be rejected during validation.
+             */
+            metadata?: {[key: string]: any};
+            /**
+             * The specification for the PersistentVolumeClaim. The entire content is copied unchanged into the PVC that gets created from this template. The same fields as in a PersistentVolumeClaim are also valid here.
+             */
+            spec: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpec;
+        }
+
+        /**
+         * The specification for the PersistentVolumeClaim. The entire content is copied unchanged into the PVC that gets created from this template. The same fields as in a PersistentVolumeClaim are also valid here.
+         */
+        export interface PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpec {
+            /**
+             * accessModes contains the desired access modes the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
+             */
+            accessModes?: string[];
+            /**
+             * dataSource field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source. When the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified. If the namespace is specified, then dataSourceRef will not be copied to dataSource.
+             */
+            dataSource?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSource;
+            /**
+             * dataSourceRef specifies the object from which to populate the volume with data, if a non-empty volume is desired. This may be any object from a non-empty API group (non core object) or a PersistentVolumeClaim object. When this field is specified, volume binding will only succeed if the type of the specified object matches some installed volume populator or dynamic provisioner. This field will replace the functionality of the dataSource field and as such if both fields are non-empty, they must have the same value. For backwards compatibility, when namespace isn't specified in dataSourceRef, both fields (dataSource and dataSourceRef) will be set to the same value automatically if one of them is empty and the other is non-empty. When namespace is specified in dataSourceRef, dataSource isn't set to the same value and must be empty. There are three important differences between dataSource and dataSourceRef: * While dataSource only allows two specific types of objects, dataSourceRef allows any non-core object, as well as PersistentVolumeClaim objects. * While dataSource ignores disallowed values (dropping them), dataSourceRef preserves all values, and generates an error if a disallowed value is specified. * While dataSource only allows local objects, dataSourceRef allows objects in any namespaces. (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled. (Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+             */
+            dataSourceRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSourceRef;
+            /**
+             * resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+             */
+            resources?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecResources;
+            /**
+             * selector is a label query over volumes to consider for binding.
+             */
+            selector?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecSelector;
+            /**
+             * storageClassName is the name of the StorageClass required by the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1
+             */
+            storageClassName?: string;
+            /**
+             * volumeMode defines what type of volume is required by the claim. Value of Filesystem is implied when not included in claim spec.
+             */
+            volumeMode?: string;
+            /**
+             * volumeName is the binding reference to the PersistentVolume backing this claim.
+             */
+            volumeName?: string;
+        }
+
+        /**
+         * dataSource field can be used to specify either: * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot) * An existing PVC (PersistentVolumeClaim) If the provisioner or an external controller can support the specified data source, it will create a new volume based on the contents of the specified data source. When the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified. If the namespace is specified, then dataSourceRef will not be copied to dataSource.
+         */
+        export interface PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSource {
+            /**
+             * APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.
+             */
+            apiGroup?: string;
+            /**
+             * Kind is the type of resource being referenced
+             */
+            kind: string;
+            /**
+             * Name is the name of resource being referenced
+             */
+            name: string;
+        }
+
+        /**
+         * dataSourceRef specifies the object from which to populate the volume with data, if a non-empty volume is desired. This may be any object from a non-empty API group (non core object) or a PersistentVolumeClaim object. When this field is specified, volume binding will only succeed if the type of the specified object matches some installed volume populator or dynamic provisioner. This field will replace the functionality of the dataSource field and as such if both fields are non-empty, they must have the same value. For backwards compatibility, when namespace isn't specified in dataSourceRef, both fields (dataSource and dataSourceRef) will be set to the same value automatically if one of them is empty and the other is non-empty. When namespace is specified in dataSourceRef, dataSource isn't set to the same value and must be empty. There are three important differences between dataSource and dataSourceRef: * While dataSource only allows two specific types of objects, dataSourceRef allows any non-core object, as well as PersistentVolumeClaim objects. * While dataSource ignores disallowed values (dropping them), dataSourceRef preserves all values, and generates an error if a disallowed value is specified. * While dataSource only allows local objects, dataSourceRef allows objects in any namespaces. (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled. (Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+         */
+        export interface PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSourceRef {
+            /**
+             * APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.
+             */
+            apiGroup?: string;
+            /**
+             * Kind is the type of resource being referenced
+             */
+            kind: string;
+            /**
+             * Name is the name of resource being referenced
+             */
+            name: string;
+            /**
+             * Namespace is the namespace of resource being referenced Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required in the referent namespace to allow that namespace's owner to accept the reference. See the ReferenceGrant documentation for details. (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+             */
+            namespace?: string;
+        }
+
+        /**
+         * resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+         */
+        export interface PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecResources {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. 
+             *  This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. 
+             *  This field is immutable. It can only be set for containers.
+             */
+            claims?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecResourcesClaims[];
+            /**
+             * Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits?: {[key: string]: number | string};
+            /**
+             * Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests?: {[key: string]: number | string};
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecResourcesClaims {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+             */
+            name: string;
+        }
+
+        /**
+         * selector is a label query over volumes to consider for binding.
+         */
+        export interface PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+         */
+        export interface PoolerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+             */
+            values?: string[];
+        }
+
+        /**
+         * fc represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
+         */
+        export interface PoolerSpecTemplateSpecVolumesFc {
+            /**
+             * fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. TODO: how do we prevent errors in the filesystem from compromising the machine
+             */
+            fsType?: string;
+            /**
+             * lun is Optional: FC target lun number
+             */
+            lun?: number;
+            /**
+             * readOnly is Optional: Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
+             */
+            readOnly?: boolean;
+            /**
+             * targetWWNs is Optional: FC target worldwide names (WWNs)
+             */
+            targetWWNs?: string[];
+            /**
+             * wwids Optional: FC volume world wide identifiers (wwids) Either wwids or combination of targetWWNs and lun must be set, but not both simultaneously.
+             */
+            wwids?: string[];
+        }
+
+        /**
+         * flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.
+         */
+        export interface PoolerSpecTemplateSpecVolumesFlexVolume {
+            /**
+             * driver is the name of the driver to use for this volume.
+             */
+            driver: string;
+            /**
+             * fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
+             */
+            fsType?: string;
+            /**
+             * options is Optional: this field holds extra command options if any.
+             */
+            options?: {[key: string]: string};
+            /**
+             * readOnly is Optional: defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
+             */
+            readOnly?: boolean;
+            /**
+             * secretRef is Optional: secretRef is reference to the secret object containing sensitive information to pass to the plugin scripts. This may be empty if no secret object is specified. If the secret object contains more than one secret, all secrets are passed to the plugin scripts.
+             */
+            secretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesFlexVolumeSecretRef;
+        }
+
+        /**
+         * secretRef is Optional: secretRef is reference to the secret object containing sensitive information to pass to the plugin scripts. This may be empty if no secret object is specified. If the secret object contains more than one secret, all secrets are passed to the plugin scripts.
+         */
+        export interface PoolerSpecTemplateSpecVolumesFlexVolumeSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+        }
+
+        /**
+         * flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running
+         */
+        export interface PoolerSpecTemplateSpecVolumesFlocker {
+            /**
+             * datasetName is Name of the dataset stored as metadata -> name on the dataset for Flocker should be considered as deprecated
+             */
+            datasetName?: string;
+            /**
+             * datasetUUID is the UUID of the dataset. This is unique identifier of a Flocker dataset
+             */
+            datasetUUID?: string;
+        }
+
+        /**
+         * gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+         */
+        export interface PoolerSpecTemplateSpecVolumesGcePersistentDisk {
+            /**
+             * fsType is filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk TODO: how do we prevent errors in the filesystem from compromising the machine
+             */
+            fsType?: string;
+            /**
+             * partition is the partition in the volume that you want to mount. If omitted, the default is to mount by volume name. Examples: For volume /dev/sda1, you specify the partition as "1". Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty). More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+             */
+            partition?: number;
+            /**
+             * pdName is unique name of the PD resource in GCE. Used to identify the disk in GCE. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+             */
+            pdName: string;
+            /**
+             * readOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+             */
+            readOnly?: boolean;
+        }
+
+        /**
+         * gitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.
+         */
+        export interface PoolerSpecTemplateSpecVolumesGitRepo {
+            /**
+             * directory is the target directory name. Must not contain or start with '..'.  If '.' is supplied, the volume directory will be the git repository.  Otherwise, if specified, the volume will contain the git repository in the subdirectory with the given name.
+             */
+            directory?: string;
+            /**
+             * repository is the URL
+             */
+            repository: string;
+            /**
+             * revision is the commit hash for the specified revision.
+             */
+            revision?: string;
+        }
+
+        /**
+         * glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/glusterfs/README.md
+         */
+        export interface PoolerSpecTemplateSpecVolumesGlusterfs {
+            /**
+             * endpoints is the endpoint name that details Glusterfs topology. More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+             */
+            endpoints: string;
+            /**
+             * path is the Glusterfs volume path. More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+             */
+            path: string;
+            /**
+             * readOnly here will force the Glusterfs volume to be mounted with read-only permissions. Defaults to false. More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+             */
+            readOnly?: boolean;
+        }
+
+        /**
+         * hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath --- TODO(jonesdl) We need to restrict who can use host directory mounts and who can/can not mount host directories as read/write.
+         */
+        export interface PoolerSpecTemplateSpecVolumesHostPath {
+            /**
+             * path of the directory on the host. If the path is a symlink, it will follow the link to the real path. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+             */
+            path: string;
+            /**
+             * type for HostPath Volume Defaults to "" More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+             */
+            type?: string;
+        }
+
+        /**
+         * iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md
+         */
+        export interface PoolerSpecTemplateSpecVolumesIscsi {
+            /**
+             * chapAuthDiscovery defines whether support iSCSI Discovery CHAP authentication
+             */
+            chapAuthDiscovery?: boolean;
+            /**
+             * chapAuthSession defines whether support iSCSI Session CHAP authentication
+             */
+            chapAuthSession?: boolean;
+            /**
+             * fsType is the filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#iscsi TODO: how do we prevent errors in the filesystem from compromising the machine
+             */
+            fsType?: string;
+            /**
+             * initiatorName is the custom iSCSI Initiator Name. If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface <target portal>:<volume name> will be created for the connection.
+             */
+            initiatorName?: string;
+            /**
+             * iqn is the target iSCSI Qualified Name.
+             */
+            iqn: string;
+            /**
+             * iscsiInterface is the interface Name that uses an iSCSI transport. Defaults to 'default' (tcp).
+             */
+            iscsiInterface?: string;
+            /**
+             * lun represents iSCSI Target Lun number.
+             */
+            lun: number;
+            /**
+             * portals is the iSCSI Target Portal List. The portal is either an IP or ip_addr:port if the port is other than default (typically TCP ports 860 and 3260).
+             */
+            portals?: string[];
+            /**
+             * readOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false.
+             */
+            readOnly?: boolean;
+            /**
+             * secretRef is the CHAP Secret for iSCSI target and initiator authentication
+             */
+            secretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesIscsiSecretRef;
+            /**
+             * targetPortal is iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port is other than default (typically TCP ports 860 and 3260).
+             */
+            targetPortal: string;
+        }
+
+        /**
+         * secretRef is the CHAP Secret for iSCSI target and initiator authentication
+         */
+        export interface PoolerSpecTemplateSpecVolumesIscsiSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+        }
+
+        /**
+         * nfs represents an NFS mount on the host that shares a pod's lifetime More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+         */
+        export interface PoolerSpecTemplateSpecVolumesNfs {
+            /**
+             * path that is exported by the NFS server. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+             */
+            path: string;
+            /**
+             * readOnly here will force the NFS export to be mounted with read-only permissions. Defaults to false. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+             */
+            readOnly?: boolean;
+            /**
+             * server is the hostname or IP address of the NFS server. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+             */
+            server: string;
+        }
+
+        /**
+         * persistentVolumeClaimVolumeSource represents a reference to a PersistentVolumeClaim in the same namespace. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+         */
+        export interface PoolerSpecTemplateSpecVolumesPersistentVolumeClaim {
+            /**
+             * claimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+             */
+            claimName: string;
+            /**
+             * readOnly Will force the ReadOnly setting in VolumeMounts. Default false.
+             */
+            readOnly?: boolean;
+        }
+
+        /**
+         * photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
+         */
+        export interface PoolerSpecTemplateSpecVolumesPhotonPersistentDisk {
+            /**
+             * fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+             */
+            fsType?: string;
+            /**
+             * pdID is the ID that identifies Photon Controller persistent disk
+             */
+            pdID: string;
+        }
+
+        /**
+         * portworxVolume represents a portworx volume attached and mounted on kubelets host machine
+         */
+        export interface PoolerSpecTemplateSpecVolumesPortworxVolume {
+            /**
+             * fSType represents the filesystem type to mount Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs". Implicitly inferred to be "ext4" if unspecified.
+             */
+            fsType?: string;
+            /**
+             * readOnly defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
+             */
+            readOnly?: boolean;
+            /**
+             * volumeID uniquely identifies a Portworx volume
+             */
+            volumeID: string;
+        }
+
+        /**
+         * projected items for all in one resources secrets, configmaps, and downward API
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjected {
+            /**
+             * defaultMode are the mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            defaultMode?: number;
+            /**
+             * sources is the list of volume projections
+             */
+            sources?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSources[];
+        }
+
+        /**
+         * Projection that may be projected along with other supported volume types
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSources {
+            /**
+             * configMap information about the configMap data to project
+             */
+            configMap?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSourcesConfigMap;
+            /**
+             * downwardAPI information about the downwardAPI data to project
+             */
+            downwardAPI?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSourcesDownwardAPI;
+            /**
+             * secret information about the secret data to project
+             */
+            secret?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSourcesSecret;
+            /**
+             * serviceAccountToken is information about the serviceAccountToken data to project
+             */
+            serviceAccountToken?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSourcesServiceAccountToken;
+        }
+
+        /**
+         * configMap information about the configMap data to project
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSourcesConfigMap {
+            /**
+             * items if unspecified, each key-value pair in the Data field of the referenced ConfigMap will be projected into the volume as a file whose name is the key and content is the value. If specified, the listed keys will be projected into the specified paths, and unlisted keys will not be present. If a key is specified which is not present in the ConfigMap, the volume setup will error unless it is marked optional. Paths must be relative and may not contain the '..' path or start with '..'.
+             */
+            items?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSourcesConfigMapItems[];
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * optional specify whether the ConfigMap or its keys must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Maps a string key to a path within a volume.
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSourcesConfigMapItems {
+            /**
+             * key is the key to project.
+             */
+            key: string;
+            /**
+             * mode is Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            mode?: number;
+            /**
+             * path is the relative path of the file to map the key to. May not be an absolute path. May not contain the path element '..'. May not start with the string '..'.
+             */
+            path: string;
+        }
+
+        /**
+         * downwardAPI information about the downwardAPI data to project
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSourcesDownwardAPI {
+            /**
+             * Items is a list of DownwardAPIVolume file
+             */
+            items?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSourcesDownwardAPIItems[];
+        }
+
+        /**
+         * DownwardAPIVolumeFile represents information to create the file containing the pod field
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSourcesDownwardAPIItems {
+            /**
+             * Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
+             */
+            fieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSourcesDownwardAPIItemsFieldRef;
+            /**
+             * Optional: mode bits used to set permissions on this file, must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            mode?: number;
+            /**
+             * Required: Path is  the relative path name of the file to be created. Must not be absolute or contain the '..' path. Must be utf-8 encoded. The first item of the relative path must not start with '..'
+             */
+            path: string;
+            /**
+             * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
+             */
+            resourceFieldRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSourcesDownwardAPIItemsResourceFieldRef;
+        }
+
+        /**
+         * Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSourcesDownwardAPIItemsFieldRef {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion?: string;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath: string;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSourcesDownwardAPIItemsResourceFieldRef {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName?: string;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor?: number | string;
+            /**
+             * Required: resource to select
+             */
+            resource: string;
+        }
+
+        /**
+         * secret information about the secret data to project
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSourcesSecret {
+            /**
+             * items if unspecified, each key-value pair in the Data field of the referenced Secret will be projected into the volume as a file whose name is the key and content is the value. If specified, the listed keys will be projected into the specified paths, and unlisted keys will not be present. If a key is specified which is not present in the Secret, the volume setup will error unless it is marked optional. Paths must be relative and may not contain the '..' path or start with '..'.
+             */
+            items?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesProjectedSourcesSecretItems[];
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+            /**
+             * optional field specify whether the Secret or its key must be defined
+             */
+            optional?: boolean;
+        }
+
+        /**
+         * Maps a string key to a path within a volume.
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSourcesSecretItems {
+            /**
+             * key is the key to project.
+             */
+            key: string;
+            /**
+             * mode is Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            mode?: number;
+            /**
+             * path is the relative path of the file to map the key to. May not be an absolute path. May not contain the path element '..'. May not start with the string '..'.
+             */
+            path: string;
+        }
+
+        /**
+         * serviceAccountToken is information about the serviceAccountToken data to project
+         */
+        export interface PoolerSpecTemplateSpecVolumesProjectedSourcesServiceAccountToken {
+            /**
+             * audience is the intended audience of the token. A recipient of a token must identify itself with an identifier specified in the audience of the token, and otherwise should reject the token. The audience defaults to the identifier of the apiserver.
+             */
+            audience?: string;
+            /**
+             * expirationSeconds is the requested duration of validity of the service account token. As the token approaches expiration, the kubelet volume plugin will proactively rotate the service account token. The kubelet will start trying to rotate the token if the token is older than 80 percent of its time to live or if the token is older than 24 hours.Defaults to 1 hour and must be at least 10 minutes.
+             */
+            expirationSeconds?: number;
+            /**
+             * path is the path relative to the mount point of the file to project the token into.
+             */
+            path: string;
+        }
+
+        /**
+         * quobyte represents a Quobyte mount on the host that shares a pod's lifetime
+         */
+        export interface PoolerSpecTemplateSpecVolumesQuobyte {
+            /**
+             * group to map volume access to Default is no group
+             */
+            group?: string;
+            /**
+             * readOnly here will force the Quobyte volume to be mounted with read-only permissions. Defaults to false.
+             */
+            readOnly?: boolean;
+            /**
+             * registry represents a single or multiple Quobyte Registry services specified as a string as host:port pair (multiple entries are separated with commas) which acts as the central registry for volumes
+             */
+            registry: string;
+            /**
+             * tenant owning the given Quobyte volume in the Backend Used with dynamically provisioned Quobyte volumes, value is set by the plugin
+             */
+            tenant?: string;
+            /**
+             * user to map volume access to Defaults to serivceaccount user
+             */
+            user?: string;
+            /**
+             * volume is a string that references an already created Quobyte volume by name.
+             */
+            volume: string;
+        }
+
+        /**
+         * rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md
+         */
+        export interface PoolerSpecTemplateSpecVolumesRbd {
+            /**
+             * fsType is the filesystem type of the volume that you want to mount. Tip: Ensure that the filesystem type is supported by the host operating system. Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified. More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd TODO: how do we prevent errors in the filesystem from compromising the machine
+             */
+            fsType?: string;
+            /**
+             * image is the rados image name. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+             */
+            image: string;
+            /**
+             * keyring is the path to key ring for RBDUser. Default is /etc/ceph/keyring. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+             */
+            keyring?: string;
+            /**
+             * monitors is a collection of Ceph monitors. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+             */
+            monitors: string[];
+            /**
+             * pool is the rados pool name. Default is rbd. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+             */
+            pool?: string;
+            /**
+             * readOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+             */
+            readOnly?: boolean;
+            /**
+             * secretRef is name of the authentication secret for RBDUser. If provided overrides keyring. Default is nil. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+             */
+            secretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesRbdSecretRef;
+            /**
+             * user is the rados user name. Default is admin. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+             */
+            user?: string;
+        }
+
+        /**
+         * secretRef is name of the authentication secret for RBDUser. If provided overrides keyring. Default is nil. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+         */
+        export interface PoolerSpecTemplateSpecVolumesRbdSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+        }
+
+        /**
+         * scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
+         */
+        export interface PoolerSpecTemplateSpecVolumesScaleIO {
+            /**
+             * fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Default is "xfs".
+             */
+            fsType?: string;
+            /**
+             * gateway is the host address of the ScaleIO API Gateway.
+             */
+            gateway: string;
+            /**
+             * protectionDomain is the name of the ScaleIO Protection Domain for the configured storage.
+             */
+            protectionDomain?: string;
+            /**
+             * readOnly Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
+             */
+            readOnly?: boolean;
+            /**
+             * secretRef references to the secret for ScaleIO user and other sensitive information. If this is not provided, Login operation will fail.
+             */
+            secretRef: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesScaleIOSecretRef;
+            /**
+             * sslEnabled Flag enable/disable SSL communication with Gateway, default false
+             */
+            sslEnabled?: boolean;
+            /**
+             * storageMode indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned. Default is ThinProvisioned.
+             */
+            storageMode?: string;
+            /**
+             * storagePool is the ScaleIO Storage Pool associated with the protection domain.
+             */
+            storagePool?: string;
+            /**
+             * system is the name of the storage system as configured in ScaleIO.
+             */
+            system: string;
+            /**
+             * volumeName is the name of a volume already created in the ScaleIO system that is associated with this volume source.
+             */
+            volumeName?: string;
+        }
+
+        /**
+         * secretRef references to the secret for ScaleIO user and other sensitive information. If this is not provided, Login operation will fail.
+         */
+        export interface PoolerSpecTemplateSpecVolumesScaleIOSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+        }
+
+        /**
+         * secret represents a secret that should populate this volume. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
+         */
+        export interface PoolerSpecTemplateSpecVolumesSecret {
+            /**
+             * defaultMode is Optional: mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. Defaults to 0644. Directories within the path are not affected by this setting. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            defaultMode?: number;
+            /**
+             * items If unspecified, each key-value pair in the Data field of the referenced Secret will be projected into the volume as a file whose name is the key and content is the value. If specified, the listed keys will be projected into the specified paths, and unlisted keys will not be present. If a key is specified which is not present in the Secret, the volume setup will error unless it is marked optional. Paths must be relative and may not contain the '..' path or start with '..'.
+             */
+            items?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesSecretItems[];
+            /**
+             * optional field specify whether the Secret or its keys must be defined
+             */
+            optional?: boolean;
+            /**
+             * secretName is the name of the secret in the pod's namespace to use. More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
+             */
+            secretName?: string;
+        }
+
+        /**
+         * Maps a string key to a path within a volume.
+         */
+        export interface PoolerSpecTemplateSpecVolumesSecretItems {
+            /**
+             * key is the key to project.
+             */
+            key: string;
+            /**
+             * mode is Optional: mode bits used to set permissions on this file. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. YAML accepts both octal and decimal values, JSON requires decimal values for mode bits. If not specified, the volume defaultMode will be used. This might be in conflict with other options that affect the file mode, like fsGroup, and the result can be other mode bits set.
+             */
+            mode?: number;
+            /**
+             * path is the relative path of the file to map the key to. May not be an absolute path. May not contain the path element '..'. May not start with the string '..'.
+             */
+            path: string;
+        }
+
+        /**
+         * storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.
+         */
+        export interface PoolerSpecTemplateSpecVolumesStorageos {
+            /**
+             * fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+             */
+            fsType?: string;
+            /**
+             * readOnly defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.
+             */
+            readOnly?: boolean;
+            /**
+             * secretRef specifies the secret to use for obtaining the StorageOS API credentials.  If not specified, default values will be attempted.
+             */
+            secretRef?: outputs.postgresql.v1.PoolerSpecTemplateSpecVolumesStorageosSecretRef;
+            /**
+             * volumeName is the human-readable name of the StorageOS volume.  Volume names are only unique within a namespace.
+             */
+            volumeName?: string;
+            /**
+             * volumeNamespace specifies the scope of the volume within StorageOS.  If no namespace is specified then the Pod's namespace will be used.  This allows the Kubernetes name scoping to be mirrored within StorageOS for tighter integration. Set VolumeName to any name to override the default behaviour. Set to "default" if you are not using namespaces within StorageOS. Namespaces that do not pre-exist within StorageOS will be created.
+             */
+            volumeNamespace?: string;
+        }
+
+        /**
+         * secretRef specifies the secret to use for obtaining the StorageOS API credentials.  If not specified, default values will be attempted.
+         */
+        export interface PoolerSpecTemplateSpecVolumesStorageosSecretRef {
+            /**
+             * Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?
+             */
+            name?: string;
+        }
+
+        /**
+         * vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
+         */
+        export interface PoolerSpecTemplateSpecVolumesVsphereVolume {
+            /**
+             * fsType is filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+             */
+            fsType?: string;
+            /**
+             * storagePolicyID is the storage Policy Based Management (SPBM) profile ID associated with the StoragePolicyName.
+             */
+            storagePolicyID?: string;
+            /**
+             * storagePolicyName is the storage Policy Based Management (SPBM) profile name.
+             */
+            storagePolicyName?: string;
+            /**
+             * volumePath is the path that identifies vSphere volume vmdk
+             */
+            volumePath: string;
+        }
+
+        /**
+         * PoolerStatus defines the observed state of Pooler
+         */
+        export interface PoolerStatus {
+            /**
+             * The number of pods trying to be scheduled
+             */
+            instances?: number;
+            /**
+             * The resource version of the config object
+             */
+            secrets?: outputs.postgresql.v1.PoolerStatusSecrets;
+        }
+
+        /**
+         * The resource version of the config object
+         */
+        export interface PoolerStatusSecrets {
+            /**
+             * The client CA secret version
+             */
+            clientCA?: outputs.postgresql.v1.PoolerStatusSecretsClientCA;
+            /**
+             * The version of the secrets used by PgBouncer
+             */
+            pgBouncerSecrets?: outputs.postgresql.v1.PoolerStatusSecretsPgBouncerSecrets;
+            /**
+             * The server CA secret version
+             */
+            serverCA?: outputs.postgresql.v1.PoolerStatusSecretsServerCA;
+            /**
+             * The server TLS secret version
+             */
+            serverTLS?: outputs.postgresql.v1.PoolerStatusSecretsServerTLS;
+        }
+
+        /**
+         * The client CA secret version
+         */
+        export interface PoolerStatusSecretsClientCA {
+            /**
+             * The name of the secret
+             */
+            name?: string;
+            /**
+             * The ResourceVersion of the secret
+             */
+            version?: string;
+        }
+
+        /**
+         * The version of the secrets used by PgBouncer
+         */
+        export interface PoolerStatusSecretsPgBouncerSecrets {
+            /**
+             * The auth query secret version
+             */
+            authQuery?: outputs.postgresql.v1.PoolerStatusSecretsPgBouncerSecretsAuthQuery;
+        }
+
+        /**
+         * The auth query secret version
+         */
+        export interface PoolerStatusSecretsPgBouncerSecretsAuthQuery {
+            /**
+             * The name of the secret
+             */
+            name?: string;
+            /**
+             * The ResourceVersion of the secret
+             */
+            version?: string;
+        }
+
+        /**
+         * The server CA secret version
+         */
+        export interface PoolerStatusSecretsServerCA {
+            /**
+             * The name of the secret
+             */
+            name?: string;
+            /**
+             * The ResourceVersion of the secret
+             */
+            version?: string;
+        }
+
+        /**
+         * The server TLS secret version
+         */
+        export interface PoolerStatusSecretsServerTLS {
+            /**
+             * The name of the secret
+             */
+            name?: string;
+            /**
+             * The ResourceVersion of the secret
+             */
+            version?: string;
+        }
+
+        /**
+         * Specification of the desired behavior of the ScheduledBackup. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ScheduledBackupSpec {
+            /**
+             * Indicates which ownerReference should be put inside the created backup resources.<br /> - none: no owner reference for created backup objects (same behavior as before the field was introduced)<br /> - self: sets the Scheduled backup object as owner of the backup<br /> - cluster: set the cluster as owner of the backup<br />
+             */
+            backupOwnerReference?: string;
+            /**
+             * The cluster to backup
+             */
+            cluster?: outputs.postgresql.v1.ScheduledBackupSpecCluster;
+            /**
+             * If the first backup has to be immediately start after creation or not
+             */
+            immediate?: boolean;
+            /**
+             * The schedule does not follow the same format used in Kubernetes CronJobs as it includes an additional seconds specifier, see https://pkg.go.dev/github.com/robfig/cron#hdr-CRON_Expression_Format
+             */
+            schedule: string;
+            /**
+             * If this backup is suspended or not
+             */
+            suspend?: boolean;
+            /**
+             * The policy to decide which instance should perform this backup. If empty, it defaults to `cluster.spec.backup.target`. Available options are empty string, `primary` and `prefer-standby`. `primary` to have backups run always on primary instances, `prefer-standby` to have backups run preferably on the most updated standby, if available.
+             */
+            target?: string;
+        }
+        /**
+         * scheduledBackupSpecProvideDefaults sets the appropriate defaults for ScheduledBackupSpec
+         */
+        export function scheduledBackupSpecProvideDefaults(val: ScheduledBackupSpec): ScheduledBackupSpec {
+            return {
+                ...val,
+                backupOwnerReference: (val.backupOwnerReference) ?? "none",
+            };
+        }
+
+        /**
+         * The cluster to backup
+         */
+        export interface ScheduledBackupSpecCluster {
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * Most recently observed status of the ScheduledBackup. This data may not be up to date. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ScheduledBackupStatus {
+            /**
+             * The latest time the schedule
+             */
+            lastCheckTime?: string;
+            /**
+             * Information when was the last time that backup was successfully scheduled.
+             */
+            lastScheduleTime?: string;
+            /**
+             * Next time we will run a backup
+             */
+            nextScheduleTime?: string;
+        }
+
+    }
+}
+
 export namespace traefik {
     export namespace v1alpha1 {
         /**
