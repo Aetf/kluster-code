@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: testzfs
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: zfs
+  local:
+    path: /mnt/nas
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: "kubernetes.io/hostname"
+              operator: "In"
+              values:
+                - aetf-arch-homelab
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: "zfs"
+  volumeName: "testzfs"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+spec:
+  containers:
+  - name: test
+    image: busybox:latest
+    command:
+      - sleep
+      - "36000"
+    volumeMounts:
+      - mountPath: "/mnt/test"
+        name: pv
+        mountPropagation: "HostToContainer"
+  volumes:
+    - name: pv
+      persistentVolumeClaim:
+        claimName: myclaim
