@@ -129,7 +129,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                 globalArguments: null,
             },
             transformations: [
-                removeHelmTestAnnotation
+                removeHelmTestAnnotation,
             ]
         }, {
             parent: this,

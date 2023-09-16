@@ -3,6 +3,7 @@
 download_github_release() {
     local repo_name=$1
     local pattern=$2
+    local bin=$3
 
     local awk_extract_url='
     # line of interest is sth like:
@@ -27,7 +28,7 @@ download_github_release() {
 
     curl --silent -L "$url" | tar xz
     # ~+ is bashism, expanding to the absolute path of the pwd
-    find ~+ -type f -name crd2pulumi
+    find ~+ -type f -name "$bin"
 }
 
 fix_crds() {
@@ -56,13 +57,17 @@ main() {
 
     pushd "$dir" >/dev/null
 
-    local crd2pulumi=$(download_github_release pulumi/crd2pulumi linux-amd64)
+    local crd2pulumi=$(download_github_release pulumi/crd2pulumi linux-amd64 crd2pulumi)
+    local yq=$(download_github_release mikefarah/yq linux_amd64.tar.gz 'yq_*')
 
     mv "$output" "${output}.bak"
-    kubectl get crds -o yaml \
-        | awk '/^-/ { print "---"; sub(/^- /, ""); print } /^ / { sub(/  /, ""); print } ' \
-        | "${crd2pulumi}" -n --nodejsPath "${output}" - \
-    && rm -rf "${output}.bak"
+
+    kubectl get crds -o yaml > crds.yml
+    echo "${yq}"
+    "${yq}" --split-exp '"crd_" + $index' '.items[] | select(.spec.group!="traefik.containo.us") | del(.status)' crds.yml
+    "${crd2pulumi}" -n --nodejsPath "${output}" crd_*.yml
+
+    rm -rf "${output}.bak"
 
     popd >/dev/null
 
