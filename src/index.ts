@@ -20,6 +20,7 @@ import { Jellyfin } from "./jellyfin";
 import { Shoko } from "./shoko";
 import { Dufs } from "./dav";
 import { CloudNativePg } from "./postgresql";
+import { Immich } from "./immich";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -250,6 +251,15 @@ function setup() {
         externalIPs: ["10.144.180.10"],
         pvc: mediaPv.pvc,
     }, { provider: mediaProvider });
+
+    // Photo service using Immich
+    const immich = new Immich("immich", {
+        serving,
+        host: 'photos.unlimited-code.works',
+        storageClass: cluster.jfsStorageClass.metadata.name,
+        dbStorageClass: cluster.localStableStorageClass.metadata.name,
+        cacheStorageClass: cluster.localStorageClass.metadata.name,
+    }, { provider: namespaced('immich') });
 }
 
 setup();

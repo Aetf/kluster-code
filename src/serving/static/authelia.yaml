@@ -99,6 +99,7 @@ access_control:
   - domain:
     - "k8s.<%= domain %>"
     - "mon.<%= domain %>"
+    - "photos.<%= domain %>"
     subject: "group:admins"
     policy: one_factor
 

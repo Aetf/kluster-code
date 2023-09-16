@@ -1,0 +1,8 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: backup-example
+  namespace: immich
+spec:
+  cluster:
+    name: immich-db-b8a230d8
