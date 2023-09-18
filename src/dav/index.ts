@@ -54,9 +54,22 @@ export class Dufs extends pulumi.ComponentResource<DufsArgs> {
                 ],
                 volumeMounts: [
                     cert.mount('/tls'),
-                    webdavPV.mount('/files'),
-                ]
+                    // webdavPV.mount('/files'),
+                    {
+                        name: webdavPV.metadata.name,
+                        mountPath: "/files",
+                        mountPropagation: "HostToContainer",
+                    },
+                ],
             }],
+            volumes: [
+                {
+                    name: webdavPV.metadata.name,
+                    persistentVolumeClaim: {
+                        claimName: webdavPV.metadata.name,
+                    },
+                },
+            ],
             affinity: {
                 podAffinity: {
                     // This is a hack to run the pod on the same node as juicefs
