@@ -302,7 +302,8 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         serving.createFrontendService(name, {
             host: host,
             targetService: this.chart!.service(/proxy/),
-            enableAuth: true,
+            // Immich will itself connect to Authelia using OpenID Connect
+            enableAuth: false,
         });
     }
 }
