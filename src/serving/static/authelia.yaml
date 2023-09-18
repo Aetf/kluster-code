@@ -52,6 +52,32 @@ notifier:
     sender: "auth@<%= domain %>"
     subject: "[Authelia] {title}"
 
+identity_providers:
+  oidc:
+    cors:
+      endpoints:
+      - authorization
+      - token
+      - revocation
+      - introspection
+      - userinfo
+    clients:
+    - id: immich
+      description: Immich OAuth Connection
+      secret: mrsRdgyNfgLkxYiXAgHkvWei3tQDpe57
+      public: false
+      authorization_policy: two_factor
+      scopes:
+      - openid
+      - email
+      - profile
+      redirect_uris:
+      - app.immich:/
+      - https://photos.unlimited-code.works/api/oauth/mobile-redirect
+      - https://photos.unlimited-code.works/auth/login
+      - https://photos.unlimited-code.works/user-settings
+
+
 ##
 ## Access Control Configuration
 ##
@@ -99,7 +125,6 @@ access_control:
   - domain:
     - "k8s.<%= domain %>"
     - "mon.<%= domain %>"
-    - "photos.<%= domain %>"
     subject: "group:admins"
     policy: one_factor
 

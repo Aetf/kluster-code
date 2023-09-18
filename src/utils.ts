@@ -307,6 +307,44 @@ export class SealedSecret extends crds.bitnami.v1alpha1.SealedSecret {
     }
 }
 
+export type FileSecretArgs = Omit<SealedSecretArgs, 'spec'> & {
+    readonly spec: FileSecretSpecArgs
+}
+export interface FileSecretSpecArgs extends SealedSecretSpecArgs {
+    prefix: string,
+}
+/**
+ * The secret that automatically mount in the container and write `_FILE` env
+ * vars.
+ */
+export class FileSecret extends SealedSecret {
+
+    public readonly prefix: string;
+
+    constructor(name: string, args: FileSecretArgs, opts?: pulumi.CustomResourceOptions) {
+        const spec = args.spec;
+        super(name, {
+            ...args,
+            spec,
+        }, opts);
+
+        this.prefix = args.spec.prefix;
+    }
+
+    /**
+     * mount the secret and provide the path for each key in env vars
+     */
+    public mountBoth(destPath: string): [pulumi.Output<kx.types.VolumeMount>, pulumi.Output<kx.types.EnvMap>] {
+        const secretEnvs = this.spec.apply(spec =>
+            _.chain(spec?.encryptedData)
+                .mapValues((_, k) => `${destPath}/${k}`)
+                .mapKeys((_, k) => `${this.prefix}${k}_FILE`)
+                .value()
+        );
+        return [this.mount(destPath), secretEnvs];
+    }
+}
+
 export function dedent(templ: TemplateStringsArray | string, ...values: unknown[]): string {
   let strings = Array.from(typeof templ === 'string' ? [templ] : templ);
 
