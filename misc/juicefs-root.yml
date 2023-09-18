@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: juicefs-root
+  labels:
+    juicefs-name: juicefs-root
+spec:
+  capacity:
+    storage: 5Pi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  csi:
+    driver: csi.juicefs.com
+    volumeHandle: juicefs-root
+    fsType: juicefs
+    nodePublishSecretRef:
+      name: juicefs
+      namespace: kube-system
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: juicefs-root-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 5Pi
+  selector:
+    matchLabels:
+      juicefs-name: juicefs-root
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+spec:
+  containers:
+  - name: test
+    image: busybox:latest
+    command:
+    - /bin/sh
+    args:
+    - -c
+    - while true; do echo $(date -u) >> /tmp/out.txt; sleep 5; done
+    volumeMounts:
+    - mountPath: "/data"
+      name: pv
+      mountPropagation: "HostToContainer"
+  volumes:
+  - name: pv
+    persistentVolumeClaim:
+      claimName: juicefs-root-pvc
