@@ -28,8 +28,8 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
             spec: {
                 encryptedData: {
                     smtp_user: 'AgBN6O5GuQQ3iFH97FCUXAx00fi+XhD8jUFgJFc0Mo7A9XpyUa9tEb2X93Bx3ApIw4HwZG3/+ukouUZhMjA24oUOnRmodlyLIAgIeo6WRsc8Qdi0yiIJrt1uNF7CcM9ztzWjxXlF4041qcyAcWOcgDtbIXmlk60d+3t4xSCm0Us/SZ9uDkTKuQnQikqqq3DltU7KKo/4YvtcGaVz9NHbOuKaBakCt9KAvBmLJ6vEZO0WHtbPFSUQ+tQOKps0V0B3KtAM6kPbGKna4Zbv52SZAreCN79mR5LY3jsoBIql0Tqh7eKYEKQXJFIV/rU2LT4Fk40qY91SABB6XfDJAaMEgyieTQuePhgimghknrOL9brZMI7t8UPcRVVhEOL279RVdldrvJma/vcPpqquXkNl0tQvU+cNy6ZpRbFjB5PUovVot1pkDFsTz+CM93UQ5yylmTBTaZ0n+hrVEUgtvVeFzpgI57dwhw9VLZg3CJw5XYh2rQR6esDd3xNXj7dpkFpJO6A3UCz9ct1a9e3i43YlGwrKGw+V6MWek14UK3eFkhuKfRJ9ikQRpjUGNHk2nx3bKjeMWQgfMpppmutbzIos0G6tCpP0EyxuRfgk6NHSMxy741B0fmXgMesXRwGoevDTA4d9CNCNS6OqSejCAkRYLkYUEp+L1SnM8WkwoK+Wy+LHSkfaXd+QFtkppFVXWTAOEvAR9p/RPcLao/CCDY+uO02M4gqgYWt9Q/kKPg==',
-                    smtp_pass: 'AgCCtwWR1hBzmHVjIGbNDgPV752bIY8sG84cNUpzKZM0QQO6R+3Q7Jmn5JVOrLhkAW58YHGmcuiv2SQpQ7nkcmdfOQxIsjyvkjyF68jVrED3mM/LeWsY5a8a77JqLUv15CqEy2nZAb0aGm+guvbGSQEnxx2bcW8psh3Wj01z1YkFs7WOVvn3g88O/UFpz9JIrLTcKuUhECbmeUlKWw0Dp9h/Irw000pCKFN1X0n2hibHDU4MnQ4h7bzGiHaECMIQjT5d3geV6SU+46OsJoDzyTiIRU3dVrS+8TwKues8IePosA1KS9F4LBEK2pkmZksueY+GMvzFSDIaHE6+tduUEcN03cSywrGZZAswMNraqKol3IeL3/c3JWQbyaKkppD/aEhRUFwji2hF1dgb2JckyvrauJEWeb0CtQy4kKFHAQiVBx+K2aKqc1+Au20iao+iSOz91KPTh3Z3IOn/1vr5ghN4IHxmHiuOTdZZ6HZOg4Z7Dmr8S9EniYXdT300FVNb8fZBMnja9qS5hocnU+mpyti8mYR4Z0WfYV55miaaFRZ4JTiWy+f2+rvH0VAs+Vv6UOgktly+WN4ngxd3Wb7eELe+Jb/SpocMyLZ9PI/BYYNQRYMep5PsxjC4IcY2mwuPNX07E6RzNGBJh+GYgQ+VIPiqzYMzpc8o6nalSxM7gE1UrHDyRvuEvEbfzf3aCpM/bV2RFP+KIEfdXcDjvobds93IYksrOsDXQld4/q9ZFyFFnIPkeL6PBc6M',
-                }
+                    smtp_pass: 'AgAxaK6mTqe6sprsgqcY0LJCzDWw6LH13VV67f6ahY7220fs4/0K88WPutZLfBwLqw6udknQ+cQLQeCwa9BDC7zcFmbTccPtCKshZEEoBbFU+8KWne5kOq2s1tdmaBdZpBOVDe75d1uRI6OIvQoSR7zPUxxLEFC3TIxczC53QmzaoKVi5UmpI0DNLG5t6cu1tMRrvFNql6386b+Ny5FvJtdDEsmAoZJrEqEvCHD6toH2z/tId13X6cjUWFIdR7y6emgi3PAKnM8+O8T7eSGZS+G3xX5xXzt9AG851EiMeY37kpmiPSkTHo4r4jboa8wTZM0dcnRNm6h5AAruiastpJTiytMLHPuZRz2KF7mlWwJvQQUlL0M1tIwNQMiFeGaNSayAAtoFlF9cPB/qjE7YZVK1yCQ1+0k7jyDQCrIngBkn97GxZgasYpEoZDjx4hfoobZAgp/Nx4BR2AhZQoUyr+WXv+CQfxhh9fsupY2YjeHlQDLF2BE2M73Qnj4iOgaq2PYB45dxEyYqXzdO9hf1KqYVQ8ODn+oJx9+BngV2pr8LGle8vtLmBK+ZfLtw3hGQ4yUAvDpCzdxbirEZO40CalveJ7xvDeYP0RTsYELNa8fHdpo5Z7bAanUECgpkqU6wnM0MbUvlgcJiw+V0dDBd8pjZNzFDhtaSnAREuj88UTFfWaFj666oPytOoY2AsYpGFrOLktKgTpxa9irXikGYflh7',
+                },
             }
         }, { parent: this });
 
@@ -84,7 +84,7 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
         const deployment = new kx.Deployment(name, {
             metadata: {
                 annotations: {
-                    "reloader.stakater.com/search": "true"
+                    "reloader.stakater.com/auto": "true"
                 }
             },
             spec: pb.asDeploymentSpec(),
