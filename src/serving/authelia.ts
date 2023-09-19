@@ -5,26 +5,32 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import { BaseCluster, BackendCertificate } from '#src/base-cluster';
-import { FileSecret, setAndRegisterOutputs, urlFromService, serviceFromDeployment, ConfigMap, SealedSecret, HelmChart } from "#src/utils";
-import { Middleware } from './traefik';
-import { FrontendService } from "./service";
+import { FileSecret, setAndRegisterOutputs, serviceFromDeployment, ConfigMap, SealedSecret } from "#src/utils";
 import { Redis } from "#src/redis";
+import { Service } from "#src/utils";
+
+import { FrontendService } from './service';
+import { Middleware } from './traefik';
 
 interface AutheliaArgs {
     base: BaseCluster,
+    crdsReady: pulumi.Input<pulumi.CustomResource[]>,
 
-    smtpHost: pulumi.Input<string>,
-    smtpPort: pulumi.Input<number>,
+    smtp: pulumi.Input<Service>,
 
-    domain: string,
-    subdomain: string,
+    domain: pulumi.Input<string>,
+    subdomain: pulumi.Input<string>,
 }
 
 export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
-    public readonly service: kx.Service;
+    public readonly service: Service;
     public readonly certificate: BackendCertificate;
-    public readonly middlewareAuth: Middleware;
-    public readonly middlewareAuthBasic: Middleware;
+
+    public readonly authHost!: pulumi.Output<string>;
+    // Verify endpoint for forward auth
+    public readonly url!: pulumi.Output<string>;
+    // Verify endpoint for basic auth
+    public readonly urlBasic!: pulumi.Output<string>;
 
     constructor(name: string, args: AutheliaArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:Authelia', name, args, opts);
@@ -60,6 +66,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
 
         // deployment and service
         this.service = this.setupDeploymentService(name, args, service_account, secret, redis);
+        this.authHost = pulumi.interpolate`${args.subdomain}.${args.domain}`;
 
         // frontend service for the login page
         const middlewareAuthelia = new Middleware('authelia', {
@@ -71,71 +78,42 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                     "Pragma": "no-cache",
                 }
             }
-        }, { parent: this });
-        const front = new FrontendService(name, {
-            host: `${args.subdomain}.${args.domain}`,
+        }, { parent: this, dependsOn: args.crdsReady });
+        const front = new FrontendService('authelia', {
+            host: this.authHost,
             targetService: this.service,
             middlewares: [middlewareAuthelia],
         }, { parent: this });
 
-        // auth middleware
-        const url = pulumi.all([urlFromService(this.service, 'https'), front.url]).apply(([url, loginUrl]) => {
+        // urls used for verify
+        const url = pulumi.all([this.service.asUrl('https'), front.url]).apply(([url, loginUrl]) => {
+            console.log("full url is ", url);
             const fullUrl = new URL(url);
             fullUrl.pathname = '/api/verify';
             fullUrl.searchParams.append('rd', loginUrl);
             return fullUrl.href;
         });
-        const urlBasic = pulumi.all([urlFromService(this.service, 'https')]).apply(([url]) => {
+        const urlBasic = this.service.asUrl('https').apply(url => {
             const fullUrl = new URL(url);
             fullUrl.pathname = '/api/verify';
             fullUrl.searchParams.append('auth', 'basic');
             return fullUrl.href;
         });
-        this.middlewareAuth = new Middleware('auth', {
-            forwardAuth: {
-                address: url,
-                // this is safe because traefik sanitize all forwarded header
-                // before handling req to middlewares
-                trustForwardHeader: true,
-                authResponseHeaders: [
-                    "Remote-User",
-                    "Remote-Name",
-                    "Remote-Email",
-                    "Remote-Groups",
-                ],
-                tls: {
-                    caSecret: "cert-svc-authelia"
-                }
-            }
-        }, { parent: this });
-        this.middlewareAuthBasic = new Middleware('auth-basic', {
-            forwardAuth: {
-                address: urlBasic,
-                // this is safe because traefik sanitize all forwarded header
-                // before handling req to middlewares
-                trustForwardHeader: true,
-                authResponseHeaders: [
-                    "Remote-User",
-                    "Remote-Name",
-                    "Remote-Email",
-                    "Remote-Groups",
-                ],
-                tls: {
-                    caSecret: "cert-svc-authelia"
-                }
-            }
-        }, { parent: this });
 
-        setAndRegisterOutputs(this, {});
+        setAndRegisterOutputs(this, {
+            authHost: pulumi.interpolate`${args.subdomain}.${args.domain}`,
+            url,
+            urlBasic,
+        });
     }
 
     private setupDeploymentService(
         name: string,
         args: AutheliaArgs,
         service_account: k8s.core.v1.ServiceAccount,
-        secret: AutheliaSecret,
+        secret: FileSecret,
         redis: Redis
-    ): kx.Service {
+    ): Service {
         // persistent storage
         const storagePath = "/storage";
         const pvc = args.base.createLocalStoragePVC(name, {
@@ -152,15 +130,15 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             base: __dirname,
             data: 'static/*',
             stripComponents: 1,
-            tplVariables: {
+            tplVariables: pulumi.all([args, redis.masterService]).apply(([args, redisService]) => ({
                 domain: args.domain,
                 subdomain: args.subdomain,
-                smtpHost: args.smtpHost,
-                smtpPort: args.smtpPort,
                 storagePath,
-                redisHost: redis.serviceHost,
-                redisPort: redis.servicePort
-            },
+                redisHost: redisService.internalEndpoint(),
+                redisPort: redisService.port(),
+                smtpHost: args.smtp.internalEndpoint(),
+                smtpPort: args.smtp.port('smtp'),
+            })),
         }, { parent: this });
 
         // setup the secrets
@@ -240,28 +218,3 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
     }
 }
 
-/**
- * The secret used by authelia
- */
-class AutheliaSecret extends SealedSecret {
-    constructor(name: string, encryptedData: Record<string, string>, opts?: pulumi.CustomResourceOptions) {
-        super(name, {
-            spec: {
-                encryptedData,
-            }
-        }, opts);
-    }
-
-    /**
-     * mount the secret and provide the path for each key in env vars
-     */
-    public mountBoth(destPath: string): [pulumi.Output<kx.types.VolumeMount>, pulumi.Output<kx.types.EnvMap>] {
-        const secretEnvs = this.spec.apply(spec =>
-            _.chain(spec?.encryptedData)
-                .mapValues((_, k) => `${destPath}/${k}`)
-                .mapKeys((_, k) => `AUTHELIA_${k}_FILE`)
-                .value()
-        );
-        return [this.mount(destPath), secretEnvs];
-    }
-}

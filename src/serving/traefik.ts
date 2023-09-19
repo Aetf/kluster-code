@@ -150,7 +150,10 @@ export class Middleware extends crds.traefik.v1alpha1.Middleware {
         super(name, {
             metadata: { name, },
             spec,
-        }, { deleteBeforeReplace: true, ...opts ?? {} });
+        }, {
+            deleteBeforeReplace: true,
+            ...opts ?? {}
+        });
     }
 
     /**

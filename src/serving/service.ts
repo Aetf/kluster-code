@@ -4,7 +4,7 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from '#src/crds';
-import { setAndRegisterOutputs, urlFromService } from "#src/utils";
+import { Service, setAndRegisterOutputs } from "#src/utils";
 
 import { Middleware, TLSOption } from "./traefik";
 
@@ -23,7 +23,7 @@ export interface FrontendServiceArgs {
  * <name>-ingress: Ingress rule
  */
 export class FrontendService extends pulumi.ComponentResource<FrontendServiceArgs> {
-    public readonly service: kx.Service;
+    public readonly service: Service;
 
     public readonly url!: pulumi.Output<string>;
 
@@ -47,7 +47,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
             };
         });
 
-        this.service = new kx.Service(`${name}-dns`, {
+        this.service = new Service(`${name}-dns`, {
             metadata: {
                 name: `${name}-dns`
             },
@@ -71,9 +71,8 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
             spec: this.ingressSpecFromHosts(args.host),
         }, { parent: this });
 
-        const url = pulumi.output(args.host).apply(h => 'https://' + h);
         setAndRegisterOutputs(this, {
-            url
+            url: pulumi.interpolate`https://${args.host}`
         });
     }
 

@@ -69,10 +69,15 @@ function setup() {
     // serving
     const serving = new Serving("kluster-serving", {
         base: cluster,
-        authDomain: 'unlimited-code.works',
+        smtp: mailer.smtpService,
+
         externalIPs: [
             "45.77.144.92",
         ],
+        httpPort: staging ? 10000 : 80,
+        httpsPort: staging ? 10443 : 443,
+
+        domain: 'unlimited-code.works',
         certificates: [{
             main: 'unlimited-code.works',
             sans: [
@@ -93,13 +98,7 @@ function setup() {
                 "*.jiahui.love",
             ],
         }],
-        smtpHost: mailer.address,
-        smtpPort: mailer.port,
-        httpPort: staging ? 10000 : 80,
-        httpsPort: staging ? 10443 : 443,
-    }, {
-        provider: namespaced('serving-system')
-    });
+    }, { provider: namespaced('serving-system') });
 
     // monitoring
     const prometheus = new Prometheus("prometheus", {

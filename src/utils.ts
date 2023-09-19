@@ -47,7 +47,7 @@ export function serviceFromDeployment(
     name: string,
     d: kx.Deployment,
     args?: Omit<kx.types.Service, 'spec'> & { spec?: kx.types.ServiceSpec }
-): kx.Service {
+): Service {
     const serviceSpec = pulumi
         .all([d.spec.template.spec.containers, args?.spec ?? {}])
         .apply(([containers, spec]) => {
@@ -114,12 +114,12 @@ export class HelmChart extends k8s.helm.v3.Chart {
      * Returns the first service
      * @param namePattern: optional search for this name. The name is in the format `v1/Service::<namespace>/<name>`
      */
-    public service(namePattern?: RegExp): pulumi.Output<k8s.core.v1.Service> {
+    public service(namePattern?: RegExp): pulumi.Output<Service> {
         return this.resources.apply(res => {
             const keys = _.keys(res).filter(k => k.startsWith('v1/Service::'));
             let key: string | undefined = undefined;
             if (keys.length === 0) {
-                // pass
+                throw new TypeError("No service found in the chart: " + keys.join(','));
             } else if (keys.length === 1) {
                 key = keys[0];
             } else {
@@ -130,9 +130,10 @@ export class HelmChart extends k8s.helm.v3.Chart {
                 }
             }
             if (_.isUndefined(key)) {
-                throw new TypeError("No service found in the chart: " + keys.join(','));
+                throw new TypeError("No service found in the chart with matching name: " + keys.join(','));
             }
-            return res[key] as k8s.core.v1.Service;
+            const bareService = res[key] as k8s.core.v1.Service;
+            return bareService;
         });
     }
 }
@@ -322,12 +323,7 @@ export class FileSecret extends SealedSecret {
     public readonly prefix: string;
 
     constructor(name: string, args: FileSecretArgs, opts?: pulumi.CustomResourceOptions) {
-        const spec = args.spec;
-        super(name, {
-            ...args,
-            spec,
-        }, opts);
-
+        super(name, args, opts);
         this.prefix = args.spec.prefix;
     }
 
@@ -343,6 +339,39 @@ export class FileSecret extends SealedSecret {
         );
         return [this.mount(destPath), secretEnvs];
     }
+}
+
+import { Service } from "@pulumi/kubernetes/core/v1/service";
+export { Service } from "@pulumi/kubernetes/core/v1/service";
+declare module "@pulumi/kubernetes/core/v1/service" {
+    interface Service {
+        internalEndpoint(): pulumi.Output<string>;
+        port(schema?: string): pulumi.Output<number | undefined>;
+        asUrl(schema: string): pulumi.Output<string>;
+    }
+}
+Service.prototype.internalEndpoint = function() {
+    return pulumi.interpolate`${this.metadata.name}.${this.metadata.namespace}`;
+
+}
+Service.prototype.port = function(schema?: string) {
+    return this.spec.apply(spec => {
+        if (_.isUndefined(schema)) {
+            return spec.ports[0]?.port;
+        }
+        const port = _.find(spec.ports, v => v.name === schema || v.name.startsWith(schema) || v.name.endsWith(schema));
+        return port?.port;
+    });
+}
+Service.prototype.asUrl = function(schema: string) {
+    return pulumi.all([this.internalEndpoint(), this.port(schema)])
+        .apply(([endpoint, port]) => {
+            if (_.isUndefined(port)) {
+                return `${schema}://${endpoint}`;
+            } else {
+                return `${schema}://${endpoint}:${port}`;
+            }
+        });
 }
 
 export function dedent(templ: TemplateStringsArray | string, ...values: unknown[]): string {

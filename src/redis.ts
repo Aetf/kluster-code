@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import { HelmChart } from "./utils";
+import { Service, HelmChart } from "./utils";
 
 export interface RedisArgs {
     persistentStorageClass: pulumi.Input<string>,
@@ -12,7 +12,7 @@ export interface RedisArgs {
 }
 
 export class Redis extends HelmChart {
-    public readonly redisService: pulumi.Output<k8s.core.v1.Service>;
+    public readonly masterService: pulumi.Output<Service>;
     private authPassword: pulumi.Output<k8s.types.input.core.v1.SecretKeySelector>;
 
     constructor(name: string, args: RedisArgs, opts?: pulumi.ComponentResourceOptions) {
@@ -41,17 +41,8 @@ export class Redis extends HelmChart {
                 }
             }
         }, opts);
-        this.redisService = this.service(/master/);
+        this.masterService = this.service(/master/);
         this.authPassword = authPassword;
-    }
-
-    public get serviceHost(): pulumi.Output<string> {
-        /* return pulumi.interpolate`${this.redisService.metadata.name}.${this.redisService.metadata.namespace}`; */
-        return pulumi.interpolate`${this.redisService.metadata.name}.${this.redisService.metadata.namespace}.svc.cluster.local`;
-    }
-
-    public get servicePort(): pulumi.Output<number> {
-        return this.redisService.spec.ports.apply(ports => ports.find(port => port.name == 'tcp-redis')?.port ?? 6379);
     }
 
     public get servicePassword(): pulumi.Output<k8s.types.input.core.v1.SecretKeySelector> {

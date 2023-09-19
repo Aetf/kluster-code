@@ -85,8 +85,8 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     }
                 },
                 env: {
-                    'REDIS_HOSTNAME': redis.serviceHost,
-                    'REDIS_PORT': redis.servicePort,
+                    'REDIS_HOSTNAME': pulumi.output(redis.masterService).apply(s => s.internalEndpoint()),
+                    'REDIS_PORT': pulumi.output(redis.masterService).apply(s => s.port()),
                     'REDIS_PASSWORD': {
                         valueFrom: secret.asEnvValue('redis_pass'),
                     },

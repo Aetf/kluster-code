@@ -5,7 +5,7 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import { BaseCluster, ClusterCertificate } from '#src/base-cluster';
-import { ConfigMap, SealedSecret, serviceFromDeployment } from "#src/utils";
+import { Service, ConfigMap, SealedSecret, serviceFromDeployment } from "#src/utils";
 import * as crds from "#src/crds";
 
 interface EximArgs {
@@ -17,12 +17,10 @@ interface EximArgs {
  * Internal SMTP relay to consolidate email settings
  */
 export class Exim extends pulumi.ComponentResource<EximArgs> {
-    public port: pulumi.Output<number>;
-    public address: pulumi.Output<string>;
+    public readonly smtpService: Service;
 
     constructor(name: string, args: EximArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:Exim', name, args, opts);
-        this.port = pulumi.output(8025);
 
         const secret = new SealedSecret(name, {
             spec: {
@@ -59,7 +57,7 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
                 name,
                 image: 'docker.io/devture/exim-relay:4.94.2-r0-2',
                 ports: {
-                    smtp: this.port,
+                    smtp: 8025,
                 },
                 env: {
                     HOSTNAME: args.host,
@@ -90,12 +88,10 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
             spec: pb.asDeploymentSpec(),
         }, { parent: this });
 
-        const service = serviceFromDeployment(name, deployment, {
+        this.smtpService = serviceFromDeployment(name, deployment, {
             metadata: {
                 name: 'smtp',
             },
         });
-
-        this.address = pulumi.interpolate`${service.metadata.name}.${service.metadata.namespace}`;
     }
 }
