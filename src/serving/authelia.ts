@@ -87,7 +87,6 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
 
         // urls used for verify
         const url = pulumi.all([this.service.asUrl('https'), front.url]).apply(([url, loginUrl]) => {
-            console.log("full url is ", url);
             const fullUrl = new URL(url);
             fullUrl.pathname = '/api/verify';
             fullUrl.searchParams.append('rd', loginUrl);
