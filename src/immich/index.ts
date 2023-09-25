@@ -75,7 +75,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             },
             values: {
                 image: {
-                    tag: "v1.78.1",
+                    tag: "v1.79.1",
                 },
                 immich: {
                     persistence: {
@@ -333,7 +333,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     name: pulumi.all([db.metadata.name]).apply(([dbcluster_name]) => dbcluster_name!),
                 },
             }
-        });
+        }, { parent: this });
         return db;
     }
 
