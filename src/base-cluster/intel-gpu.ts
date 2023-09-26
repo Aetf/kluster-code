@@ -56,6 +56,9 @@ export class IntelDevicePlugins extends pulumi.ComponentResource<IntelDevicePlug
             fetchOpts: {
                 repo: "https://intel.github.io/helm-charts",
             },
+            values: {
+                sharedDevNum: 5,
+            },
         }, { parent: this });
     }
 }
