@@ -167,24 +167,10 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     },
                 },
                 microservices: {
-                    affinity: {
-                        podAffinity: {
-                            // This is a hack to run the pod on the same node as juicefs
-                            // redis master, because otherwise the metadata server
-                            // performance is very bad.
-                            requiredDuringSchedulingIgnoredDuringExecution: [
-                                {
-                                    topologyKey: 'kubernetes.io/hostname',
-                                    labelSelector: {
-                                        matchLabels: {
-                                            'app.kubernetes.io/instance': 'juicefs-redis',
-                                            'app.kubernetes.io/component': 'master',
-                                        }
-                                    },
-                                    namespaces: ['kube-system']
-                                }
-                            ]
-                        },
+                    resources: {
+                        limits: {
+                            'gpu.intel.com/i915': '1'
+                        }
                     },
                     persistence: {
                         'geodata-cache': {
