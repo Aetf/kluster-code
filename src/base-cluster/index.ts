@@ -2,12 +2,14 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
+import { Node } from "#src/utils";
+
 export { BaseCluster } from "./base";
 export { FrontendCertificate, BackendCertificate, ClusterCertificate } from "./certs";
 
 interface NodePVArgs {
     path: pulumi.Input<string>,
-    node: pulumi.Input<string>,
+    node: pulumi.Input<Node>,
     capacity: pulumi.Input<string>,
     accessModes?: pulumi.Input<pulumi.Input<string>[]>,
 }
@@ -36,13 +38,9 @@ export class NodePV extends pulumi.ComponentResource<NodePVArgs> {
                 },
                 nodeAffinity: {
                     required: {
-                        nodeSelectorTerms: [{
-                            matchExpressions: [{
-                                key: 'kubernetes.io/hostname',
-                                operator: 'In',
-                                values: [args.node],
-                            }]
-                        }]
+                        nodeSelectorTerms: [
+                            pulumi.output(args.node).hostnameSelector,
+                        ]
                     }
                 }
             }

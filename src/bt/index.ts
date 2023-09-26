@@ -53,9 +53,6 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
 
         const pb = new kx.PodBuilder({
             restartPolicy: 'Always',
-            nodeSelector: {
-                "kubernetes.io/hostname": args.serving.base.nodes.AetfArchHomelab
-            },
             containers: [
             {
                 image: 'docker.io/haugene/transmission-openvpn:latest',

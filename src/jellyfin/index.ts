@@ -41,9 +41,6 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
 
             const pb = new kx.PodBuilder({
                 restartPolicy: 'Always',
-                nodeSelector: {
-                    "kubernetes.io/hostname": args.serving.base.nodes.AetfArchHomelab
-                },
                 containers: [
                     {
                         image: 'docker.io/jellyfin/jellyfin:latest',

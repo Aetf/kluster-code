@@ -125,8 +125,8 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     MYSQL_PASSWORD: secret.asEnvValue('db_pass'),
 
                     // redis
-                    REDIS_HOST: redis.serviceHost,
-                    REDIS_HOST_PORT: pulumi.interpolate`${redis.servicePort}`,
+                    REDIS_HOST: pulumi.output(redis.masterService).apply(s => s.internalEndpoint()),
+                    REDIS_HOST_PORT: pulumi.output(redis.masterService).apply(s => s.port() || 0),
                     REDIS_HOST_PASSWORD: {
                         secretKeyRef: redis.servicePassword
                     },

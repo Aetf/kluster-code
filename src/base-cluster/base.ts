@@ -6,17 +6,15 @@ import * as crds from "#src/crds";
 import { NamespaceProbe, HelmChart, SealedSecret } from "#src/utils";
 import LocalPathProvisioner from "#src/local-path";
 import { JuiceFs } from "#src/juicefs";
+
 import { FrontendCertificate, FrontendCertificateArgs, BackendCertificate, BackendCertificateArgs } from "./certs";
+import { nodes, Nodes } from "./nodes";
+
+export { Nodes } from "./nodes";
 
 export const CertificateCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::certificates.cert-manager.io";
 export const ClusterIssuerCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::clusterissuers.cert-manager.io";
 export const SealedSecretCRD = "apiextensions.k8s.io/v1/CustomResourceDefinition::sealedsecrets.bitnami.com";
-
-const NODE_NAMES = [
-    "AetfArchVPS",
-    "AetfArchHomelab",
-] as const;
-export type Nodes = Record<typeof NODE_NAMES[number], string>;
 
 export interface BaseClusterArgs {
     isSetupSecrets: boolean,
@@ -44,15 +42,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     constructor(name: string, args: BaseClusterArgs, opts?: pulumi.ComponentResourceOptions) {
         super("kluster:BaseCluster", name, args, opts);
 
-        // known cluster nodes
-        const nodes: Partial<Nodes> = {};
-        for (const node of NODE_NAMES) {
-            const hostname = node.split(/(?<=[a-z])(?=[A-Z])/).map(s => s.toLowerCase()).join('-');
-            // nodes[node] = k8s.core.v1.Node.get(hostname, hostname);
-            // no need to get the Node resource, which takes very long
-            nodes[node] = hostname;
-        }
-        this.nodes = nodes as Nodes;
+        this.nodes = nodes;
 
         const namespace = new NamespaceProbe(`${name}-probe`, { parent: this }).namespace;
 

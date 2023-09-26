@@ -374,6 +374,28 @@ Service.prototype.asUrl = function(schema: string) {
         });
 }
 
+import { NodePatch } from '@pulumi/kubernetes/core/v1/nodePatch';
+export { NodePatch as Node } from '@pulumi/kubernetes/core/v1/nodePatch';
+
+declare module '@pulumi/kubernetes/core/v1/nodePatch' {
+    interface NodePatch {
+        /**
+         * Selector to uniquely select this node
+         */
+        readonly hostnameSelector: k8s.types.input.core.v1.NodeSelectorTerm;
+    }
+}
+Object.defineProperty(NodePatch.prototype, 'hostnameSelector', { get: function(): k8s.types.input.core.v1.NodeSelectorTerm {
+    const hostnamelabel = 'kubernetes.io/hostname';
+    return {
+        matchExpressions: [{
+            key: hostnamelabel,
+            operator: 'In',
+            values: [this.metadata.name],
+        }],
+    };
+}});
+
 export function dedent(templ: TemplateStringsArray | string, ...values: unknown[]): string {
   let strings = Array.from(typeof templ === 'string' ? [templ] : templ);
 
