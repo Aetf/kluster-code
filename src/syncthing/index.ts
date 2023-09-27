@@ -34,6 +34,7 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
 
         const pb = new kx.PodBuilder({
             containers: [{
+                name,
                 image: 'syncthing/discosrv:1.24.0',
                 args: [
                     '-cert=/tls/tls.crt',
@@ -60,7 +61,7 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
                     type: 'Recreate'
                 }
             }),
-        }, { parent: this });
+        }, { parent: this, deleteBeforeReplace: true });
         const service = serviceFromDeployment(name, deployment, {
             metadata: {
                 name,

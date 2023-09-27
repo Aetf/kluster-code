@@ -40,6 +40,7 @@ export class Ukulele extends pulumi.ComponentResource<UkuleleArgs> {
         const pb = new kx.PodBuilder({
             restartPolicy: 'Always',
             containers: [{
+                name,
                 image: 'ghcr.io/freyacodes/ukulele:master',
                 envFrom: [
                     secrets.asEnvFromSource(),

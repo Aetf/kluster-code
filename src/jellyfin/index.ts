@@ -74,6 +74,7 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
                 restartPolicy: 'Always',
                 containers: [
                     {
+                        name,
                         image: 'docker.io/jellyfin/jellyfin:latest',
                         env: {
                             'JELLYFIN_PublishedServerUrl': publishedUrl,

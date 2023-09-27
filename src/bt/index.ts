@@ -55,6 +55,7 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
             restartPolicy: 'Always',
             containers: [
             {
+                name,
                 image: 'docker.io/haugene/transmission-openvpn:latest',
                 env: {
                     'OPENVPN_PROVIDER': 'PIA',
