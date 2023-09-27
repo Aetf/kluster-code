@@ -240,8 +240,7 @@ function setup() {
 
     // media serving using jellyfin
     const jellyfin = new Jellyfin("jellyfin", {
-        serving,
-        externalIPs: ["192.168.70.85", "10.144.180.10"],
+        base: cluster,
         pvc: mediaPv.pvc,
     }, { provider: mediaProvider });
 
