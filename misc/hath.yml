@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+  namespace: hath
+spec:
+  containers:
+  - name: test
+    image: lightruncom/koolkits:python
+    command:
+    - /bin/sh
+    args:
+    - -c
+    - while true; do echo $(date -u) >> /tmp/out.txt; sleep 5; done
+    volumeMounts:
+    - mountPath: "/hosthath"
+      name: hosthath
+    - mountPath: "/hath"
+      name: hath
+      mountPropagation: HostToContainer
+  volumes:
+  - name: hath
+    persistentVolumeClaim:
+      claimName: hath-317aa4f9
+  - name: hosthath
+    hostPath:
+      path: /mnt/s3ql/hath
+      type: Directory
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - topologyKey: 'kubernetes.io/hostname'
+        labelSelector:
+          matchLabels:
+            'app.kubernetes.io/instance': 'juicefs-redis'
+            'app.kubernetes.io/component': 'master'
+        namespaces: ['kube-system']
+
