@@ -245,8 +245,7 @@ function setup() {
     }, { provider: mediaProvider });
 
     const shoko = new Shoko("shoko", {
-        serving,
-        externalIPs: ["10.144.180.10"],
+        base: cluster,
         pvc: mediaPv.pvc,
     }, { provider: mediaProvider });
 

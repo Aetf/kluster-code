@@ -6,11 +6,10 @@ import * as kx from "@pulumi/kubernetesx";
 
 import { BackendCertificate } from '#src/base-cluster';
 import { ConfigMap, SealedSecret, serviceFromDeployment } from "#src/utils";
-import { Serving } from "#src/serving";
+import { BaseCluster } from "#src/base-cluster";
 
 interface ShokoArgs {
-    serving: Serving,
-    externalIPs: string[],
+    base: BaseCluster,
     pvc: pulumi.Input<kx.PersistentVolumeClaim>,
 }
 
@@ -30,8 +29,8 @@ export class Shoko extends pulumi.ComponentResource<ShokoArgs> {
             // config should be persisted, so use stable for storage
             // jfs isn't a good fit as this will run on homelab with limited up
             // bw to S3
-            const configPvc = args.serving.base.createLocalStoragePVC(`${name}-config`, {
-                storageClassName: args.serving.base.localStableStorageClass.metadata.name,
+            const configPvc = args.base.createLocalStoragePVC(`${name}-config`, {
+                storageClassName: args.base.localStableStorageClass.metadata.name,
                 resources: {
                     requests: {
                         storage: "1Gi"
@@ -39,10 +38,15 @@ export class Shoko extends pulumi.ComponentResource<ShokoArgs> {
                 }
             }, { parent: this });
 
+            const ports = [
+                { name: 'http', containerPort: 8111 },
+            ];
+
             const pb = new kx.PodBuilder({
                 restartPolicy: 'Always',
                 containers: [
                     {
+                        name,
                         image: 'docker.io/shokoanime/server:latest',
                         env: {
                             'TZ': 'America/Los_Angeles',
@@ -57,9 +61,7 @@ export class Shoko extends pulumi.ComponentResource<ShokoArgs> {
                             args.pvc.mount('/media'),
                             configPvc.mount('/home/shoko/.shoko'),
                         ],
-                        ports: [
-                            { name: 'http', containerPort: 8111 },
-                        ],
+                        ports,
                         /* livenessProbe: this.configureProbe(), */
                         /* readinessProbe: this.configureProbe(), */
                     },
@@ -73,18 +75,24 @@ export class Shoko extends pulumi.ComponentResource<ShokoArgs> {
                     }
                 },
                 spec: pb.asDeploymentSpec(),
-            }, {
-                parent: this,
-            });
+            }, { parent: this, });
 
-            const service = serviceFromDeployment(name, deployment, {
+            const service = new kx.Service(name, {
                 metadata: {
                     name,
+                    labels: {
+                        'svccontroller.k3s.cattle.io/lbpool': 'homelan',
+                    },
                 },
                 spec: {
-                    externalIPs: args.externalIPs,
+                    type: 'LoadBalancer',
+                    allocateLoadBalancerNodePorts: false,
+                    ports: ports.map(({ name, containerPort }) => ({ name, port: containerPort })),
+                    selector: {
+                        app: name,
+                    },
                 },
-            });
+            }, { parent: deployment, deleteBeforeReplace: true });
         });
     }
 
