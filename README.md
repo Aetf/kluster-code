@@ -83,7 +83,7 @@ Note that the trailing slash is important.
     * - [x] syncthing-discorv needs cert-unlimited-code.works
         + - [x] there's also syncthing/discorv image
     * maybe not possible? maybe just deploy syncthing and etc as NodeIP Service
-- - [ ] run hath inside k8s
+- - [x] run hath inside k8s
     * note the open port
 - - [ ] check nofile: `sudo lsof | awk '{print $1 $2}' | sort | uniq -c | sort -n | tee ~/lsof.txt`
 - - [ ] load sealed secret from yaml file

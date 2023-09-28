@@ -21,6 +21,7 @@ import { Shoko } from "./shoko";
 import { Dufs } from "./dav";
 import { CloudNativePg } from "./postgresql";
 import { Immich } from "./immich";
+import { Hath } from "./hath";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -257,6 +258,12 @@ function setup() {
         dbStorageClass: cluster.localStableStorageClass.metadata.name,
         cacheStorageClass: cluster.localStorageClass.metadata.name,
     }, { provider: namespaced('immich') });
+
+    // Hath@Home
+    const hath = new Hath('hath', {
+        base: cluster,
+        storageClassName: cluster.jfsStorageClass.metadata.name,
+    }, { provider: namespaced('hath') });
 }
 
 setup();
