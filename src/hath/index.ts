@@ -106,6 +106,20 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
                     secrets.mount(`${hathPrefix}/data/client_login`, 'client_login'),
                     cm.mount('/entrypoint.sh', 'entrypoint.sh'),
                 ],
+                startupProbe: {
+                    tcpSocket: {
+                        port,
+                    },
+                    failureThreshold: 3,
+                    periodSeconds: 10,
+                },
+                livenessProbe: {
+                    tcpSocket: {
+                        port,
+                    },
+                    failureThreshold: 1,
+                    periodSeconds: 60,
+                },
             }]
         });
 
