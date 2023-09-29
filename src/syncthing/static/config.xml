@@ -1,0 +1,79 @@
+<configuration>
+  <gui enabled="true" tls="true" debugging="false">
+    <address>:{{ ports.gui }}</address>
+    <theme>default</theme>
+    <insecureAdminAccess>true</insecureAdminAccess>
+  </gui>
+  <ldap></ldap>
+  <options>
+    <listenAddress>tcp://:{{ ports.syncthing }}</listenAddress>
+    <listenAddress>quic://:{{ ports.syncthing }}</listenAddress>
+    <listenAddress>dynamic+https://relays.syncthing.net/endpoint</listenAddress>
+    <globalAnnounceServer>https://syncapi.unlimited-code.works</globalAnnounceServer>
+    <globalAnnounceEnabled>true</globalAnnounceEnabled>
+    <localAnnounceEnabled>false</localAnnounceEnabled>
+    <maxSendKbps>0</maxSendKbps>
+    <maxRecvKbps>0</maxRecvKbps>
+    <relaysEnabled>true</relaysEnabled>
+    <relayReconnectIntervalM>10</relayReconnectIntervalM>
+    <startBrowser>false</startBrowser>
+    <natEnabled>true</natEnabled>
+    <urAccepted>-1</urAccepted>
+    <urSeen>3</urSeen>
+    <urUniqueID>TRbNnsXq</urUniqueID>
+    <autoUpgradeIntervalH>0</autoUpgradeIntervalH>
+    <upgradeToPreReleases>false</upgradeToPreReleases>
+    <cacheIgnoredFiles>false</cacheIgnoredFiles>
+    <minHomeDiskFree unit="%">1</minHomeDiskFree>
+    <overwriteRemoteDeviceNamesOnConnect>false</overwriteRemoteDeviceNamesOnConnect>
+    <setLowPriority>false</setLowPriority>
+    <maxFolderConcurrency>0</maxFolderConcurrency>
+    <crashReportingEnabled>false</crashReportingEnabled>
+    <stunServer>default</stunServer>
+    <databaseTuning>auto</databaseTuning>
+    <maxConcurrentIncomingRequestKiB>0</maxConcurrentIncomingRequestKiB>
+    <announceLANAddresses>false</announceLANAddresses>
+    <sendFullIndexOnUpgrade>false</sendFullIndexOnUpgrade>
+    <connectionLimitEnough>0</connectionLimitEnough>
+    <connectionLimitMax>0</connectionLimitMax>
+    <connectionPriorityTcpLan>10</connectionPriorityTcpLan>
+    <connectionPriorityQuicLan>20</connectionPriorityQuicLan>
+    <connectionPriorityTcpWan>30</connectionPriorityTcpWan>
+    <connectionPriorityQuicWan>40</connectionPriorityQuicWan>
+    <connectionPriorityRelay>50</connectionPriorityRelay>
+    <connectionPriorityUpgradeThreshold>0</connectionPriorityUpgradeThreshold>
+  </options>
+  <defaults>
+    <folder id="" label="" path="{{ filePrefix }}" type="sendreceive" fsWatcherEnabled="true" ignorePerms="false" autoNormalize="true">
+      <versioning type="staggered">
+        <cleanupIntervalS>3600</cleanupIntervalS>
+        <param key="maxAge" value="604800"></param>
+      </versioning>
+      <order>random</order>
+      <ignoreDelete>false</ignoreDelete>
+      <maxConflicts>10</maxConflicts>
+      <disableSparseFiles>false</disableSparseFiles>
+      <disableTempIndexes>false</disableTempIndexes>
+      <paused>false</paused>
+      <markerName>.stfolder</markerName>
+      <copyOwnershipFromParent>false</copyOwnershipFromParent>
+      <caseSensitiveFS>true</caseSensitiveFS>
+      <syncOwnership>false</syncOwnership>
+      <sendOwnership>false</sendOwnership>
+      <syncXattrs>true</syncXattrs>
+      <sendXattrs>true</sendXattrs>
+      <xattrFilter>
+        <maxSingleEntrySize>10240</maxSingleEntrySize>
+        <maxTotalSize>40960</maxTotalSize>
+      </xattrFilter>
+    </folder>
+    <device id="" compression="metadata" introducer="false" skipIntroductionRemovals="false">
+      <paused>false</paused>
+      <autoAcceptFolders>false</autoAcceptFolders>
+      <untrusted>false</untrusted>
+    </device>
+    <ignores>
+      <line>include stignore.txt</line>
+    </ignores>
+  </defaults>
+</configuration>

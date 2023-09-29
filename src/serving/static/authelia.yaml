@@ -133,6 +133,10 @@ access_control:
     policy: one_factor
 
   - domain:
+    - "sync.<%= domain %>"
+    policy: one_factor
+
+  - domain:
     - "dav.<%= domain %>"
     subject: "user:webdav"
     policy: one_factor

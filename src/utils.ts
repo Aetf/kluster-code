@@ -152,6 +152,10 @@ export type ConfigMapArgs = Omit<k8s.types.input.core.v1.ConfigMap, 'data'> & {
      * if not null, render template
      */
     tplVariables?: pulumi.Inputs,
+    /**
+     * whether to use alternative patterns {{ variable }}, for xml
+     */
+    tplAltPattern?: boolean,
 };
 
 export class ConfigMap extends kx.ConfigMap {
@@ -162,9 +166,10 @@ export class ConfigMap extends kx.ConfigMap {
                 return data;
             } else {
                 // render data with template
+                const interpolate = args.tplAltPattern ? /{{([\s\S]+?)}}/g : /<%=([\s\S]+?)%>/g;
                 try {
                     return _.mapValues(data, content => {
-                        const tpl = _.template(content, { interpolate: /<%=([\s\S]+?)%>/g });
+                        const tpl = _.template(content, { interpolate });
                         return tpl(args.tplVariables);
                     });
                 } catch (err) {

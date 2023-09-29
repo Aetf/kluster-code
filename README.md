@@ -71,9 +71,9 @@ Note that the trailing slash is important.
     * move mariadb in nextcloud to a shared service using statefulset
         + how does statefulset's pvc template works?
     * make authelia connect to mariadb instead of sqlite
-- - [ ] run syncthing inside k8s
-    * setup nodepv
-    * - [ ] tcp forwarding for btsync
+- - [x] run syncthing inside k8s
+    * ~~setup nodepv~~ use juicefs now
+    * - [x] tcp forwarding for btsync
     * syncthing needs the follow certs
         + permanent cert for device ID (this seems can be self generated, needs testing)
             + how to import existing ones

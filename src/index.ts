@@ -10,7 +10,7 @@ import { K8sDashboard } from "./k8s-dashboard";
 import { Nginx } from "./nginx";
 import { Exim } from "./mail";
 import { Genshin } from "./genshin";
-import { SyncthingDiscosrv } from "./syncthing";
+import { SyncthingDiscosrv, Syncthing } from "./syncthing";
 import { Ukulele } from "./ukulele";
 import { Mc } from "./mc";
 import { Bt } from "./bt";
@@ -191,15 +191,16 @@ function setup() {
     });
 
     // syncthing
+    const syncthingProvider = namespaced("syncthing");
+    const syncthing = new Syncthing("syncthing", {
+        serving,
+        host: 'sync.unlimited-code.works',
+        storageClassName: cluster.jfsStorageClass.metadata.name,
+    }, { provider: syncthingProvider });
     const stdiscosrv = new SyncthingDiscosrv("stdiscosrv", {
         serving,
-        host: 'stdiscosrv.unlimited-code.works',
-        externalIPs: [
-            "45.77.144.92",
-        ]
-    }, {
-        provider: namespaced("syncthing")
-    });
+        host: 'syncapi.unlimited-code.works',
+    }, { provider: syncthingProvider, });
 
     // ukulele, a discord music bot
     // install into default namespace
