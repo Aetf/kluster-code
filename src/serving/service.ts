@@ -13,6 +13,9 @@ export interface FrontendServiceArgs {
     targetService: pulumi.Input<k8s.core.v1.Service>,
     targetPort?: string,
 
+    // If disabled, force to http to upstream
+    enableTls?: boolean,
+
     tlsOption?: pulumi.Input<TLSOption>,
     middlewares?: pulumi.Input<Middleware[]>,
 }
@@ -27,8 +30,13 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
 
     public readonly url!: pulumi.Output<string>;
 
+    private readonly enableTls: boolean;
+    private readonly schema: string;
+
     constructor(name: string, args: FrontendServiceArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:FrontendService', name, args, opts);
+        this.enableTls = args.enableTls ?? true;
+        this.schema = this.enableTls ? 'https' : 'http'
 
         const serviceSpec = pulumi.output(args.targetService)
         .apply(service => {
@@ -38,7 +46,11 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                 ports: service.spec.ports.apply(ports => ports.map(port => {
                     // be smart about service ports: if there's a 443 port, override its
                     // name to be https
-                    const name = port.port == 443 ? 'https' : port.name;
+                    let name = port.port == 443 ? 'https' : port.name;
+                    // if tls disabled, force to http
+                    if (!this.enableTls && name === "https") {
+                        name = "http"
+                    }
                     return {
                         name,
                         port: port.port,
@@ -72,7 +84,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
         }, { parent: this });
 
         setAndRegisterOutputs(this, {
-            url: pulumi.interpolate`https://${args.host}`
+            url: pulumi.interpolate`${this.schema}://${args.host}`
         });
     }
 
@@ -101,7 +113,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
         _.set(rule, 'http.paths[0].path', '/');
         _.set(rule, 'http.paths[0].pathType', 'Prefix');
         _.set(rule, 'http.paths[0].backend.service.name', this.service.metadata.name);
-        _.set(rule, 'http.paths[0].backend.service.port.name', 'https');
+        _.set(rule, 'http.paths[0].backend.service.port.name', this.schema);
         return rule;
     }
 }
