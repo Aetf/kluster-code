@@ -69,13 +69,13 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         this.chart = new HelmChart(name, {
             namespace: this.namespace,
             chart: "immich",
-            version: "0.1.2",
+            version: "0.1.3",
             fetchOpts: {
                 repo: "https://immich-app.github.io/immich-charts",
             },
             values: {
                 image: {
-                    tag: "v1.79.1",
+                    tag: "v1.81.1",
                 },
                 immich: {
                     persistence: {
