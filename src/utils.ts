@@ -9,6 +9,25 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from "#src/crds";
+import { versions } from "#src/config";
+
+export function rsplit(str: string, sep: string, maxsplit?: number) {
+    const split = str.split(sep);
+    maxsplit = maxsplit ?? -1;
+    if (maxsplit < 0 || maxsplit > split.length) {
+        maxsplit = split.length;
+    }
+    // -1: [] [1, 2, 3]
+    // 0: [1, 2, 3] []
+    // 1: [1, 2] [3]
+    // 2: [1] [2, 3]
+    // 3: [] [1, 2, 3]
+    const remaining = split.slice(0, split.length - maxsplit);
+    if (remaining.length > 0) {
+        return [remaining.join(sep), ...split.slice(split.length - maxsplit, split.length)];
+    }
+    return split;
+}
 
 export function setAndRegisterOutputs(obj: any, outputs: pulumi.Inputs) {
     for (const key in outputs) {
@@ -99,14 +118,22 @@ export class NamespaceProbe extends pulumi.ComponentResource {
 }
 
 export class HelmChart extends k8s.helm.v3.Chart {
-    constructor(releaseName: string, config: k8s.helm.v3.ChartOpts | k8s.helm.v3.LocalChartOpts, opts?: pulumi.ComponentResourceOptions) {
-        const transformations = [
-            chartNamingWorkaround,
-            ...config.transformations ?? []
-        ];
+    constructor(releaseName: string, config: k8s.helm.v3.ChartOpts, opts?: pulumi.ComponentResourceOptions) {
+        const version = pulumi.output(config.chart).apply(chart => rsplit(versions.chart[chart], ':', 1)[1]);
+        const fetchOpts = pulumi.output(config).apply(config => {
+            return {
+                repo: rsplit(versions.chart[config.chart], ':', 1)[0],
+                ...config.fetchOpts ?? {},
+            };
+        });
         super(releaseName, {
+            version,
+            fetchOpts,
             ...config,
-            transformations,
+            transformations: [
+                chartNamingWorkaround,
+                ...config.transformations ?? [],
+            ],
         }, opts);
     }
 
@@ -390,67 +417,69 @@ declare module '@pulumi/kubernetes/core/v1/nodePatch' {
         readonly hostnameSelector: k8s.types.input.core.v1.NodeSelectorTerm;
     }
 }
-Object.defineProperty(NodePatch.prototype, 'hostnameSelector', { get: function(): k8s.types.input.core.v1.NodeSelectorTerm {
-    const hostnamelabel = 'kubernetes.io/hostname';
-    return {
-        matchExpressions: [{
-            key: hostnamelabel,
-            operator: 'In',
-            values: [this.metadata.name],
-        }],
-    };
-}});
+Object.defineProperty(NodePatch.prototype, 'hostnameSelector', {
+    get: function(): k8s.types.input.core.v1.NodeSelectorTerm {
+        const hostnamelabel = 'kubernetes.io/hostname';
+        return {
+            matchExpressions: [{
+                key: hostnamelabel,
+                operator: 'In',
+                values: [this.metadata.name],
+            }],
+        };
+    }
+});
 
 export function dedent(templ: TemplateStringsArray | string, ...values: unknown[]): string {
-  let strings = Array.from(typeof templ === 'string' ? [templ] : templ);
+    let strings = Array.from(typeof templ === 'string' ? [templ] : templ);
 
-  // 1. Remove trailing whitespace.
-  strings[strings.length - 1] = strings[strings.length - 1].replace(
-    /\r?\n([\t ]*)$/,
-    '',
-  );
+    // 1. Remove trailing whitespace.
+    strings[strings.length - 1] = strings[strings.length - 1].replace(
+        /\r?\n([\t ]*)$/,
+        '',
+    );
 
-  // 2. Find all line breaks to determine the highest common indentation level.
-  const indentLengths = strings.reduce((arr, str) => {
-    const matches = str.match(/\n([\t ]+|(?!\s).)/g);
-    if (matches) {
-      return arr.concat(
-        matches.map((match) => match.match(/[\t ]/g)?.length ?? 0),
-      );
-    }
-    return arr;
-  }, <number[]>[]);
+    // 2. Find all line breaks to determine the highest common indentation level.
+    const indentLengths = strings.reduce((arr, str) => {
+        const matches = str.match(/\n([\t ]+|(?!\s).)/g);
+        if (matches) {
+            return arr.concat(
+                matches.map((match) => match.match(/[\t ]/g)?.length ?? 0),
+            );
+        }
+        return arr;
+    }, <number[]>[]);
 
-  // 3. Remove the common indentation from all strings.
-  if (indentLengths.length) {
-    const pattern = new RegExp(`\n[\t ]{${Math.min(...indentLengths)}}`, 'g');
+    // 3. Remove the common indentation from all strings.
+    if (indentLengths.length) {
+        const pattern = new RegExp(`\n[\t ]{${Math.min(...indentLengths)}}`, 'g');
 
-    strings = strings.map((str) => str.replace(pattern, '\n'));
-  }
-
-  // 4. Remove leading whitespace.
-  strings[0] = strings[0].replace(/^\r?\n/, '');
-
-  // 5. Perform interpolation.
-  let string = strings[0];
-
-  values.forEach((value, i) => {
-    // 5.1 Read current indentation level
-    const endentations = string.match(/(?:^|\n)( *)$/)
-    const endentation = endentations ? endentations[1] : ''
-    let indentedValue = value
-    // 5.2 Add indentation to values with multiline strings
-    if (typeof value === 'string' && value.includes('\n')) {
-      indentedValue = String(value)
-        .split('\n')
-        .map((str, i) => {
-          return i === 0 ? str : `${endentation}${str}`
-        })
-        .join('\n');
+        strings = strings.map((str) => str.replace(pattern, '\n'));
     }
 
-    string += indentedValue + strings[i + 1];
-  });
+    // 4. Remove leading whitespace.
+    strings[0] = strings[0].replace(/^\r?\n/, '');
 
-  return string;
+    // 5. Perform interpolation.
+    let string = strings[0];
+
+    values.forEach((value, i) => {
+        // 5.1 Read current indentation level
+        const endentations = string.match(/(?:^|\n)( *)$/)
+        const endentation = endentations ? endentations[1] : ''
+        let indentedValue = value
+        // 5.2 Add indentation to values with multiline strings
+        if (typeof value === 'string' && value.includes('\n')) {
+            indentedValue = String(value)
+                .split('\n')
+                .map((str, i) => {
+                    return i === 0 ? str : `${endentation}${str}`
+                })
+                .join('\n');
+        }
+
+        string += indentedValue + strings[i + 1];
+    });
+
+    return string;
 }

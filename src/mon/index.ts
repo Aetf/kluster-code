@@ -46,9 +46,6 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
             namespace,
             chart: "prometheus",
             version: "15.12.2",
-            fetchOpts: {
-                repo: "https://prometheus-community.github.io/helm-charts",
-            },
             values: {
                 nameOverride: name,
                 alertmanager: {

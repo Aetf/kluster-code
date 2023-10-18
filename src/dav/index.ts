@@ -8,6 +8,7 @@ import { BaseCluster, ClusterCertificate, NodePV } from '#src/base-cluster';
 import { ConfigMap, SealedSecret, serviceFromDeployment } from "#src/utils";
 import { Serving } from "#src/serving";
 import * as crds from "#src/crds";
+import { versions } from "#src/config";
 
 interface DufsArgs {
     serving: Serving,
@@ -41,7 +42,7 @@ export class Dufs extends pulumi.ComponentResource<DufsArgs> {
         const pb = new kx.PodBuilder({
             containers: [{
                 name,
-                image: 'docker.io/sigoden/dufs:v0.32.0',
+                image: versions.image.dufs,
                 ports: {
                     https: this.port,
                 },

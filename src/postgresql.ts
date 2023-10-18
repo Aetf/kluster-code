@@ -19,10 +19,6 @@ export class CloudNativePg extends pulumi.ComponentResource<CloudNativePgArgs> {
         this.chart = new HelmChart(name, {
             namespace,
             chart: "cloudnative-pg",
-            version: "0.18.2",
-            fetchOpts: {
-                repo: "https://cloudnative-pg.github.io/charts",
-            },
             values: {}
         }, { parent: this });
     }

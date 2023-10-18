@@ -4,6 +4,7 @@ tsConfigPaths.register(undefined as any);
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
+import { config } from "./config";
 import { BaseCluster, NodePV } from "./base-cluster";
 import { Serving } from "./serving";
 import { K8sDashboard } from "./k8s-dashboard";
@@ -37,19 +38,15 @@ function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
 }
 
 function setup() {
-    const config = new pulumi.Config();
-    const isSetupSecrets = config.requireBoolean("setupSecrets");
-    const staging = config.requireBoolean("staging");
-
     // base cluster
-    const cluster = new BaseCluster("kluster", { isSetupSecrets }, {
+    const cluster = new BaseCluster("kluster", { isSetupSecrets: config.setupSecrets }, {
         provider: new k8s.Provider('k8s-provider', {
             suppressDeprecationWarnings: true,
             namespace: 'kube-system'
         })
     });
 
-    if (isSetupSecrets) {
+    if (config.setupSecrets) {
         return;
     }
 
@@ -75,8 +72,8 @@ function setup() {
         externalIPs: [
             "45.77.144.92",
         ],
-        httpPort: staging ? 10000 : 80,
-        httpsPort: staging ? 10443 : 443,
+        httpPort: config.staging ? 10000 : 80,
+        httpsPort: config.staging ? 10443 : 443,
 
         domain: 'unlimited-code.works',
         certificates: [{
@@ -209,7 +206,7 @@ function setup() {
     });
 
     // Minecraft server
-    if (config.requireBoolean("enableMc")) {
+    if (config.enableMc) {
         const mc = new Mc("mc", {
             base: cluster,
             externalIPs: [

@@ -7,6 +7,7 @@ import * as kx from "@pulumi/kubernetesx";
 import { BackendCertificate } from '#src/base-cluster';
 import { ConfigMap, SealedSecret, serviceFromDeployment } from "#src/utils";
 import { BaseCluster } from "#src/base-cluster";
+import { versions } from '#src/config';
 
 interface ShokoArgs {
     base: BaseCluster,
@@ -47,7 +48,7 @@ export class Shoko extends pulumi.ComponentResource<ShokoArgs> {
                 containers: [
                     {
                         name,
-                        image: 'docker.io/shokoanime/server:latest',
+                        image: versions.image.shoko,
                         env: {
                             'TZ': 'America/Los_Angeles',
                             // AVDump requires large dependencies and is not by

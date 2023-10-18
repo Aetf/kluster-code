@@ -87,7 +87,7 @@ Note that the trailing slash is important.
     * note the open port
 - - [ ] check nofile: `sudo lsof | awk '{print $1 $2}' | sort | uniq -c | sort -n | tee ~/lsof.txt`
 - - [ ] load sealed secret from yaml file
-- - [ ] consolidate all image/version into main index.ts for easier updating
+- - [x] consolidate all image/version into main index.ts for easier updating
 - - [x] add jellyfin
     * should run on aetf-laptop only
 - - [ ] add [navidrome](https://www.navidrome.org/docs/installation/docker/)

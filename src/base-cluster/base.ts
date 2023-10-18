@@ -49,10 +49,6 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.sealedSecret = new HelmChart("sealed-secrets-controller", {
             namespace,
             chart: "sealed-secrets",
-            version: "2.7.2",
-            fetchOpts: {
-                repo: "https://bitnami-labs.github.io/sealed-secrets"
-            }
         }, { parent: this });
 
         if (args.isSetupSecrets) {
@@ -62,10 +58,6 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
         this.certManager = new HelmChart("cert-manager", {
             namespace,
             chart: "cert-manager",
-            version: "1.9.1",
-            fetchOpts: {
-                repo: "https://charts.jetstack.io",
-            },
             values: {
                 installCRDs: true,
                 // this is a helm post-hook that waits for the webhook to be ready,
@@ -98,18 +90,11 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
             namespace,
             chart: "reloader",
             version: "0.0.129",
-            fetchOpts: {
-                repo: "https://stakater.github.io/stakater-charts"
-            },
         }, { parent: this });
 
         this.nfd = new HelmChart("nfd", {
             namespace,
             chart: "node-feature-discovery",
-            version: "0.13.4",
-            fetchOpts: {
-                repo: "https://kubernetes-sigs.github.io/node-feature-discovery/charts",
-            },
             values: {
                 tls: {
                     enable: true,

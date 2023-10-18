@@ -1,8 +1,39 @@
 encryptionsalt: v1:7ue0/6v2seo=:v1:YUhKoJxDUT1ec/U/:7Nt1iK/T4QM6EHyull1fk9JfhfmAOA==
 config:
-  kluster-code:setupSecrets: "false"
+  kubernetes:enableServerSideApply: "true"
+  kluster-code:setupSecrets: false
   kluster-code:smtpPassword:
     secure: v1:+V43BCWXufREi2V+:4GWjNe3g5XS7GsqamNdMQd4TxgkmzLoVajn4bUbUKy4=
-  kluster-code:staging: "false"
-  kubernetes:enableServerSideApply: "true"
-  kluster-code:enableMc: "false"
+  kluster-code:staging: false
+  kluster-code:enableMc: false
+  chart:sealed-secrets: https://bitnami-labs.github.io/sealed-secrets:2.7.2
+  chart:cert-manager: https://charts.jetstack.io:1.9.1
+  chart:reloader: https://stakater.github.io/stakater-charts:0.0.129
+  chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.27.1
+  chart:intel-device-plugins-gpu: https://intel.github.io/helm-charts:0.27.1
+  chart:immich: https://immich-app.github.io/immich-charts:0.1.3
+  chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.2.0
+  chart:prometheus: https://prometheus-community.github.io/helm-charts:15.12.2
+  chart:traefik: https://helm.traefik.io/traefik:24.0.0
+  chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.13.5
+  chart:kubernetes-dashboard: https://kubernetes.github.io/dashboard:5.10.0
+  chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.18.2
+  chart:redis: https://charts.bitnami.com/bitnami:18.0.1
+  chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.13.4
+  image:transmission: docker.io/haugene/transmission-openvpn:latest
+  image:nginx: docker.io/bitnami/nginx:1.23.1-debian-11-r14
+  image:dufs: docker.io/sigoden/dufs:v0.32.0
+  image:genshinhelper: docker.io/yindan/genshinhelper:2.0.3
+  image:hath: docker.io/tdcpf/hath:v1.6.2
+  image:immich: ghcr.io/immich-app/immich-server:v1.81.1
+  image:jellyfin: docker.io/jellyfin/jellyfin:latest
+  image:localpath: rancher/local-path-provisioner:v0.0.22
+  image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
+  image:mariadb: docker.io/mariadb:10.6.2
+  image:nextcloud: docker.io/nextcloud:23.0.0-fpm-alpine
+  image:authelia: ghcr.io/authelia/authelia:4.37.5
+  image:shoko: docker.io/shokoanime/server:latest
+  image:yq: docker.io/mikefarah/yq:4.35.2
+  image:syncthing: docker.io/syncthing/syncthing:1.24.0
+  image:stdiscosrv: docker.io/syncthing/discosrv:1.24.0
+  image:ukulele: ghcr.io/freyacodes/ukulele:master

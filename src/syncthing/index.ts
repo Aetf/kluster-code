@@ -6,6 +6,7 @@ import * as kx from "@pulumi/kubernetesx";
 
 import { serviceFromDeployment, SealedSecret, ConfigMap } from "#src/utils";
 import { Serving, Middleware, TLSOption } from "#src/serving";
+import { versions } from '#src/config';
 
 interface SyncthingArgs {
     serving: Serving,
@@ -114,7 +115,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             ],
             initContainers: [{
                 name: `${name}-config`,
-                image: 'docker.io/mikefarah/yq:4.35.2',
+                image: versions.image.yq,
                 args: [
                     '--inplace',
                     '--input-format', 'xml',
@@ -132,7 +133,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             }],
             containers: [{
                 name,
-                image: 'docker.io/syncthing/syncthing:1.24.0',
+                image: versions.image.syncthing,
                 ports,
                 args: [
                     '--no-browser',
@@ -252,7 +253,7 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
         const pb = new kx.PodBuilder({
             containers: [{
                 name,
-                image: 'syncthing/discosrv:1.24.0',
+                image: versions.image.stdiscosrv,
                 args: [
                     '-cert=/tls/tls.crt',
                     '-key=/tls/tls.key',

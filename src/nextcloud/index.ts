@@ -8,6 +8,7 @@ import { BackendCertificate, NodePV } from '#src/base-cluster';
 import { serviceFromDeployment, urlFromService, ConfigMap, SealedSecret } from "#src/utils";
 import { Serving } from "#src/serving";
 import { Redis } from '#src/redis';
+import { versions } from "#src/config";
 
 interface NextcloudArgs {
     serving: Serving,
@@ -17,9 +18,6 @@ interface NextcloudArgs {
     smtpPort: pulumi.Input<number>,
 
     servicePort?: number;
-    image?: string,
-    nginxImage?: string,
-    mariadbImage?: string,
 }
 
 export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
@@ -36,9 +34,6 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         this.homeMountPath = '/homedata';
         this.webdavMountPath = '/webdav';
         args.servicePort = args.servicePort ?? 8443;
-        args.image = args.image ?? 'docker.io/nextcloud:23.0.0-fpm-alpine';
-        args.nginxImage = args.nginxImage ?? 'docker.io/bitnami/nginx:1.21.0-debian-10-r20';
-        args.mariadbImage = args.mariadbImage ?? 'docker.io/mariadb:10.6.2';
 
         // nodepv for host file access
         const webdavPV = new NodePV(`${name}-webdav`, {
@@ -109,7 +104,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                 }
             ],
             containers: [{
-                image: args.image,
+                image: versions.image.nextcloud,
                 env: {
                     NEXTCLOUD_ADMIN_USER: 'admin',
                     NEXTCLOUD_ADMIN_PASSWORD: 'admin',
@@ -188,7 +183,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     })),
                 ],
             }, {
-                image: args.nginxImage,
+                image: versions.image.nginx,
                 ports: {
                     https: args.servicePort,
                 },
@@ -200,7 +195,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                 livenessProbe: this.configureProbe(args),
                 readinessProbe: this.configureProbe(args),
             }, {
-                image: args.mariadbImage,
+                image: versions.image.mariadb,
                 args: [
                     '--character-set-server=utf8mb4',
                     '--collation-server=utf8mb4_unicode_ci',
@@ -258,7 +253,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         const cronpb = new kx.PodBuilder({
             restartPolicy: 'Never',
             containers: [{
-                image: args.image,
+                image: versions.image.nextcloud,
                 command: ["sh"],
                 args: [
                     '-c',

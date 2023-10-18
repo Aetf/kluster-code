@@ -7,6 +7,7 @@ import * as kx from "@pulumi/kubernetesx";
 import { BaseCluster, ClusterCertificate } from '#src/base-cluster';
 import { Service, ConfigMap, SealedSecret, serviceFromDeployment } from "#src/utils";
 import * as crds from "#src/crds";
+import { versions } from "#src/config";
 
 interface EximArgs {
     base: BaseCluster,
@@ -55,7 +56,7 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
         const pb = new kx.PodBuilder({
             containers: [{
                 name,
-                image: 'docker.io/devture/exim-relay:4.94.2-r0-2',
+                image: versions.image.exim,
                 ports: {
                     smtp: 8025,
                 },

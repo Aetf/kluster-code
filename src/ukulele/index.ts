@@ -5,6 +5,7 @@ import * as kx from "@pulumi/kubernetesx";
 
 import { BaseCluster } from '#src/base-cluster';
 import { SealedSecret, ConfigMap } from "#src/utils";
+import { versions } from '#src/config';
 
 interface UkuleleArgs {
     base: BaseCluster
@@ -41,7 +42,7 @@ export class Ukulele extends pulumi.ComponentResource<UkuleleArgs> {
             restartPolicy: 'Always',
             containers: [{
                 name,
-                image: 'ghcr.io/freyacodes/ukulele:master',
+                image: versions.image.ukulele,
                 envFrom: [
                     secrets.asEnvFromSource(),
                 ],

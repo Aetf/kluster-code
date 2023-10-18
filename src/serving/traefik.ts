@@ -34,9 +34,6 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
             namespace,
             chart: "traefik",
             version: "24.0.0",
-            fetchOpts: {
-                repo: "https://helm.traefik.io/traefik",
-            },
             values: {
                 providers: {
                     kubernetesCRD: {

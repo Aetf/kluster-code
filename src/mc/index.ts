@@ -52,11 +52,9 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
         }, { parent: this, retainOnDelete: true, protect: false });
 
         this.namespace = pvc.metadata.namespace;
-        return;
         this.chart = new HelmChart(name, {
             namespace: this.namespace,
             chart: "minecraft",
-            version: "4.2.0",
             fetchOpts: {
                 repo: "https://itzg.github.io/minecraft-server-charts/",
             },

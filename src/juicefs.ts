@@ -48,10 +48,6 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
         this.chart = new HelmChart(name, {
             namespace: args.namespace,
             chart: 'juicefs-csi-driver',
-            version: "0.13.5",
-            fetchOpts: {
-                repo: "https://juicedata.github.io/charts/",
-            },
             transformations: [
                 removeHelmTestAnnotation,
                 patchCsiNode,

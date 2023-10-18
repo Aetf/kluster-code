@@ -43,19 +43,12 @@ export class IntelDevicePlugins extends pulumi.ComponentResource<IntelDevicePlug
         this.chart = new HelmChart(`${name}-operator`, {
             namespace: namespace,
             chart: "intel-device-plugins-operator",
-            version: "0.27.1",
-            fetchOpts: {
-                repo: "https://intel.github.io/helm-charts",
-            },
         }, { parent: this });
 
         this.chartGPU = new HelmChart(`${name}-gpu`, {
             namespace: namespace,
             chart: "intel-device-plugins-gpu",
             version: "0.27.1",
-            fetchOpts: {
-                repo: "https://intel.github.io/helm-charts",
-            },
             values: {
                 sharedDevNum: 5,
             },

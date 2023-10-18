@@ -5,6 +5,7 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import { ConfigMap, setAndRegisterOutputs } from "#src/utils";
+import { versions } from "#src/config";
 
 interface LocalPathProvisionerArgs {
     storageClass: string,
@@ -97,7 +98,7 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
             serviceAccountName: this.service_account.metadata.name,
             containers: [{
                 name: "local-path-provisioner",
-                image: "rancher/local-path-provisioner:v0.0.22",
+                image: versions.image.localpath,
                 command: [
                     "local-path-provisioner",
                     "--debug",

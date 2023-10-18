@@ -8,6 +8,7 @@ import { BaseCluster, BackendCertificate } from '#src/base-cluster';
 import { FileSecret, setAndRegisterOutputs, serviceFromDeployment, ConfigMap, SealedSecret } from "#src/utils";
 import { Redis } from "#src/redis";
 import { Service } from "#src/utils";
+import { versions } from '#src/config';
 
 import { FrontendService } from './service';
 import { Middleware } from './traefik';
@@ -149,7 +150,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             enableServiceLinks: false,
             containers: [{
                 name: "authelia",
-                image: "ghcr.io/authelia/authelia:4.37.5",
+                image: versions.image.authelia,
                 command: ["authelia"],
                 args: [
                     `--config=${configPath}/authelia.yaml`

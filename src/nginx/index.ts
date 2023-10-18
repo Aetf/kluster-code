@@ -9,6 +9,7 @@ import * as kx from "@pulumi/kubernetesx";
 import { BackendCertificate, NodePV } from '#src/base-cluster';
 import { Serving } from "#src/serving";
 import { ConfigMap, serviceFromDeployment } from '#src/utils';
+import { versions } from '#src/config';
 
 export interface StaticSite {
     // document root is relative to /srv/http in hostPath, i.e. siteMountPath in container
@@ -52,7 +53,7 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
         const pb = new kx.PodBuilder({
             containers: [{
                 name,
-                image: 'docker.io/bitnami/nginx:1.23.1-debian-11-r14',
+                image: versions.image.nginx,
                 ports: {
                     https: 8443,
                 },

@@ -5,6 +5,7 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import { SealedSecret } from "#src/utils";
+import { versions } from "#src/config";
 
 interface GenshinArgs {
 }
@@ -26,7 +27,7 @@ export class Genshin extends pulumi.ComponentResource<GenshinArgs> {
             restartPolicy: 'Never',
             containers: [{
                 name,
-                image: 'yindan/genshinhelper:2.0.3',
+                image: versions.image.genshinhelper,
                 command: [
                     'python3', '-c',
                     'import genshincheckinhelper.main as gch; gch.run_once()'

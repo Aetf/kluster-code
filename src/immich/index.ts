@@ -9,6 +9,7 @@ import { NamespaceProbe, HelmChart, SealedSecret, ConfigMap } from "#src/utils";
 import { BaseCluster } from '#src/base-cluster';
 import { Redis } from '#src/redis';
 import { Serving } from '#src/serving';
+import { versions } from "#src/config";
 
 interface ImmichArgs {
     serving: Serving,
@@ -69,13 +70,9 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         this.chart = new HelmChart(name, {
             namespace: this.namespace,
             chart: "immich",
-            version: "0.1.3",
-            fetchOpts: {
-                repo: "https://immich-app.github.io/immich-charts",
-            },
             values: {
                 image: {
-                    tag: "v1.81.1",
+                    tag: versions.image.immich.split(':', 2)[1],
                 },
                 immich: {
                     persistence: {

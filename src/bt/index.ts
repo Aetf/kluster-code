@@ -6,6 +6,7 @@ import * as kx from "@pulumi/kubernetesx";
 import { BackendCertificate } from '#src/base-cluster';
 import { ConfigMap, SealedSecret, serviceFromDeployment } from "#src/utils";
 import { Serving } from "#src/serving";
+import { versions } from "#src/config";
 
 interface BtArgs {
     serving: Serving,
@@ -56,7 +57,7 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
             containers: [
             {
                 name,
-                image: 'docker.io/haugene/transmission-openvpn:latest',
+                image: versions.image.transmission,
                 env: {
                     'OPENVPN_PROVIDER': 'PIA',
                     'OPENVPN_CONFIG': 'us_seattle',
@@ -84,7 +85,7 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
             // ip, we make it bind to localhost only, and then use a nginx proxy
             // to actually serve it as a backend service
             {
-                image: 'docker.io/bitnami/nginx:1.23.1-debian-11-r14',
+                image: versions.image.nginx,
                 ports: {
                     https: 8443,
                 },

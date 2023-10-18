@@ -5,6 +5,7 @@ import * as kx from "@pulumi/kubernetesx";
 
 import { BaseCluster } from '#src/base-cluster';
 import { SealedSecret, ConfigMap, serviceFromDeployment } from "#src/utils";
+import { versions } from "#src/config";
 
 interface HathArgs {
     base: BaseCluster,
@@ -75,7 +76,7 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
             },
             containers: [{
                 name,
-                image: 'docker.io/tdcpf/hath:v1.6.2',
+                image: versions.image.hath,
                 ports: {
                     hath: port,
                 },

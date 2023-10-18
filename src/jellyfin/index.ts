@@ -6,6 +6,7 @@ import * as kx from "@pulumi/kubernetesx";
 
 import { Serving } from "#src/serving";
 import { BaseCluster } from '#src/base-cluster';
+import { versions } from "#src/config";
 
 interface JellyfinArgs {
     base: BaseCluster,
@@ -75,7 +76,7 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
                 containers: [
                     {
                         name,
-                        image: 'docker.io/jellyfin/jellyfin:latest',
+                        image: versions.image.jellyfin,
                         env: {
                             'JELLYFIN_PublishedServerUrl': publishedUrl,
                             // cache dir defaults to /config/cache, but we want it

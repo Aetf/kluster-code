@@ -20,10 +20,6 @@ export class Redis extends HelmChart {
         super(name, {
             namespace: args.namespace,
             chart: 'redis',
-            version: "18.0.1",
-            fetchOpts: {
-                repo: "https://charts.bitnami.com/bitnami",
-            },
             values: {
                 global: {
                     storageClass: args.persistentStorageClass,
