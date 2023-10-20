@@ -1,0 +1,52 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "major": {
+    "dependencyDashboardApproval": true,
+  },
+  "patch": {
+    "enabled": false,
+  },
+  "automergeStrategy": "squash",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "ignorePaths": [
+    "src/crds/**",
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    },
+  ],
+  "customManagers": [
+    // Match helm charts in pulumi config.
+    {
+      "customType": "regex",
+      "fileMatch": ["^Pulumi\\..+\\.ya?ml$"],
+      "matchStrings": [
+        "chart:(?<depName>[\\w.-]+):\\s*(?<registryUrl>[\\w.:/-]+):(?<currentValue>[\\w.-]+)"
+      ],
+      "datasourceTemplate": "helm",
+      "versioningTemplate": "helm",
+    },
+    // Match docker images in pulumi config.
+    {
+      "customType": "regex",
+      "fileMatch": ["^Pulumi\\..+\\.ya?ml$"],
+      "matchStrings": [
+        "image:(?<depName>[\\w.-]+):\\s*(?<packageName>[\\w./-]+):(?<currentValue>[\\w.-]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ]
+}
