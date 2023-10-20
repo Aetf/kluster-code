@@ -22,7 +22,7 @@ config:
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.13.4
   image:transmission: docker.io/haugene/transmission-openvpn:latest
   image:nginx: docker.io/bitnami/nginx:1.23.1-debian-11-r14
-  image:dufs: docker.io/sigoden/dufs:v0.32.0
+  image:dufs: docker.io/sigoden/dufs:v0.36.0
   image:genshinhelper: docker.io/yindan/genshinhelper:2.0.3
   image:hath: docker.io/tdcpf/hath:v1.6.2
   image:immich: ghcr.io/immich-app/immich-server:v1.81.1
