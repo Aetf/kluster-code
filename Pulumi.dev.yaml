@@ -15,7 +15,7 @@ config:
   chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.11.0
   chart:prometheus: https://prometheus-community.github.io/helm-charts:15.12.2
   chart:traefik: https://helm.traefik.io/traefik:24.0.0
-  chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.13.5
+  chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.18.1
   chart:kubernetes-dashboard: https://kubernetes.github.io/dashboard:5.11.0
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.18.2
   chart:redis: https://charts.bitnami.com/bitnami:18.0.1
