@@ -18,7 +18,7 @@ config:
   chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.13.5
   chart:kubernetes-dashboard: https://kubernetes.github.io/dashboard:5.11.0
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.18.2
-  chart:redis: https://charts.bitnami.com/bitnami:18.0.1
+  chart:redis: https://charts.bitnami.com/bitnami:18.1.6
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.13.4
   image:transmission: docker.io/haugene/transmission-openvpn:5.2.0
   image:nginx: docker.io/bitnami/nginx:1.25.2-debian-11-r14
