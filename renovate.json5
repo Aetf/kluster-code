@@ -22,8 +22,8 @@
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
-      "groupName": "Non major dep updates",
-      "groupSlug": "non-major-deps",
+      "groupName": "dependencies with non-major changes",
+      "groupSlug": "deps-non-major",
     },
     {
       "matchDepTypes": ["devDependencies"],
@@ -37,8 +37,8 @@
     {
       "matchDepTypes": ["helm", "container"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "groupName": "Non major app updates",
-      "groupSlug": "non-major-apps",
+      "groupName": "applications with non-major changes",
+      "groupSlug": "apps-non-major",
     },
   ],
   "customManagers": [
