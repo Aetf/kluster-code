@@ -6,7 +6,7 @@ config:
     secure: v1:+V43BCWXufREi2V+:4GWjNe3g5XS7GsqamNdMQd4TxgkmzLoVajn4bUbUKy4=
   kluster-code:staging: false
   kluster-code:enableMc: false
-  chart:sealed-secrets: https://bitnami-labs.github.io/sealed-secrets:2.7.2
+  chart:sealed-secrets: https://bitnami-labs.github.io/sealed-secrets:2.13.1
   chart:cert-manager: https://charts.jetstack.io:1.9.1
   chart:reloader: https://stakater.github.io/stakater-charts:0.0.129
   chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.28.0
