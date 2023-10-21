@@ -35,5 +35,5 @@ config:
   image:shoko: docker.io/shokoanime/server:v4.2.2
   image:yq: docker.io/mikefarah/yq:4.35.2
   image:syncthing: docker.io/syncthing/syncthing:1.24.0
-  image:stdiscosrv: docker.io/syncthing/discosrv:1.24.0
+  image:stdiscosrv: docker.io/syncthing/discosrv:1.25.0
   image:ukulele: ghcr.io/freyacodes/ukulele:master
