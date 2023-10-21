@@ -16,7 +16,7 @@ config:
   chart:prometheus: https://prometheus-community.github.io/helm-charts:15.18.0
   chart:traefik: https://helm.traefik.io/traefik:24.0.0
   chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.18.1
-  chart:kubernetes-dashboard: https://kubernetes.github.io/dashboard:5.11.0
+  chart:kubernetes-dashboard: https://kubernetes.github.io/dashboard:6.0.8
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.19.0
   chart:redis: https://charts.bitnami.com/bitnami:18.1.6
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.14.2
