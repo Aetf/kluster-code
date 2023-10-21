@@ -28,6 +28,11 @@
       "matchDepTypes": ["devDependencies"],
       "automerge": true
     },
+    {
+      "matchDepTypes": ["helm", "container"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "apps",
+    },
   ],
   "customManagers": [
     // Match helm charts in pulumi config.
@@ -39,6 +44,7 @@
       ],
       "datasourceTemplate": "helm",
       "versioningTemplate": "helm",
+      "depTypeTemplate": "helm",
     },
     // Match docker images in pulumi config.
     {
@@ -48,7 +54,8 @@
         "image:(?<depName>[\\w.-]+):\\s*(?<packageName>[\\w./-]+):(?<currentValue>[\\w.-]+)"
       ],
       "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
+      "versioningTemplate": "docker",
+      "depTypeTemplate": "helm",
     }
   ]
 }
