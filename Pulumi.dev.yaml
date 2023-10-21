@@ -21,7 +21,7 @@ config:
   chart:redis: https://charts.bitnami.com/bitnami:18.0.1
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.13.4
   image:transmission: docker.io/haugene/transmission-openvpn:5.2.0
-  image:nginx: docker.io/bitnami/nginx:1.23.1-debian-11-r14
+  image:nginx: docker.io/bitnami/nginx:1.25.2-debian-11-r14
   image:dufs: docker.io/sigoden/dufs:v0.36.0
   image:genshinhelper: docker.io/yindan/genshinhelper:2.1.3
   image:hath: docker.io/tdcpf/hath:v1.6.2
