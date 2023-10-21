@@ -2,7 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "group:allNonMajor",
     "group:pulumi",
   ],
   "major": {
@@ -23,6 +22,8 @@
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
+      "groupName": "Non major dep updates",
+      "groupSlug": "non-major-deps",
     },
     {
       "matchDepTypes": ["devDependencies"],
@@ -32,6 +33,12 @@
       "matchDepTypes": ["helm", "container"],
       "semanticCommitType": "fix",
       "semanticCommitScope": "apps",
+    },
+    {
+      "matchDepTypes": ["helm", "container"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "groupName": "Non major app updates",
+      "groupSlug": "non-major-apps",
     },
   ],
   "customManagers": [
