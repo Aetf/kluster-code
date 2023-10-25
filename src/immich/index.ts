@@ -304,7 +304,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     serverCASecret: dbCert.secretName,
                     serverTLSSecret: dbCert.secretName,
                 },
-                monitoring: { enablePodMonitor: true },
+                monitoring: { enablePodMonitor: false },
             },
         }, { parent: this });
 
