@@ -207,6 +207,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
                     MARIADB_DATABASE: name,
                     MARIADB_USER: name,
                     MARIADB_PASSWORD: secret.asEnvValue('db_pass'),
+                    MARIADB_AUTO_UPGRADE: '1',
                 },
                 volumeMounts: [{
                     name: pvc.metadata.name,
