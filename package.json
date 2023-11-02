@@ -5,7 +5,7 @@
     },
     "devDependencies": {
         "@types/lodash": "^4.14.173",
-        "@types/node": "^18.1.18",
+        "@types/node": "^20.0.0",
         "tsconfig-paths": "^4.1.2"
     },
     "dependencies": {
