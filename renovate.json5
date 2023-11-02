@@ -62,7 +62,7 @@
       ],
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker",
-      "depTypeTemplate": "helm",
+      "depTypeTemplate": "container",
     }
   ]
 }
