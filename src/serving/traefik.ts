@@ -33,7 +33,6 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
         this.chart = new HelmChart(name, {
             namespace,
             chart: "traefik",
-            version: "24.0.0",
             values: {
                 providers: {
                     kubernetesCRD: {
@@ -70,7 +69,9 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     web: {
                         exposedPort: args.httpPort,
                         // permanent redirection by default
-                        redirectTo: "websecure"
+                        redirectTo: {
+                            port: "websecure"
+                        }
                     },
                     websecure: {
                         exposedPort: args.httpsPort,
