@@ -29,7 +29,7 @@ config:
   image:jellyfin: docker.io/jellyfin/jellyfin:10.8.11
   image:localpath: rancher/local-path-provisioner:v0.0.22
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
-  image:mariadb: docker.io/mariadb:10.11.5
+  image:mariadb: docker.io/mariadb:11.1.2
   image:nextcloud: docker.io/nextcloud:27.1.2-fpm-alpine
   image:authelia: ghcr.io/authelia/authelia:4.37.5
   image:shoko: docker.io/shokoanime/server:v4.2.2
