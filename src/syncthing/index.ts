@@ -255,22 +255,24 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
                 name,
                 image: versions.image.stdiscosrv,
                 args: [
-                    '-cert=/tls/tls.crt',
-                    '-key=/tls/tls.key',
+                    //'-cert=/tls/tls.crt',
+                    //'-key=/tls/tls.key',
+                    '-http',
                     '-debug',
                 ],
                 ports: {
-                    https: 8443,
+                    //https: 8443,
+                    http: 8443,
                 },
                 volumeMounts: [
-                    certificate.mount('/tls'),
+                    //certificate.mount('/tls'),
                     pvc.mount('/var/stdiscosrv'),
                 ],
                 livenessProbe: {
                     httpGet: {
                         port: 8443,
                         path: '/ping',
-                        scheme: 'HTTPS',
+                        scheme: 'HTTP',
                     },
                     initialDelaySeconds: 10,
                     periodSeconds: 60,
@@ -309,6 +311,7 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
             host: args.host,
             targetService: service,
             tlsOption,
+            enableTls: false,
             middlewares: [
                 // stdiscosrv needs client cert info
                 // note that X-Client-Port is only needed if connecting using http
@@ -319,7 +322,7 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
                     passTLSClientCert: {
                         pem: true
                     }
-                }, { parent: this })
+                }, { parent: this }),
             ],
         });
     }
