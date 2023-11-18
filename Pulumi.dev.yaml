@@ -15,17 +15,17 @@ config:
   chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.11.0
   chart:prometheus: https://prometheus-community.github.io/helm-charts:15.18.0
   chart:traefik: https://helm.traefik.io/traefik:25.0.0
-  chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.18.1
+  chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.19.1
   chart:kubernetes-dashboard: https://kubernetes.github.io/dashboard:6.0.8
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.19.0
-  chart:redis: https://charts.bitnami.com/bitnami:18.3.2
+  chart:redis: https://charts.bitnami.com/bitnami:18.4.0
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.14.2
   image:transmission: docker.io/haugene/transmission-openvpn:5.2.0
   image:nginx: docker.io/bitnami/nginx:1.25.2-debian-11-r14
   image:dufs: docker.io/sigoden/dufs:v0.37.1
   image:genshinhelper: docker.io/yindan/genshinhelper:2.1.3
   image:hath: docker.io/tdcpf/hath:v1.6.2
-  image:immich: ghcr.io/immich-app/immich-server:v1.85.0
+  image:immich: ghcr.io/immich-app/immich-server:v1.87.0
   image:jellyfin: docker.io/jellyfin/jellyfin:10.8.11
   image:localpath: rancher/local-path-provisioner:v0.0.22
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
