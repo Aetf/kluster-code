@@ -106,6 +106,12 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                     },
                 },
                 {
+                    name: pvc.metadata.name,
+                    persistentVolumeClaim: {
+                        claimName: pvc.metadata.name,
+                    },
+                },
+                {
                     name: pulumi.output(cert.metadata.name).apply(n => n!),
                     secret: {
                         secretName: cert.secretName,
@@ -147,7 +153,11 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                         name: localDbPvc.metadata.name,
                         mountPath: sthomePrefix,
                     },
-                    pvc.mount(filePrefix),
+                    {
+                        name: pvc.metadata.name,
+                        mountPath: filePrefix,
+                        mountPropagation: "HostToContainer",
+                    },
                     secrets.mount(`${sthomePrefix}/key.pem`, 'key.pem'),
                     {
                         name: pulumi.output(cert.metadata.name).apply(n => n!),

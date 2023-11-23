@@ -33,7 +33,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         this.namespace = new NamespaceProbe(`${name}-probe`, { parent: this }).namespace;
 
         this.libraryPVC = args.serving.base.createLocalStoragePVC(`${name}`, {
-            storageClassName: args.serving.base.jfsStorageClass.metadata.name,
+            storageClassName: args.storageClass,
             resources: {
                 requests: {
                     storage: "50Ti"

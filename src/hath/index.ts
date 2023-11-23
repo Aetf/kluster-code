@@ -103,11 +103,23 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
                     // secrets.asEnvFromSource(),
                 ],
                 volumeMounts: [
-                    pvc.mount(hathPrefix),
+                    {
+                        name: pvc.metadata.name,
+                        mountPath: hathPrefix,
+                        mountPropagation: "HostToContainer",
+                    },
                     secrets.mount(`${hathPrefix}/data/client_login`, 'client_login'),
                     cm.mount('/entrypoint.sh', 'entrypoint.sh'),
                 ],
-            }]
+            }],
+            volumes: [
+                {
+                    name: pvc.metadata.name,
+                    persistentVolumeClaim: {
+                        claimName: pvc.metadata.name,
+                    },
+                },
+            ],
         });
 
         const deployment = new kx.Deployment(name, {
