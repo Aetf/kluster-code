@@ -57,14 +57,6 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             parent: this
         });
         const redis = this.setupRedis(name, args.cacheStorageClass, secret);
-        const cmNginxConf = new ConfigMap(`${name}-nginx-conf`, {
-            base: __dirname,
-            data: 'static/*',
-            stripComponents: 1,
-        }, { parent: this });
-        const proxyCert = args.serving.base.createBackendCertificate('immich-proxy', {
-            namespace: this.namespace,
-        }, { parent: this });
 
         // Now the real immich chart
         this.chart = new HelmChart(name, {
@@ -202,55 +194,6 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                         }
                     }
                 },
-                // Make sure the immich-proxy uses HTTPS
-                proxy: {
-                    service: {
-                        main: {
-                            ports: {
-                                http: {
-                                    enabled: false
-                                },
-                                https: {
-                                    enabled: true,
-                                    primary: true,
-                                    port: 8443,
-                                    protocol: 'HTTPS',
-                                },
-                            }
-                        }
-                    },
-                    persistence: {
-                        'nginx-conf': {
-                            enabled: true,
-                            type: 'configMap',
-                            name: cmNginxConf.metadata.name,
-                            mountPath: '/etc/nginx/conf.d/nginx-tls.conf',
-                            subPath: 'nginx-tls.conf',
-                        },
-                        'force-tls': {
-                            enabled: true,
-                            type: 'configMap',
-                            name: cmNginxConf.metadata.name,
-                            defaultMode: '0755',
-                            mountPath: '/docker-entrypoint.d/99-force-tls.sh',
-                            subPath: '99-force-tls.sh',
-                        },
-                        'tls': {
-                            enabled: true,
-                            type: 'secret',
-                            name: proxyCert.secretName,
-                        },
-                    },
-                    probes: {
-                        liveness: {
-                            spec: {
-                                httpGet: {
-                                    port: 'https',
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }, { parent: this });
 
@@ -334,7 +277,9 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
     private setupFrontendService(name: string, serving: Serving, host: pulumi.Input<string>) {
         serving.createFrontendService(name, {
             host: host,
-            targetService: this.chart!.service(/proxy/),
+            targetService: this.chart!.service(/server/),
+            // Immich doesn't support TLS on its own.
+            enableTls: false,
             // Immich will itself connect to Authelia using OpenID Connect
             enableAuth: false,
         });
