@@ -224,10 +224,22 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     storageClass: storageClass,
                     size: '5Gi',
                 },
+                // Install pgvecto.rs extension. The extension is built as a
+                // custom image.
+                // https://github.com/tensorchord/pgvecto.rs
+                imageName: "ghcr.io/aetf/pgvecto-rs-cnpg:15.3-10",
+                postgresql: {
+                    shared_preload_libraries: ["vectors"],
+                },
                 bootstrap: {
                     initdb: {
                         database: dbname,
                         owner: dbname,
+                        postInitTemplateSQL: [
+                            "CREATE EXTENSION vectors;",
+                            "CREATE EXTENSION cube;",
+                            "CREATE EXTENSION earthdistance;",
+                        ],
                     },
                 },
                 backup: {
