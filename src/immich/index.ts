@@ -49,7 +49,6 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         const secret = new SealedSecret(`${name}`, {
             spec: {
                 encryptedData: {
-                    typesense_api_key: 'AgCr1G0BarxDF/B9DzdQdUcTIeoTbgZ3/pz276W+hG0FqoimSSTT772uIPy4CLHdA4Bx/K7CtXaRTCBijzK7N+rgGFULdDJiLT1Rz/j3cUBgeYFUoJ4NQ5N+xB1rVLoCGtYkdT1je5nz4SgoEI0OW3B6b6jHQaz+411PZ3kAXDJdEO9l94PB928QOO/W8RA12kRYeK8NgvNg/T5Kh6tkfKAmJv74fKiMTgWvkY3QAvH6IoXFkv6KDY+XhSl6TvaJxnfIsDN4IkF21kR6lhIqwzxqWrK9wOVCQvyuiqVu/jJ1LgKGhifAFlBALW6lOrN3bVtDaxeOWp3d6hoeJle3VLa5NGSWznHHNn4zdtgpnFpdIyJq7gTuHZLpvx+UUAK6x7ngKs64YTQjE+k45EOKJASP1CT7ghURN7a8xC6Z6aqx2mvQB2OlV2RgNvFVBHddTEgnyt47/L2Ctf3Oz00RULHoh5supzE8iwOyj60MPre5qaBJ1ENlgM0I28ij9vHD1mh3/ETH/gy5wu+g7Bo4fIJgIOXFypBLotvHWBWCTXn+Kh6MC/390mKT/NgReUqaqeWiVyA1dcpmKC8PNYmEgDnAOvK9NAZpW7ZnW4wvg4ZLCJ/EoVFuscpL/G0QuuYkWgejJXbzTUaLYiN64IhDeryKoV7HzwAGDse0x3RTAaLW/oMEeKDv7YqNw853q6r1iDiMQCeJ1IpbYp+BYpXvAf2hIUKz/L4nM03F7Q6SB9iOgw==',
                     redis_pass: "AgAqC5v0EFkO2vHj9Xjhv7d8klOhDC1M9UXNrHhROeVRJQPWYlkHCvnwgRo3zblMajBtk4rvR8fC5nKpfg9kSSW1KEmov0t5av9lhli1H4YnfWgkxHBzb8Vk1EVQ462bmoQX0j3hat7j4PY3BCOsdJsoFcHbbfEHeHJr7TFBwQ+qZMJ2QYtwHhE0b/R8Dl/FVwnY2+SzrxirIh+FrejscDAzxg+LGXea0G/31edJQFk8AwxbU7n84RWHSHlbtqX/UTHEFiXIkISuN0ePumWiUKDLb5xW4KVE92YJf1fPKkK1NVwkXrxCHXIHv88hX+eXleu3Lnm3Qt23Z7tW/hDvrSJ4P3sxZ/99e9JmBeh3yddyAZgcyBGng6W0fzu7BffrIiKw6m1f1aVHiw1dQsKAoatGKvY2TXG/ORMpQzMs5Y/BlPxFWV2tovR/OPDOmV/6NzgtdJkuoTXWDcR4eT2IsolR5e4lpub3tye7M1E4hfcsEN67quS64HoqCsPzCEa0tC/t+ILjfKhlk4kgTaSEmwRtbCvjlqe9TJYoyh9axYUxbNZvwSlSoIB4NJZBPkPmSoUjIiBJpme5GLb1z8+dWk+IkaYOiih/THlPOU1mHndxMJyn4m3T/hQ9RK6oZMlcPapG1PWheU3DIMPPzwvjTGLxvINAf2UpSLgSF8Pj3EdlxiHntjYFdmhKmcMS7PS948vj5Wg2TaXdeC6VAFBjyN8m2kWrxc24epJq+edpUfjKcQ=="
                 }
             }
@@ -101,23 +100,6 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     },
                     //'DB_PASSWORD_FILE': '/db-secret/password',
                     'DB_DATABASE_NAME': this.dbname,
-                    'TYPESENSE_API_KEY':  {
-                        valueFrom: secret.asEnvValue('typesense_api_key'),
-                    },
-                },
-                typesense: {
-                    enabled: true,
-                    env: {
-                        'TYPESENSE_API_KEY': {
-                            valueFrom: secret.asEnvValue('typesense_api_key'),
-                        },
-                    },
-                    persistence: {
-                        tsdata: {
-                            enabled: true,
-                            storageClass: args.cacheStorageClass,
-                        },
-                    },
                 },
                 server: {
                     affinity: {
@@ -162,11 +144,6 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                         }
                     },
                     persistence: {
-                        'geodata-cache': {
-                            type: '', // empty defaults to PVC
-                            accessMode: 'ReadWriteOnce',
-                            storageClass: args.cacheStorageClass,
-                        },
                         secrets: {
                             enabled: true,
                             type: 'secret',
