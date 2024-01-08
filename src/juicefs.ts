@@ -78,7 +78,7 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                             memory: '1Gi',
                         }
                     },
-                    storageClassShareMount: true,
+                    storageClassShareMount: false,
                     // Use a new Priorityclass for Mount Pod to not preempt other pods.
                     // See: https://juicefs.com/docs/csi/guide/resource-optimization#set-non-preempting-priorityclass-for-mount-pod
                     mountPodNonPreempting: true,
