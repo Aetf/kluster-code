@@ -26,7 +26,7 @@ config:
   image:genshinhelper: docker.io/yindan/genshinhelper:2.1.3
   image:hath: docker.io/tdcpf/hath:v1.6.2
   image:immich: ghcr.io/immich-app/immich-server:v1.95.1
-  image:jellyfin: docker.io/jellyfin/jellyfin:10.8.11
+  image:jellyfin: docker.io/jellyfin/jellyfin:10.8.13
   image:localpath: rancher/local-path-provisioner:v0.0.22
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
   image:mariadb: docker.io/mariadb:11.3.2
