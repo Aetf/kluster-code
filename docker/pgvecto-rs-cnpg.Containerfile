@@ -2,7 +2,7 @@
 
 FROM docker.io/tensorchord/pgvecto-rs-binary:pg15-v0.1.11-amd64 as binary
 
-FROM ghcr.io/cloudnative-pg/postgresql:15.5-10
+FROM ghcr.io/cloudnative-pg/postgresql:15.6-10
 LABEL org.opencontainers.image.source=https://github.com/Aetf/kluster-code
 
 USER root
