@@ -23,6 +23,7 @@ import { Dufs } from "./dav";
 import { CloudNativePg } from "./postgresql";
 import { Immich } from "./immich";
 import { Hath } from "./hath";
+import { Service } from "./utils";
 
 function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
     const namespace = new k8s.core.v1.Namespace(ns, {
@@ -262,6 +263,52 @@ function setup() {
         base: cluster,
         storageClassName: cluster.jfsStorageClass.metadata.name,
     }, { provider: namespaced('hath') });
+
+    // HaOS
+    const haosProvider = namespaced('haos');
+    const haosService = new Service(`haos`, {
+        metadata: {
+            name: 'haos'
+        },
+        spec: {
+            type: k8s.types.enums.core.v1.ServiceSpecType.ExternalName,
+            externalName: 'haos.zt.unlimited-code.works',
+            ports: [
+                { name: 'http', port: 8123 },
+            ],
+        }
+    }, { parent: haosProvider, deleteBeforeReplace: true });
+
+    new k8s.networking.v1.Ingress('haos', {
+        metadata: {
+            annotations: {
+                "traefik.ingress.kubernetes.io/router.entrypoints": "websecure",
+            }
+        },
+        spec: {
+            tls: [
+                { secretName: 'cert-unlimited-code.works' },
+            ],
+            rules: [{
+                host: 'haos.unlimited-code.works',
+                http: {
+                    paths: [{
+                        path: '/',
+                        pathType: 'Prefix',
+                        backend: {
+                            service: {
+                                name: 'haos',
+                                port: {
+                                    name: 'http'
+                                }
+                            },
+                        }
+                    }]
+                }
+            }]
+        },
+    }, { parent: haosProvider });
+
 }
 
 setup();
