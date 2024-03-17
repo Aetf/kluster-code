@@ -11,29 +11,29 @@ config:
   chart:reloader: https://stakater.github.io/stakater-charts:1.0.46
   chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.29.0
   chart:intel-device-plugins-gpu: https://intel.github.io/helm-charts:0.29.0
-  chart:immich: https://immich-app.github.io/immich-charts:0.3.0
+  chart:immich: https://immich-app.github.io/immich-charts:0.4.0
   chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.15.0
   chart:prometheus: https://prometheus-community.github.io/helm-charts:15.18.0
   chart:traefik: https://helm.traefik.io/traefik:25.0.0
   chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.19.1
   chart:kubernetes-dashboard: https://kubernetes.github.io/dashboard:6.0.8
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.20.0
-  chart:redis: https://charts.bitnami.com/bitnami:18.16.1
+  chart:redis: https://charts.bitnami.com/bitnami:18.19.2
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.15.0
   image:transmission: docker.io/haugene/transmission-openvpn:5.3.1
   image:nginx: docker.io/bitnami/nginx:1.25.2-debian-11-r14
   image:dufs: docker.io/sigoden/dufs:v0.40.0
   image:genshinhelper: docker.io/yindan/genshinhelper:2.1.3
   image:hath: docker.io/tdcpf/hath:v1.6.2
-  image:immich: ghcr.io/immich-app/immich-server:v1.95.1
+  image:immich: ghcr.io/immich-app/immich-server:v1.98.2
   image:jellyfin: docker.io/jellyfin/jellyfin:10.8.13
   image:localpath: rancher/local-path-provisioner:v0.0.22
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
   image:mariadb: docker.io/mariadb:11.3.2
   image:nextcloud: docker.io/nextcloud:27.1.2-fpm-alpine
-  image:authelia: ghcr.io/authelia/authelia:4.37.5
+  image:authelia: ghcr.io/authelia/authelia:4.38.3
   image:shoko: docker.io/shokoanime/server:v4.2.2
-  image:yq: docker.io/mikefarah/yq:4.41.1
+  image:yq: docker.io/mikefarah/yq:4.42.1
   image:syncthing: docker.io/syncthing/syncthing:1.27.0
   image:stdiscosrv: docker.io/syncthing/discosrv:1.27.0
   image:ukulele: ghcr.io/freyacodes/ukulele:master
