@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: "local-path-stable-dxq1rw7v"
+  volumeName: "pvc-11e07382-3b82-4a4e-9b2b-e8f9d50b1e9d"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+  labels:
+    name: test
+spec:
+  containers:
+  - name: test
+    image: ghcr.io/aetf/pgvecto-rs-cnpg:15.5-10-0.2.0
+    command: 
+      - sleep
+      - "3700"
+    env:
+      - name: PGDATA
+        value: /var/lib/postgresql/data/pgdata
+    volumeMounts:
+      - mountPath: "/var/lib/postgresql/data"
+        name: pv
+        mountPropagation: "HostToContainer"
+    ports:
+      - containerPort: 5432
+        name: postgres
+  volumes:
+    - name: pv
+      persistentVolumeClaim:
+        claimName: myclaim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: testdb
+spec:
+  selector:
+    name: test
+  clusterIP: None
+  ports:
+    - name: postgres
+      port: 5432
