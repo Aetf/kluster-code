@@ -35,6 +35,12 @@ function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
         ...args,
         suppressDeprecationWarnings: true,
         namespace: namespace.metadata.name,
+        enableServerSideApply: true,
+        kubeClientSettings: {
+            burst: 120,
+            qps: 60,
+            timeout: 300,
+        },
     });
 }
 
