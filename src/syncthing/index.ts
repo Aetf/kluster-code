@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
@@ -62,10 +60,9 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             // 'localdiscosrv': 21027
         };
         const cm = new ConfigMap(name, {
-            base: __dirname,
+            ref_file: __filename,
             data: 'static/*',
             stripComponents: 1,
-            tplAltPattern: true,
             tplVariables: {
                 ports,
                 filePrefix,

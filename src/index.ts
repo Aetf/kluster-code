@@ -25,22 +25,18 @@ import { Immich } from "./immich";
 import { Hath } from "./hath";
 import { Service } from "./utils";
 
-function namespaced(ns: string, args?: k8s.ProviderArgs): k8s.Provider {
-    const namespace = new k8s.core.v1.Namespace(ns, {
-        metadata: {
-            name: ns,
-        }
-    }, { deleteBeforeReplace: true });
+function namespaced(ns: string, createNs?: boolean, args?: k8s.ProviderArgs): k8s.Provider {
+    if (createNs ?? true) {
+        const namespace = new k8s.core.v1.Namespace(ns, {
+            metadata: {
+                name: ns,
+            }
+        }, { deleteBeforeReplace: true });
+    }
     return new k8s.Provider(`${ns}-provider`, {
         ...args,
         suppressDeprecationWarnings: true,
-        namespace: namespace.metadata.name,
-        enableServerSideApply: true,
-        kubeClientSettings: {
-            burst: 120,
-            qps: 60,
-            timeout: 300,
-        },
+        namespace: ns,
     });
 }
 
@@ -50,7 +46,7 @@ function setup() {
         provider: new k8s.Provider('k8s-provider', {
             suppressDeprecationWarnings: true,
             namespace: 'kube-system'
-        })
+        }),
     });
 
     if (config.setupSecrets) {

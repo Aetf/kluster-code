@@ -60,10 +60,6 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                 service: {
                     type: "ClusterIP",
                     externalIPs: args.externalIPs,
-                    // an additional internal service for traefik dashbaord
-                    internal: {
-                        type: "ClusterIP",
-                    }
                 },
                 ports: {
                     web: {

@@ -1,18 +1,27 @@
 {
     "name": "kluster-code",
+    "engines": {
+        "node": ">=18"
+    },
     "scripts": {
         "crds": "scripts/update-crds.sh"
     },
     "devDependencies": {
-        "@types/lodash": "^4.14.173",
-        "@types/node": "^20.0.0",
-        "tsconfig-paths": "^4.1.2"
+        "@types/node": "^20.0.0"
     },
     "dependencies": {
         "@pulumi/kubernetes": "^3.7.2",
         "@pulumi/kubernetesx": "^0.1.6",
-        "@pulumi/pulumi": "^3.13.0",
+        "@pulumi/pulumi": "^3.113.0",
+        "@tsconfig/node20": "^20.1.4",
+        "@tsconfig/strictest": "^2.0.5",
         "fast-glob": "^3.2.7",
-        "lodash": "^4.17.21"
+        "handlebars": "^4.7.8",
+        "radash": "^12.1.0",
+        "tsconfig-paths": "^4.2.0",
+        "tsx": "^4.16.2"
+    },
+    "volta": {
+        "node": "20.12.2"
     }
 }

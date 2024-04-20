@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 import * as pulumi from "@pulumi/pulumi";
 import * as kx from "@pulumi/kubernetesx";
 
@@ -25,7 +23,7 @@ export class Ukulele extends pulumi.ComponentResource<UkuleleArgs> {
         }, { parent: this });
 
         const cm = new ConfigMap(name, {
-            base: __dirname,
+            ref_file: __filename,
             data: 'static/*',
             stripComponents: 1,
         }, { parent: this });

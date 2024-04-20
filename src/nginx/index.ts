@@ -1,7 +1,5 @@
 import * as pathFn from 'path';
 
-import * as _ from 'lodash';
-
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
@@ -122,7 +120,7 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
 
     private setupCM(name: string, args: NginxArgs): kx.ConfigMap {
         const cm = new ConfigMap(name, {
-            base: __dirname,
+            ref_file: __filename,
             data: 'static/*',
             stripComponents: 1,
             tplVariables: {

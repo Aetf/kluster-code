@@ -1,8 +1,10 @@
+import { fileURLToPath } from 'url';
 import { promises as fs } from 'fs';
 import * as pathFn from 'path';
 
-import * as _ from 'lodash';
+import * as _ from 'radash';
 import * as fg from 'fast-glob';
+import * as Handlebars from 'handlebars';
 
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
@@ -41,20 +43,19 @@ export function chartNamingWorkaround(_obj: any, opts: pulumi.CustomResourceOpti
 }
 
 export function removeHelmTestAnnotation(obj: any, _opts: pulumi.CustomResourceOptions) {
-    _.unset(obj, 'metadata.annotations["helm.sh/hook"]');
-    _.unset(obj, 'metadata.annotations["helm.sh/hook-delete-policy"]')
+    delete obj?.metadata?.annotations?.["helm.sh/hook"]
+    delete obj?.metadata?.annotations?.["helm.sh/hook-delete-policy"]
 }
 
 export function urlFromService(service: k8s.core.v1.Service, schema: string): pulumi.Output<string> {
     return pulumi.all([service.metadata, service.spec])
         .apply(([metadata, spec]) => {
-            const port = _.find(spec.ports, v => v.name === schema || v.name.startsWith(schema) || v.name.endsWith(schema));
-            const portNumber = port?.port;
-            if (_.isUndefined(portNumber)) {
-                return `${schema}://${metadata.name}.${metadata.namespace}`;
-            } else {
-                return `${schema}://${metadata.name}.${metadata.namespace}:${portNumber}`;
+            for (let port of spec.ports) {
+                if (port.name === schema || port.name.startsWith(schema) || port.name.endsWith(schema)) {
+                    return `${schema}://${metadata.name}.${metadata.namespace}:${port.port}`;
+                }
             }
+            return `${schema}://${metadata.name}.${metadata.namespace}`;
         });
 }
 
@@ -89,7 +90,7 @@ export function serviceFromDeployment(
         namespace: d.metadata.namespace,
         ...args?.metadata ?? {},
     };
-    const deleteBeforeReplace = !_.isUndefined(metadata.name);
+    const deleteBeforeReplace = metadata.name !== undefined;
     return new kx.Service(name, {
         metadata,
         spec: serviceSpec,
@@ -143,20 +144,20 @@ export class HelmChart extends k8s.helm.v3.Chart {
      */
     public service(namePattern?: RegExp): pulumi.Output<Service> {
         return this.resources.apply(res => {
-            const keys = _.keys(res).filter(k => k.startsWith('v1/Service::'));
+            const keys = _.keys(res).filter((k: string) => k.startsWith('v1/Service::'));
             let key: string | undefined = undefined;
             if (keys.length === 0) {
                 throw new TypeError("No service found in the chart: " + keys.join(','));
             } else if (keys.length === 1) {
                 key = keys[0];
             } else {
-                if (_.isUndefined(namePattern)) {
+                if (namePattern === undefined) {
                     throw new TypeError("Multiple services defined in the chart, specify a selector");
                 } else {
-                    key = keys.find(k => namePattern.test(k));
+                    key = keys.find((k: string) => namePattern.test(k));
                 }
             }
-            if (_.isUndefined(key)) {
+            if (key === undefined) {
                 throw new TypeError("No service found in the chart with matching name: " + keys.join(','));
             }
             const bareService = res[key] as k8s.core.v1.Service;
@@ -167,9 +168,10 @@ export class HelmChart extends k8s.helm.v3.Chart {
 
 export type ConfigMapArgs = Omit<k8s.types.input.core.v1.ConfigMap, 'data'> & {
     /**
-     * base directory to start glob
+     * reference file to start searching for files. The parent directory of
+     * ref_file is used as cwd to search.
      */
-    base: pulumi.Input<string>,
+    ref_file: pulumi.Input<string>,
     /**
      * glob pattern for the data
      */
@@ -179,30 +181,24 @@ export type ConfigMapArgs = Omit<k8s.types.input.core.v1.ConfigMap, 'data'> & {
      * if not null, render template
      */
     tplVariables?: pulumi.Inputs,
-    /**
-     * whether to use alternative patterns {{ variable }}, for xml
-     */
-    tplAltPattern?: boolean,
 };
 
 export class ConfigMap extends kx.ConfigMap {
     constructor(name: string, args: ConfigMapArgs, opts?: pulumi.CustomResourceOptions) {
         const renderedData = pulumi.output(args).apply(async args => {
             const data = await this.globFiles(args.data, args);
-            if (_.isUndefined(args.tplVariables)) {
+            if (args.tplVariables === undefined) {
                 return data;
             } else {
                 // render data with template
-                const interpolate = args.tplAltPattern ? /{{([\s\S]+?)}}/g : /<%=([\s\S]+?)%>/g;
                 try {
-                    return _.mapValues(data, content => {
-                        const tpl = _.template(content, { interpolate });
-                        return tpl(args.tplVariables);
+                    return _.mapValues(data, (content: string) => {
+                        const template = Handlebars.compile(content);
+                        return template(args.tplVariables || {});
                     });
                 } catch (err) {
                     console.log('Error rendering config map', name, args);
                     throw err;
-                    // return data;
                 }
             }
         });
@@ -214,13 +210,20 @@ export class ConfigMap extends kx.ConfigMap {
     }
 
     private async globFiles(glob: string | string[], args: pulumi.UnwrappedObject<ConfigMapArgs>): Promise<Record<string, string>> {
+        let base = args.ref_file;
+        if (args.ref_file.startsWith('/')) {
+            // already a path
+            base = pathFn.dirname(args.ref_file);
+        } else {
+            base = fileURLToPath(new URL('.', args.ref_file));
+        }
         const paths = await fg(glob, {
-            cwd: args.base,
+            cwd: base,
             onlyFiles: true,
         });
-        const contents = await Promise.all(paths.map(path => fs.readFile(pathFn.join(args.base, path), 'utf-8')));
+        const contents = await Promise.all(paths.map(path => fs.readFile(pathFn.join(base, path), 'utf-8')));
         const stripped = paths.map(p => pathStripComponents(p, args.stripComponents ?? 1));
-        return _.fromPairs(_.zip(stripped, contents));
+        return _.zipToObject(stripped, contents);
     }
 }
 
@@ -261,30 +264,30 @@ export class SealedSecret extends crds.bitnami.v1alpha1.SealedSecret {
     constructor(name: string, args: SealedSecretArgs, opts?: pulumi.CustomResourceOptions) {
         // add namespace-wide annotation by default,
         // but also provide a stable name
-        const metadata = _.merge({
+        const metadata = _.assign({
             name,
             annotations: {
                 "sealedsecrets.bitnami.com/namespace-wide": "true",
             },
-        }, args.metadata);
-        const spec = _.merge({
+        }, args.metadata || {});
+        const spec: SealedSecretSpecArgs = _.assign({
             template: {
                 metadata: {
                     annotations: {
                         "sealedsecrets.bitnami.com/namespace-wide": "true",
-                    }
-                }
-            }
-        }, args.spec);
-        // only need delete before replce if the name is a stable name
-        const deleteBeforeReplace = metadata.name === name;
+                    },
+                },
+            },
+            encryptedData: {},
+        }, args.spec!);
 
         super(name, {
             ...args,
             metadata,
             spec,
         }, {
-            deleteBeforeReplace,
+            // the name is always assigned so need to delete before replace
+            deleteBeforeReplace: true,
             ...opts ?? {}
         });
     }
@@ -355,19 +358,22 @@ export class FileSecret extends SealedSecret {
     public readonly prefix: string;
 
     constructor(name: string, args: FileSecretArgs, opts?: pulumi.CustomResourceOptions) {
-        super(name, args, opts);
-        this.prefix = args.spec.prefix;
+        const prefix = args.spec.prefix;
+        super(name, {
+            ...args,
+            spec: args.spec,
+            // spec: _.omit(args.spec, ['prefix']),
+        }, opts);
+        this.prefix = prefix
     }
 
     /**
      * mount the secret and provide the path for each key in env vars
      */
     public mountBoth(destPath: string): [pulumi.Output<kx.types.VolumeMount>, pulumi.Output<kx.types.EnvMap>] {
-        const secretEnvs = this.spec.apply(spec =>
-            _.chain(spec?.encryptedData)
-                .mapValues((_, k) => `${destPath}/${k}`)
-                .mapKeys((_, k) => `${this.prefix}${k}_FILE`)
-                .value()
+        const secretEnvs = this.spec.apply((spec: {encryptedData: {[key: string]: string}}) =>
+            _.mapEntries(spec?.encryptedData,
+                (key, _) => [`${this.prefix}${key}_FILE`, `${destPath}/${key}`])
         );
         return [this.mount(destPath), secretEnvs];
     }
@@ -388,17 +394,21 @@ Service.prototype.internalEndpoint = function() {
 }
 Service.prototype.port = function(schema?: string) {
     return this.spec.apply(spec => {
-        if (_.isUndefined(schema)) {
+        if (schema === undefined) {
             return spec.ports[0]?.port;
         }
-        const port = _.find(spec.ports, v => v.name === schema || v.name.startsWith(schema) || v.name.endsWith(schema));
-        return port?.port;
+        for (let port of spec.ports) {
+            if (port.name === schema || port.name.startsWith(schema) || port.name.endsWith(schema)) {
+                return port.port
+            }
+        }
+        return undefined;
     });
 }
 Service.prototype.asUrl = function(schema: string) {
     return pulumi.all([this.internalEndpoint(), this.port(schema)])
         .apply(([endpoint, port]) => {
-            if (_.isUndefined(port)) {
+            if (port === undefined) {
                 return `${schema}://${endpoint}`;
             } else {
                 return `${schema}://${endpoint}:${port}`;

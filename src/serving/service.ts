@@ -1,9 +1,9 @@
-import * as _ from "lodash";
+import * as _ from "radash";
+
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import * as crds from '#src/crds';
 import { Service, setAndRegisterOutputs } from "#src/utils";
 
 import { Middleware, TLSOption } from "./traefik";
@@ -91,10 +91,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
     private ingressSpecFromHosts(host: pulumi.Input<string | pulumi.Input<string>[]>): pulumi.Output<k8s.types.input.networking.v1.IngressSpec> {
         return pulumi.output(host).apply(host => {
             const hosts = _.isString(host) ? [host] : host;
-            const tls = _.chain(hosts)
-                .map(this.tlsFromHost)
-                .uniqBy('secretName')
-                .value();
+            const tls = _.unique(hosts.map(this.tlsFromHost), tls => tls.secretName!)
             return {
                 tls,
                 rules: hosts.map(this.ruleFromHost.bind(this)),
@@ -102,18 +99,18 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
         });
     }
 
-    private tlsFromHost(host: string): k8s.types.input.networking.v1.IngressTLS {
+    private tlsFromHost(host: string): { secretName: string } {
         const tld = host.split('.').slice(-2).join('.');
         // NOTE: keep in sync with naming logic in certs.ts
         return { secretName: `cert-${tld}` };
     }
 
     private ruleFromHost(host: string): k8s.types.input.networking.v1.IngressRule {
-        const rule = { host };
-        _.set(rule, 'http.paths[0].path', '/');
-        _.set(rule, 'http.paths[0].pathType', 'Prefix');
-        _.set(rule, 'http.paths[0].backend.service.name', this.service.metadata.name);
-        _.set(rule, 'http.paths[0].backend.service.port.name', this.schema);
+        let rule = { host };
+        rule = _.set(rule, 'http.paths[0].path', '/');
+        rule = _.set(rule, 'http.paths[0].pathType', 'Prefix');
+        rule = _.set(rule, 'http.paths[0].backend.service.name', this.service.metadata.name);
+        rule = _.set(rule, 'http.paths[0].backend.service.port.name', this.schema);
         return rule;
     }
 }

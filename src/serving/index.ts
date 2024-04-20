@@ -1,5 +1,3 @@
-import * as _ from "lodash";
-
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
@@ -114,8 +112,8 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
     ): FrontendService {
         const enableAuth = args.enableAuth ?? false;
         const enableBasicAuth = args.enableBasicAuth ?? false;
-        _.unset(args, 'enableAuth');
-        _.unset(args, 'enableBasicAuth');
+        delete args['enableAuth'];
+        delete args['enableBasicAuth'];
         return new FrontendService(name, {
             ...args,
             middlewares: pulumi.output(args.middlewares)

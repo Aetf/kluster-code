@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
@@ -63,7 +61,7 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         }, { parent: this });
 
         const nginxCm = new ConfigMap(name, {
-            base: __dirname,
+            ref_file: __filename,
             data: 'static/nginx/*',
             stripComponents: 2,
             tplVariables: {
@@ -73,13 +71,13 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         }, { parent: this });
 
         const phpCm = new ConfigMap(`${name}-php`, {
-            base: __dirname,
+            ref_file: __filename,
             data: 'static/php/*',
             stripComponents: 2,
         }, { parent: this });
 
         const nextcloudCm = new ConfigMap(`${name}-nc`, {
-            base: __dirname,
+            ref_file: __filename,
             data: 'static/nextcloud/*',
             stripComponents: 2,
         }, { parent: this });

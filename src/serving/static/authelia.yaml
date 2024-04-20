@@ -15,15 +15,15 @@ theme: "light"
 log:
   level: "debug"
 
-default_redirection_url: "https://<%= subdomain %>.<%= domain %>"
+default_redirection_url: "https://{{~ subdomain }}.{{~ domain }}"
 
 totp:
-  issuer: "<%= domain %>"
+  issuer: "{{~ domain }}"
 authentication_backend:
   password_reset:
     disable: false
   file:
-    path: "<%= storagePath %>/users.yaml"
+    path: "{{~ storagePath }}/users.yaml"
     password:
         algorithm: argon2id
         iterations: 1
@@ -33,23 +33,23 @@ authentication_backend:
         parallelism: 8
 session:
   name: "authelia_session"
-  domain: "<%= domain %>"
+  domain: "{{~ domain }}"
   expiration: "1d"
   inactivity: "1d"
   remember_me_duration: "1y"
   redis:
-    host: "<%= redisHost %>"
-    port: <%= redisPort %>
+    host: "{{~ redisHost }}"
+    port: {{ redisPort }}
 storage:
   local:
-    path: "<%= storagePath %>/db.sqlite3"
+    path: "{{~ storagePath }}/db.sqlite3"
 notifier:
   smtp:
-    host: "<%= smtpHost %>"
-    port: <%= smtpPort %>
+    host: "{{~ smtpHost }}"
+    port: {{ smtpPort }}
     ## HELO/EHLO Identifier. Identifies the mail client
-    identifier: "<%= subdomain %>.<%= domain %>"
-    sender: "auth@<%= domain %>"
+    identifier: "{{~ subdomain }}.{{~ domain }}"
+    sender: "auth@{{~ domain }}"
     subject: "[Authelia] {title}"
 
 identity_providers:
@@ -123,21 +123,21 @@ access_control:
 
   rules:
   - domain:
-    - "k8s.<%= domain %>"
-    - "mon.<%= domain %>"
+    - "k8s.{{~ domain }}"
+    - "mon.{{~ domain }}"
     subject: "group:admins"
     policy: one_factor
 
   - domain:
-    - "bt.<%= domain %>"
+    - "bt.{{~ domain }}"
     policy: one_factor
 
   - domain:
-    - "sync.<%= domain %>"
+    - "sync.{{~ domain }}"
     policy: one_factor
 
   - domain:
-    - "dav.<%= domain %>"
+    - "dav.{{~ domain }}"
     subject: "user:webdav"
     policy: one_factor
   # rules:

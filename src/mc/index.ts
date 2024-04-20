@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 import * as pulumi from "@pulumi/pulumi";
 import * as kx from "@pulumi/kubernetesx";
 
@@ -28,7 +26,7 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
         }, { parent: this });
 
         const configCm = new ConfigMap(name, {
-            base: __dirname,
+            ref_file: __filename,
             data: 'static/config/*',
             stripComponents: 2,
         }, { parent: this });

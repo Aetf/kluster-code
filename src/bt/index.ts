@@ -39,7 +39,7 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
 
         // configmap for the nginx sidecar
         const cm = new ConfigMap(name, {
-            base: __dirname,
+            ref_file: __filename,
             data: 'static/*',
             stripComponents: 1,
             tplVariables: {

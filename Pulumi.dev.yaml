@@ -18,7 +18,7 @@ config:
   chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.19.1
   chart:kubernetes-dashboard: https://kubernetes.github.io/dashboard:6.0.8
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.20.0
-  chart:redis: https://charts.bitnami.com/bitnami:19.1.0
+  chart:redis: https://charts.bitnami.com/bitnami:18.19.2
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.15.0
   image:transmission: docker.io/haugene/transmission-openvpn:5.3.1
   image:nginx: docker.io/bitnami/nginx:1.25.2-debian-11-r14
@@ -33,7 +33,7 @@ config:
   image:nextcloud: docker.io/nextcloud:28.0.4-fpm-alpine
   image:authelia: ghcr.io/authelia/authelia:4.38.3
   image:shoko: docker.io/shokoanime/server:v4.2.2
-  image:yq: docker.io/mikefarah/yq:4.43.1
+  image:yq: docker.io/mikefarah/yq:4.42.1
   image:syncthing: docker.io/syncthing/syncthing:1.27.0
   image:stdiscosrv: docker.io/syncthing/discosrv:1.27.0
   image:ukulele: ghcr.io/freyacodes/ukulele:master

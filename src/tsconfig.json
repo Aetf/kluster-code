@@ -1,26 +1,47 @@
 {
+    "$schema": "https://json.schemastore.org/tsconfig",
+    // "extends": "@tsconfig/node20/tsconfig.json",
     "compilerOptions": {
+        // ts-node doesn't support extends array yet.
+        // And using a pre-release version breaks pulumi peer dependency
+        // versions constraints.
+        // See https://github.com/TypeStrong/ts-node/issues/2000
+        // "extends": "@tsconfig/strictest/tsconfig.json",
+        "allowUnusedLabels": false,
+        "allowUnreachableCode": false,
+        // "exactOptionalPropertyTypes": true,
+        "noFallthroughCasesInSwitch": true,
+        // "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        // "noPropertyAccessFromIndexSignature": true,
+        // "noUncheckedIndexedAccess": true,
+        // "noUnusedLocals": true,
+        // "noUnusedParameters": true,
+        // "isolatedModules": true,
+        "checkJs": true,
+        "preserveConstEnums": true,
+        "allowJs": true,
+        // end "extends": "@tsconfig/strictest/tsconfig.json",
+
+
         "strict": true,
-        "outDir": "bin",
-        "target": "es2016",
+        "target": "es6",
         "module": "commonjs",
         "moduleResolution": "node",
         "sourceMap": true,
         "experimentalDecorators": true,
         "pretty": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitReturns": true,
-        "forceConsistentCasingInFileNames": true,
+
+        "outDir": "bin",
         "baseUrl": ".",
         "paths": {
+            "#crds/*": [ "./crds/*" ],
             "#src/*": [
                 "*"
             ]
         }
     },
     "ts-node": {
-        // this doesn't actually work in the old 7.x version of ts-node bundled in pulumi
-        // we hack this by manually register in index.ts
         "require": [
             "tsconfig-paths/register"
         ]
