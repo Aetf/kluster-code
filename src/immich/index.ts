@@ -100,6 +100,18 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     'DB_DATABASE_NAME': this.dbname,
                 },
                 server: {
+                    probes: {
+                        liveness: {
+                            spec: {
+                                initialDelaySeconds: 120,
+                            },
+                        },
+                        readiness: {
+                            spec: {
+                                initialDelaySeconds: 120,
+                            },
+                        },
+                    },
                     affinity: {
                         podAffinity: {
                             // This is a hack to run the pod on the same node as juicefs
@@ -135,6 +147,8 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                         }
                     },
                 },
+                // this section is no used since microservices is merged in
+                // server
                 microservices: {
                     resources: {
                         limits: {
@@ -214,6 +228,8 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                             "CREATE EXTENSION vectors;",
                             "CREATE EXTENSION cube;",
                             "CREATE EXTENSION earthdistance;",
+                            `GRANT USAGE ON SCHEMA vectors TO ${dbname};`,
+                            "GRANT SELECT ON TABLE pg_vector_index_stat TO PUBLIC;",
                         ],
                     },
                 },
