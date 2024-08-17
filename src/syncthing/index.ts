@@ -42,14 +42,25 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
         }, { parent: this, });
 
         // file storage
-        const pvc = args.serving.base.createLocalStoragePVC(`${name}`, {
-            storageClassName: args.storageClassName,
-            resources: {
-                requests: {
-                    storage: "5Ti"
-                }
+        const pvc = new kx.PersistentVolumeClaim(name, {
+            metadata: {
+                name: `${name}-data`,
+            },
+            spec: {
+                storageClassName: args.storageClassName,
+                accessModes: [
+                    'ReadWriteOnce',
+                    'ReadWriteMany',
+                ],
+                resources: {
+                    requests: {
+                        storage: "5Ti"
+                    }
+                },
             }
-        }, { parent: this, retainOnDelete: true });
+        }, {
+            parent: this,
+        });
 
         // partial config
         const sthomePrefix = '/var/syncthing';
