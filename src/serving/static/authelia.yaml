@@ -72,7 +72,7 @@ identity_providers:
       - email
       - profile
       redirect_uris:
-      - app.immich:/
+      - app.immich:///oauth-callback
       - https://photos.unlimited-code.works/api/oauth/mobile-redirect
       - https://photos.unlimited-code.works/auth/login
       - https://photos.unlimited-code.works/user-settings
