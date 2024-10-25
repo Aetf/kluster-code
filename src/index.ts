@@ -204,9 +204,9 @@ function setup() {
 
     // ukulele, a discord music bot
     // install into default namespace
-    const ukulele = new Ukulele("ukulele", {
-        base: cluster,
-    });
+    // const ukulele = new Ukulele("ukulele", {
+    //     base: cluster,
+    // });
 
     // Minecraft server
     if (config.enableMc) {
