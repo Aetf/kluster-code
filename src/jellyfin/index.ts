@@ -85,6 +85,8 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
                             args.pvc.mount('/media'),
                             configPvc.mount('/config'),
                             cachePvc.mount('/cache'),
+                            // for custom system fonts
+                            configPvc.mount('/usr/local/share/fonts/custom', 'fonts'),
                         ],
                         ports,
                         resources: {
