@@ -275,8 +275,8 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
                 args: [
                     //'-cert=/tls/tls.crt',
                     //'-key=/tls/tls.key',
-                    '-http',
-                    '-debug',
+                    '--http',
+                    '--debug',
                 ],
                 ports: {
                     //https: 8443,
