@@ -279,7 +279,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
 
     private setupFrontendService(name: string, serving: Serving, host: pulumi.Input<string>) {
         serving.createFrontendService(name, {
-            host: host,
+            host,
             targetService: this.chart!.service(/server/),
             // Immich doesn't support TLS on its own.
             enableTls: false,

@@ -242,7 +242,8 @@ function setup() {
 
     // media serving using jellyfin
     const jellyfin = new Jellyfin("jellyfin", {
-        base: cluster,
+        serving,
+        host: 'tube.unlimited-code.works',
         pvc: mediaPv.pvc,
     }, { provider: mediaProvider });
 
@@ -310,7 +311,6 @@ function setup() {
             }]
         },
     }, { parent: haosProvider });
-
 }
 
 setup();

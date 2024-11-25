@@ -43,19 +43,22 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
             return {
                 type: k8s.types.enums.core.v1.ServiceSpecType.ExternalName,
                 externalName: pulumi.interpolate`${service.metadata.name}.${service.metadata.namespace}`,
-                ports: service.spec.ports.apply(ports => ports.map(port => {
-                    // be smart about service ports: if there's a 443 port, override its
-                    // name to be https
-                    let name = port.port == 443 ? 'https' : port.name;
-                    // if tls disabled, force to http
-                    if (!this.enableTls && name === "https") {
-                        name = "http"
-                    }
-                    return {
-                        name,
-                        port: port.port,
-                    };
-                }))
+                ports: service.spec.ports.apply(ports => {
+                    const hasHttp = ports.some(port => port.name === 'http');
+                    return ports.map(port => {
+                        // be smart about service ports: if there's a 443 port, override its
+                        // name to be https
+                        let name = port.port == 443 ? 'https' : port.name;
+                        // if tls disabled, force to http
+                        if (!this.enableTls && name === "https" && !hasHttp) {
+                            name = "http"
+                        }
+                        return {
+                            name,
+                            port: port.port,
+                        };
+                    });
+                })
             };
         });
 
