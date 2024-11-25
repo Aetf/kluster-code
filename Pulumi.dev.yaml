@@ -32,7 +32,7 @@ config:
   image:mariadb: docker.io/mariadb:11.6.2
   image:nextcloud: docker.io/nextcloud:28.0.4-fpm-alpine
   image:authelia: ghcr.io/authelia/authelia:4.38.17
-  image:shoko: docker.io/shokoanime/server:v4.2.2
+  image:shoko: docker.io/shokoanime/server:v5.0.0
   image:yq: docker.io/mikefarah/yq:4.44.2
   image:syncthing: docker.io/syncthing/syncthing:1.28.0
   image:stdiscosrv: docker.io/syncthing/discosrv:1.28.0
