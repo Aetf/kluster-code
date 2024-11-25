@@ -58,8 +58,12 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     }
                 },
                 service: {
-                    type: "ClusterIP",
-                    externalIPs: args.externalIPs,
+                    labels: {
+                        'svccontroller.k3s.cattle.io/lbpool': 'internet',
+                    },
+                    spec: {
+                        allocateLoadBalancerNodePorts: false,
+                    },
                 },
                 ports: {
                     web: {
