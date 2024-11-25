@@ -385,7 +385,7 @@ declare module "@pulumi/kubernetes/core/v1/service" {
     interface Service {
         internalEndpoint(): pulumi.Output<string>;
         port(schema?: string): pulumi.Output<number | undefined>;
-        asUrl(schema: string): pulumi.Output<string>;
+        asUrl(schema: string, urlSchema?: string): pulumi.Output<string>;
     }
 }
 Service.prototype.internalEndpoint = function() {
@@ -405,13 +405,16 @@ Service.prototype.port = function(schema?: string) {
         return undefined;
     });
 }
-Service.prototype.asUrl = function(schema: string) {
+Service.prototype.asUrl = function(schema: string, urlSchema?: string) {
+    if (urlSchema === undefined) {
+        urlSchema = schema;
+    }
     return pulumi.all([this.internalEndpoint(), this.port(schema)])
         .apply(([endpoint, port]) => {
             if (port === undefined) {
-                return `${schema}://${endpoint}`;
+                return `${urlSchema}://${endpoint}`;
             } else {
-                return `${schema}://${endpoint}:${port}`;
+                return `${urlSchema}://${endpoint}:${port}`;
             }
         });
 }

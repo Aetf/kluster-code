@@ -84,10 +84,9 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
         }, { parent: this });
 
         // urls used for verify
-        const url = pulumi.all([this.service.asUrl('https'), front.url]).apply(([url, loginUrl]) => {
+        const url = this.service.asUrl('https').apply(url => {
             const fullUrl = new URL(url);
-            fullUrl.pathname = '/api/verify';
-            fullUrl.searchParams.append('rd', loginUrl);
+            fullUrl.pathname = '/api/authz/forward-auth';
             return fullUrl.href;
         });
         const urlBasic = this.service.asUrl('https').apply(url => {
@@ -133,7 +132,8 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             spec: {
                 prefix: 'CONFIG_EXTRA_',
                 encryptedData: {
-                    OIDC_CLIENTS_IMMICH_SECRET: "AgCDojGFluQnVfob81F0ve6p4BwUdqHK4R1JwzxRilFm2nT851s6rKmGoMKrPHjLyXZxZMifbyMkc5eTOgU3qeEiqlnj5d990fWZ0XiGGi+Q20q6uctungmHgI0xo0mTbA1kzM/orXuyDpcwQH45vPW+OUobKZ2Y/B4gmQRptNAqEX/MHt8foNNB4By64pBIi4AI/DtSV0ab0lDHU/imHF0PozVBkJZgm9qqU4IuymyGrOJQQG70CZkUjNIUiNSCe8Zq4YL9+RKNVZni3t6AcM+rneAGZ2BhNngNdwuBuD22c2EYz0o4//vsKWcUqWJtu/qSALaodrdPJ1406Gilj9CEGgW3m59vVnDtk5gJrKzDfJVLEsl3Ed2urJmB7fEeiEQ7YObzszg878sn3GXZ77R4Rn1QAKLKwlHRm+NTr2n2mhi8VkFO68tPJqWA0B32d3HqctC/ERwKdskxzzQ74ChlHO3FtHxaY7DnCUY+cY7ahPeP1fuX0hiBGb7Spn73ebfelyUgpEvD393beMbE7CwiHq1GaGJKHNCyhvurnuYaO6alpzYo8fa4vyBvsFkGr+PP0ziv0UWKt0LGWOQlyHwVuRn9YUrJHlQ+LyacLH+TCklhiGJeFNhMbdE/roS1Y92RW+ok8i8ECFuZccgb2YbudGJcCDcEswvP9uIxlkdH2fSFcgns+xpbbIVdLX0J3UItzHPijFaeXXEX8JsiOkd+eWErgFkEM4mUkMAl0EtU9w==",
+                    OIDC_CLIENTS_IMMICH_ID: "AgAgRkbHs0T8tTzmIrLp+oIbg51WaFMgfNj7bGOrfZW1QEELrcVzJA5y78lHd0/iicvNrYg9+rSvF5SaINfs9FS7lvHKW5+4rFr7bmJJ9DZTYtf7IHBLbUH9lM/UndXOr1q5aM9+Xr/ekWwdZKDGUhxPhIyvSPavcIpxTAWEgSS59uidL8/uJz4A/wzk1GoBYkjf1yW9LzQGU8nhES8veeeHvkCEP0DChje+rbjSXpp8fnmeL2yK2vnpH/THfenG10lYWXLXWk0wKG3TLjd5zypOEj3LAeYb14zXRByd4/Mjq1AeUG+8Pbu6wgqSg8aAmrgTfO1KxuRMr4FeUn9h7QOdNEP/E+XJdhsCBUzfafpdVyORVJMIO1Jc75wFurQCuW+Z3DZ4gV8nM1l6rJlyUqWIzsTQG548t5p4pBKu+9eHvZlycg6YtVWOdNrkbyPswkTTS6z8QlLGqXaQy0J1cCykrKD5ZeDN7lSF7ASJgXRCtreK5gRZW64+LtCPuvBMK3m8WPE9U8ugGAqiPlJhyEMGiWrLMRD78VtMBnoNbwpxht5EMutpUj/y2qom2wLVWX9jd9xVnoC88guslC+cGRRLGuFoi5EOTjMMo/mUBPIuQIZMMsQrlvXqlgHcbNIhZgTuJlCsY1YrbfITYogOoiEOC1fdF0ie5bOA2UYrO0ysR1qT95c3DALngm232dOf+Vm10JuAO9Reg0xNDxVTUUo+DwIt/QkmKrN2Fr5QgHQbzp0WT2o1TWuV6Vafbm0/fr62MF6X0lLmzJFdGkkJJJmBOeCGWuAruLY=",
+                    OIDC_CLIENTS_IMMICH_SECRET: "AgAxBr/fP7NLIroP8JZyuhH5MIruIYxvdqN/nXbMmXPNsau1UJV0KLsWcdPZqjD6UzE6oLMSEyQw4TqRIGwzIiNimxOxFqLIjtzjnSSm+gyO0a3mL2T0H4ttNTRHrC825NrBaCT9FLyS/3JErk6XuPTkDf48FVrhjC+/mjzan2y7P/+fGANOIBybDCnjm5lmLYnQGhPNyyrLbKur+INpv/z2g6Cr3ZeUYxeClA/qSIccOvmAinKv2egyqELdvtxbPIz2ijTiX9iReCJu7XBeYGdbcJRfN283pIaK4hZJwojk5j5M4hhIWSdvu37kIJ543Bmcr5oyc+nHGRtscrwURrF8OdH8x3V7+yb8h2DmhgGXSPAOsvO2dIBao4onI/6/fIQrLewAym41snr2WmkFGuDM4HSUSFMBwPKVltIiEOm49hqQfjbAYM27/1D9m2QVfzzMFqM6FnpFsHq+p59KUn4AuJV0IU98Zt1ZNXOsqDjDnkQ+hH3k+Y2bK6Cy7ur8uDhKrPzVqCzDclqqdfGkPtM6/vukcEPh5/U5qZs2Z16Tb1zcQqK2CGumtA+SZuY80Sx19v7kKrRVZBtA2LUCrDWVxjfagZqJ3NgAlq2dXkrV/nHr7xxxwPu0ru4ajr6PalgCnTRdV5cYhUGeg85BNnGIV4jGQ2VWdSZGUua7n3rl84RV1SwhRw2OH39fdrEy9sK7WHC/9NMDwValmHUnDi52DWs6t/9pxsJe403khZQ5ozu79XR6UeVCccXASjtNqAMmCB2wo9fj56AzQeVPbfQOYRlbvKtGn324ek80xdYkPB/f2RCxSJ+Frbi8FLmCfHyXYH/QQhLasxnW0uXH0QZICs2Buf7UrJjJT1ck6j1eO5h0MQ==",
                     OIDC_JWKS_ISSUER_PRIVATE_KEY: "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",
                 }
             }
@@ -154,10 +154,6 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                 name: "authelia",
                 image: versions.image.authelia,
                 command: ["authelia"],
-                args: [
-                    `--config=${configPath}/authelia.yaml`
-                ],
-                // ports
                 ports: {
                     https: 9091
                 },
@@ -167,7 +163,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                 .apply(([se, ce, a, rs, ss]) => ({
                     ...se,
                     ...ce,
-                    'AUTHELIA_LOG_LEVEL': 'info',
+                    'X_AUTHELIA_CONFIG': configPath,
                     'X_AUTHELIA_CONFIG_FILTERS': 'template',
                     'CONFIG_EXTRA_DOMAIN': a.domain,
                     'CONFIG_EXTRA_SUBDOMAIN': a.subdomain,
@@ -175,8 +171,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                     'CONFIG_EXTRA_CONFIGPATH': configPath,
                     'CONFIG_EXTRA_REDISHOST': rs.internalEndpoint(),
                     'CONFIG_EXTRA_REDISPORT': pulumi.interpolate`${rs.port()}`,
-                    'CONFIG_EXTRA_SMTPHOST': ss.internalEndpoint(),
-                    'CONFIG_EXTRA_SMTPPORT': pulumi.interpolate`${ss.port('smtp')}`,
+                    'CONFIG_EXTRA_SMTPADDR': ss.asUrl('smtp'),
                 })),
                 volumeMounts: [
                     cm.mount(configPath),

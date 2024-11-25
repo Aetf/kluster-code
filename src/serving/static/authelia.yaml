@@ -15,9 +15,6 @@ theme: "light"
 log:
   level: "debug"
 
-default_redirection_url: |-
-  https://{{ env "CONFIG_EXTRA_SUBDOMAIN" }}.{{ env "CONFIG_EXTRA_DOMAIN" }}
-
 totp:
   issuer: |-
     {{ env "CONFIG_EXTRA_DOMAIN" }}
@@ -36,24 +33,24 @@ authentication_backend:
         parallelism: 8
 session:
   name: "authelia_session"
-  domain: |-
-    {{ env "CONFIG_EXTRA_DOMAIN" }}
   expiration: "1d"
   inactivity: "1d"
-  remember_me_duration: "1y"
+  remember_me: "1y"
   redis:
-    host: |- 
-      {{ env "CONFIG_EXTRA_REDISHOST" }}
+    host: {{ env "CONFIG_EXTRA_REDISHOST" | mindent 6 "|" | msquote }}
     port: {{ env "CONFIG_EXTRA_REDISPORT" }}
+  cookies:
+    - domain: {{ env "CONFIG_EXTRA_DOMAIN" | mindent 8 "|" | msquote }}
+      authelia_url: 'https://{{ env "CONFIG_EXTRA_SUBDOMAIN" }}.{{ env "CONFIG_EXTRA_DOMAIN" }}'
+      default_redirection_url: 'https://{{ env "CONFIG_EXTRA_SUBDOMAIN" }}.{{ env "CONFIG_EXTRA_DOMAIN" }}/settings'
+
 storage:
   local:
     path: |-
       {{ env "CONFIG_EXTRA_STORAGEPATH" }}/db.sqlite3
 notifier:
   smtp:
-    host: |-
-      {{ env "CONFIG_EXTRA_SMTPHOST" }}
-    port: {{ env "CONFIG_EXTRA_SMTPPORT" }}
+    address: {{ env "CONFIG_EXTRA_SMTPADDR" | mindent 6 "|" | msquote }}
     ## HELO/EHLO Identifier. Identifies the mail client
     identifier: |-
       {{ env "CONFIG_EXTRA_SUBDOMAIN" }}.{{ env "CONFIG_EXTRA_DOMAIN" }}
@@ -72,10 +69,9 @@ identity_providers:
       - introspection
       - userinfo
     clients:
-    - id: immich
-      description: Immich OAuth Connection
-      secret: |-
-          {{ env "CONFIG_EXTRA_OIDC_CLIENTS_IMMICH_SECRET_FILE" | secret }}
+    - client_name: Immich OAuth Connection
+      client_id: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_IMMICH_ID_FILE" | secret | mindent 8 "|" | msquote }}
+      client_secret: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_IMMICH_SECRET_FILE" | secret | mindent 8 "|" | msquote }}
       public: false
       authorization_policy: two_factor
       scopes:
