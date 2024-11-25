@@ -1,0 +1,32 @@
+identity_providers:
+  oidc:
+    clients:
+      - client_name: Immich OAuth Connection
+        client_id: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_IMMICH_ID_FILE" | secret | mindent 8 "|" | msquote }}
+        client_secret: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_IMMICH_SECRET_FILE" | secret | mindent 8 "|" | msquote }}
+        public: false
+        authorization_policy: immich
+        scopes:
+        - openid
+        - email
+        - profile
+        redirect_uris:
+        - app.immich:///oauth-callback
+        - https://photos.unlimited-code.works/api/oauth/mobile-redirect
+        - https://photos.unlimited-code.works/auth/login
+        - https://photos.unlimited-code.works/user-settings
+      - client_name: Jellyfin
+        client_id: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_JELLYFIN_ID_FILE" | secret | mindent 8 "|" | msquote }}
+        client_secret: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_JELLYFIN_SECRET_FILE" | secret | mindent 8 "|" | msquote }}
+        public: false
+        authorization_policy: jellyfin
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_post'
+        scopes:
+          - openid
+          - profile
+          - groups
+        redirect_uris:
+          - https://tube.{{ env "CONFIG_EXTRA_DOMAIN" }}/sso/OID/redirect/Authelia

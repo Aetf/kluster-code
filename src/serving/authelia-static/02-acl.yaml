@@ -46,60 +46,57 @@ access_control:
     - 'k8s.{{ env "CONFIG_EXTRA_DOMAIN" }}'
     - 'mon.{{ env "CONFIG_EXTRA_DOMAIN" }}'
     subject: "group:admins"
-    policy: one_factor
+    policy: two_factor
 
   - domain:
     - 'bt.{{ env "CONFIG_EXTRA_DOMAIN" }}'
-    policy: one_factor
+    subject: "group:users"
+    policy: two_factor
 
   - domain:
     - 'sync.{{ env "CONFIG_EXTRA_DOMAIN" }}'
-    policy: one_factor
+    subject: "group:users"
+    policy: two_factor
 
   - domain:
     - 'dav.{{ env "CONFIG_EXTRA_DOMAIN" }}'
     subject: "user:webdav"
     policy: one_factor
-  # rules:
-  # - domain: public.example.com
-  #   policy: bypass
-  # - domain: "*.example.com"
-  #   policy: bypass
-  #   methods:
-  #   - OPTIONS
-  # - domain: secure.example.com
-  #   policy: one_factor
-  #   networks:
-  #   - private
-  #   - vpn
-  #   - 192.168.1.0/24
-  #   - 10.0.0.1
-  # - domain:
-  #   - secure.example.com
-  #   - private.example.com
-  #   policy: two_factor
-  # - domain: singlefactor.example.com
-  #   policy: one_factor
-  # - domain: "mx2.mail.example.com"
-  #   subject: "group:admins"
-  #   policy: deny
-  # - domain: "*.example.com"
-  #   subject:
-  #   - "group:admins"
-  #   - "group:moderators"
-  #   policy: two_factor
-  # - domain: dev.example.com
-  #   resources:
-  #   - "^/groups/dev/.*$"
-  #   subject: "group:dev"
-  #   policy: two_factor
-  # - domain: dev.example.com
-  #   resources:
-  #   - "^/users/john/.*$"
-  #   subject:
-  #   - ["group:dev", "user:john"]
-  #   - "group:admins"
-  #   policy: two_factor
-  # - domain: "{user}.example.com"
-  #   policy: bypass
+
+## OpenID Connect 1.0 policies
+## The authorization policies section allows creating custom authorization policies which can be applied to clients.
+## This is useful if you wish to only allow specific users to access specific clients i.e. RBAC.
+## It’s generally recommended however that users rely on the OpenID Connect 1.0 relying party to provide RBAC controls based on the available claims.
+##
+## Each policy applies one of the effective policies which can be either one_factor or two_factor as per the standard policies,
+## or also the deny policy which is exclusively available via these configuration options.
+##
+## Each rule within a policy is matched in order where the first fully matching rule is the applied policy.
+## If the deny rule is matched the user is not asked for consent and it is considered a rejected consent and returns an OpenID Connect 1.0 access_denied error.
+##
+## The key for the policy itself is the name of the policy, which is used when configuring the client authorization_policy option.
+## In the example we name the policy policy_name.
+##
+## See https://www.authelia.com/configuration/identity-providers/openid-connect/provider/#authorization_policies
+identity_providers:
+  oidc:
+    authorization_policies:
+      jellyfin:
+        default_policy: 'deny'
+        rules:
+          - policy: 'two_factor'
+            subject: 'group:admins'
+          - policy: 'two_factor'
+            subject: 'group:users'
+          - policy: 'two_factor'
+            subject: 'group:jellyfin-users'
+      immich:
+        default_policy: 'deny'
+        rules:
+          - policy: 'two_factor'
+            subject: 'group:admins'
+          - policy: 'two_factor'
+            subject: 'group:users'
+          - policy: 'two_factor'
+            subject: 'group:immich-users'
 

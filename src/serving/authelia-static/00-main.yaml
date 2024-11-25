@@ -16,15 +16,14 @@ log:
   level: "debug"
 
 totp:
-  issuer: |-
-    {{ env "CONFIG_EXTRA_DOMAIN" }}
+  issuer: {{ env "CONFIG_EXTRA_DOMAIN" | msquote }}
 
 authentication_backend:
   password_reset:
     disable: false
   file:
-    path: |-
-      {{ env "CONFIG_EXTRA_STORAGEPATH" }}/users.yaml
+    path: '{{ env "CONFIG_EXTRA_STORAGEPATH" }}/users.yaml'
+    watch: true
     password:
         algorithm: argon2id
         iterations: 1
@@ -71,4 +70,20 @@ identity_providers:
       - revocation
       - introspection
       - userinfo
+    authorization_policies:
+      jellyfin:
+        default_policy: 'deny'
+        rules:
+          - policy: 'two_factor'
+            subject: 'group:users'
+          - policy: 'two_factor'
+            subject: 'group:jellyfin-users'
+      immich:
+        default_policy: 'deny'
+        rules:
+          - policy: 'two_factor'
+            subject: 'group:users'
+          - policy: 'two_factor'
+            subject: 'group:immich-users'
+
 
