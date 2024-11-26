@@ -10,10 +10,30 @@ export type AcceleratorFunction = import("./acceleratorFunction").AcceleratorFun
 export const AcceleratorFunction: typeof import("./acceleratorFunction").AcceleratorFunction = null as any;
 utilities.lazyLoad(exports, ["AcceleratorFunction"], () => require("./acceleratorFunction"));
 
+export { AcceleratorFunctionListArgs } from "./acceleratorFunctionList";
+export type AcceleratorFunctionList = import("./acceleratorFunctionList").AcceleratorFunctionList;
+export const AcceleratorFunctionList: typeof import("./acceleratorFunctionList").AcceleratorFunctionList = null as any;
+utilities.lazyLoad(exports, ["AcceleratorFunctionList"], () => require("./acceleratorFunctionList"));
+
+export { AcceleratorFunctionPatchArgs } from "./acceleratorFunctionPatch";
+export type AcceleratorFunctionPatch = import("./acceleratorFunctionPatch").AcceleratorFunctionPatch;
+export const AcceleratorFunctionPatch: typeof import("./acceleratorFunctionPatch").AcceleratorFunctionPatch = null as any;
+utilities.lazyLoad(exports, ["AcceleratorFunctionPatch"], () => require("./acceleratorFunctionPatch"));
+
 export { FpgaRegionArgs } from "./fpgaRegion";
 export type FpgaRegion = import("./fpgaRegion").FpgaRegion;
 export const FpgaRegion: typeof import("./fpgaRegion").FpgaRegion = null as any;
 utilities.lazyLoad(exports, ["FpgaRegion"], () => require("./fpgaRegion"));
+
+export { FpgaRegionListArgs } from "./fpgaRegionList";
+export type FpgaRegionList = import("./fpgaRegionList").FpgaRegionList;
+export const FpgaRegionList: typeof import("./fpgaRegionList").FpgaRegionList = null as any;
+utilities.lazyLoad(exports, ["FpgaRegionList"], () => require("./fpgaRegionList"));
+
+export { FpgaRegionPatchArgs } from "./fpgaRegionPatch";
+export type FpgaRegionPatch = import("./fpgaRegionPatch").FpgaRegionPatch;
+export const FpgaRegionPatch: typeof import("./fpgaRegionPatch").FpgaRegionPatch = null as any;
+utilities.lazyLoad(exports, ["FpgaRegionPatch"], () => require("./fpgaRegionPatch"));
 
 
 const _module = {
@@ -22,8 +42,16 @@ const _module = {
         switch (type) {
             case "kubernetes:fpga.intel.com/v2:AcceleratorFunction":
                 return new AcceleratorFunction(name, <any>undefined, { urn })
+            case "kubernetes:fpga.intel.com/v2:AcceleratorFunctionList":
+                return new AcceleratorFunctionList(name, <any>undefined, { urn })
+            case "kubernetes:fpga.intel.com/v2:AcceleratorFunctionPatch":
+                return new AcceleratorFunctionPatch(name, <any>undefined, { urn })
             case "kubernetes:fpga.intel.com/v2:FpgaRegion":
                 return new FpgaRegion(name, <any>undefined, { urn })
+            case "kubernetes:fpga.intel.com/v2:FpgaRegionList":
+                return new FpgaRegionList(name, <any>undefined, { urn })
+            case "kubernetes:fpga.intel.com/v2:FpgaRegionPatch":
+                return new FpgaRegionPatch(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

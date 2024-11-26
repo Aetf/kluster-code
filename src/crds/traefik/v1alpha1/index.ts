@@ -10,50 +10,150 @@ export type IngressRoute = import("./ingressRoute").IngressRoute;
 export const IngressRoute: typeof import("./ingressRoute").IngressRoute = null as any;
 utilities.lazyLoad(exports, ["IngressRoute"], () => require("./ingressRoute"));
 
+export { IngressRouteListArgs } from "./ingressRouteList";
+export type IngressRouteList = import("./ingressRouteList").IngressRouteList;
+export const IngressRouteList: typeof import("./ingressRouteList").IngressRouteList = null as any;
+utilities.lazyLoad(exports, ["IngressRouteList"], () => require("./ingressRouteList"));
+
+export { IngressRoutePatchArgs } from "./ingressRoutePatch";
+export type IngressRoutePatch = import("./ingressRoutePatch").IngressRoutePatch;
+export const IngressRoutePatch: typeof import("./ingressRoutePatch").IngressRoutePatch = null as any;
+utilities.lazyLoad(exports, ["IngressRoutePatch"], () => require("./ingressRoutePatch"));
+
 export { IngressRouteTCPArgs } from "./ingressRouteTCP";
 export type IngressRouteTCP = import("./ingressRouteTCP").IngressRouteTCP;
 export const IngressRouteTCP: typeof import("./ingressRouteTCP").IngressRouteTCP = null as any;
 utilities.lazyLoad(exports, ["IngressRouteTCP"], () => require("./ingressRouteTCP"));
+
+export { IngressRouteTCPListArgs } from "./ingressRouteTCPList";
+export type IngressRouteTCPList = import("./ingressRouteTCPList").IngressRouteTCPList;
+export const IngressRouteTCPList: typeof import("./ingressRouteTCPList").IngressRouteTCPList = null as any;
+utilities.lazyLoad(exports, ["IngressRouteTCPList"], () => require("./ingressRouteTCPList"));
+
+export { IngressRouteTCPPatchArgs } from "./ingressRouteTCPPatch";
+export type IngressRouteTCPPatch = import("./ingressRouteTCPPatch").IngressRouteTCPPatch;
+export const IngressRouteTCPPatch: typeof import("./ingressRouteTCPPatch").IngressRouteTCPPatch = null as any;
+utilities.lazyLoad(exports, ["IngressRouteTCPPatch"], () => require("./ingressRouteTCPPatch"));
 
 export { IngressRouteUDPArgs } from "./ingressRouteUDP";
 export type IngressRouteUDP = import("./ingressRouteUDP").IngressRouteUDP;
 export const IngressRouteUDP: typeof import("./ingressRouteUDP").IngressRouteUDP = null as any;
 utilities.lazyLoad(exports, ["IngressRouteUDP"], () => require("./ingressRouteUDP"));
 
+export { IngressRouteUDPListArgs } from "./ingressRouteUDPList";
+export type IngressRouteUDPList = import("./ingressRouteUDPList").IngressRouteUDPList;
+export const IngressRouteUDPList: typeof import("./ingressRouteUDPList").IngressRouteUDPList = null as any;
+utilities.lazyLoad(exports, ["IngressRouteUDPList"], () => require("./ingressRouteUDPList"));
+
+export { IngressRouteUDPPatchArgs } from "./ingressRouteUDPPatch";
+export type IngressRouteUDPPatch = import("./ingressRouteUDPPatch").IngressRouteUDPPatch;
+export const IngressRouteUDPPatch: typeof import("./ingressRouteUDPPatch").IngressRouteUDPPatch = null as any;
+utilities.lazyLoad(exports, ["IngressRouteUDPPatch"], () => require("./ingressRouteUDPPatch"));
+
 export { MiddlewareArgs } from "./middleware";
 export type Middleware = import("./middleware").Middleware;
 export const Middleware: typeof import("./middleware").Middleware = null as any;
 utilities.lazyLoad(exports, ["Middleware"], () => require("./middleware"));
+
+export { MiddlewareListArgs } from "./middlewareList";
+export type MiddlewareList = import("./middlewareList").MiddlewareList;
+export const MiddlewareList: typeof import("./middlewareList").MiddlewareList = null as any;
+utilities.lazyLoad(exports, ["MiddlewareList"], () => require("./middlewareList"));
+
+export { MiddlewarePatchArgs } from "./middlewarePatch";
+export type MiddlewarePatch = import("./middlewarePatch").MiddlewarePatch;
+export const MiddlewarePatch: typeof import("./middlewarePatch").MiddlewarePatch = null as any;
+utilities.lazyLoad(exports, ["MiddlewarePatch"], () => require("./middlewarePatch"));
 
 export { MiddlewareTCPArgs } from "./middlewareTCP";
 export type MiddlewareTCP = import("./middlewareTCP").MiddlewareTCP;
 export const MiddlewareTCP: typeof import("./middlewareTCP").MiddlewareTCP = null as any;
 utilities.lazyLoad(exports, ["MiddlewareTCP"], () => require("./middlewareTCP"));
 
+export { MiddlewareTCPListArgs } from "./middlewareTCPList";
+export type MiddlewareTCPList = import("./middlewareTCPList").MiddlewareTCPList;
+export const MiddlewareTCPList: typeof import("./middlewareTCPList").MiddlewareTCPList = null as any;
+utilities.lazyLoad(exports, ["MiddlewareTCPList"], () => require("./middlewareTCPList"));
+
+export { MiddlewareTCPPatchArgs } from "./middlewareTCPPatch";
+export type MiddlewareTCPPatch = import("./middlewareTCPPatch").MiddlewareTCPPatch;
+export const MiddlewareTCPPatch: typeof import("./middlewareTCPPatch").MiddlewareTCPPatch = null as any;
+utilities.lazyLoad(exports, ["MiddlewareTCPPatch"], () => require("./middlewareTCPPatch"));
+
 export { ServersTransportArgs } from "./serversTransport";
 export type ServersTransport = import("./serversTransport").ServersTransport;
 export const ServersTransport: typeof import("./serversTransport").ServersTransport = null as any;
 utilities.lazyLoad(exports, ["ServersTransport"], () => require("./serversTransport"));
+
+export { ServersTransportListArgs } from "./serversTransportList";
+export type ServersTransportList = import("./serversTransportList").ServersTransportList;
+export const ServersTransportList: typeof import("./serversTransportList").ServersTransportList = null as any;
+utilities.lazyLoad(exports, ["ServersTransportList"], () => require("./serversTransportList"));
+
+export { ServersTransportPatchArgs } from "./serversTransportPatch";
+export type ServersTransportPatch = import("./serversTransportPatch").ServersTransportPatch;
+export const ServersTransportPatch: typeof import("./serversTransportPatch").ServersTransportPatch = null as any;
+utilities.lazyLoad(exports, ["ServersTransportPatch"], () => require("./serversTransportPatch"));
 
 export { ServersTransportTCPArgs } from "./serversTransportTCP";
 export type ServersTransportTCP = import("./serversTransportTCP").ServersTransportTCP;
 export const ServersTransportTCP: typeof import("./serversTransportTCP").ServersTransportTCP = null as any;
 utilities.lazyLoad(exports, ["ServersTransportTCP"], () => require("./serversTransportTCP"));
 
+export { ServersTransportTCPListArgs } from "./serversTransportTCPList";
+export type ServersTransportTCPList = import("./serversTransportTCPList").ServersTransportTCPList;
+export const ServersTransportTCPList: typeof import("./serversTransportTCPList").ServersTransportTCPList = null as any;
+utilities.lazyLoad(exports, ["ServersTransportTCPList"], () => require("./serversTransportTCPList"));
+
+export { ServersTransportTCPPatchArgs } from "./serversTransportTCPPatch";
+export type ServersTransportTCPPatch = import("./serversTransportTCPPatch").ServersTransportTCPPatch;
+export const ServersTransportTCPPatch: typeof import("./serversTransportTCPPatch").ServersTransportTCPPatch = null as any;
+utilities.lazyLoad(exports, ["ServersTransportTCPPatch"], () => require("./serversTransportTCPPatch"));
+
 export { TLSOptionArgs } from "./tlsoption";
 export type TLSOption = import("./tlsoption").TLSOption;
 export const TLSOption: typeof import("./tlsoption").TLSOption = null as any;
 utilities.lazyLoad(exports, ["TLSOption"], () => require("./tlsoption"));
+
+export { TLSOptionListArgs } from "./tlsoptionList";
+export type TLSOptionList = import("./tlsoptionList").TLSOptionList;
+export const TLSOptionList: typeof import("./tlsoptionList").TLSOptionList = null as any;
+utilities.lazyLoad(exports, ["TLSOptionList"], () => require("./tlsoptionList"));
+
+export { TLSOptionPatchArgs } from "./tlsoptionPatch";
+export type TLSOptionPatch = import("./tlsoptionPatch").TLSOptionPatch;
+export const TLSOptionPatch: typeof import("./tlsoptionPatch").TLSOptionPatch = null as any;
+utilities.lazyLoad(exports, ["TLSOptionPatch"], () => require("./tlsoptionPatch"));
 
 export { TLSStoreArgs } from "./tlsstore";
 export type TLSStore = import("./tlsstore").TLSStore;
 export const TLSStore: typeof import("./tlsstore").TLSStore = null as any;
 utilities.lazyLoad(exports, ["TLSStore"], () => require("./tlsstore"));
 
+export { TLSStoreListArgs } from "./tlsstoreList";
+export type TLSStoreList = import("./tlsstoreList").TLSStoreList;
+export const TLSStoreList: typeof import("./tlsstoreList").TLSStoreList = null as any;
+utilities.lazyLoad(exports, ["TLSStoreList"], () => require("./tlsstoreList"));
+
+export { TLSStorePatchArgs } from "./tlsstorePatch";
+export type TLSStorePatch = import("./tlsstorePatch").TLSStorePatch;
+export const TLSStorePatch: typeof import("./tlsstorePatch").TLSStorePatch = null as any;
+utilities.lazyLoad(exports, ["TLSStorePatch"], () => require("./tlsstorePatch"));
+
 export { TraefikServiceArgs } from "./traefikService";
 export type TraefikService = import("./traefikService").TraefikService;
 export const TraefikService: typeof import("./traefikService").TraefikService = null as any;
 utilities.lazyLoad(exports, ["TraefikService"], () => require("./traefikService"));
+
+export { TraefikServiceListArgs } from "./traefikServiceList";
+export type TraefikServiceList = import("./traefikServiceList").TraefikServiceList;
+export const TraefikServiceList: typeof import("./traefikServiceList").TraefikServiceList = null as any;
+utilities.lazyLoad(exports, ["TraefikServiceList"], () => require("./traefikServiceList"));
+
+export { TraefikServicePatchArgs } from "./traefikServicePatch";
+export type TraefikServicePatch = import("./traefikServicePatch").TraefikServicePatch;
+export const TraefikServicePatch: typeof import("./traefikServicePatch").TraefikServicePatch = null as any;
+utilities.lazyLoad(exports, ["TraefikServicePatch"], () => require("./traefikServicePatch"));
 
 
 const _module = {
@@ -62,24 +162,64 @@ const _module = {
         switch (type) {
             case "kubernetes:traefik.io/v1alpha1:IngressRoute":
                 return new IngressRoute(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:IngressRouteList":
+                return new IngressRouteList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:IngressRoutePatch":
+                return new IngressRoutePatch(name, <any>undefined, { urn })
             case "kubernetes:traefik.io/v1alpha1:IngressRouteTCP":
                 return new IngressRouteTCP(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:IngressRouteTCPList":
+                return new IngressRouteTCPList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:IngressRouteTCPPatch":
+                return new IngressRouteTCPPatch(name, <any>undefined, { urn })
             case "kubernetes:traefik.io/v1alpha1:IngressRouteUDP":
                 return new IngressRouteUDP(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:IngressRouteUDPList":
+                return new IngressRouteUDPList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:IngressRouteUDPPatch":
+                return new IngressRouteUDPPatch(name, <any>undefined, { urn })
             case "kubernetes:traefik.io/v1alpha1:Middleware":
                 return new Middleware(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:MiddlewareList":
+                return new MiddlewareList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:MiddlewarePatch":
+                return new MiddlewarePatch(name, <any>undefined, { urn })
             case "kubernetes:traefik.io/v1alpha1:MiddlewareTCP":
                 return new MiddlewareTCP(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:MiddlewareTCPList":
+                return new MiddlewareTCPList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:MiddlewareTCPPatch":
+                return new MiddlewareTCPPatch(name, <any>undefined, { urn })
             case "kubernetes:traefik.io/v1alpha1:ServersTransport":
                 return new ServersTransport(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:ServersTransportList":
+                return new ServersTransportList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:ServersTransportPatch":
+                return new ServersTransportPatch(name, <any>undefined, { urn })
             case "kubernetes:traefik.io/v1alpha1:ServersTransportTCP":
                 return new ServersTransportTCP(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:ServersTransportTCPList":
+                return new ServersTransportTCPList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:ServersTransportTCPPatch":
+                return new ServersTransportTCPPatch(name, <any>undefined, { urn })
             case "kubernetes:traefik.io/v1alpha1:TLSOption":
                 return new TLSOption(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:TLSOptionList":
+                return new TLSOptionList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:TLSOptionPatch":
+                return new TLSOptionPatch(name, <any>undefined, { urn })
             case "kubernetes:traefik.io/v1alpha1:TLSStore":
                 return new TLSStore(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:TLSStoreList":
+                return new TLSStoreList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:TLSStorePatch":
+                return new TLSStorePatch(name, <any>undefined, { urn })
             case "kubernetes:traefik.io/v1alpha1:TraefikService":
                 return new TraefikService(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:TraefikServiceList":
+                return new TraefikServiceList(name, <any>undefined, { urn })
+            case "kubernetes:traefik.io/v1alpha1:TraefikServicePatch":
+                return new TraefikServicePatch(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

@@ -6,8 +6,6 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 export class HelmChart extends pulumi.CustomResource {
     /**
      * Get an existing HelmChart resource's state with the given name, ID, and optional extra
@@ -35,11 +33,20 @@ export class HelmChart extends pulumi.CustomResource {
         return obj['__pulumiType'] === HelmChart.__pulumiType;
     }
 
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     public readonly apiVersion!: pulumi.Output<"helm.cattle.io/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     public readonly kind!: pulumi.Output<"HelmChart">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
-    public readonly spec!: pulumi.Output<outputs.helm.v1.HelmChartSpec | undefined>;
-    public readonly status!: pulumi.Output<outputs.helm.v1.HelmChartStatus | undefined>;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    public readonly spec!: pulumi.Output<outputs.helm.v1.HelmChartSpec>;
+    public /*out*/ readonly status!: pulumi.Output<outputs.helm.v1.HelmChartStatus>;
 
     /**
      * Create a HelmChart resource with the given unique name, arguments, and options.
@@ -56,7 +63,7 @@ export class HelmChart extends pulumi.CustomResource {
             resourceInputs["kind"] = "HelmChart";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -73,9 +80,17 @@ export class HelmChart extends pulumi.CustomResource {
  * The set of arguments for constructing a HelmChart resource.
  */
 export interface HelmChartArgs {
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     apiVersion?: pulumi.Input<"helm.cattle.io/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     kind?: pulumi.Input<"HelmChart">;
-    metadata?: pulumi.Input<ObjectMeta>;
-    spec?: pulumi.Input<inputs.helm.v1.HelmChartSpecArgs>;
-    status?: pulumi.Input<inputs.helm.v1.HelmChartStatusArgs>;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.helm.v1.HelmChartSpec>;
 }

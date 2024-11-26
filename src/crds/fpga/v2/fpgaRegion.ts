@@ -6,10 +6,9 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
- * FpgaRegion is a specification for a FPGA region resource which can be programmed with a bitstream.
+ * FpgaRegion is a specification for a FPGA region resource which can be programmed
+ * with a bitstream.
  */
 export class FpgaRegion extends pulumi.CustomResource {
     /**
@@ -38,17 +37,23 @@ export class FpgaRegion extends pulumi.CustomResource {
         return obj['__pulumiType'] === FpgaRegion.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"fpga.intel.com/v2">;
-    public readonly kind!: pulumi.Output<"FpgaRegion">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * FpgaRegionSpec contains actual specs for FpgaRegion.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
+    public readonly apiVersion!: pulumi.Output<"fpga.intel.com/v2">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
+    public readonly kind!: pulumi.Output<"FpgaRegion">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
     public readonly spec!: pulumi.Output<outputs.fpga.v2.FpgaRegionSpec>;
     /**
      * FpgaRegionStatus is an empty object used to satisfy operator-sdk.
      */
-    public readonly status!: pulumi.Output<{[key: string]: any} | undefined>;
+    public /*out*/ readonly status!: pulumi.Output<{[key: string]: string}>;
 
     /**
      * Create a FpgaRegion resource with the given unique name, arguments, and options.
@@ -65,7 +70,7 @@ export class FpgaRegion extends pulumi.CustomResource {
             resourceInputs["kind"] = "FpgaRegion";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -82,15 +87,17 @@ export class FpgaRegion extends pulumi.CustomResource {
  * The set of arguments for constructing a FpgaRegion resource.
  */
 export interface FpgaRegionArgs {
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     apiVersion?: pulumi.Input<"fpga.intel.com/v2">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     kind?: pulumi.Input<"FpgaRegion">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * FpgaRegionSpec contains actual specs for FpgaRegion.
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    spec?: pulumi.Input<inputs.fpga.v2.FpgaRegionSpecArgs>;
-    /**
-     * FpgaRegionStatus is an empty object used to satisfy operator-sdk.
-     */
-    status?: pulumi.Input<{[key: string]: any}>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.fpga.v2.FpgaRegionSpec>;
 }

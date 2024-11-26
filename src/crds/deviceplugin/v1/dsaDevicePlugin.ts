@@ -6,10 +6,10 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
- * DsaDevicePlugin is the Schema for the dsadeviceplugins API. It represents the DSA device plugin responsible for advertising Intel DSA hardware resources to the kubelet.
+ * DsaDevicePlugin is the Schema for the dsadeviceplugins API. It represents
+ * the DSA device plugin responsible for advertising Intel DSA hardware resources to
+ * the kubelet.
  */
 export class DsaDevicePlugin extends pulumi.CustomResource {
     /**
@@ -38,17 +38,20 @@ export class DsaDevicePlugin extends pulumi.CustomResource {
         return obj['__pulumiType'] === DsaDevicePlugin.__pulumiType;
     }
 
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     public readonly apiVersion!: pulumi.Output<"deviceplugin.intel.com/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     public readonly kind!: pulumi.Output<"DsaDevicePlugin">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * DsaDevicePluginSpec defines the desired state of DsaDevicePlugin.
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly spec!: pulumi.Output<outputs.deviceplugin.v1.DsaDevicePluginSpec | undefined>;
-    /**
-     * DsaDevicePluginStatus defines the observed state of DsaDevicePlugin.
-     */
-    public readonly status!: pulumi.Output<outputs.deviceplugin.v1.DsaDevicePluginStatus | undefined>;
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    public readonly spec!: pulumi.Output<outputs.deviceplugin.v1.DsaDevicePluginSpec>;
+    public /*out*/ readonly status!: pulumi.Output<outputs.deviceplugin.v1.DsaDevicePluginStatus>;
 
     /**
      * Create a DsaDevicePlugin resource with the given unique name, arguments, and options.
@@ -65,7 +68,7 @@ export class DsaDevicePlugin extends pulumi.CustomResource {
             resourceInputs["kind"] = "DsaDevicePlugin";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -82,15 +85,17 @@ export class DsaDevicePlugin extends pulumi.CustomResource {
  * The set of arguments for constructing a DsaDevicePlugin resource.
  */
 export interface DsaDevicePluginArgs {
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     apiVersion?: pulumi.Input<"deviceplugin.intel.com/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     kind?: pulumi.Input<"DsaDevicePlugin">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * DsaDevicePluginSpec defines the desired state of DsaDevicePlugin.
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    spec?: pulumi.Input<inputs.deviceplugin.v1.DsaDevicePluginSpecArgs>;
-    /**
-     * DsaDevicePluginStatus defines the observed state of DsaDevicePlugin.
-     */
-    status?: pulumi.Input<inputs.deviceplugin.v1.DsaDevicePluginStatusArgs>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.deviceplugin.v1.DsaDevicePluginSpec>;
 }

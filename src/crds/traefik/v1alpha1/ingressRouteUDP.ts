@@ -6,8 +6,6 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
  * IngressRouteUDP is a CRD implementation of a Traefik UDP Router.
  */
@@ -38,12 +36,18 @@ export class IngressRouteUDP extends pulumi.CustomResource {
         return obj['__pulumiType'] === IngressRouteUDP.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
-    public readonly kind!: pulumi.Output<"IngressRouteUDP">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * IngressRouteUDPSpec defines the desired state of a IngressRouteUDP.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
+    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
+    public readonly kind!: pulumi.Output<"IngressRouteUDP">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
     public readonly spec!: pulumi.Output<outputs.traefik.v1alpha1.IngressRouteUDPSpec>;
 
     /**
@@ -76,11 +80,17 @@ export class IngressRouteUDP extends pulumi.CustomResource {
  * The set of arguments for constructing a IngressRouteUDP resource.
  */
 export interface IngressRouteUDPArgs {
-    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
-    kind?: pulumi.Input<"IngressRouteUDP">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * IngressRouteUDPSpec defines the desired state of a IngressRouteUDP.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    spec?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteUDPSpecArgs>;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
+    kind?: pulumi.Input<"IngressRouteUDP">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.traefik.v1alpha1.IngressRouteUDPSpec>;
 }

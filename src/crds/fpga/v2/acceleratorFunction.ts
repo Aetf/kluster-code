@@ -6,10 +6,9 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
- * AcceleratorFunction is a specification for an Accelerator Function resource provided by a FPGA-based programmable hardware accelerator.
+ * AcceleratorFunction is a specification for an Accelerator Function resource
+ * provided by a FPGA-based programmable hardware accelerator.
  */
 export class AcceleratorFunction extends pulumi.CustomResource {
     /**
@@ -38,17 +37,23 @@ export class AcceleratorFunction extends pulumi.CustomResource {
         return obj['__pulumiType'] === AcceleratorFunction.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"fpga.intel.com/v2">;
-    public readonly kind!: pulumi.Output<"AcceleratorFunction">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * AcceleratorFunctionSpec contains actual specs for AcceleratorFunction.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
+    public readonly apiVersion!: pulumi.Output<"fpga.intel.com/v2">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
+    public readonly kind!: pulumi.Output<"AcceleratorFunction">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
     public readonly spec!: pulumi.Output<outputs.fpga.v2.AcceleratorFunctionSpec>;
     /**
      * AcceleratorFunctionStatus is an empty object used to satisfy operator-sdk.
      */
-    public readonly status!: pulumi.Output<{[key: string]: any} | undefined>;
+    public /*out*/ readonly status!: pulumi.Output<{[key: string]: string}>;
 
     /**
      * Create a AcceleratorFunction resource with the given unique name, arguments, and options.
@@ -65,7 +70,7 @@ export class AcceleratorFunction extends pulumi.CustomResource {
             resourceInputs["kind"] = "AcceleratorFunction";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -82,15 +87,17 @@ export class AcceleratorFunction extends pulumi.CustomResource {
  * The set of arguments for constructing a AcceleratorFunction resource.
  */
 export interface AcceleratorFunctionArgs {
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     apiVersion?: pulumi.Input<"fpga.intel.com/v2">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     kind?: pulumi.Input<"AcceleratorFunction">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * AcceleratorFunctionSpec contains actual specs for AcceleratorFunction.
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    spec?: pulumi.Input<inputs.fpga.v2.AcceleratorFunctionSpecArgs>;
-    /**
-     * AcceleratorFunctionStatus is an empty object used to satisfy operator-sdk.
-     */
-    status?: pulumi.Input<{[key: string]: any}>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.fpga.v2.AcceleratorFunctionSpec>;
 }

@@ -6,10 +6,9 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
- * TLSOption is the CRD implementation of a Traefik TLS Option, allowing to configure some parameters of the TLS connection. More info: https://doc.traefik.io/traefik/v2.10/https/tls/#tls-options
+ * TLSOption is the CRD implementation of a Traefik TLS Option, allowing to configure some parameters of the TLS connection.
+ * More info: https://doc.traefik.io/traefik/v3.2/https/tls/#tls-options
  */
 export class TLSOption extends pulumi.CustomResource {
     /**
@@ -38,12 +37,18 @@ export class TLSOption extends pulumi.CustomResource {
         return obj['__pulumiType'] === TLSOption.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
-    public readonly kind!: pulumi.Output<"TLSOption">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * TLSOptionSpec defines the desired state of a TLSOption.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
+    public readonly apiVersion!: pulumi.Output<"traefik.io/v1alpha1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
+    public readonly kind!: pulumi.Output<"TLSOption">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
     public readonly spec!: pulumi.Output<outputs.traefik.v1alpha1.TLSOptionSpec>;
 
     /**
@@ -76,11 +81,17 @@ export class TLSOption extends pulumi.CustomResource {
  * The set of arguments for constructing a TLSOption resource.
  */
 export interface TLSOptionArgs {
-    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
-    kind?: pulumi.Input<"TLSOption">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * TLSOptionSpec defines the desired state of a TLSOption.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    spec?: pulumi.Input<inputs.traefik.v1alpha1.TLSOptionSpecArgs>;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
+    kind?: pulumi.Input<"TLSOption">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.traefik.v1alpha1.TLSOptionSpec>;
 }

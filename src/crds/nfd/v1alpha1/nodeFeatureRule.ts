@@ -6,10 +6,9 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
- * NodeFeatureRule resource specifies a configuration for feature-based customization of node objects, such as node labeling.
+ * NodeFeatureRule resource specifies a configuration for feature-based
+ * customization of node objects, such as node labeling.
  */
 export class NodeFeatureRule extends pulumi.CustomResource {
     /**
@@ -38,12 +37,18 @@ export class NodeFeatureRule extends pulumi.CustomResource {
         return obj['__pulumiType'] === NodeFeatureRule.__pulumiType;
     }
 
-    public readonly apiVersion!: pulumi.Output<"nfd.k8s-sigs.io/v1alpha1">;
-    public readonly kind!: pulumi.Output<"NodeFeatureRule">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * NodeFeatureRuleSpec describes a NodeFeatureRule.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
+    public readonly apiVersion!: pulumi.Output<"nfd.k8s-sigs.io/v1alpha1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
+    public readonly kind!: pulumi.Output<"NodeFeatureRule">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
     public readonly spec!: pulumi.Output<outputs.nfd.v1alpha1.NodeFeatureRuleSpec>;
 
     /**
@@ -76,11 +81,17 @@ export class NodeFeatureRule extends pulumi.CustomResource {
  * The set of arguments for constructing a NodeFeatureRule resource.
  */
 export interface NodeFeatureRuleArgs {
-    apiVersion?: pulumi.Input<"nfd.k8s-sigs.io/v1alpha1">;
-    kind?: pulumi.Input<"NodeFeatureRule">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * NodeFeatureRuleSpec describes a NodeFeatureRule.
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    spec?: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecArgs>;
+    apiVersion?: pulumi.Input<"nfd.k8s-sigs.io/v1alpha1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
+    kind?: pulumi.Input<"NodeFeatureRule">;
+    /**
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+     */
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpec>;
 }

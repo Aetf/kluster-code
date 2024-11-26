@@ -10,6 +10,31 @@ export type Addon = import("./addon").Addon;
 export const Addon: typeof import("./addon").Addon = null as any;
 utilities.lazyLoad(exports, ["Addon"], () => require("./addon"));
 
+export { AddonListArgs } from "./addonList";
+export type AddonList = import("./addonList").AddonList;
+export const AddonList: typeof import("./addonList").AddonList = null as any;
+utilities.lazyLoad(exports, ["AddonList"], () => require("./addonList"));
+
+export { AddonPatchArgs } from "./addonPatch";
+export type AddonPatch = import("./addonPatch").AddonPatch;
+export const AddonPatch: typeof import("./addonPatch").AddonPatch = null as any;
+utilities.lazyLoad(exports, ["AddonPatch"], () => require("./addonPatch"));
+
+export { ETCDSnapshotFileArgs } from "./etcdsnapshotFile";
+export type ETCDSnapshotFile = import("./etcdsnapshotFile").ETCDSnapshotFile;
+export const ETCDSnapshotFile: typeof import("./etcdsnapshotFile").ETCDSnapshotFile = null as any;
+utilities.lazyLoad(exports, ["ETCDSnapshotFile"], () => require("./etcdsnapshotFile"));
+
+export { ETCDSnapshotFileListArgs } from "./etcdsnapshotFileList";
+export type ETCDSnapshotFileList = import("./etcdsnapshotFileList").ETCDSnapshotFileList;
+export const ETCDSnapshotFileList: typeof import("./etcdsnapshotFileList").ETCDSnapshotFileList = null as any;
+utilities.lazyLoad(exports, ["ETCDSnapshotFileList"], () => require("./etcdsnapshotFileList"));
+
+export { ETCDSnapshotFilePatchArgs } from "./etcdsnapshotFilePatch";
+export type ETCDSnapshotFilePatch = import("./etcdsnapshotFilePatch").ETCDSnapshotFilePatch;
+export const ETCDSnapshotFilePatch: typeof import("./etcdsnapshotFilePatch").ETCDSnapshotFilePatch = null as any;
+utilities.lazyLoad(exports, ["ETCDSnapshotFilePatch"], () => require("./etcdsnapshotFilePatch"));
+
 
 const _module = {
     version: utilities.getVersion(),
@@ -17,6 +42,16 @@ const _module = {
         switch (type) {
             case "kubernetes:k3s.cattle.io/v1:Addon":
                 return new Addon(name, <any>undefined, { urn })
+            case "kubernetes:k3s.cattle.io/v1:AddonList":
+                return new AddonList(name, <any>undefined, { urn })
+            case "kubernetes:k3s.cattle.io/v1:AddonPatch":
+                return new AddonPatch(name, <any>undefined, { urn })
+            case "kubernetes:k3s.cattle.io/v1:ETCDSnapshotFile":
+                return new ETCDSnapshotFile(name, <any>undefined, { urn })
+            case "kubernetes:k3s.cattle.io/v1:ETCDSnapshotFileList":
+                return new ETCDSnapshotFileList(name, <any>undefined, { urn })
+            case "kubernetes:k3s.cattle.io/v1:ETCDSnapshotFilePatch":
+                return new ETCDSnapshotFilePatch(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

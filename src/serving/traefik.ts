@@ -12,7 +12,7 @@ interface TraefikArgs {
     httpPort: number,
     httpsPort: number,
 
-    backendIssuer?: crds.certmanager.v1.ClusterIssuer | crds.certmanager.v1.Issuer,
+    backendIssuer?: crds.cert_manager.v1.ClusterIssuer | crds.cert_manager.v1.Issuer,
 }
 
 export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
@@ -144,7 +144,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
 }
 
 export class Middleware extends crds.traefik.v1alpha1.Middleware {
-    constructor(name: string, spec: crds.types.input.traefik.v1alpha1.MiddlewareSpecArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, spec: crds.types.input.traefik.v1alpha1.MiddlewareSpec, opts?: pulumi.CustomResourceOptions) {
         super(name, {
             metadata: { name, },
             spec,
@@ -163,7 +163,7 @@ export class Middleware extends crds.traefik.v1alpha1.Middleware {
 }
 
 export class TLSOption extends crds.traefik.v1alpha1.TLSOption {
-    constructor(name: string, spec: crds.types.input.traefik.v1alpha1.TLSOptionSpecArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, spec: crds.types.input.traefik.v1alpha1.TLSOptionSpec, opts?: pulumi.CustomResourceOptions) {
         super(name, {
             metadata: { name, },
             spec,

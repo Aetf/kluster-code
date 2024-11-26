@@ -6,10 +6,10 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
- * IaaDevicePlugin is the Schema for the iaadeviceplugins API. It represents the IAA device plugin responsible for advertising Intel IAA hardware resources to the kubelet.
+ * IaaDevicePlugin is the Schema for the iaadeviceplugins API. It represents
+ * the IAA device plugin responsible for advertising Intel IAA hardware resources to
+ * the kubelet.
  */
 export class IaaDevicePlugin extends pulumi.CustomResource {
     /**
@@ -38,17 +38,20 @@ export class IaaDevicePlugin extends pulumi.CustomResource {
         return obj['__pulumiType'] === IaaDevicePlugin.__pulumiType;
     }
 
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     public readonly apiVersion!: pulumi.Output<"deviceplugin.intel.com/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     public readonly kind!: pulumi.Output<"IaaDevicePlugin">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * IaaDevicePluginSpec defines the desired state of IaaDevicePlugin.
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly spec!: pulumi.Output<outputs.deviceplugin.v1.IaaDevicePluginSpec | undefined>;
-    /**
-     * IaaDevicePluginStatus defines the observed state of IaaDevicePlugin.
-     */
-    public readonly status!: pulumi.Output<outputs.deviceplugin.v1.IaaDevicePluginStatus | undefined>;
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    public readonly spec!: pulumi.Output<outputs.deviceplugin.v1.IaaDevicePluginSpec>;
+    public /*out*/ readonly status!: pulumi.Output<outputs.deviceplugin.v1.IaaDevicePluginStatus>;
 
     /**
      * Create a IaaDevicePlugin resource with the given unique name, arguments, and options.
@@ -65,7 +68,7 @@ export class IaaDevicePlugin extends pulumi.CustomResource {
             resourceInputs["kind"] = "IaaDevicePlugin";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -82,15 +85,17 @@ export class IaaDevicePlugin extends pulumi.CustomResource {
  * The set of arguments for constructing a IaaDevicePlugin resource.
  */
 export interface IaaDevicePluginArgs {
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     apiVersion?: pulumi.Input<"deviceplugin.intel.com/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     kind?: pulumi.Input<"IaaDevicePlugin">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * IaaDevicePluginSpec defines the desired state of IaaDevicePlugin.
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    spec?: pulumi.Input<inputs.deviceplugin.v1.IaaDevicePluginSpecArgs>;
-    /**
-     * IaaDevicePluginStatus defines the observed state of IaaDevicePlugin.
-     */
-    status?: pulumi.Input<inputs.deviceplugin.v1.IaaDevicePluginStatusArgs>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.deviceplugin.v1.IaaDevicePluginSpec>;
 }

@@ -10,6 +10,16 @@ export type SealedSecret = import("./sealedSecret").SealedSecret;
 export const SealedSecret: typeof import("./sealedSecret").SealedSecret = null as any;
 utilities.lazyLoad(exports, ["SealedSecret"], () => require("./sealedSecret"));
 
+export { SealedSecretListArgs } from "./sealedSecretList";
+export type SealedSecretList = import("./sealedSecretList").SealedSecretList;
+export const SealedSecretList: typeof import("./sealedSecretList").SealedSecretList = null as any;
+utilities.lazyLoad(exports, ["SealedSecretList"], () => require("./sealedSecretList"));
+
+export { SealedSecretPatchArgs } from "./sealedSecretPatch";
+export type SealedSecretPatch = import("./sealedSecretPatch").SealedSecretPatch;
+export const SealedSecretPatch: typeof import("./sealedSecretPatch").SealedSecretPatch = null as any;
+utilities.lazyLoad(exports, ["SealedSecretPatch"], () => require("./sealedSecretPatch"));
+
 
 const _module = {
     version: utilities.getVersion(),
@@ -17,6 +27,10 @@ const _module = {
         switch (type) {
             case "kubernetes:bitnami.com/v1alpha1:SealedSecret":
                 return new SealedSecret(name, <any>undefined, { urn })
+            case "kubernetes:bitnami.com/v1alpha1:SealedSecretList":
+                return new SealedSecretList(name, <any>undefined, { urn })
+            case "kubernetes:bitnami.com/v1alpha1:SealedSecretPatch":
+                return new SealedSecretPatch(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

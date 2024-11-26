@@ -6,10 +6,10 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
- * QatDevicePlugin is the Schema for the qatdeviceplugins API. It represents the QAT device plugin responsible for advertising Intel QuickAssist Technology hardware resources to the kubelet.
+ * QatDevicePlugin is the Schema for the qatdeviceplugins API. It represents the QAT device
+ * plugin responsible for advertising Intel QuickAssist Technology hardware resources
+ * to the kubelet.
  */
 export class QatDevicePlugin extends pulumi.CustomResource {
     /**
@@ -38,17 +38,20 @@ export class QatDevicePlugin extends pulumi.CustomResource {
         return obj['__pulumiType'] === QatDevicePlugin.__pulumiType;
     }
 
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     public readonly apiVersion!: pulumi.Output<"deviceplugin.intel.com/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     public readonly kind!: pulumi.Output<"QatDevicePlugin">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * QatDevicePluginSpec defines the desired state of QatDevicePlugin.
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly spec!: pulumi.Output<outputs.deviceplugin.v1.QatDevicePluginSpec | undefined>;
-    /**
-     * QatDevicePluginStatus defines the observed state of QatDevicePlugin. TODO(rojkov): consider code deduplication with GpuDevicePluginStatus.
-     */
-    public readonly status!: pulumi.Output<outputs.deviceplugin.v1.QatDevicePluginStatus | undefined>;
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    public readonly spec!: pulumi.Output<outputs.deviceplugin.v1.QatDevicePluginSpec>;
+    public /*out*/ readonly status!: pulumi.Output<outputs.deviceplugin.v1.QatDevicePluginStatus>;
 
     /**
      * Create a QatDevicePlugin resource with the given unique name, arguments, and options.
@@ -65,7 +68,7 @@ export class QatDevicePlugin extends pulumi.CustomResource {
             resourceInputs["kind"] = "QatDevicePlugin";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -82,15 +85,17 @@ export class QatDevicePlugin extends pulumi.CustomResource {
  * The set of arguments for constructing a QatDevicePlugin resource.
  */
 export interface QatDevicePluginArgs {
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     apiVersion?: pulumi.Input<"deviceplugin.intel.com/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     kind?: pulumi.Input<"QatDevicePlugin">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * QatDevicePluginSpec defines the desired state of QatDevicePlugin.
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    spec?: pulumi.Input<inputs.deviceplugin.v1.QatDevicePluginSpecArgs>;
-    /**
-     * QatDevicePluginStatus defines the observed state of QatDevicePlugin. TODO(rojkov): consider code deduplication with GpuDevicePluginStatus.
-     */
-    status?: pulumi.Input<inputs.deviceplugin.v1.QatDevicePluginStatusArgs>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.deviceplugin.v1.QatDevicePluginSpec>;
 }

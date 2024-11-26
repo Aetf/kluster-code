@@ -6,10 +6,10 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
- * SealedSecret is the K8s representation of a "sealed Secret" - a regular k8s Secret that has been sealed (encrypted) using the controller's key.
+ * SealedSecret is the K8s representation of a "sealed Secret" - a
+ * regular k8s Secret that has been sealed (encrypted) using the
+ * controller's key.
  */
 export class SealedSecret extends pulumi.CustomResource {
     /**
@@ -38,17 +38,20 @@ export class SealedSecret extends pulumi.CustomResource {
         return obj['__pulumiType'] === SealedSecret.__pulumiType;
     }
 
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     public readonly apiVersion!: pulumi.Output<"bitnami.com/v1alpha1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     public readonly kind!: pulumi.Output<"SealedSecret">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * SealedSecretSpec is the specification of a SealedSecret
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
     public readonly spec!: pulumi.Output<outputs.bitnami.v1alpha1.SealedSecretSpec>;
-    /**
-     * SealedSecretStatus is the most recently observed status of the SealedSecret.
-     */
-    public readonly status!: pulumi.Output<outputs.bitnami.v1alpha1.SealedSecretStatus | undefined>;
+    public /*out*/ readonly status!: pulumi.Output<outputs.bitnami.v1alpha1.SealedSecretStatus>;
 
     /**
      * Create a SealedSecret resource with the given unique name, arguments, and options.
@@ -65,7 +68,7 @@ export class SealedSecret extends pulumi.CustomResource {
             resourceInputs["kind"] = "SealedSecret";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
             resourceInputs["spec"] = args ? args.spec : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -82,15 +85,17 @@ export class SealedSecret extends pulumi.CustomResource {
  * The set of arguments for constructing a SealedSecret resource.
  */
 export interface SealedSecretArgs {
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     apiVersion?: pulumi.Input<"bitnami.com/v1alpha1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     kind?: pulumi.Input<"SealedSecret">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * SealedSecretSpec is the specification of a SealedSecret
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    spec?: pulumi.Input<inputs.bitnami.v1alpha1.SealedSecretSpecArgs>;
-    /**
-     * SealedSecretStatus is the most recently observed status of the SealedSecret.
-     */
-    status?: pulumi.Input<inputs.bitnami.v1alpha1.SealedSecretStatusArgs>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.bitnami.v1alpha1.SealedSecretSpec>;
 }

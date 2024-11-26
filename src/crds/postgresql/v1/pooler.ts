@@ -6,8 +6,6 @@ import * as inputs from "../../types/input";
 import * as outputs from "../../types/output";
 import * as utilities from "../../utilities";
 
-import {ObjectMeta} from "../../meta/v1";
-
 /**
  * Pooler is the Schema for the poolers API
  */
@@ -38,17 +36,20 @@ export class Pooler extends pulumi.CustomResource {
         return obj['__pulumiType'] === Pooler.__pulumiType;
     }
 
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     public readonly apiVersion!: pulumi.Output<"postgresql.cnpg.io/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     public readonly kind!: pulumi.Output<"Pooler">;
-    public readonly metadata!: pulumi.Output<ObjectMeta>;
     /**
-     * PoolerSpec defines the desired state of Pooler
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly spec!: pulumi.Output<outputs.postgresql.v1.PoolerSpec | undefined>;
-    /**
-     * PoolerStatus defines the observed state of Pooler
-     */
-    public readonly status!: pulumi.Output<outputs.postgresql.v1.PoolerStatus | undefined>;
+    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    public readonly spec!: pulumi.Output<outputs.postgresql.v1.PoolerSpec>;
+    public /*out*/ readonly status!: pulumi.Output<outputs.postgresql.v1.PoolerStatus>;
 
     /**
      * Create a Pooler resource with the given unique name, arguments, and options.
@@ -64,8 +65,8 @@ export class Pooler extends pulumi.CustomResource {
             resourceInputs["apiVersion"] = "postgresql.cnpg.io/v1";
             resourceInputs["kind"] = "Pooler";
             resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? (args.spec ? pulumi.output(args.spec).apply(inputs.postgresql.v1.poolerSpecArgsProvideDefaults) : undefined) : undefined;
-            resourceInputs["status"] = args ? args.status : undefined;
+            resourceInputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
@@ -82,15 +83,17 @@ export class Pooler extends pulumi.CustomResource {
  * The set of arguments for constructing a Pooler resource.
  */
 export interface PoolerArgs {
+    /**
+     * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+     */
     apiVersion?: pulumi.Input<"postgresql.cnpg.io/v1">;
+    /**
+     * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+     */
     kind?: pulumi.Input<"Pooler">;
-    metadata?: pulumi.Input<ObjectMeta>;
     /**
-     * PoolerSpec defines the desired state of Pooler
+     * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    spec?: pulumi.Input<inputs.postgresql.v1.PoolerSpecArgs>;
-    /**
-     * PoolerStatus defines the observed state of Pooler
-     */
-    status?: pulumi.Input<inputs.postgresql.v1.PoolerStatusArgs>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
+    spec?: pulumi.Input<inputs.postgresql.v1.PoolerSpec>;
 }

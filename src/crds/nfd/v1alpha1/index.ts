@@ -10,10 +10,45 @@ export type NodeFeature = import("./nodeFeature").NodeFeature;
 export const NodeFeature: typeof import("./nodeFeature").NodeFeature = null as any;
 utilities.lazyLoad(exports, ["NodeFeature"], () => require("./nodeFeature"));
 
+export { NodeFeatureGroupArgs } from "./nodeFeatureGroup";
+export type NodeFeatureGroup = import("./nodeFeatureGroup").NodeFeatureGroup;
+export const NodeFeatureGroup: typeof import("./nodeFeatureGroup").NodeFeatureGroup = null as any;
+utilities.lazyLoad(exports, ["NodeFeatureGroup"], () => require("./nodeFeatureGroup"));
+
+export { NodeFeatureGroupListArgs } from "./nodeFeatureGroupList";
+export type NodeFeatureGroupList = import("./nodeFeatureGroupList").NodeFeatureGroupList;
+export const NodeFeatureGroupList: typeof import("./nodeFeatureGroupList").NodeFeatureGroupList = null as any;
+utilities.lazyLoad(exports, ["NodeFeatureGroupList"], () => require("./nodeFeatureGroupList"));
+
+export { NodeFeatureGroupPatchArgs } from "./nodeFeatureGroupPatch";
+export type NodeFeatureGroupPatch = import("./nodeFeatureGroupPatch").NodeFeatureGroupPatch;
+export const NodeFeatureGroupPatch: typeof import("./nodeFeatureGroupPatch").NodeFeatureGroupPatch = null as any;
+utilities.lazyLoad(exports, ["NodeFeatureGroupPatch"], () => require("./nodeFeatureGroupPatch"));
+
+export { NodeFeatureListArgs } from "./nodeFeatureList";
+export type NodeFeatureList = import("./nodeFeatureList").NodeFeatureList;
+export const NodeFeatureList: typeof import("./nodeFeatureList").NodeFeatureList = null as any;
+utilities.lazyLoad(exports, ["NodeFeatureList"], () => require("./nodeFeatureList"));
+
+export { NodeFeaturePatchArgs } from "./nodeFeaturePatch";
+export type NodeFeaturePatch = import("./nodeFeaturePatch").NodeFeaturePatch;
+export const NodeFeaturePatch: typeof import("./nodeFeaturePatch").NodeFeaturePatch = null as any;
+utilities.lazyLoad(exports, ["NodeFeaturePatch"], () => require("./nodeFeaturePatch"));
+
 export { NodeFeatureRuleArgs } from "./nodeFeatureRule";
 export type NodeFeatureRule = import("./nodeFeatureRule").NodeFeatureRule;
 export const NodeFeatureRule: typeof import("./nodeFeatureRule").NodeFeatureRule = null as any;
 utilities.lazyLoad(exports, ["NodeFeatureRule"], () => require("./nodeFeatureRule"));
+
+export { NodeFeatureRuleListArgs } from "./nodeFeatureRuleList";
+export type NodeFeatureRuleList = import("./nodeFeatureRuleList").NodeFeatureRuleList;
+export const NodeFeatureRuleList: typeof import("./nodeFeatureRuleList").NodeFeatureRuleList = null as any;
+utilities.lazyLoad(exports, ["NodeFeatureRuleList"], () => require("./nodeFeatureRuleList"));
+
+export { NodeFeatureRulePatchArgs } from "./nodeFeatureRulePatch";
+export type NodeFeatureRulePatch = import("./nodeFeatureRulePatch").NodeFeatureRulePatch;
+export const NodeFeatureRulePatch: typeof import("./nodeFeatureRulePatch").NodeFeatureRulePatch = null as any;
+utilities.lazyLoad(exports, ["NodeFeatureRulePatch"], () => require("./nodeFeatureRulePatch"));
 
 
 const _module = {
@@ -22,8 +57,22 @@ const _module = {
         switch (type) {
             case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeature":
                 return new NodeFeature(name, <any>undefined, { urn })
+            case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeatureGroup":
+                return new NodeFeatureGroup(name, <any>undefined, { urn })
+            case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeatureGroupList":
+                return new NodeFeatureGroupList(name, <any>undefined, { urn })
+            case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeatureGroupPatch":
+                return new NodeFeatureGroupPatch(name, <any>undefined, { urn })
+            case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeatureList":
+                return new NodeFeatureList(name, <any>undefined, { urn })
+            case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeaturePatch":
+                return new NodeFeaturePatch(name, <any>undefined, { urn })
             case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeatureRule":
                 return new NodeFeatureRule(name, <any>undefined, { urn })
+            case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeatureRuleList":
+                return new NodeFeatureRuleList(name, <any>undefined, { urn })
+            case "kubernetes:nfd.k8s-sigs.io/v1alpha1:NodeFeatureRulePatch":
+                return new NodeFeatureRulePatch(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

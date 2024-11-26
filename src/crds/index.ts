@@ -14,10 +14,12 @@ utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 // Export sub-modules:
 import * as acme from "./acme";
 import * as bitnami from "./bitnami";
-import * as certmanager from "./certmanager";
+import * as cert_manager from "./cert_manager";
 import * as deviceplugin from "./deviceplugin";
 import * as fpga from "./fpga";
+import * as gateway from "./gateway";
 import * as helm from "./helm";
+import * as hub from "./hub";
 import * as k3s from "./k3s";
 import * as nfd from "./nfd";
 import * as postgresql from "./postgresql";
@@ -27,10 +29,12 @@ import * as types from "./types";
 export {
     acme,
     bitnami,
-    certmanager,
+    cert_manager,
     deviceplugin,
     fpga,
+    gateway,
     helm,
+    hub,
     k3s,
     nfd,
     postgresql,
@@ -40,7 +44,7 @@ export {
 pulumi.runtime.registerResourcePackage("crds", {
     version: utilities.getVersion(),
     constructProvider: (name: string, type: string, urn: string): pulumi.ProviderResource => {
-        if (type !== "pulumi:providers:crds") {
+        if (type !== "pulumi:providers:kubernetes") {
             throw new Error(`unknown provider type ${type}`);
         }
         return new Provider(name, <any>undefined, { urn });

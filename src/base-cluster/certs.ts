@@ -4,17 +4,17 @@ import * as kx from "@pulumi/kubernetesx";
 import * as crds from "#src/crds";
 import { BaseCluster } from "./base";
 
-export type ClusterCertificateSpecArgs = Omit<crds.types.input.certmanager.v1.CertificateSpecArgs, 'issuerRef' | 'secretName'> & {
+export type ClusterCertificateSpec = Omit<crds.types.input.cert_manager.v1.CertificateSpec, 'issuerRef' | 'secretName'> & {
     secretName?: pulumi.Input<string>,
     secretLabels?: Record<string, pulumi.Input<string>>,
     secretAnnotations?: Record<string, pulumi.Input<string>>,
-    issuer: crds.certmanager.v1.ClusterIssuer | crds.certmanager.v1.Issuer
+    issuer: crds.cert_manager.v1.ClusterIssuer | crds.cert_manager.v1.Issuer
 };
-export type ClusterCertificateArgs = Omit<crds.certmanager.v1.CertificateArgs, 'spec'> & {
-    spec: ClusterCertificateSpecArgs,
+export type ClusterCertificateArgs = Omit<crds.cert_manager.v1.CertificateArgs, 'spec'> & {
+    spec: ClusterCertificateSpec,
 };
 
-export class ClusterCertificate extends crds.certmanager.v1.Certificate {
+export class ClusterCertificate extends crds.cert_manager.v1.Certificate {
     public readonly secretName!: pulumi.Output<string>;
 
     constructor(certName: string, args: ClusterCertificateArgs, opts?: pulumi.CustomResourceOptions) {

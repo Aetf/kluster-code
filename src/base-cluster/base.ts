@@ -31,9 +31,9 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     private readonly nfd!: HelmChart;
 
     public readonly nodes: Nodes;
-    public readonly rootIssuer!: crds.certmanager.v1.ClusterIssuer;
-    public readonly letsencryptIssuer!: crds.certmanager.v1.ClusterIssuer;
-    public readonly letsencryptStagingIssuer!: crds.certmanager.v1.ClusterIssuer;
+    public readonly rootIssuer!: crds.cert_manager.v1.ClusterIssuer;
+    public readonly letsencryptIssuer!: crds.cert_manager.v1.ClusterIssuer;
+    public readonly letsencryptStagingIssuer!: crds.cert_manager.v1.ClusterIssuer;
 
     public readonly localStorageClass!: k8s.storage.v1.StorageClass;
     public readonly localStableStorageClass!: k8s.storage.v1.StorageClass;
@@ -114,15 +114,15 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     /**
      * Setup a private CA issuer using self-signed certificate
      */
-    private setupPrivateCA(name: string): crds.certmanager.v1.ClusterIssuer {
-        const bootstrap = new crds.certmanager.v1.ClusterIssuer(`${name}-ca-bootstrap`, {
+    private setupPrivateCA(name: string): crds.cert_manager.v1.ClusterIssuer {
+        const bootstrap = new crds.cert_manager.v1.ClusterIssuer(`${name}-ca-bootstrap`, {
             spec: {
                 selfSigned: {}
             }
         }, { parent: this, dependsOn: [this.certManager.resources[ClusterIssuerCRD]] });
 
         const certName = `${name}-ca`;
-        const ca = new crds.certmanager.v1.Certificate(certName, {
+        const ca = new crds.cert_manager.v1.Certificate(certName, {
             spec: {
                 isCA: true,
                 commonName: certName,
@@ -140,7 +140,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
                 },
             }
         }, { parent: this, dependsOn: [this.certManager.resources[CertificateCRD]] });
-        return new crds.certmanager.v1.ClusterIssuer(certName, {
+        return new crds.cert_manager.v1.ClusterIssuer(certName, {
             metadata: {
                 name: certName,
             },
@@ -155,7 +155,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     /**
      * Setup let's encrypt issuer
      */
-    private setupLetsEncrypt(): crds.certmanager.v1.ClusterIssuer[] {
+    private setupLetsEncrypt(): crds.cert_manager.v1.ClusterIssuer[] {
         // cloudflare API token for letsencrypt dns challenge
         // the API token should have the following settings
         // Permissions:
@@ -172,7 +172,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
             }
         }, { parent: this, dependsOn: [this.sealedSecret.resources[SealedSecretCRD]] });
 
-        return ['', '-staging'].map(stage => new crds.certmanager.v1.ClusterIssuer(`letsencrypt${stage}`, {
+        return ['', '-staging'].map(stage => new crds.cert_manager.v1.ClusterIssuer(`letsencrypt${stage}`, {
             metadata: {
                 name: `letsencrypt${stage}`
             },

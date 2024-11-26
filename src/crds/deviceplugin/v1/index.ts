@@ -10,35 +10,105 @@ export type DlbDevicePlugin = import("./dlbDevicePlugin").DlbDevicePlugin;
 export const DlbDevicePlugin: typeof import("./dlbDevicePlugin").DlbDevicePlugin = null as any;
 utilities.lazyLoad(exports, ["DlbDevicePlugin"], () => require("./dlbDevicePlugin"));
 
+export { DlbDevicePluginListArgs } from "./dlbDevicePluginList";
+export type DlbDevicePluginList = import("./dlbDevicePluginList").DlbDevicePluginList;
+export const DlbDevicePluginList: typeof import("./dlbDevicePluginList").DlbDevicePluginList = null as any;
+utilities.lazyLoad(exports, ["DlbDevicePluginList"], () => require("./dlbDevicePluginList"));
+
+export { DlbDevicePluginPatchArgs } from "./dlbDevicePluginPatch";
+export type DlbDevicePluginPatch = import("./dlbDevicePluginPatch").DlbDevicePluginPatch;
+export const DlbDevicePluginPatch: typeof import("./dlbDevicePluginPatch").DlbDevicePluginPatch = null as any;
+utilities.lazyLoad(exports, ["DlbDevicePluginPatch"], () => require("./dlbDevicePluginPatch"));
+
 export { DsaDevicePluginArgs } from "./dsaDevicePlugin";
 export type DsaDevicePlugin = import("./dsaDevicePlugin").DsaDevicePlugin;
 export const DsaDevicePlugin: typeof import("./dsaDevicePlugin").DsaDevicePlugin = null as any;
 utilities.lazyLoad(exports, ["DsaDevicePlugin"], () => require("./dsaDevicePlugin"));
+
+export { DsaDevicePluginListArgs } from "./dsaDevicePluginList";
+export type DsaDevicePluginList = import("./dsaDevicePluginList").DsaDevicePluginList;
+export const DsaDevicePluginList: typeof import("./dsaDevicePluginList").DsaDevicePluginList = null as any;
+utilities.lazyLoad(exports, ["DsaDevicePluginList"], () => require("./dsaDevicePluginList"));
+
+export { DsaDevicePluginPatchArgs } from "./dsaDevicePluginPatch";
+export type DsaDevicePluginPatch = import("./dsaDevicePluginPatch").DsaDevicePluginPatch;
+export const DsaDevicePluginPatch: typeof import("./dsaDevicePluginPatch").DsaDevicePluginPatch = null as any;
+utilities.lazyLoad(exports, ["DsaDevicePluginPatch"], () => require("./dsaDevicePluginPatch"));
 
 export { FpgaDevicePluginArgs } from "./fpgaDevicePlugin";
 export type FpgaDevicePlugin = import("./fpgaDevicePlugin").FpgaDevicePlugin;
 export const FpgaDevicePlugin: typeof import("./fpgaDevicePlugin").FpgaDevicePlugin = null as any;
 utilities.lazyLoad(exports, ["FpgaDevicePlugin"], () => require("./fpgaDevicePlugin"));
 
+export { FpgaDevicePluginListArgs } from "./fpgaDevicePluginList";
+export type FpgaDevicePluginList = import("./fpgaDevicePluginList").FpgaDevicePluginList;
+export const FpgaDevicePluginList: typeof import("./fpgaDevicePluginList").FpgaDevicePluginList = null as any;
+utilities.lazyLoad(exports, ["FpgaDevicePluginList"], () => require("./fpgaDevicePluginList"));
+
+export { FpgaDevicePluginPatchArgs } from "./fpgaDevicePluginPatch";
+export type FpgaDevicePluginPatch = import("./fpgaDevicePluginPatch").FpgaDevicePluginPatch;
+export const FpgaDevicePluginPatch: typeof import("./fpgaDevicePluginPatch").FpgaDevicePluginPatch = null as any;
+utilities.lazyLoad(exports, ["FpgaDevicePluginPatch"], () => require("./fpgaDevicePluginPatch"));
+
 export { GpuDevicePluginArgs } from "./gpuDevicePlugin";
 export type GpuDevicePlugin = import("./gpuDevicePlugin").GpuDevicePlugin;
 export const GpuDevicePlugin: typeof import("./gpuDevicePlugin").GpuDevicePlugin = null as any;
 utilities.lazyLoad(exports, ["GpuDevicePlugin"], () => require("./gpuDevicePlugin"));
+
+export { GpuDevicePluginListArgs } from "./gpuDevicePluginList";
+export type GpuDevicePluginList = import("./gpuDevicePluginList").GpuDevicePluginList;
+export const GpuDevicePluginList: typeof import("./gpuDevicePluginList").GpuDevicePluginList = null as any;
+utilities.lazyLoad(exports, ["GpuDevicePluginList"], () => require("./gpuDevicePluginList"));
+
+export { GpuDevicePluginPatchArgs } from "./gpuDevicePluginPatch";
+export type GpuDevicePluginPatch = import("./gpuDevicePluginPatch").GpuDevicePluginPatch;
+export const GpuDevicePluginPatch: typeof import("./gpuDevicePluginPatch").GpuDevicePluginPatch = null as any;
+utilities.lazyLoad(exports, ["GpuDevicePluginPatch"], () => require("./gpuDevicePluginPatch"));
 
 export { IaaDevicePluginArgs } from "./iaaDevicePlugin";
 export type IaaDevicePlugin = import("./iaaDevicePlugin").IaaDevicePlugin;
 export const IaaDevicePlugin: typeof import("./iaaDevicePlugin").IaaDevicePlugin = null as any;
 utilities.lazyLoad(exports, ["IaaDevicePlugin"], () => require("./iaaDevicePlugin"));
 
+export { IaaDevicePluginListArgs } from "./iaaDevicePluginList";
+export type IaaDevicePluginList = import("./iaaDevicePluginList").IaaDevicePluginList;
+export const IaaDevicePluginList: typeof import("./iaaDevicePluginList").IaaDevicePluginList = null as any;
+utilities.lazyLoad(exports, ["IaaDevicePluginList"], () => require("./iaaDevicePluginList"));
+
+export { IaaDevicePluginPatchArgs } from "./iaaDevicePluginPatch";
+export type IaaDevicePluginPatch = import("./iaaDevicePluginPatch").IaaDevicePluginPatch;
+export const IaaDevicePluginPatch: typeof import("./iaaDevicePluginPatch").IaaDevicePluginPatch = null as any;
+utilities.lazyLoad(exports, ["IaaDevicePluginPatch"], () => require("./iaaDevicePluginPatch"));
+
 export { QatDevicePluginArgs } from "./qatDevicePlugin";
 export type QatDevicePlugin = import("./qatDevicePlugin").QatDevicePlugin;
 export const QatDevicePlugin: typeof import("./qatDevicePlugin").QatDevicePlugin = null as any;
 utilities.lazyLoad(exports, ["QatDevicePlugin"], () => require("./qatDevicePlugin"));
 
+export { QatDevicePluginListArgs } from "./qatDevicePluginList";
+export type QatDevicePluginList = import("./qatDevicePluginList").QatDevicePluginList;
+export const QatDevicePluginList: typeof import("./qatDevicePluginList").QatDevicePluginList = null as any;
+utilities.lazyLoad(exports, ["QatDevicePluginList"], () => require("./qatDevicePluginList"));
+
+export { QatDevicePluginPatchArgs } from "./qatDevicePluginPatch";
+export type QatDevicePluginPatch = import("./qatDevicePluginPatch").QatDevicePluginPatch;
+export const QatDevicePluginPatch: typeof import("./qatDevicePluginPatch").QatDevicePluginPatch = null as any;
+utilities.lazyLoad(exports, ["QatDevicePluginPatch"], () => require("./qatDevicePluginPatch"));
+
 export { SgxDevicePluginArgs } from "./sgxDevicePlugin";
 export type SgxDevicePlugin = import("./sgxDevicePlugin").SgxDevicePlugin;
 export const SgxDevicePlugin: typeof import("./sgxDevicePlugin").SgxDevicePlugin = null as any;
 utilities.lazyLoad(exports, ["SgxDevicePlugin"], () => require("./sgxDevicePlugin"));
+
+export { SgxDevicePluginListArgs } from "./sgxDevicePluginList";
+export type SgxDevicePluginList = import("./sgxDevicePluginList").SgxDevicePluginList;
+export const SgxDevicePluginList: typeof import("./sgxDevicePluginList").SgxDevicePluginList = null as any;
+utilities.lazyLoad(exports, ["SgxDevicePluginList"], () => require("./sgxDevicePluginList"));
+
+export { SgxDevicePluginPatchArgs } from "./sgxDevicePluginPatch";
+export type SgxDevicePluginPatch = import("./sgxDevicePluginPatch").SgxDevicePluginPatch;
+export const SgxDevicePluginPatch: typeof import("./sgxDevicePluginPatch").SgxDevicePluginPatch = null as any;
+utilities.lazyLoad(exports, ["SgxDevicePluginPatch"], () => require("./sgxDevicePluginPatch"));
 
 
 const _module = {
@@ -47,18 +117,46 @@ const _module = {
         switch (type) {
             case "kubernetes:deviceplugin.intel.com/v1:DlbDevicePlugin":
                 return new DlbDevicePlugin(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:DlbDevicePluginList":
+                return new DlbDevicePluginList(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:DlbDevicePluginPatch":
+                return new DlbDevicePluginPatch(name, <any>undefined, { urn })
             case "kubernetes:deviceplugin.intel.com/v1:DsaDevicePlugin":
                 return new DsaDevicePlugin(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:DsaDevicePluginList":
+                return new DsaDevicePluginList(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:DsaDevicePluginPatch":
+                return new DsaDevicePluginPatch(name, <any>undefined, { urn })
             case "kubernetes:deviceplugin.intel.com/v1:FpgaDevicePlugin":
                 return new FpgaDevicePlugin(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:FpgaDevicePluginList":
+                return new FpgaDevicePluginList(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:FpgaDevicePluginPatch":
+                return new FpgaDevicePluginPatch(name, <any>undefined, { urn })
             case "kubernetes:deviceplugin.intel.com/v1:GpuDevicePlugin":
                 return new GpuDevicePlugin(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:GpuDevicePluginList":
+                return new GpuDevicePluginList(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:GpuDevicePluginPatch":
+                return new GpuDevicePluginPatch(name, <any>undefined, { urn })
             case "kubernetes:deviceplugin.intel.com/v1:IaaDevicePlugin":
                 return new IaaDevicePlugin(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:IaaDevicePluginList":
+                return new IaaDevicePluginList(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:IaaDevicePluginPatch":
+                return new IaaDevicePluginPatch(name, <any>undefined, { urn })
             case "kubernetes:deviceplugin.intel.com/v1:QatDevicePlugin":
                 return new QatDevicePlugin(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:QatDevicePluginList":
+                return new QatDevicePluginList(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:QatDevicePluginPatch":
+                return new QatDevicePluginPatch(name, <any>undefined, { urn })
             case "kubernetes:deviceplugin.intel.com/v1:SgxDevicePlugin":
                 return new SgxDevicePlugin(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:SgxDevicePluginList":
+                return new SgxDevicePluginList(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:SgxDevicePluginPatch":
+                return new SgxDevicePluginPatch(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }
