@@ -70,11 +70,16 @@ export interface BackendCertificateArgs {
     secretLabels?: Record<string, pulumi.Input<string>>,
     secretAnnotations?: Record<string, pulumi.Input<string>>,
     base?: BaseCluster,
+    createPkcs12?: boolean,
+    pkcs12?: pulumi.Input<crds.types.input.cert_manager.v1.CertificateSpecKeystoresPkcs12>;
 }
 
 export class BackendCertificate extends ClusterCertificate {
     constructor(name: string, args: Omit<BackendCertificateArgs, 'base'> & { base: BaseCluster }, opts?: pulumi.CustomResourceOptions) {
         const certName = `cert-svc-${name}`;
+        const maybePkcs12 = {
+            create: true,
+        }
         super(certName, {
             metadata: {
                 labels: {
@@ -86,6 +91,9 @@ export class BackendCertificate extends ClusterCertificate {
                 issuer: args.base.rootIssuer,
                 secretLabels: args.secretLabels,
                 secretAnnotations: args.secretAnnotations,
+                keystores: {
+                    pkcs12: args.pkcs12,
+                }
             }
         }, opts);
     }
