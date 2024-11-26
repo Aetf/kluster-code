@@ -38,8 +38,23 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
                 }
             }, { parent: this });
 
+            const pkcs12Secret = new k8s.core.v1.Secret(`${name}-pkcs12-password`, {
+                stringData: {
+                    // This doesn't need to be secure, because the certificate
+                    // in pkcs12 is available in plain text in the save output
+                    // secret anyway.
+                    password: name,
+                }
+            }, { parent: this });
             const cert = args.serving.base.createBackendCertificate(name, {
                 namespace: configPvc.metadata.namespace,
+                pkcs12: {
+                    create: true,
+                    passwordSecretRef: {
+                        name: pkcs12Secret.metadata.name,
+                        key: 'password',
+                    },
+                },
             }, { parent: this });
 
             const ports: k8s.types.input.core.v1.ContainerPort[] = [
@@ -137,7 +152,7 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
                 host: args.host,
                 targetService: service,
                 // Jellyfin doesn't support TLS on its own.
-                enableTls: false,
+                enableTls: true,
                 // Jellyfin will itself connect to Authelia using OpenID Connect
                 enableAuth: false,
             });
