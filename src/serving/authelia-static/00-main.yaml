@@ -24,6 +24,8 @@ authentication_backend:
   file:
     path: '{{ env "CONFIG_EXTRA_STORAGEPATH" }}/users.yaml'
     watch: true
+    search:
+      email: true
     password:
         algorithm: argon2id
         iterations: 1
