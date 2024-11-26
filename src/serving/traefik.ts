@@ -112,7 +112,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                 ],
                 logs: {
                     general: {
-                        level: "DEBUG"
+                        level: "INFO"
                     },
                     access: {
                         enabled: true
