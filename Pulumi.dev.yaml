@@ -7,7 +7,7 @@ config:
   kluster-code:staging: false
   kluster-code:enableMc: false
   chart:sealed-secrets: https://bitnami-labs.github.io/sealed-secrets:2.16.1
-  chart:cert-manager: https://charts.jetstack.io:v1.16.0
+  chart:cert-manager: https://charts.jetstack.io:v1.16.2
   chart:reloader: https://stakater.github.io/stakater-charts:1.2.0
   chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.31.0
   chart:intel-device-plugins-gpu: https://intel.github.io/helm-charts:0.31.0
