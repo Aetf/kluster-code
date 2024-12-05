@@ -68,6 +68,8 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
                 extraArgs: [
                     // When this flag is enabled, secrets will be automatically removed when the certificate resource is deleted
                     '--enable-certificate-owner-ref=true',
+                    // ClusterIssuer looks for resources in this namespace
+                    pulumi.interpolate`--cluster-resource-namespace=${namespace}`,
                 ]
             }
         }, { parent: this });
