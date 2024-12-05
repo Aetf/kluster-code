@@ -29,35 +29,16 @@ export class IntelDevicePlugins extends pulumi.ComponentResource<IntelDevicePlug
                     {
                         name: "intel.gpu",
                         labels: { "intel.feature.node.kubernetes.io/gpu": "true" },
-                        matchAny: [
+                        matchFeatures: [
                             {
-                                // To workaround a bug in crd2pulumi where the
-                                // type of value should be an array but is a
-                                // list.
-                                matchFeatures: [
-                                    {
-                                        feature: "pci.device",
-                                        matchExpressions: {
-                                            vendor: { op: "In", value: "8086" },
-                                            class: { op: "In", value: "0380" },
-                                        }
-                                    },
-                                    { feature: "kernel.loadedmodule", matchExpressions: { i915: { op: "Exists" } } },
-                                ],
+                                feature: "pci.device",
+                                matchExpressions: {
+                                    vendor: { op: "In", value: ["8086"] },
+                                    class: { op: "In", value: ["0380", "0300"] },
+                                }
                             },
-                            {
-                                matchFeatures: [
-                                    {
-                                        feature: "pci.device",
-                                        matchExpressions: {
-                                            vendor: { op: "In", value: "8086" },
-                                            class: { op: "In", value: "0300" },
-                                        }
-                                    },
-                                    { feature: "kernel.loadedmodule", matchExpressions: { i915: { op: "Exists" } } },
-                                ],
-                            }
-                        ]
+                            { feature: "kernel.loadedmodule", matchExpressions: { i915: { op: "Exists" } } },
+                        ],
                     }
                 ]
             }
