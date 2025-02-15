@@ -212,10 +212,6 @@ function setup() {
     if (config.enableMc) {
         const mc = new Mc("mc", {
             base: cluster,
-            externalIPs: [
-                "45.77.144.92",
-                "192.168.70.85",
-            ]
         }, {
             provider: namespaced("mc"),
         });

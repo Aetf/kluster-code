@@ -6,7 +6,6 @@ import { SealedSecret, ConfigMap, HelmChart } from "#src/utils";
 
 interface McArgs {
     base: BaseCluster,
-    externalIPs: string[],
 }
 
 export class Mc extends pulumi.ComponentResource<McArgs> {
@@ -73,9 +72,17 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                 podAnnotations: {
                     'kubectl.kubernetes.io/default-container': `${name}-minecraft`
                 },
+                serviceLabels: {
+                    // Note select a pool, so all nodes will host the service
+                    // 'svccontroller.k3s.cattle.io/lbpool': 'internet',
+                },
+                rconServiceLabels: {
+                    // Only lan has this service
+                    'svccontroller.k3s.cattle.io/lbpool': 'homelan',
+                },
                 minecraftServer: {
                     eula: "TRUE",
-                    version: "1.19.2",
+                    version: "1.20.1",
                     type: "FABRIC",
                     // Let JVM calculate heap size from the container declared
                     // memory limit
@@ -95,20 +102,21 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                         'b3c4aeb8-083a-434e-b89a-b6794431dfe1',
                     ].join(','),
                     rcon: {
-                        "enabled": true,
-                        "existingSecret": secrets.metadata.name,
+                        enabled: true,
+                        existingSecret: secrets.metadata.name,
+                        serviceType: "LoadBalancer",
                     },
-                    externalIPs: args.externalIPs,
+                    serviceType: "LoadBalancer",
                     extraPorts: [
                         {
-                            "name": "dynmap",
-                            "containerPort": "8123",
-                            "protocol": "TCP",
-                            "service": {
-                                "enabled": false,
+                            name: "dynmap",
+                            containerPort: "8123",
+                            protocol: "TCP",
+                            service: {
+                                enabled: false,
                             },
-                            "ingress": {
-                                "enabled": false,
+                            ingress: {
+                                enabled: false,
                             },
                         }
                     ],
