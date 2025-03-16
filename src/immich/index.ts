@@ -194,9 +194,34 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             spec: {
                 encryptedData: {
                     gcs_credentials: "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"
+                },
+                template: {
+                    metadata: {
+                        labels: {
+                            "cnpg.io/reload": "true",
+                        },
+                    },
                 }
             }
         }, { parent: this });
+        const superuserSecret = new SealedSecret(`${name}-db-superuser`, {
+            spec: {
+                encryptedData: {
+                    username: "AgCFaps4K3zp+vjAtbdedRalojRgddhiu6tlX4oaCzRibKjXwxU6z6h6kzK2IZUGnAH7dZ1i8Y2UM5yBF8xwCN1w1Y6qTVvZhG9k7n7L0ln/0qU1CKcO2N5Cds4t112JyfNukJr8n4Je2qT/cchlzQLEq7BwSlVSbYtloQ0hh9nJcaGbqCqYTW5Nky/UjO0qKbYXr7iM2HijvOd/NZ2zhV9xkMiC2csseIaV7wOTRrVzhO2M+STWh9ndFFW0qWsVifxpXY1yUfGx0MVsXjIQ8bFOqmKMTcl0gc/MkKMXzLsJcYaScjOUqdW27fqmGtnrUEEMKVw7551RVY78F/df2QOFAmQisBfm4wfoKCKgCPxAvufPJpHw0s+fro1bO3foEljOUcrxtnsqCMLUaY2P9BOhnfEERfN9hI1Uo7uOQuV26N/vTkyuizF9dg1zd9HvZ+4YD9B22pf34iaEq/isz1PfsjI0YTLIhOxcqR7ewQi6PAaZTPe+eNNg2HXoNMoZTYVwi92W++fLHxO07Kh31nvR6Y62mKCs95zehEDXCnB11XKhZO47gDTAFFuzSQMCzb/GIAuNT9YjAVOuXfvpz7iGsXS+yL9ydlyRHRc/pq1oQAnc41CYreoHsVY5cBvyQfESw2uKuQYp2buD9IXtk3D+LFSMAEqYhxugMPEPm9w2T6Ge8RNvfmOxOaceIoMDfboFiDTNn16sKQ==",
+                    password: "AgBF4EJEuaRNeaUWSpDP5fxp9b/Wol5z5LS+1Cyh0qYQ1333Zy4VdIlSxy94RiVumHq4Bw1qXrnLx3KDry+ip83gkqE5ErIZzFOjM/rCoiGESLvm4r8J6ZtEx8xp6jCuzFcSAPgkxBxvNXRBsuE9Op1PJXwgRnLrG7SwVxbVyu48zYlmjzbC2Rqhj59CGzvNO4HvA8lKVrlzUtwNjRGu4mYkd1WW0qi6tEq/MnxshUu54QXh3xMzzyZze8/oLWLHHZLE60eYVOim0V4J1q6ivG+7PU5tmBsmGk5gRW2yclRoTKpIrzUHWNRU7ls6NOBtVVQkilEQAQ7wozIH7e+keOvAn2HnKGc/OP8UglO8p6IAwZ0VaqBGzyZqb93jI+Crdx79exrNdiQn/pgkSIveTPoZJxOquMqDgKNsrBdwrRO75P6BoMupVcf5pYKLhtg3bEoJPszrlZjv6ppWB0VUhtDWFAAB6GCvVu07G2cYAV5fW1L8473p/j9EemRE5YCxL0F6Gw+vzit09bsVO1fO3CPXhbZZcqL046oLZnqt46kgTiYmoG33Rs/0OxlLjxsamkh5wmbgsWiW4aColXEVH4xHWh1/RWyAMH65Y+4AME3V3ZG8HzAPcXBM+GFl0/h37QRCgGLc75WG9XiQ1eGnDxGvs92RGqmHb2S/rfsQUNPkyZZrD3WwvNYh/GU/pNhlk7T0NsErsoLYa4CRrL8H91cpM1DDkLR+E6KL/L1rskzicaJrZsn1FRJh"
+                },
+                template: {
+                    metadata: {
+                        labels: {
+                            "cnpg.io/reload": "true",
+                        },
+                    },
+                    type: 'kubernetes.io/basic-auth',
+                }
+            }
+        }, {
+            parent: this
+        });
 
         const dbCert = serving.base.createBackendCertificate(`${name}-db`, {
             namespace: this.namespace,
@@ -216,10 +241,12 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                 // Install pgvecto.rs extension. The extension is built as a
                 // custom image.
                 // https://github.com/tensorchord/pgvecto.rs
-                imageName: "ghcr.io/aetf/pgvecto-rs-cnpg:15.10-10-0.2.0",
+                imageName: "ghcr.io/aetf/pgvecto-rs-cnpg:15.12-5-0.3.0",
                 postgresql: {
                     shared_preload_libraries: ["vectors"],
                 },
+                enableSuperuserAccess: true,
+                superuserSecret: superuserSecret.asSecretRef(),
                 bootstrap: {
                     initdb: {
                         database: dbname,

@@ -1,8 +1,8 @@
 # vim: set ft=Dockerfile
 
-FROM docker.io/tensorchord/pgvecto-rs-binary:pg15-v0.2.0-amd64 as binary
+FROM docker.io/tensorchord/pgvecto-rs-binary:pg15-v0.3.0-amd64 as binary
 
-FROM ghcr.io/cloudnative-pg/postgresql:15.10-10
+FROM ghcr.io/cloudnative-pg/postgresql:15.12-5
 LABEL org.opencontainers.image.source=https://github.com/Aetf/kluster-code
 
 USER root
