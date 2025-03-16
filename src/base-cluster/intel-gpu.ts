@@ -7,6 +7,17 @@ import { HelmChart, NamespaceProbe } from "#src/utils";
 interface IntelDevicePluginsArgs {
 }
 
+function deleteUnusedService(obj: any, opts: pulumi.CustomResourceOptions) {
+    // This service has wrong targetport spec, and causes pulumi to always
+    // waiting for it.
+
+    // Omit a resource from the Chart by transforming the specified resource definition to an empty List.
+    const targetName = 'inteldeviceplugins-controller-manager-metrics-service';
+    if (obj.kind === 'Service' && obj.metadata.name === targetName) {
+        obj.apiVersion = 'v1';
+        obj.kind = 'List';
+    }
+}
 /*
  * Intel Device Plugins Operator to manage intel device plugins
  *
@@ -47,12 +58,12 @@ export class IntelDevicePlugins extends pulumi.ComponentResource<IntelDevicePlug
         this.chart = new HelmChart(`${name}-operator`, {
             namespace: namespace,
             chart: "intel-device-plugins-operator",
+            transformations: [deleteUnusedService],
         }, { parent: this });
 
         this.chartGPU = new HelmChart(`${name}-gpu`, {
             namespace: namespace,
             chart: "intel-device-plugins-gpu",
-            version: "0.27.1",
             values: {
                 sharedDevNum: 5,
             },
