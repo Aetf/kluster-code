@@ -212,6 +212,8 @@ function setup() {
     if (config.enableMc) {
         const mc = new Mc("mc", {
             base: cluster,
+            serving,
+            mapHost: "mcmap.unlimited-code.works"
         }, {
             provider: namespaced("mc"),
         });

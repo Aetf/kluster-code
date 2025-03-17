@@ -2,10 +2,13 @@ import * as pulumi from "@pulumi/pulumi";
 import * as kx from "@pulumi/kubernetesx";
 
 import { BaseCluster } from '#src/base-cluster';
+import { Serving } from '#src/serving';
 import { SealedSecret, ConfigMap, HelmChart } from "#src/utils";
 
 interface McArgs {
     base: BaseCluster,
+    serving: Serving,
+    mapHost: pulumi.Input<string>,
 }
 
 export class Mc extends pulumi.ComponentResource<McArgs> {
@@ -19,7 +22,8 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
             spec: {
                 encryptedData: {
                     "rcon-password": "AgB5NxhtrEgDg2gziGt9yEhhrA0ZyLceztTQjV5LPpwIy9ldkjMABVIQ4vvx4i9kqhwWC0+ujG6JN2ChqQqWhAacP2G6Q/tybEWIsjrp0/rH/IXZNpNgMQNQTn22I2ApiXPRsPoDORfHqLxUnjHaIK+v0W0+cfJcc8GEH+owVuEwn9QvGvwZFSRtqCJXnBJHPsVbdDQRHT3qWpN4aIogmWTg8+DHyInezJ7e6eWM586b91np20sb1PjuuQp2mDIvoNWAY3ZxEbBCgGzt7rMvqUWhAwGxpShxTqMN7I8jfjIxLxcznbQTDjMzvjrE9Rd1FJh99slD9I0P4hM9XHTz/eo2U4X/zPuNHgVxQ+Z1T/J7sBsrbQy09ZoMkLPVhwFzzGHMZS1kHglZshDd1pSn3rwrZscm/8NB1hESgkwLUumIrfPo/bo+rmOuMdZA22v8PKBXORq6yRgTCcA1UUaTTqKfLpgVQ4cTvKPKOZuEzytEJax/eNmpybDjtGtfi2vEG0f/jTx5CB+PkOYW4JnCmhW15+GbJSh8a1Nj9xeoAKOI0wQ5zHWCdDeeMkftcUOfa1fWRvwdkmd6gxaIuS6pWXEWM0/yP7jqch4/BZYkM9SQZec4taA2FtB3ZU3fjpzFuPEjwmNmsPMoKVvYFVMcSOHc9Ji3NF4Y/JWmsZuPS9IItapxrc9txyrbCFcjX5BddfQFI5sSYIDvK8KI",
-                    "discord-bot-token": "AgAaMKhN8zZ/YNjcycduJWXDW3bebF7djm+Puc7cYNfHRvcvDE+/g3hnEQrfyYo4gjYIJID1LYH5EeNKtthX8u7KSxlBtuJ4hbOnQjyr/R+gwjkpMs6HwrikzjxCAp/A0WeovLeTI1ONByqzVlsQqHxMur+9gzwZSwxcFLyyeAzMt/JZdDPBU5haXGJRuYdn+b+bLQaXP3j6/2PgO/pR0WUjmsP2ioN0Cggd2lza9o9rAPwbK4Cavi+tl6m/2t8z3111uhTNIr0COmX0//NydlD6nIP6xeFxD+icGDlWg7KwYVes2Boe42RzEouKyyUZ4tvQeNS8qIEJpZw+MxSO7BmGEFat3dtqJGUU1JS4ZrTANMxX5qSocxzjdbGkv6y513O57jk3f5dIPaXcVZHJSl73kNN1gvuzZlSeoMSpTWwKO7iG5HgBPfPxrXt97WyFxo7HNQXWXcfnvLex+3FfXSTO5INk10wGCZRuTxX4SXjDcSBz/rOJ6QkHza+vjGWbE251yN7UBIVhmDoGOieFItcLrulhiAyw2ug3PGI0SeyRciNl8690WY8fIVZ0YD0TyJxXl1HzY+ouK9mryV4x2g79i6KziNrnjTshRZ9UeekjpWglkXXnIl5HR5DhaW9fya1OSR2KuaBKsOHIyCOJOxHfzaLmSh0i8BjdY6klXiPLBtJWmhEYd3fGL4wky1l198o6wiFNiGgudFxn5mbbv7QfZaLQx5lDMcadrWQ4M/twjNieF8Y0PsImjSrSDyS0w5kLI81alJhxJA1UC1w1ixaAL1JKQCXhwQo=",
+                    "discord-bot-token": "AgCU10xQyVkH9FzOZbyELFt98D1PvG5c3aTFInKrTlErHo4c4kBdUf0mSv+VrapKEjcIPFYdjBhDgk340YntNVTwOxHf44GqjadDuKoVEcWaijUe3DlI4bMq+Af35TkD6z0TbRI76+utEoNz+h/wl/mBkiH9T7Ki9xOPIUVe0MuEX61JdAlRYfFEdQ++ZjGDY1EPEqD798ez/4v4NCG3g40PYkxrLFaEfa+51L09cG0AubhPfPP2YXU9WVHK01xt89S7rXvOwdH8fMtAhpESmLxO6Va0iKnJ32mOXTauaXGiYlvs2rOk8NeW4KPycERLi+WKbkwHP2X5EfDhKgjjzsU3i+pHgIv7d8Pr6t98wfVXG6nwBXnonfsXiHMlWF7b5duPYocJUI8prihKfNGNTbrvwfngIe0m+bgGKRaCHbJRlPdP1K1Kh1t3PYiIPY2s063SkjRn9iFaSXYSXrR7+iUjDrYaUS4lr5itvpK1rWBW9s9Ko8Jw3gfPJOwbqq1KUgjztEK35ztzoYPBUOU4kt2GhQKNyCxOBT38jhk7hpgVnXjJEd0FVfiZDvfccT0EKJOEmawwfMDHuLfEEAgCtigAJzaJIkCeCHePDC6pVZOmb9OOp7ABegM2eM77H3oW0tDnQo8bSxRBwg06ItUUq7q1md/Nm0SEcIfGB02hB+FQb2qsi/IENxBu2CAjiyC1N81IkNYyK+avXeiZCMVundqiTihN0Ova1KyprfD1tp1Q6U2GSQ4CatH6rKla7cDLz4m9iwTUZJii3A1Nd0rRjuwc3zPFI3n3Gw4=",
+                    "discord-webhook": "AgBGZzB5z5NmhgqqpStgbl8dROCkMp2zgMqn/PkWrJqo8Si9Yh1ooUiBDBMAeHHnY/cEveJAHnwYWjmk13luAAdcbMwiCKZsdBaaad0UvGA34F1lX67cJ7zGgdEgesdzIX2HOn6rzDlHglLsksRxVlb2wEnpVkIstjeLgn9Fc7Lhr5OhAMcAvcDPqOZTuTwtnzzBM2Pn1CzgsNQajjnT/mw+CwroNP0JLlx8Y/4xc2Ez7Gyw3dlKMiwEcnAHsUX41gTUbmbG84YWeFQnb/aSW2bLfx5JjqWm6Q4OjdivW8g7sNLlghxbVS9M30TifefIK6KSycemLP6SyVMtzYP00WlsTJmYlaC+W07Or92xUfrE2U7SHrm371+gO8FCtOjuObvk3nNIgWG4pNkVEdrR7u8Zlng4+TRuTjNn3OHp83lpLjckIhlLW80jthe7Hs9wffWGAR6jB6IkjhLgByRQugLj85pfzA+y4bj6kBVCa7fFWoPuhQvfJBtdn9lcUK5LqOUTOKTd8OV++L1EqLLiohEAl3PBAAOn9+nnYH7hgp6zoP4JJvBRGARgYKw5lm3v5xtH2UICA41g+G02tNRSUBhgnMTMj/2B2qgrFz04wMzfdkHu7KfPwQxdZxgR76UJ8alA4y2iObQYU4UXra4pVAtWEI9Ay7JUbmS2lr/zuBiOugl/kRI8Y5jewtMh/kkvZjwhXCKfLLU1HYC6dZNZGGI16VO4VW/4/AFi1SXTTztaE63i7jQWnXRaJTp9tjXbRMK/r1mOcOuV+CwoBIWVCrIEi3a8C1XLLogVH9pYhAmNug29HV6iui2smnIGU6CMCIM+v95aTEhk+Es+20tYqxiEgHZ9aSx0FlAR",
                 }
             }
         }, { parent: this });
@@ -46,15 +50,6 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
             }
         }, { parent: this, retainOnDelete: true, protect: true });
 
-        const backupPvc = args.base.createLocalStoragePVC(`${name}-backup`, {
-            storageClassName: args.base.jfsStorageClass.metadata.name,
-            resources: {
-                requests: {
-                    storage: "50Gi"
-                }
-            }
-        }, { parent: this, retainOnDelete: false, protect: false });
-
         this.namespace = pvc.metadata.namespace;
         this.chart = new HelmChart(name, {
             namespace: this.namespace,
@@ -66,11 +61,11 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                 resources: {
                     limits: {
                         memory: "12Gi",
-                        cpu: "2",
+                        cpu: "4",
                     },
                     requests: {
                         memory: "8Gi",
-                        cpu: "2",
+                        cpu: "4",
                     }
                 },
                 nodeSelector: {
@@ -97,16 +92,20 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                     jvmXXOpts: "-XX:MaxRAMPercentage=75",
                     difficulty: 'hard',
                     whitelist: [
-                        // ChenGao
-                        '41cd7633-510b-4771-9434-bc4260390a59',
                         // Aetf
+                        '41cd7633-510b-4771-9434-bc4260390a59',
+                        // ChenGao
                         'b3c4aeb8-083a-434e-b89a-b6794431dfe1',
+                        // gaochen315
+                        'd9e4a5aa-5e47-4829-b3cb-a7e11f6eabd0',
                     ].join(','),
                     ops: [
-                        // ChenGao
-                        '41cd7633-510b-4771-9434-bc4260390a59',
                         // Aetf
+                        '41cd7633-510b-4771-9434-bc4260390a59',
+                        // ChenGao
                         'b3c4aeb8-083a-434e-b89a-b6794431dfe1',
+                        // gaochen315
+                        'd9e4a5aa-5e47-4829-b3cb-a7e11f6eabd0',
                     ].join(','),
                     rcon: {
                         enabled: true,
@@ -117,10 +116,13 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                     extraPorts: [
                         {
                             name: "dynmap",
-                            containerPort: "8123",
+                            containerPort: 8123,
                             protocol: "TCP",
                             service: {
-                                enabled: false,
+                                enabled: true,
+                                // This is a http web only, so put it behind ingress controller
+                                type: "ClusterIP",
+                                port: 8123
                             },
                             ingress: {
                                 enabled: false,
@@ -138,13 +140,17 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                                 }
                             },
                             {
-                                name: 'discord-bot-token',
+                                name: 'discord-bot',
                                 secret: {
                                     secretName: secrets.metadata.name,
                                     items: [
                                         {
                                             key: 'discord-bot-token',
                                             path: 'discord-bot-token',
+                                        },
+                                        {
+                                            key: 'discord-webhook',
+                                            path: 'discord-webhook',
                                         }
                                     ]
                                 }
@@ -153,11 +159,12 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                         volumeMounts: [
                             {
                                 name: 'config',
-                                mountPath: '/config',
+                                // ConfigMap doesnt allow nested folder
+                                mountPath: '/config/simple-discord-link',
                                 readOnly: true,
                             },
                             {
-                                name: 'discord-bot-token',
+                                name: 'discord-bot',
                                 mountPath: '/secrets',
                                 readOnly: true,
                             }
@@ -171,6 +178,7 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                     'OVERRIDE_WHITELIST': 'TRUE',
                     'SYNC_SKIP_NEWER_IN_DESTINATION': 'false',
                     'CFG_DISCORD_BOT_TOKEN_FILE': '/secrets/discord-bot-token',
+                    'CFG_DISCORD_WEBHOOK_FILE': '/secrets/discord-webhook',
                     // 'DEBUG': 'true'
                 },
                 persistence: {
@@ -190,5 +198,16 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                 }
             }
         }, { parent: this });
+
+        const dynmapSvc = this.chart.service(/dynmap/);
+        args.serving.createFrontendService(name, {
+            host: args.mapHost,
+            targetService: dynmapSvc,
+            targetPort: 'dynmap',
+            // Dynmap doesn't support TLS
+            enableTls: false,
+            // Dynmap is readonly data
+            enableAuth: false,
+        });
     }
 }
