@@ -278,37 +278,17 @@ function setup() {
                 { name: 'http', port: 8123 },
             ],
         }
-    }, { parent: haosProvider, deleteBeforeReplace: true });
-
-    new k8s.networking.v1.Ingress('haos', {
-        metadata: {
-            annotations: {
-                "traefik.ingress.kubernetes.io/router.entrypoints": "websecure",
-            }
-        },
-        spec: {
-            tls: [
-                { secretName: 'cert-unlimited-code.works' },
-            ],
-            rules: [{
-                host: 'haos.unlimited-code.works',
-                http: {
-                    paths: [{
-                        path: '/',
-                        pathType: 'Prefix',
-                        backend: {
-                            service: {
-                                name: 'haos',
-                                port: {
-                                    name: 'http'
-                                }
-                            },
-                        }
-                    }]
-                }
-            }]
-        },
-    }, { parent: haosProvider });
+    }, { parent: haosProvider, provider: haosProvider, deleteBeforeReplace: true });
+    serving.createFrontendService('haos', {
+        host: 'haos.unlimited-code.works',
+        targetService: haosService,
+        // HAOS doesn't support TLS
+        enableTls: false,
+        // HAOS has its own auth
+        // Check out https://github.com/christiaangoossens/hass-oidc-auth when
+        // it is mature.
+        enableAuth: false,
+    });
 }
 
 setup();
