@@ -32,12 +32,15 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
 
     private readonly enableTls: boolean;
     private readonly schema: string;
+    private readonly targetPort?: string;
 
     constructor(name: string, args: FrontendServiceArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:FrontendService', name, args, opts);
         this.enableTls = args.enableTls ?? true;
         this.schema = this.enableTls ? 'https' : 'http'
+        this.targetPort = args.targetPort;
 
+        // Generate an external name service based on the target service
         const serviceSpec = pulumi.output(args.targetService)
         .apply(service => {
             return {
@@ -113,7 +116,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
         rule = _.set(rule, 'http.paths[0].path', '/');
         rule = _.set(rule, 'http.paths[0].pathType', 'Prefix');
         rule = _.set(rule, 'http.paths[0].backend.service.name', this.service.metadata.name);
-        rule = _.set(rule, 'http.paths[0].backend.service.port.name', this.schema);
+        rule = _.set(rule, 'http.paths[0].backend.service.port.name', this.targetPort ?? this.schema);
         return rule;
     }
 }
