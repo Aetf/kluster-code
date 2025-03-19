@@ -84,8 +84,8 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                 },
                 minecraftServer: {
                     eula: "TRUE",
-                    version: "1.20.1",
-                    type: "FABRIC",
+                    version: "1.21.1",
+                    type: "NEOFORGE",
                     // Let JVM calculate heap size from the container declared
                     // memory limit
                     memory: "",
