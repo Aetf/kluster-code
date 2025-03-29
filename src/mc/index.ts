@@ -60,12 +60,12 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
             values: {
                 resources: {
                     limits: {
-                        memory: "12Gi",
-                        cpu: "4",
+                        memory: "20Gi",
+                        cpu: "8",
                     },
                     requests: {
-                        memory: "8Gi",
-                        cpu: "4",
+                        memory: "20Gi",
+                        cpu: "8",
                     }
                 },
                 nodeSelector: {
@@ -86,9 +86,7 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                     eula: "TRUE",
                     version: "1.21.1",
                     type: "NEOFORGE",
-                    // Let JVM calculate heap size from the container declared
-                    // memory limit
-                    memory: "",
+                    memory: "15G", // also need to change limit
                     jvmXXOpts: "-XX:MaxRAMPercentage=75",
                     difficulty: 'hard',
                     whitelist: [
@@ -179,6 +177,7 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                     'SYNC_SKIP_NEWER_IN_DESTINATION': 'false',
                     'CFG_DISCORD_BOT_TOKEN_FILE': '/secrets/discord-bot-token',
                     'CFG_DISCORD_WEBHOOK_FILE': '/secrets/discord-webhook',
+                    'USE_AIKAR_FLAGS': 'true',
                     // 'DEBUG': 'true'
                 },
                 persistence: {

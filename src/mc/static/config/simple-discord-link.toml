@@ -316,7 +316,15 @@
 	#You can leave this empty, or enter the channel ID's (surrounded by "") of channels where linked commands can be used
 	allowedChannels = []
 	#List of command permissions
-	permissions = []
+	[[minecraftCommands.permissions]]
+		role = "0"
+		commands = ["weather clear", "help", "list"]
+		permissionLevel = 1
+	[[minecraftCommands.permissions]]
+		# MC Admin
+		role = "1013329268530491392"
+		commands = []
+		permissionLevel = 4
 
 #Configure messages that will be ignored when relaying to discord
 [ignoredMessages]
