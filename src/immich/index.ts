@@ -235,7 +235,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                 images: [
                     {
                         major: 15,
-                        image: "ghcr.io/aetf/pgvecto-rs-cnpg:15.13-1-0.3.0",
+                        image: "ghcr.io/aetf/vchord-cnpg:15.13-1-0.3.0",
                     },
                 ]
             }
@@ -272,7 +272,6 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                             "CREATE EXTENSION cube;",
                             "CREATE EXTENSION earthdistance;",
                             `GRANT USAGE ON SCHEMA vectors TO ${dbname};`,
-                            `GRANT USAGE ON SCHEMA vchord TO ${dbname};`,
                             "GRANT SELECT ON TABLE pg_vector_index_stat TO PUBLIC;",
                         ],
                     },
