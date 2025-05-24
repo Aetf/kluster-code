@@ -30,7 +30,7 @@ config:
   image:localpath: rancher/local-path-provisioner:v0.0.22
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
   image:mariadb: docker.io/mariadb:11.6.2
-  image:nextcloud: docker.io/nextcloud:28.0.4-fpm-alpine
+  image:nextcloud: docker.io/nextcloud:31.0.5-fpm-alpine
   image:authelia: ghcr.io/authelia/authelia:4.38.17
   image:shoko: docker.io/shokoanime/server:v5.1.0
   image:yq: docker.io/mikefarah/yq:4.45.1
