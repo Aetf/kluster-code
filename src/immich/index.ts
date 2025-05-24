@@ -112,6 +112,10 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                             },
                         },
                     },
+                    resources: {
+                        requests: { memory: "640Mi", cpu: "100m" },
+                        limits: { memory: "640Mi", cpu: "1" },
+                    },
                     affinity: {
                         podAffinity: {
                             // This is a hack to run the pod on the same node as juicefs
@@ -151,8 +155,15 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                 // server
                 microservices: {
                     resources: {
+                        requests: {
+                            memory: "1Gi",
+                            cpu: "1",
+                            'gpu.intel.com/i915': '1',
+                        },
                         limits: {
-                            'gpu.intel.com/i915': '1'
+                            memory: "2Gi",
+                            cpu: "2",
+                            'gpu.intel.com/i915': '1',
                         }
                     },
                     persistence: {
@@ -245,6 +256,16 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             spec: {
                 description: "Database for Immich",
                 instances: 2,
+                resources: {
+                    requests: {
+                        memory: "256Mi",
+                        cpu: "300m",
+                    },
+                    limits: {
+                        memory: "512Mi",
+                        cpu: "500m",
+                    },
+                },
                 storage: {
                     storageClass: storageClass,
                     size: '5Gi',

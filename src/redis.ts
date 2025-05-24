@@ -8,7 +8,8 @@ export interface RedisArgs {
     persistentStorageClass: pulumi.Input<string>,
     namespace: pulumi.Input<string>,
     password: pulumi.Input<Omit<k8s.types.input.core.v1.SecretKeySelector, 'optional'>>,
-    size?: pulumi.Input<string | undefined>
+    size?: pulumi.Input<string | undefined>,
+    resources?: k8s.types.input.core.v1.ResourceRequirements,
 }
 
 export class Redis extends HelmChart {
@@ -33,7 +34,11 @@ export class Redis extends HelmChart {
                 master: {
                     persistence: {
                         size: args.size
-                    }
+                    },
+                    resources: args.resources ?? {
+                        requests: { memory: "64Mi", cpu: "50m" },
+                        limits: { memory: "64Mi", cpu: "50m" },
+                    },
                 }
             }
         }, opts);

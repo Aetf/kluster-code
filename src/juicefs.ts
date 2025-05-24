@@ -167,6 +167,10 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
             persistentStorageClass: metadataStorageClass,
             password: secret.asSecretKeyRef('redis_pass'),
             size: "8Gi",
+            resources: {
+                requests: { memory: "256Mi", cpu: "100m" },
+                limits: { memory: "512Mi", cpu: "200m" },
+            }
         }, { parent: this });
     }
 }
