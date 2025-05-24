@@ -20,6 +20,21 @@ export type AccessControlPolicyPatch = import("./accessControlPolicyPatch").Acce
 export const AccessControlPolicyPatch: typeof import("./accessControlPolicyPatch").AccessControlPolicyPatch = null as any;
 utilities.lazyLoad(exports, ["AccessControlPolicyPatch"], () => require("./accessControlPolicyPatch"));
 
+export { AIServiceArgs } from "./aiservice";
+export type AIService = import("./aiservice").AIService;
+export const AIService: typeof import("./aiservice").AIService = null as any;
+utilities.lazyLoad(exports, ["AIService"], () => require("./aiservice"));
+
+export { AIServiceListArgs } from "./aiserviceList";
+export type AIServiceList = import("./aiserviceList").AIServiceList;
+export const AIServiceList: typeof import("./aiserviceList").AIServiceList = null as any;
+utilities.lazyLoad(exports, ["AIServiceList"], () => require("./aiserviceList"));
+
+export { AIServicePatchArgs } from "./aiservicePatch";
+export type AIServicePatch = import("./aiservicePatch").AIServicePatch;
+export const AIServicePatch: typeof import("./aiservicePatch").AIServicePatch = null as any;
+utilities.lazyLoad(exports, ["AIServicePatch"], () => require("./aiservicePatch"));
+
 export { APIArgs } from "./api";
 export type API = import("./api").API;
 export const API: typeof import("./api").API = null as any;
@@ -54,6 +69,21 @@ export { APIBundlePatchArgs } from "./apibundlePatch";
 export type APIBundlePatch = import("./apibundlePatch").APIBundlePatch;
 export const APIBundlePatch: typeof import("./apibundlePatch").APIBundlePatch = null as any;
 utilities.lazyLoad(exports, ["APIBundlePatch"], () => require("./apibundlePatch"));
+
+export { APICatalogItemArgs } from "./apicatalogItem";
+export type APICatalogItem = import("./apicatalogItem").APICatalogItem;
+export const APICatalogItem: typeof import("./apicatalogItem").APICatalogItem = null as any;
+utilities.lazyLoad(exports, ["APICatalogItem"], () => require("./apicatalogItem"));
+
+export { APICatalogItemListArgs } from "./apicatalogItemList";
+export type APICatalogItemList = import("./apicatalogItemList").APICatalogItemList;
+export const APICatalogItemList: typeof import("./apicatalogItemList").APICatalogItemList = null as any;
+utilities.lazyLoad(exports, ["APICatalogItemList"], () => require("./apicatalogItemList"));
+
+export { APICatalogItemPatchArgs } from "./apicatalogItemPatch";
+export type APICatalogItemPatch = import("./apicatalogItemPatch").APICatalogItemPatch;
+export const APICatalogItemPatch: typeof import("./apicatalogItemPatch").APICatalogItemPatch = null as any;
+utilities.lazyLoad(exports, ["APICatalogItemPatch"], () => require("./apicatalogItemPatch"));
 
 export { APIListArgs } from "./apilist";
 export type APIList = import("./apilist").APIList;
@@ -125,11 +155,32 @@ export type APIVersionPatch = import("./apiversionPatch").APIVersionPatch;
 export const APIVersionPatch: typeof import("./apiversionPatch").APIVersionPatch = null as any;
 utilities.lazyLoad(exports, ["APIVersionPatch"], () => require("./apiversionPatch"));
 
+export { ManagedSubscriptionArgs } from "./managedSubscription";
+export type ManagedSubscription = import("./managedSubscription").ManagedSubscription;
+export const ManagedSubscription: typeof import("./managedSubscription").ManagedSubscription = null as any;
+utilities.lazyLoad(exports, ["ManagedSubscription"], () => require("./managedSubscription"));
+
+export { ManagedSubscriptionListArgs } from "./managedSubscriptionList";
+export type ManagedSubscriptionList = import("./managedSubscriptionList").ManagedSubscriptionList;
+export const ManagedSubscriptionList: typeof import("./managedSubscriptionList").ManagedSubscriptionList = null as any;
+utilities.lazyLoad(exports, ["ManagedSubscriptionList"], () => require("./managedSubscriptionList"));
+
+export { ManagedSubscriptionPatchArgs } from "./managedSubscriptionPatch";
+export type ManagedSubscriptionPatch = import("./managedSubscriptionPatch").ManagedSubscriptionPatch;
+export const ManagedSubscriptionPatch: typeof import("./managedSubscriptionPatch").ManagedSubscriptionPatch = null as any;
+utilities.lazyLoad(exports, ["ManagedSubscriptionPatch"], () => require("./managedSubscriptionPatch"));
+
 
 const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
+            case "kubernetes:hub.traefik.io/v1alpha1:AIService":
+                return new AIService(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:AIServiceList":
+                return new AIServiceList(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:AIServicePatch":
+                return new AIServicePatch(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:API":
                 return new API(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:APIAccess":
@@ -144,6 +195,12 @@ const _module = {
                 return new APIBundleList(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:APIBundlePatch":
                 return new APIBundlePatch(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:APICatalogItem":
+                return new APICatalogItem(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:APICatalogItemList":
+                return new APICatalogItemList(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:APICatalogItemPatch":
+                return new APICatalogItemPatch(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:APIList":
                 return new APIList(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:APIPatch":
@@ -178,6 +235,12 @@ const _module = {
                 return new AccessControlPolicyList(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:AccessControlPolicyPatch":
                 return new AccessControlPolicyPatch(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:ManagedSubscription":
+                return new ManagedSubscription(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:ManagedSubscriptionList":
+                return new ManagedSubscriptionList(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:ManagedSubscriptionPatch":
+                return new ManagedSubscriptionPatch(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }
