@@ -32,14 +32,20 @@ download_github_release() {
 }
 
 fix_crds() {
+    cd "$1"
+    echo "Work from $PWD"
+
+    # remove main field from crd since we use it not as a standalone package
+    sed -i '/main/d' package.json
+
     # Due to pulumi/crd2pulumi#35 and pulumi/crd2pulumi#30, some output fields
     # have incorrect typing, fix them here after generation until the bugs are
     # fixed.
-    echo "Work from $PWD"
     find $(pwd) -type f -iname '*.ts' \
         -exec sed -i 's/public readonly \(metadata\)!: pulumi.Output<\(\S\+\) | undefined>/public readonly \1!: pulumi.Output<\2>/' '{}' '+' \
         -exec sed -i 's/public readonly \(kind\)!: pulumi.Output<\(\S\+\) | undefined>/public readonly \1!: pulumi.Output<\2>/' '{}' '+' \
         -exec sed -i 's/public readonly \(apiVersion\)!: pulumi.Output<\(\S\+\) | undefined>/public readonly \1!: pulumi.Output<\2>/' '{}' '+'
+
     echo "Done"
 }
 
@@ -71,7 +77,7 @@ main() {
 
     popd >/dev/null
 
-    #fix_crds
+    fix_crds "${output}"
 }
 
 main
