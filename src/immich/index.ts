@@ -230,6 +230,17 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             },
         }, { parent: this });
 
+        const catalog = new crds.postgresql.v1.ImageCatalog(`${name}-db-images`, {
+            spec: {
+                images: [
+                    {
+                        major: 15,
+                        image: "ghcr.io/aetf/pgvecto-rs-cnpg:15.13-1-0.3.0",
+                    },
+                ]
+            }
+        }, { parent: this })
+
         const db = new crds.postgresql.v1.Cluster(`${name}-db`, {
             spec: {
                 description: "Database for Immich",
@@ -238,12 +249,16 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     storageClass: storageClass,
                     size: '5Gi',
                 },
+                imageCatalogRef: {
+                    apiGroup: "postgresql.cnpg.io",
+                    kind: "ImageCatalog",
+                    name: catalog.metadata.name,
+                    major: 15,
+                },
                 // Install pgvecto.rs extension. The extension is built as a
                 // custom image.
-                // https://github.com/tensorchord/pgvecto.rs
-                imageName: "ghcr.io/aetf/pgvecto-rs-cnpg:15.12-5-0.3.0",
                 postgresql: {
-                    shared_preload_libraries: ["vectors"],
+                    shared_preload_libraries: ["vectors", "vchord.so"],
                 },
                 enableSuperuserAccess: true,
                 superuserSecret: superuserSecret.asSecretRef(),
@@ -253,9 +268,11 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                         owner: dbname,
                         postInitTemplateSQL: [
                             "CREATE EXTENSION vectors;",
+                            "CREATE EXTENSION vchord;",
                             "CREATE EXTENSION cube;",
                             "CREATE EXTENSION earthdistance;",
                             `GRANT USAGE ON SCHEMA vectors TO ${dbname};`,
+                            `GRANT USAGE ON SCHEMA vchord TO ${dbname};`,
                             "GRANT SELECT ON TABLE pg_vector_index_stat TO PUBLIC;",
                         ],
                     },

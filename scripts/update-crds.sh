@@ -71,7 +71,7 @@ main() {
 
     popd >/dev/null
 
-    fix_crds
+    #fix_crds
 }
 
 main
