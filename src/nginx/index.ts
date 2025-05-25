@@ -53,8 +53,8 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
                 name,
                 image: versions.image.nginx,
                 resources: {
-                    requests: { cpu: "1m", memory: "8Mi" },
-                    limits: { cpu: "2m", memory: "16Mi" }
+                    requests: { cpu: "10m", memory: "8Mi" },
+                    limits: { cpu: "50m", memory: "16Mi" }
                 },
                 ports: {
                     https: 8443,

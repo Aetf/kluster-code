@@ -40904,7 +40904,7 @@ export namespace nfd {
              * MatchExpressions is the set of per-element expressions evaluated. These
              * match against the value of the specified elements.
              */
-            matchExpressions?: pulumi.Input<{[key: string]: pulumi.Input<{[key: string]: pulumi.Input<string>}>}>;
+            matchExpressions?: pulumi.Input<{[key: string]: pulumi.Input<{[key: string]: any}>}>;
             matchName?: pulumi.Input<inputs.nfd.v1alpha1.NodeFeatureRuleSpecRulesMatchFeaturesMatchName>;
         }
 

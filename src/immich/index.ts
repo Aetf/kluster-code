@@ -175,10 +175,40 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     },
                 },
                 'machine-learning': {
+                    // To make all running on vps for minimum juicefs access latency and stability
+                    resources: {
+                        requests: { cpu: "10m", memory: "384Mi" },
+                        limits: { cpu: "1", memory: "384Mi"  },
+                    },
+                    // Not working yet since the pod has local path storage
+                    /*
+                    affinity: {
+                        podAffinity: {
+                            // This is a hack to run the pod on the same node as juicefs
+                            // redis master, because otherwise the metadata server
+                            // performance is very bad.
+                            requiredDuringSchedulingIgnoredDuringExecution: [
+                                {
+                                    topologyKey: 'kubernetes.io/hostname',
+                                    labelSelector: {
+                                        matchLabels: {
+                                            'app.kubernetes.io/instance': 'juicefs-redis',
+                                            'app.kubernetes.io/component': 'master',
+                                        }
+                                    },
+                                    namespaces: ['kube-system']
+                                }
+                            ]
+                        },
+                    },
+                    */
+                    /*
+                    // Large requirements for running on homelab
                     resources: {
                         requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
                         limits: { cpu: "2", memory: "2Gi", 'gpu.intel.com/i915': '1' },
                     },
+                    */
                     persistence: {
                         library: {
                             enable: false,
