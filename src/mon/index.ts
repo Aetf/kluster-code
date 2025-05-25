@@ -156,6 +156,16 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         requests: { cpu: "10m", memory: "32Mi" },
                         limits: { cpu: "200m", memory: "64Mi" },
                     },
+                    prometheus: {
+                        monitor: {
+                            attachMetadata: { node: true },
+                            relabelings: [{
+                                action: "replace",
+                                sourceLabels: ["__meta_kubernetes_node_name"],
+                                targetLabel: "node",
+                            }],
+                        },
+                    },
                 },
             },
         }, { parent: this });
