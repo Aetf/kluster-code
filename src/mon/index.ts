@@ -46,8 +46,8 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                 nameOverride: name,
                 grafana: {
                     resources: {
-                        requests: { cpu: "500m", memory: "512Mi" },
-                        limits: { cpu: "500m", memory: "512Mi" },
+                        requests: { cpu: "300m", memory: "512Mi" },
+                        limits: { cpu: "300m", memory: "2Gi" },
                     },
                     testFramework: { enabled: false },
                     "grafana.ini": {
@@ -96,6 +96,10 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                     ],
                 },
                 alertmanager: {
+                    resources: {
+                        requests: { cpu: "5m", memory: "64Mi" },
+                        limits: { cpu: "5m", memory: "128Mi" },
+                    },
                     alertmanagerSpec: {
                         storage: {
                             volumeClaimTemplate: {
@@ -113,6 +117,10 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                     },
                 },
                 prometheus: {
+                    resources: {
+                        requests: { cpu: "100m", memory: "1Gi" },
+                        limits: { cpu: "200m", memory: "4Gi" },
+                    },
                     prometheusSpec: {
                         storageSpec: {
                             volumeClaimTemplate: {
@@ -131,8 +139,8 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                 },
                 prometheusOperator: {
                     resources: {
-                        requests: { cpu: "100m", memory: "128Mi" },
-                        limits: { cpu: "200m", memory: "256Mi" },
+                        requests: { cpu: "2m", memory: "96Mi" },
+                        limits: { cpu: "2m", memory: "96Mi" },
                     },
                     admissionWebhooks: {
                         enabled: true,
@@ -147,14 +155,14 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                 },
                 "kube-state-metrics": {
                     resources: {
-                        requests: { cpu: "10m", memory: "32Mi" },
-                        limits: { cpu: "100m", memory: "64Mi" },
+                        requests: { cpu: "5m", memory: "32Mi" },
+                        limits: { cpu: "10m", memory: "64Mi" },
                     },
                 },
                 "prometheus-node-exporter": {
                     resources: {
-                        requests: { cpu: "10m", memory: "32Mi" },
-                        limits: { cpu: "200m", memory: "64Mi" },
+                        requests: { cpu: "5m", memory: "32Mi" },
+                        limits: { cpu: "20m", memory: "32Mi" },
                     },
                     prometheus: {
                         monitor: {

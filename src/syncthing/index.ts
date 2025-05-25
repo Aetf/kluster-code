@@ -148,6 +148,10 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             containers: [{
                 name,
                 image: versions.image.syncthing,
+                resources: {
+                    requests: { cpu: "10m", memory: "96Mi" },
+                    limits: { cpu: "30m", memory: "128Mi" },
+                },
                 ports,
                 args: [
                     '--no-browser',
@@ -272,6 +276,10 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
             containers: [{
                 name,
                 image: versions.image.stdiscosrv,
+                resources: {
+                    requests: { cpu: "2m", memory: "24Mi" },
+                    limits: { cpu: "2m", memory: "24Mi" },
+                },
                 args: [
                     //'-cert=/tls/tls.crt',
                     //'-key=/tls/tls.key',

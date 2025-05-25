@@ -41,6 +41,10 @@ export class Dufs extends pulumi.ComponentResource<DufsArgs> {
             containers: [{
                 name,
                 image: versions.image.dufs,
+                resources: {
+                    requests: { cpu: "10m", memory: "8Mi" },
+                    limits: { cpu: "10m", memory: "8Mi" },
+                },
                 ports: {
                     https: this.port,
                 },

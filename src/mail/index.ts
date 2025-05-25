@@ -55,6 +55,10 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
             containers: [{
                 name,
                 image: versions.image.exim,
+                resources: {
+                    requests: { cpu: "1m", memory: "8Mi" },
+                    limits: { cpu: "1m", memory: "8Mi" },
+                },
                 ports: {
                     smtp: 8025,
                 },

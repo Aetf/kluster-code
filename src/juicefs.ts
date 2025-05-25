@@ -168,8 +168,8 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
             password: secret.asSecretKeyRef('redis_pass'),
             size: "8Gi",
             resources: {
-                requests: { memory: "256Mi", cpu: "100m" },
-                limits: { memory: "512Mi", cpu: "200m" },
+                requests: { cpu: "100m", memory: "256Mi" },
+                limits: { cpu: "100m", memory: "384Mi" },
             }
         }, { parent: this });
     }

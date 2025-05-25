@@ -59,14 +59,8 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
             },
             values: {
                 resources: {
-                    limits: {
-                        memory: "20Gi",
-                        cpu: "8",
-                    },
-                    requests: {
-                        memory: "20Gi",
-                        cpu: "8",
-                    }
+                    requests: { cpu: "8", memory: "20Gi" },
+                    limits: { cpu: "9", memory: "21Gi" },
                 },
                 nodeSelector: {
                     "kubernetes.io/hostname": "aetf-arch-homelab"

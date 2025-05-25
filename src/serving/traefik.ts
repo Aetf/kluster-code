@@ -34,6 +34,10 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
             namespace,
             chart: "traefik",
             values: {
+                resources: {
+                    requests: { cpu: "10m", memory: "128Mi" },
+                    limits: { cpu: "50m", memory: "256Mi" }
+                },
                 providers: {
                     kubernetesCRD: {
                         enabled: true,

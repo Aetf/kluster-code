@@ -59,6 +59,12 @@ export class IntelDevicePlugins extends pulumi.ComponentResource<IntelDevicePlug
             namespace: namespace,
             chart: "intel-device-plugins-operator",
             transformations: [deleteUnusedService],
+            values: {
+                resources: {
+                    requests: { cpu: "8m", memory: "64Mi" },
+                    limits: { cpu: "20m", memory: "96Mi" },
+                },
+            }
         }, { parent: this });
 
         this.chartGPU = new HelmChart(`${name}-gpu`, {

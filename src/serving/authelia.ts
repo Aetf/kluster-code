@@ -60,6 +60,10 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             persistentStorageClass: args.base.localStorageClass.metadata.name,
             password: secret.asSecretKeyRef('SESSION_REDIS_PASSWORD'),
             size: "50Mi",
+            resources: {
+                requests: { cpu: "36m", memory: "32Mi" },
+                limits: { cpu: "36m", memory: "32Mi" },
+            },
         }, { parent: this });
 
         // deployment and service
@@ -161,8 +165,8 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                 name: "authelia",
                 image: versions.image.authelia,
                 resources: {
-                    requests: { memory: "128Mi", cpu: "100m"},
-                    limits: { memory: "128Mi", cpu: "200m"}
+                    requests: { cpu: "20m", memory: "48Mi" },
+                    limits: { cpu: "50m", memory: "48Mi" }
                 },
                 command: ["authelia"],
                 ports: {

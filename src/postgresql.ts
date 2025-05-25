@@ -17,7 +17,13 @@ export class CloudNativePg extends pulumi.ComponentResource<CloudNativePgArgs> {
         this.chart = new HelmChart(name, {
             namespace,
             chart: "cloudnative-pg",
-            values: {}
+            values: {
+                resources: {
+                    requests: { cpu: "5m", memory: "48Mi" },
+                    limits: { cpu: "10m", memory: "48Mi" },
+                },
+
+            }
         }, { parent: this });
     }
 }

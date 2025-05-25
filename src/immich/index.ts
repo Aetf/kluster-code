@@ -100,6 +100,10 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     'DB_DATABASE_NAME': this.dbname,
                 },
                 server: {
+                    resources: {
+                        requests: { cpu: "200m", memory: "480Mi" },
+                        limits: { cpu: "200m", memory: "640Mi" },
+                    },
                     probes: {
                         liveness: {
                             spec: {
@@ -111,10 +115,6 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                                 initialDelaySeconds: 120,
                             },
                         },
-                    },
-                    resources: {
-                        requests: { memory: "640Mi", cpu: "100m" },
-                        limits: { memory: "640Mi", cpu: "1" },
                     },
                     affinity: {
                         podAffinity: {
@@ -155,16 +155,8 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                 // server
                 microservices: {
                     resources: {
-                        requests: {
-                            memory: "1Gi",
-                            cpu: "1",
-                            'gpu.intel.com/i915': '1',
-                        },
-                        limits: {
-                            memory: "2Gi",
-                            cpu: "2",
-                            'gpu.intel.com/i915': '1',
-                        }
+                        requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
+                        limits: { cpu: "2", memory: "2Gi", 'gpu.intel.com/i915': '1' },
                     },
                     persistence: {
                         secrets: {
@@ -183,6 +175,10 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     },
                 },
                 'machine-learning': {
+                    resources: {
+                        requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
+                        limits: { cpu: "2", memory: "2Gi", 'gpu.intel.com/i915': '1' },
+                    },
                     persistence: {
                         library: {
                             enable: false,
@@ -338,6 +334,10 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             persistentStorageClass: metadataStorageClass,
             password: secret.asSecretKeyRef('redis_pass'),
             size: "8Gi",
+            resources: {
+                requests: { cpu: "50m", memory: "48Mi" },
+                limits: { cpu: "50m", memory: "64Mi" },
+            },
         }, { parent: this });
     }
 
