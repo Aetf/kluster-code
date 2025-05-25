@@ -139,6 +139,9 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
 
                     OIDC_CLIENTS_JELLYFIN_ID: "AgBannmtoYc5j6WxPZGfttnWQOilSVvYpzFHVtQcpkoq2oOSqD8/e59hmHUs8Clqs6XQZwBHMZOtXSyVeS5b/kLnUQk4RykRgdeHOkBTS7PgP/ovihn/ri4ALWf751ONB48D9EMBx4nuHva0DlEbSHGnLyO12P1uIsUBZmSHoKwEB9tF+QohsgVyaN1DBApPGJ0LCq/OPWdcMqK9qst4uO5+BU22f7YTs05DEcakPV+tGoGV6hMfhG1E9h94Ab3hSOaZk4fz7mxa/nseEfRkv1naohgnA1GvSoFCOXaL+bBGCzg7x/zd8fYHKOmn5gm4wyzni/9QHT7+4a/axFJ+0Y+AC94A8Fj7jBa0SmzvW+MJQy5y+QM+qHJRQHKiUoYD9XxQgDaMwya/85590WFOqkay6kdTTB/FiwWlKQ6wVmkZ8eChgDz4IpvYrUhK2iLivE8iTQLVxOlbnVq8TD9RXr901eDV2Y1fe9VyY+Y1NJ/B28zcUaO9tE3A+oLNbQmC/7Y6HdhwlUb7kVJnmzXTzZJPc90b08ayJMjsBgO2/mUxUQ2Q0bgwo6o9EV44kuT81Xfj9DrICetfwWd1bb5j61GFSnt6g9zA1pkpWfx8btTnxvcPnmDSApzgY+2dri16pA7dbP6fPKUL5XQIU+n0sH4VDaObIoyraiYS502033p4PY10HaOXeLTJAB2RxZ+jeozDbJ9nb2OCbDjqhNTY7BM8q/yptHEmNp5Tm7zziBZfAQOS7Lz5gCSJ/xYDTe+NYzg+XsCZjU3kyVVTTqUERX4UPT98/y+TPHc=",
                     OIDC_CLIENTS_JELLYFIN_SECRET: "AgA4G3y+BvSJgxygII4xkOC3lfgx0PgxK2v2tvSQ2RBcxAR4aFPwSHYSEmSTeZCtweGbfz8dg2DLKwNMYC2PuZkX+PoLdpxSdf0I8cVD/0OQGffDjNMCANnezd2wk9+lFKElXaVcuaNF7LlHR+PxiefQZ/RCugoHHNIxLZaBOjCn8w5s3fPuOdIR+dJq++JsEQYM4YsKdReW1l9GJOqA+Z6ipmrJ0giLLWCgswM8JhyyX5eKtN7AhmuX89wuIybWoHAuQCgM8YxZqs27TNAFIcNIC+GeR5Z01bK2h+wXE13p1IqWQyAPnwNNWNwVBm0J/h59ofd+5GFQciG2hUMwHwVNWrdXgdKPEIUZ9LUBf31Ux08yrxld7xx7jj6DV7cMHaktjIrd78FGX1TSjnJMHAgk0Eq/A7SiYtt7CLh0ycT4yosE1U5dUSmHvLa94fVHALwO8HrspfXK/vaCcXVKwRP/tneFMZdpqYoTWX+p4abaWFrZ05rW09Pom87Rqy012GZC+eSE22SAOznaKI2BffY6/DkSrHhnzGHf2UjvYZxtPeaPv/ekpXHhVAwzR99tq/AbbrqQ/INcJLXvYn34IgKHOSNoCwRAYm3RsapH6odO6L0tBniPfrzXiuj9RhHma8KdbsmSIg8tUWONyrx/WLpgvHRjo12JUCnrX4FVIQf//cqxiopahCCi9yK3X71iEWgSweXy+/bAEVhHN7HDVKQtctlm3AsVVyb3YyqhIv76W76MrQzaoPbXrRwVnqRBuSxg/OGk4aaWg09xPqzyAsa/Ay6UcB1vO0O5HiLx5jL1bYLkS1PM1KYTXiT2dFRdshE0OWj3rZ6oj4HKcowQdvPe4jpXiz9pSST9UaZyWZGfip5YfQ==",
+
+                    OIDC_CLIENTS_GRAFANA_ID: "AgB7yInLsXJJUDnSZX66nX2FByW6WSXLA6MjeBzG5BSb+6BmZYLS7D3d3XHPUsW5xZMWhcw/XhJFlNJNBsVxCU+km4JsZdNmq1tCCzRbJctWQhxcdpMVHwz6Q0ixUL+/0jwgGtxjUqohCGLhJ8N79r+ZeYY2n8xr9Bg+EZ8pr1ekxWN8KejMVrtjKRr48tabYf+V59qUnt7tS5s9WFSZwnr2SHeTmYLy9fRPaGvWZCH/q/zf5J8WEoZEHYaDIYUxNKWr3EL6+6xlKuiiP3o5Dle2H3zWY3kdyLXlrG4mbBF96jQdKER+/NaIZaCgQGjIRVz1pTbdEQ3fEqActLspDi1bAomKIXrJxm2aEJpBZk5AX3twZMMd0suXu+Cou0WjJkThMVfIE30YoeLBdGbhVIKpWnvivkg0ZRBA1Jd9NhAuGv9Ao9NRRPhIhikS/UpDWbvquRTpYyj3V+bZGvNizYTTIRkLeBM9ywniNEhL8JZDFJFg+jwftsknFF+aLZMNHVRrml1CrZrXrHjB6/SGT7l5wed3yzp5P/Sv2qahBqzuwU7VYzWxtjLJYvtjwGwkcjY7OU5hGER5RKXSPL0Bf+RHNFEjLg8f3YPUX+uluClrxNG1A1iXPByc7VJn/lstAZHuk3zUQ4CElzfGR5LnrFaawAVxEqcOGz4POz51ihyRrYDo5kUCL6hRXte37EdG7utUihZ+xka1OQqxzVFtXJaZ/qpc3NtZBnqtqwwid5ONOwLXVXHhJlejWLD6KHX9aibLJZPLqLdrk+qI1Lx0B7We69wm/f/8LAQ=",
+                    OIDC_CLIENTS_GRAFANA_SECRET: "AgBELiW+aF6yzb1jU/2UebJmwgbBHHPF8+N7YxKnoI/iBjBU2bWCNZl5lVQg7BqnpTQBabOUBxy/m544+jFrMZKUUt1zJgtNuF+Mhtj+MWMNsYmQazQ2H06SA7vF9kf/EWcu1ASB5HXD12eRsL3dsZZ+RNyjK6Aw6ER0YStF3yKDHi7riGVp+0Zd/uS6+LVhHVP7tOepWdQ4MVHqmW8EGoBj0aKQp0EXbvE8oWdtIhxpF3eWqBvZSC+gr0vPYGDllkBKtjLl4//N31EqrgBm6MrTz3RnWljXZnpB/mr16Yep6SGtr+ElKEOcaR6DmbiAI4RQgj658R5nqQGXtMjMNLiHs9ALdXvI45hC3jGWCcER/WARYrTo1U/uWMxv9t+avOgL695njglWE2IZgTXBYtPFI1QC6FQtnSPkr/YGBeqRktrCxA6OP/Xuy5/qEDbZrBRC6pGiKr//yL+i0ss+GIywdk1DpHVFRr2LH8vIkJTaAD5cJwoh90KqcJlqo3rKd0JhKAhGPDzZQgHWzZWSOobN1P/1+00JidyqWARS7kDQS1C4UA17S3KKjYSrl25eyw0x6QNOR9/KOUYr6rvcW3j3m17AMBK2vaK58V+/UDmaSPuRT2qzUfGq+dBImFkOGn3J+fCSmG3CP5Grbj+rgW3CqjWgXE7JfFTl1vSJ1rHudRjNIfz4RIDBtK7YbblKYmGLhTWHKykphYha6go9K6bb5m9CSgcyXVdlYlusWcnk4cPJfFIUEW2NeBk0vgGFAWdDjp/T6AJ4KrxZ8zkEvYKZ9n2CpWZT5YBiI7EWmKtMakrFJxClQfiqVFHTXaxpEBWuH5FgddnRvQR/bu2cvr24PsWj0gGwSyCPDpTYrcRjNSVdvQ==",
                 }
             }
         }, { parent: this });
@@ -170,7 +173,6 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                 env: pulumi.all([secretEnvs, configSecretEnvs, args, redis.masterService, args.smtp])
                 .apply(([se, ce, a, rs, ss]) => ({
                     ...se,
-                    ...ce,
                     'X_AUTHELIA_CONFIG': configPath,
                     'X_AUTHELIA_CONFIG_FILTERS': 'template',
                     'CONFIG_EXTRA_DOMAIN': a.domain,
@@ -180,6 +182,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                     'CONFIG_EXTRA_REDISHOST': rs.internalEndpoint(),
                     'CONFIG_EXTRA_REDISPORT': pulumi.interpolate`${rs.port()}`,
                     'CONFIG_EXTRA_SMTPADDR': ss.asUrl('smtp'),
+                    ...ce,
                 })),
                 volumeMounts: [
                     cm.mount(configPath),

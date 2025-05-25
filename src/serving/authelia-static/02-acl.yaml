@@ -99,4 +99,13 @@ identity_providers:
             subject: 'group:users'
           - policy: 'two_factor'
             subject: 'group:immich-users'
+      grafana:
+        default_policy: 'deny'
+        rules:
+          - policy: 'two_factor'
+            subject: 'group:admins'
+          - policy: 'two_factor'
+            subject: 'group:users'
+          - policy: 'two_factor'
+            subject: 'group:grafana-users'
 

@@ -151,7 +151,6 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
             args.serving.createFrontendService(name, {
                 host: args.host,
                 targetService: service,
-                // Jellyfin doesn't support TLS on its own.
                 enableTls: true,
                 // Jellyfin will itself connect to Authelia using OpenID Connect
                 enableAuth: false,

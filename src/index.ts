@@ -104,7 +104,11 @@ function setup() {
     // monitoring
     const prometheus = new Prometheus("prometheus", {
         serving,
-        host: 'mon.unlimited-code.works',
+        domain: 'unlimited-code.works',
+        subdomain: 'mon',
+        authSubdomain: 'auth',
+
+        smtp: mailer.smtpService,
     }, {
         provider: namespaced("mon"),
     });
