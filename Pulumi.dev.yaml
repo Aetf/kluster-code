@@ -13,7 +13,7 @@ config:
   chart:intel-device-plugins-gpu: https://intel.github.io/helm-charts:0.32.0
   chart:immich: https://immich-app.github.io/immich-charts:0.9.3
   chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.25.0
-  chart:prometheus: https://prometheus-community.github.io/helm-charts:15.18.0
+  chart:kube-prometheus-stack: https://prometheus-community.github.io/helm-charts:72.6.2
   chart:traefik: https://helm.traefik.io/traefik:33.2.1
   chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.23.0
   chart:kubernetes-dashboard: https://kubernetes.github.io/dashboard:6.0.8
