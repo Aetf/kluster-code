@@ -1,69 +1,88 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    "group:pulumi",
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    'group:pulumi',
   ],
-  "major": {
-    "dependencyDashboardApproval": true,
+  major: {
+    dependencyDashboardApproval: true,
   },
-  "patch": {
-    "enabled": false,
+  patch: {
+    enabled: false,
   },
-  "automergeStrategy": "squash",
-  "lockFileMaintenance": {
-    "enabled": true,
-    "automerge": true
+  automergeStrategy: 'squash',
+  lockFileMaintenance: {
+    enabled: true,
+    automerge: true,
   },
-  "ignorePaths": [
-    "src/crds/**",
+  ignorePaths: [
+    'src/crds/**',
   ],
-  "packageRules": [
+  packageRules: [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true,
-      "groupName": "dependencies with non-major changes",
-      "groupSlug": "deps-non-major",
-    },
-    {
-      "matchDepTypes": ["devDependencies"],
-      "automerge": true
-    },
-    {
-      "matchDepTypes": ["helm", "container"],
-      "semanticCommitType": "fix",
-      "semanticCommitScope": "apps",
-    },
-    {
-      "matchDepTypes": ["helm", "container"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "groupName": "applications with non-major changes",
-      "groupSlug": "apps-non-major",
-    },
-  ],
-  "customManagers": [
-    // Match helm charts in pulumi config.
-    {
-      "customType": "regex",
-      "fileMatch": ["^Pulumi\\..+\\.ya?ml$"],
-      "matchStrings": [
-        "chart:(?<depName>[\\w.-]+):\\s*(?<registryUrl>[\\w.:/-]+):(?<currentValue>[\\w.-]+)"
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+        'pin',
+        'digest',
       ],
-      "datasourceTemplate": "helm",
-      "versioningTemplate": "helm",
-      "depTypeTemplate": "helm",
+      automerge: true,
+      groupName: 'dependencies with non-major changes',
+      groupSlug: 'deps-non-major',
     },
-    // Match docker images in pulumi config.
     {
-      "customType": "regex",
-      "fileMatch": ["^Pulumi\\..+\\.ya?ml$"],
-      "matchStrings": [
-        "image:(?<depName>[\\w.-]+):\\s*(?<packageName>[\\w./-]+):(?<currentValue>[\\w.-]+)"
+      matchDepTypes: [
+        'devDependencies',
       ],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker",
-      "depTypeTemplate": "container",
-    }
-  ]
+      automerge: true,
+    },
+    {
+      matchDepTypes: [
+        'helm',
+        'container',
+      ],
+      semanticCommitType: 'fix',
+      semanticCommitScope: 'apps',
+    },
+    {
+      matchDepTypes: [
+        'helm',
+        'container',
+      ],
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+        'pin',
+        'digest',
+      ],
+      groupName: 'applications with non-major changes',
+      groupSlug: 'apps-non-major',
+    },
+  ],
+  customManagers: [
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^Pulumi\\..+\\.ya?ml$/',
+      ],
+      matchStrings: [
+        'chart:(?<depName>[\\w.-]+):\\s*(?<registryUrl>[\\w.:/-]+):(?<currentValue>[\\w.-]+)',
+      ],
+      datasourceTemplate: 'helm',
+      versioningTemplate: 'helm',
+      depTypeTemplate: 'helm',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^Pulumi\\..+\\.ya?ml$/',
+      ],
+      matchStrings: [
+        'image:(?<depName>[\\w.-]+):\\s*(?<packageName>[\\w./-]+):(?<currentValue>[\\w.-]+)',
+      ],
+      datasourceTemplate: 'docker',
+      versioningTemplate: 'docker',
+      depTypeTemplate: 'container',
+    },
+  ],
 }
-
