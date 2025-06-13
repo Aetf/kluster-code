@@ -99,7 +99,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
                 tls: {
                     // Disable tls for now, the k8s built-in gRPC probe doesn't
                     // support tls properly yet.
-                    // https://github.com/kubernetes/kubernetes/issues/119093
+                    // https://github.com/kubernetes/enhancements/issues/4939
                     enable: false,
                     certManager: true,
                 }
