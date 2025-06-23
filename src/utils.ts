@@ -405,16 +405,19 @@ Service.prototype.port = function(schema?: string) {
         return undefined;
     });
 }
-Service.prototype.asUrl = function(schema: string, urlSchema?: string) {
+Service.prototype.asUrl = function(portName: string, urlSchema?: string) {
     if (urlSchema === undefined) {
-        urlSchema = schema;
+        urlSchema = portName;
     }
-    return pulumi.all([this.internalEndpoint(), this.port(schema)])
+    if (urlSchema.length !== 0) {
+        urlSchema = `${urlSchema}://`
+    }
+    return pulumi.all([this.internalEndpoint(), this.port(portName)])
         .apply(([endpoint, port]) => {
             if (port === undefined) {
-                return `${urlSchema}://${endpoint}`;
+                return `${urlSchema}${endpoint}`;
             } else {
-                return `${urlSchema}://${endpoint}:${port}`;
+                return `${urlSchema}${endpoint}:${port}`;
             }
         });
 }

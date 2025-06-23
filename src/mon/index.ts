@@ -37,6 +37,18 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
             }
         }, { parent: this });
 
+        const adminSecrets = new SealedSecret(`${name}-grafana-admin`, {
+            spec: {
+                template: {
+                    type: "kubernetes.io/basic-auth",
+                },
+                encryptedData: {
+                    username: "AgAYc2qB7J9+C0bDW7Icy3T9ETnsMtv14CbZ2KgePmb8OxfMIV7PPvV2zIg6AU6GhRuilq9UqC7JBjwc/3XQwEFo4pivbkoYS4OeT5XqECZU8ksYKH1VlbqdLc8A8s6Ly90BKZIVQ7YhP1FW67qbxrsyxhgK9Smx2ets6gTUObX1P2yrCnFlgYerGBvwfQ0vwTksvaFeF7Opf2PrcVNF5xHdthGjvtT/bHCXCRr9TrRVJcXv2oGWC19HFAZGC3GrLcBaofhY7K/nTYb/lwllgXB+FSE2S/7WfixnnlhrAcZty7S755VxeZakHyC28n2qin31hTe2q6GjYHTFmxO7yq4/eSfAa760O/mhMil5KIScvU2jpPKnpbZ/DnHuae7sZCZpoEUc5o+LGgDK+k7xBhX2ZLS66R1WkCkEJjjzIPSXjrmAxiL1dS2kAApXb8nlGJLFHPQRQCIByO9MyJFHvBWRFLBpYEWObBF5KVsMiB0oMb+9s+5ceoJExhYnzFxh+j2AH3ska5DtkR5Zpc1lvq6GmhJENiaX2ecEUyO76D/nN/uVZ2Z6LqIrXWzl+fPBCQJJTrGVFE6FPL7VDyJxS9SxOoNJpGdUDA9i4/3BpiqEIinGlSeaWCctFw3+Vz3DhGW6ly4nDnmv0Q3hYxz3EKpwSjmoaBZ0P6h0txRxcz1RzYDAnyuQwb7TeNfZf6hJn7akAQwT729SzHiriIue",
+                    password: "AgBhD2IeokaDTTcspIstqkTdZbntpjyYTv8VdUZ49vVgySCwh7pSQFWMLGH+H6YlTryqIPFh/uxjZMP/t44yEWPJnW1A2kGmNaWTr60wM8sa76rXPYWyP0ss2/Aq7F+B43YBO7EwuNwWCi4BE5VI8a0NLX21f15+Ceh/TnZbswxC8mXo6SK3lGv0banrNgtXCPsp4Emw9ODKFyjgu3uwOeoFe4uJfWx4Zw8o/Wl2Sw4F+O1C2pOVQLdJ73frJF0xl6e9gf/4Jf+TDTr9temXguKbYhoeRtCtyl5eag+oDgRuQITCHwaMCjIkmJhi9Kr3zedFfSSBy5qVZTOYQC1Z3uN+cJJC7rFnuRQN70BAnkPfbqtbdUaynrENVKHy08IxG3LUoPNSi14938kjqhiqVxdTwgeldxmu4Tln4qO8yhEoF6Mk634JbRhy6xj95c2WeMNyvQfSS1h+AzO1Y05cfQ0HglqWqNnafeP8EXXCQUyRvDfLl+F3tEYRyZWe3j5+zrPVssWqf4HvSvgNKwgIBHjKvjZR9QymwKvBuRejGlPmn8itreFXxWP1TXEDn16Ci4L+PpJZ432Z4ZELQgx7FD8XSKSF0Dbz1iU9PyGInCmyUbuUoNhcZrGSiRNhd/+BZrMGfMcUw30dV6RIVTeREx3jNpguzGXdFa1OQuBgUSLZDiEgET4+qUsdoCyuClIb0wBYpm4DdAnY6b3upE1/dL9zCn87zpC/aJKdpCOARG84TiutPW+uZUb6tCtE7UBq0dHwCBLvvmWpB0oU/Xpe1jIR",
+                }
+            }
+        }, { parent: this });
+
         const grafanaHost = pulumi.interpolate`${args.subdomain}.${args.domain}`;
 
         this.chart = new HelmChart(name, {
@@ -50,6 +62,12 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         limits: { cpu: "300m", memory: "2Gi" },
                     },
                     testFramework: { enabled: false },
+                    // The default value is not secure
+                    admin: {
+                        existingSecret: adminSecrets.metadata.name,
+                        userKey: "username",
+                        passwordKey: "password",
+                    },
                     "grafana.ini": {
                         server: {
                             domain: grafanaHost,
@@ -68,21 +86,38 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                             auth_url: pulumi.interpolate`https://${args.authSubdomain}.${args.domain}/api/oidc/authorization`,
                             token_url: pulumi.interpolate`https://${args.authSubdomain}.${args.domain}/api/oidc/token`,
                             api_url: pulumi.interpolate`https://${args.authSubdomain}.${args.domain}/api/oidc/userinfo`,
+                            use_pkce: true,
+                            use_refresh_token: true,
                             login_attribute_path: "preferred_username",
                             groups_attribute_path: "groups",
                             name_attribute_path: "name",
-                            use_pkce: true,
-                            use_refresh_token: true,
-                            role_attribute_path: "contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'dev') && 'Editor' || contains(groups[*], 'grafana-users') && 'Editor' || 'Viewer'",
+                            // Don't assign a default role if no role is found after role mapping
+                            role_attribute_strict: true,
+                            // Should not include a fallback role, as Grafana
+                            // first tries to extrat from ID token, which always
+                            // triggers the fallback because ID token doesn't contain user info now.
+                            // Then when Grafana tries payload from user info
+                            // endpoint, it won't overwrite the already retrived
+                            // role (set as fallback from ID token).
+                            role_attribute_path: "contains(groups[*], 'admins') && 'GrafanaAdmin' || contains(groups[*], 'dev') && 'Admin' || contains(groups[*], 'grafana-users') && 'Editor'",
+                            allow_assign_grafana_admin: true,
                             auto_login: true,
+                        },
+                        log: {
+                            // filters: "oauth.generic_oauth:debug",
                         },
                         smtp: {
                             enabled: true,
-                            host: pulumi.output(args.smtp).apply(ss => ss.asUrl("smtp")),
-                            from_address: pulumi.interpolate`grafana@${args.domain}`
+                            host: pulumi.output(args.smtp).apply(ss => ss.asUrl("smtp", "")),
+                            from_address: pulumi.interpolate`grafana@${args.domain}`,
+                            skip_verify: true,
                         },
                         analytics: {
                             check_for_updates: false,
+                        },
+                        security: {
+                            // Needed when Grafana is hosted behind HTTPS
+                            cookie_secure: true,
                         },
                     },
                     extraSecretMounts: [
