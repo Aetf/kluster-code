@@ -19,8 +19,8 @@ export class CloudNativePg extends pulumi.ComponentResource<CloudNativePgArgs> {
             chart: "cloudnative-pg",
             values: {
                 resources: {
-                    requests: { cpu: "5m", memory: "48Mi" },
-                    limits: { cpu: "20m", memory: "48Mi" },
+                    requests: { cpu: "5m", memory: "128Mi" },
+                    limits: { cpu: "20m", memory: "128Mi" },
                 },
 
             }

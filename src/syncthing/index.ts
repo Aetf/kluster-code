@@ -150,7 +150,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                 image: versions.image.syncthing,
                 resources: {
                     requests: { cpu: "10m", memory: "96Mi" },
-                    limits: { cpu: "30m", memory: "128Mi" },
+                    limits: { cpu: "300m", memory: "128Mi" },
                 },
                 ports,
                 args: [
