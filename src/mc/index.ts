@@ -1,5 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as kx from "@pulumi/kubernetesx";
+import * as dedent from "dedent";
 
 import { BaseCluster } from '#src/base-cluster';
 import { Serving } from '#src/serving';
@@ -30,8 +31,22 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
         const rcloneSecret = new SealedSecret(`${name}-rclone`, {
             spec: {
                 encryptedData: {
-                    "rclone.conf": "AgCFc+18AaMXgJF0ghbqKO9nR0JOknFdyZz23lzMYdb/TOoPJrfq4FJgkoMah9+KmtjeeJraQ5jRJv5f75vIw+lPMqEbCgUSE8jadxE5TsjxSV6rFdIYD+8/zHeAfn7nGMtuyeFJizglJmVT8DJq+XcP9N8avN1o+y6T4OFBRAQixsbyGxBlMhGDmKgmQcjT87aMQJayAaboy1JbUzDybPtjan2l04kyUztp2v6wdqi3qQkcETNq04R591epzM6RXzhL2Nw/Zj2jrOJJp9zTbCh5kUxEQT5afG747yA9pAZ2QSQjwYCuTrNCUtxBohfbm/sKMVgE+mcEu+dEqCTWdXtZjr5sLcuG6RketepFMz9o6rYt5imUBYRjZHpPpumDvUjgpm+sqD8z0eZ7ppL3tCP/zOZnr1WDDC/ZySC3fuvJiu3ziQcsgqJUF7l7t5ZPNZWDhnqlOKM7FlScB0k8Y2M/Icn0hr6OMQQxzskiNNI/pTc41uLOmGJ1dbdpclBhFAQyy6bQC1WyKNvHlMSntv9iD9JP/qpWxvJTvkl9E7jFlnh04ZDl7NCixe26r0d6DKrZaDWnYiNXm7w2cx8mguIyL0js4CX26qo2NakeKyk411BPKblkgpQJCs0ZIRQbfgmucfjUP/GxJgkWKmWqk3u0iwK9oPDPb+aC9r+tXix3hNlR9L8sFT8OoOSn0ZkuYTZMmtY1oVHWh3uBim3JQ8g3taqfejejQlAO7Bq5ehKr/5nPzfchJ+CnVdcKc9Z9RCg/0P540T8s01zoCd3gzFZIFLpxezODPXQwRib+8/YjeYhuMLbGeupGW+n40j8bv6cVRByA5S8/9AFcQYvnjPoYAwKZgVjkUkM/nJbZ/5XFEo599uGztUTtupm8IHVjb5B57QjA7y3ZZlX2lpM/mVIEYjbOjQN/9MZf8Zm42bdbzrvKx4Ax+DBsmdzhjggsRE9yWV5LoGZG6MdyEBdK9TJV2CM0wFzIW/G9xwbX4M6rBsq7jkpiZVhMaGqS4VDcUfdrEsAnu7moBA==",
-                }
+                    "access_key_id": "AgCF8+9702obt++E49dNlQNCz4tfmZQo9sJdYs2TuQ3tZNrxdZBYlJqAUduPw58J8B3e9ddvDLj9W+JP7s89vHIyMjRPmnqf8VCDkB4o75h6Io5AloUI6/5zVJsZr2ijrVDSY1L6PowxGFuqzQfpozGvRJ4h038/JU3tZbM4M4jaHIsMSB7+0vhD+Dh9/k3An6qaFxyckdrZfOEdH1sHnraa/AkLTGhbWsNCYlZ49XCypbT0QKe9fNn8vZiabwyxSTiohQFmVaIz20CaZWGzuUuwQ6QQbSla5RyuLi3+6PI4anMWkcQw7LnlC0lBuDuFaOr5XTCv8FJv+xPhSwfZSy6VN+XNZWM+7zM5ZDX1q5CFTA1OnCLqFi94wFjhgL59y6imbuFyG9tgCARFGfQ9YVWFk9XikC/YMVRxCyTibVMiyXNndI075DvY5o84YG8h7tqK7Fl0ODrLXvxY0krSQqXXW+NMkPMqpcQbCYIPdgTsulYvK87tMSJV+t8GVzRyCJ4oJutcWxvmE8Sl46l/hs4bHa3m0oAiv01h878k/fOVUQ7Hj4t2hXFnnNuTsIocP8Jmv3oLseOguJm4F1miaEW2S7OSLflBYW+YpOEqUyrqHAXCpUIUIB93WScG/S8Rb3HCz7uV/VqARqCOJ3EG40EIhkTnLsh5hPtVPYZVdmUvJ6+KNZVsZ73VcK5iRSab3b6u8y/N6It2/8oWHIeQK87okdR9OIoooyAN+GTHWZySRQEvKaEtAim/BXc/0Qf+5Gq02g3PfPvTmIEnDqkg",
+                    "secret_access_key": "AgCxNIJ/85uvJpm6P/AQXrqFLV513EEbOaFCFWCiPR4Je3CCWdnHpN/qloYX2X65VlwPyEfRKbChbcWdwjv0V54CyGcnp0BMwMZ4nLnuPiHyPphOII/T1ZMDrsBJUZZEvisJTwKkYCIDmf16Otyt0ijqDbCvDwNM/jArALVrwmerGVYtcb2VzvGxmxKJts4GQX5OEBpage4a8miHbxdkZJ94G08b9qXNSXUcrInU2GRlZfb9/atGDwT1zLOydJvqd8O05aZ0+45SL+PA+Tv2ioETFZVQPNgL5ozPeWg+LVdyTbrZgmu+V7HdROWhLv/OLyTQb+fsiAvtzQPwJAJ/yNwrOlhgiAXD0xxqChXABvzBgb8u4x3ZPNCj75fAFVBn0cqiCjr7UYeG9SFM1kXIqhB2SmY7b71PV/y/NAoz+1QxHyhNQAs1xVt2D16bmOiGw7NX7JAKPW9QCLYyg4rLdZFj84/BReKTEJqS+9nQkTU4bFacuO+PLrRBb395bJ6uP8LMvPBRdgPMNp0rjYrz/82z75AxOs/kHHiSeXWZcqe1Vd/7Lr1K1sDI+If2TJ14cYOUY7dcw0eFyaTdo60e2/k9cYVW71dImeKx/q7143d+g9tX8EmsFF+xUUSBe0YZBCzsz8MYS5uwM/iyXm3sQOVFcZ+MUXEmq+7BAmohF1NtWwhcJLg8QxI0VauQKdh1paJdSfjqEkQF4fEkUaDrEcW0JcVwCqExtNS/sBkspQg0HzBRL+8zRmiy",
+                },
+                template: {
+                    data: {
+                        "rclone.conf": dedent`
+                        [fabric-science-mc-backups]
+                        type = s3
+                        provider = GCS
+                        access_key_id = {{ .access_key_id }}
+                        secret_access_key = {{ .secret_access_key }}
+                        endpoint = https://storage.googleapis.com
+                        acl = private
+                        `,
+                    },
+                },
             }
         }, { parent: this });
 
@@ -183,8 +198,9 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                 mcbackup: {
                     enabled: true,
                     pauseIfNoPlayers: "true",
+                    backupMethod: "rclone",
                     compressMethod: "zstd",
-                    rcloneRemote: "fabric-science-mc-backup:rclone-fabric-science-mc",
+                    rcloneRemote: "fabric-science-mc-backups:fabric-science-mc-backups",
                     rcloneDestDir: "/",
                     rcloneCompressMethod: "zstd",
                     rcloneConfigExistingSecret: rcloneSecret.metadata.name,
