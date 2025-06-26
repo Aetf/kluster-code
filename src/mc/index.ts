@@ -43,7 +43,8 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                         access_key_id = {{ .access_key_id }}
                         secret_access_key = {{ .secret_access_key }}
                         endpoint = https://storage.googleapis.com
-                        acl = private
+                        storage_class = COLDLINE
+                        no_check_bucket = true
                         `,
                     },
                 },
@@ -200,10 +201,14 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                     pauseIfNoPlayers: "true",
                     backupMethod: "rclone",
                     compressMethod: "zstd",
-                    rcloneRemote: "fabric-science-mc-backups:fabric-science-mc-backups",
-                    rcloneDestDir: "/",
+                    rcloneRemote: "fabric-science-mc-backups",
+                    // <bucket-name>/<path>
+                    rcloneDestDir: "fabric-science-mc-backups/",
                     rcloneCompressMethod: "zstd",
                     rcloneConfigExistingSecret: rcloneSecret.metadata.name,
+                    extraEnv: {
+                        RCLONE_PROGRESS: "true",
+                    },
                 }
             }
         }, { parent: this });
