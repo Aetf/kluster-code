@@ -7,14 +7,16 @@ identity_providers:
         public: false
         authorization_policy: immich
         scopes:
-        - openid
-        - email
-        - profile
+          - openid
+          - email
+          - profile
         redirect_uris:
-        - app.immich:///oauth-callback
-        - https://photos.unlimited-code.works/api/oauth/mobile-redirect
-        - https://photos.unlimited-code.works/auth/login
-        - https://photos.unlimited-code.works/user-settings
+          - app.immich:///oauth-callback
+          - https://photos.unlimited-code.works/api/oauth/mobile-redirect
+          - https://photos.unlimited-code.works/auth/login
+          - https://photos.unlimited-code.works/user-settings
+        token_endpoint_auth_method: 'client_secret_post'
+
       - client_name: Jellyfin
         client_id: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_JELLYFIN_ID_FILE" | secret | mindent 8 "|" | msquote }}
         client_secret: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_JELLYFIN_SECRET_FILE" | secret | mindent 8 "|" | msquote }}
