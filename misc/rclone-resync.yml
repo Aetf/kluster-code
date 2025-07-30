@@ -1,0 +1,105 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rclone-resync
+  namespace: syncthing
+spec:
+  backoffLimit: 6
+  completionMode: NonIndexed
+  completions: 1
+  manualSelector: false
+  parallelism: 1
+  podReplacementPolicy: TerminatingOrFailed
+  template:
+    metadata:
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: master
+                app.kubernetes.io/instance: juicefs-redis
+            namespaces:
+            - kube-system
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - command:
+        - sh
+        args:
+        - -c
+        - sleep 30000s
+        name: sleeping
+        image: docker.io/rclone/rclone:1.70.1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 64Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /hostsync
+          name: syncthing-data
+        - mountPath: /filters
+          name: syncthing-ab1d0d63
+        - mountPath: /config
+          name: syncthing-rclone
+      - args:
+        - bisync
+        - /hostsync/Stuff
+        - gdrive:Stuff
+        - --config
+        - /config/rclone.conf
+        - --check-access
+        - --check-filename
+        - AetfKeeDb.old.kdbx
+        - --create-empty-src-dirs
+        - --compare
+        - size,modtime,checksum
+        - --slow-hash-sync-only
+        - -MvP
+        - --fix-case
+        - --resilient
+        - --recover
+        - --max-lock
+        - 2m
+        - --conflict-resolve
+        - newer
+        - --workdir
+        - /hostsync/Stuff/.rclone-bisync-workdir
+        - --filters-file
+        - /hostsync/Stuff/.rclone-bisync-workdir/rclone-filters.txt
+        - --resync
+        image: docker.io/rclone/rclone:1.70.1
+        name: rclone
+        resources:
+          limits:
+            cpu: 100m
+            memory: 64Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /hostsync
+          name: syncthing-data
+        - mountPath: /filters
+          name: syncthing-ab1d0d63
+        - mountPath: /config
+          name: syncthing-rclone
+      restartPolicy: Never
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      volumes:
+      - name: syncthing-data
+        persistentVolumeClaim:
+          claimName: syncthing-data
+      - configMap:
+          defaultMode: 420
+          name: syncthing-ab1d0d63
+        name: syncthing-ab1d0d63
+      - name: syncthing-rclone
+        secret:
+          defaultMode: 384
+          secretName: syncthing-rclone
