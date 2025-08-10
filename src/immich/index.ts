@@ -101,8 +101,8 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                 },
                 server: {
                     resources: {
-                        requests: { cpu: "200m", memory: "480Mi" },
-                        limits: { cpu: "200m", memory: "640Mi" },
+                        requests: { cpu: "1", memory: "480Mi" },
+                        limits: { cpu: "1", memory: "640Mi" },
                     },
                     probes: {
                         liveness: {
@@ -284,12 +284,12 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                 instances: 2,
                 resources: {
                     requests: {
-                        memory: "256Mi",
-                        cpu: "300m",
+                        memory: "1Gi",
+                        cpu: "500m",
                     },
                     limits: {
-                        memory: "512Mi",
-                        cpu: "500m",
+                        memory: "1Gi",
+                        cpu: "800m",
                     },
                 },
                 storage: {
