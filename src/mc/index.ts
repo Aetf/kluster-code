@@ -74,6 +74,7 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                 repo: "https://itzg.github.io/minecraft-server-charts/",
             },
             values: {
+                replicaCount: 0,
                 resources: {
                     requests: { cpu: "8", memory: "20Gi" },
                     limits: { cpu: "9", memory: "21Gi" },
@@ -94,8 +95,8 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
                 },
                 minecraftServer: {
                     eula: "TRUE",
-                    version: "1.21.1",
-                    type: "NEOFORGE",
+                    // version: "1.21.1",
+                    type: "MODRINTH",
                     memory: "15G", // also need to change limit
                     jvmXXOpts: "-XX:MaxRAMPercentage=75",
                     difficulty: 'hard',
