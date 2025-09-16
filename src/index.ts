@@ -24,6 +24,7 @@ import { CloudNativePg } from "./postgresql";
 import { Immich } from "./immich";
 import { Hath } from "./hath";
 import { Service } from "./utils";
+import { Spoolman } from "./spoolman";
 
 function namespaced(ns: string, createNs?: boolean, args?: k8s.ProviderArgs): k8s.Provider {
     if (createNs ?? true) {
@@ -292,6 +293,13 @@ function setup() {
         // Check out https://github.com/christiaangoossens/hass-oidc-auth when
         // it is mature.
         enableAuth: false,
+    });
+
+    const spoolman = new Spoolman("spoolman", {
+        serving,
+        host: 'spool.unlimited-code.works',
+    }, {
+        provider: namespaced("spool")
     });
 }
 

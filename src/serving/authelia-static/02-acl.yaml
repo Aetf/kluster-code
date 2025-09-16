@@ -63,6 +63,11 @@ access_control:
     subject: "user:webdav"
     policy: one_factor
 
+  - domain:
+    - 'spool.{{ env "CONFIG_EXTRA_DOMAIN" }}'
+    subject: "group:users"
+    policy: one_factor
+
 ## OpenID Connect 1.0 policies
 ## The authorization policies section allows creating custom authorization policies which can be applied to clients.
 ## This is useful if you wish to only allow specific users to access specific clients i.e. RBAC.
