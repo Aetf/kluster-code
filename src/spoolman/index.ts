@@ -16,10 +16,13 @@ interface SpoolmanArgs {
  * Internal SMTP relay to consolidate email settings
  */
 export class Spoolman extends pulumi.ComponentResource<SpoolmanArgs> {
+    public port: pulumi.Output<number>;
     public address: pulumi.Output<string>;
 
     constructor(name: string, args: SpoolmanArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:spoolman', name, args, opts);
+
+        this.port = pulumi.output(8000);
 
         const dataPv = args.serving.base.createLocalStoragePVC(`${name}`, {
             storageClassName: args.serving.base.jfsStorageClass.metadata.name,
@@ -39,7 +42,7 @@ export class Spoolman extends pulumi.ComponentResource<SpoolmanArgs> {
                     //limits: { cpu: "10m", memory: "80Mi" },
                 },
                 ports: {
-                    http: 8000,
+                    http: this.port,
                 },
                 volumeMounts: [
                     {
@@ -99,6 +102,32 @@ export class Spoolman extends pulumi.ComponentResource<SpoolmanArgs> {
             enableAuth: true,
             enableTls: false,
         });
+
+        // Also a lan service without auth and proxy for printers to connect
+        // directly
+        const lanService = new kx.Service(`${name}-lan`, {
+            metadata: {
+                name: `${name}-lan`,
+                labels: {
+                    'svccontroller.k3s.cattle.io/lbpool': 'homelan',
+                },
+                annotations: {
+                    // Don't wait for the service to be ready since this is
+                    // created first.
+                    'pulumi.com/skipAwait': 'true',
+                }
+            },
+            spec: {
+                type: 'LoadBalancer',
+                ports: [
+                    { name: 'http', port: this.port, },
+                ],
+                allocateLoadBalancerNodePorts: false,
+                selector: {
+                    app: name,
+                },
+            },
+        }, { parent: this, deleteBeforeReplace: true });
 
         this.address = pulumi.interpolate`${service.metadata.name}.${service.metadata.namespace}`;
     }
