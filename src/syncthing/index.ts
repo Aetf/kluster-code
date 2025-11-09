@@ -264,6 +264,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                         service_account_credentials = {{ .service_account_credentials }}
                         team_drive = {{ .team_drive }}
                         skip_gdocs = true
+                        acknowledge_abuse = true
                         `,
                     },
                 },
@@ -340,7 +341,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
 
         const rcloneCron = new k8s.batch.v1.CronJob('rclone-sync', {
             spec: {
-                schedule: "*/2 * * * *",
+                schedule: "* * * * *",
                 concurrencyPolicy: "Forbid",
                 jobTemplate: {
                     spec: rclonePod.asJobSpec({
