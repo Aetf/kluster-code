@@ -390,7 +390,6 @@ declare module "@pulumi/kubernetes/core/v1/service" {
 }
 Service.prototype.internalEndpoint = function() {
     return pulumi.interpolate`${this.metadata.name}.${this.metadata.namespace}`;
-
 }
 Service.prototype.port = function(schema?: string) {
     return this.spec.apply(spec => {

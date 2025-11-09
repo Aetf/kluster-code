@@ -60,82 +60,112 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             namespace: this.namespace,
             chart: "immich",
             values: {
-                image: {
-                    tag: versions.image.immich.split(':', 2)[1],
-                },
                 immich: {
+                    metrics: {
+                        enabled: false,
+                    },
                     persistence: {
                         library: {
                             existingClaim: this.libraryPVC.metadata.name,
                         }
                     }
                 },
-                env: {
-                    'REDIS_HOSTNAME': pulumi.output(redis.masterService).apply(s => s.internalEndpoint()),
-                    'REDIS_PORT': pulumi.output(redis.masterService).apply(s => s.port()),
-                    'REDIS_PASSWORD': {
-                        valueFrom: secret.asEnvValue('redis_pass'),
-                    },
-                    // 'REDIS_PASSWORD_FILE': '/secrets/redis_pass',
-                    'DB_HOSTNAME': dbhost,
-                    'DB_PORT': '5432',
-                    'DB_USERNAME': {
-                        valueFrom: {
-                            secretKeyRef: {
-                                name: dbpassSecret,
-                                key: 'username',
-                            }
-                        }
-                    },
-                    // 'DB_USERNAME_FILE': '/db-secret/username',
-                    'DB_PASSWORD': {
-                        valueFrom: {
-                            secretKeyRef: {
-                                name: dbpassSecret,
-                                key: 'password',
-                            }
-                        }
-                    },
-                    //'DB_PASSWORD_FILE': '/db-secret/password',
-                    'DB_DATABASE_NAME': this.dbname,
-                },
-                server: {
-                    resources: {
-                        requests: { cpu: "1", memory: "480Mi" },
-                        limits: { cpu: "1", memory: "640Mi" },
-                    },
-                    probes: {
-                        liveness: {
-                            spec: {
-                                initialDelaySeconds: 120,
-                            },
-                        },
-                        readiness: {
-                            spec: {
-                                initialDelaySeconds: 120,
-                            },
-                        },
-                    },
-                    affinity: {
-                        podAffinity: {
-                            // This is a hack to run the pod on the same node as juicefs
-                            // redis master, because otherwise the metadata server
-                            // performance is very bad.
-                            requiredDuringSchedulingIgnoredDuringExecution: [
-                                {
-                                    topologyKey: 'kubernetes.io/hostname',
-                                    labelSelector: {
-                                        matchLabels: {
-                                            'app.kubernetes.io/instance': 'juicefs-redis',
-                                            'app.kubernetes.io/component': 'master',
+                controllers: {
+                    main: {
+                        containers: {
+                            main: {
+                                image: {
+                                    tag: versions.image.immich.split(':', 2)[1],
+                                },
+                                env: {
+                                    'REDIS_HOSTNAME': pulumi.output(redis.masterService).apply(s => s.internalEndpoint()),
+                                    'REDIS_PORT': pulumi.output(redis.masterService).apply(s => s.port()),
+                                    'REDIS_PASSWORD': {
+                                        valueFrom: secret.asEnvValue('redis_pass'),
+                                    },
+                                    // 'REDIS_PASSWORD_FILE': '/secrets/redis_pass',
+                                    'DB_HOSTNAME': dbhost,
+                                    'DB_PORT': '5432',
+                                    'DB_USERNAME': {
+                                        valueFrom: {
+                                            secretKeyRef: {
+                                                name: dbpassSecret,
+                                                key: 'username',
+                                            }
                                         }
                                     },
-                                    namespaces: ['kube-system']
+                                    // 'DB_USERNAME_FILE': '/db-secret/username',
+                                    'DB_PASSWORD': {
+                                        valueFrom: {
+                                            secretKeyRef: {
+                                                name: dbpassSecret,
+                                                key: 'password',
+                                            }
+                                        }
+                                    },
+                                    //'DB_PASSWORD_FILE': '/db-secret/password',
+                                    'DB_DATABASE_NAME': this.dbname,
+                                },
+                            },
+                        },
+                    },
+                },
+                server: {
+                    controllers: {
+                        main: {
+                            pod: {
+                                affinity: {
+                                    podAffinity: {
+                                        // This is a hack to run the pod on the same node as juicefs
+                                        // redis master, because otherwise the metadata server
+                                        // performance is very bad.
+                                        requiredDuringSchedulingIgnoredDuringExecution: [
+                                            {
+                                                topologyKey: 'kubernetes.io/hostname',
+                                                labelSelector: {
+                                                    matchLabels: {
+                                                        'app.kubernetes.io/instance': 'juicefs-redis',
+                                                        'app.kubernetes.io/component': 'master',
+                                                    }
+                                                },
+                                                namespaces: ['kube-system']
+                                            }
+                                        ]
+                                    },
+                                },
+                            },
+                            containers: {
+                                main: {
+                                    resources: {
+                                        requests: { cpu: "1", memory: "1Gi" },
+                                        limits: { cpu: "1.5", memory: "2Gi" },
+                                    },
+                                    probes: {
+                                        liveness: {
+                                            spec: {
+                                                initialDelaySeconds: 60,
+                                                failureThreshold: 5,
+                                            },
+                                        },
+                                        readiness: {
+                                            spec: {
+                                                initialDelaySeconds: 60,
+                                                failureThreshold: 5,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    persistence: {
+                        data: {
+                            globalMounts: [
+                                {
+                                    mountPropagation: "HostToContainer",
                                 }
                             ]
                         },
-                    },
-                    persistence: {
                         secrets: {
                             enabled: true,
                             type: 'secret',
@@ -146,79 +176,61 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                             type: 'secret',
                             name: dbpassSecret,
                         },
-                        library: {
-                            mountPropagation: "HostToContainer",
-                        }
-                    },
-                },
-                // this section is no used since microservices is merged in
-                // server
-                microservices: {
-                    resources: {
-                        requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
-                        limits: { cpu: "2", memory: "2Gi", 'gpu.intel.com/i915': '1' },
-                    },
-                    persistence: {
-                        secrets: {
-                            enabled: true,
-                            type: 'secret',
-                            name: secret.metadata.name,
-                        },
-                        'db-secret': {
-                            enabled: true,
-                            type: 'secret',
-                            name: dbpassSecret,
-                        },
-                        library: {
-                            mountPropagation: "HostToContainer",
-                        }
                     },
                 },
                 'machine-learning': {
-                    // To make all running on vps for minimum juicefs access latency and stability
-                    resources: {
-                        requests: { cpu: "10m", memory: "384Mi" },
-                        limits: { cpu: "1", memory: "384Mi"  },
-                    },
-                    // Not working yet since the pod has local path storage
-                    /*
-                    affinity: {
-                        podAffinity: {
-                            // This is a hack to run the pod on the same node as juicefs
-                            // redis master, because otherwise the metadata server
-                            // performance is very bad.
-                            requiredDuringSchedulingIgnoredDuringExecution: [
-                                {
-                                    topologyKey: 'kubernetes.io/hostname',
-                                    labelSelector: {
-                                        matchLabels: {
-                                            'app.kubernetes.io/instance': 'juicefs-redis',
-                                            'app.kubernetes.io/component': 'master',
-                                        }
+                    controllers: {
+                        main: {
+                            pod: {
+                                affinity: {
+                                    podAffinity: {
+                                        // This is a hack to run the pod on the same node as juicefs
+                                        // redis master, because otherwise the metadata server
+                                        // performance is very bad.
+                                        requiredDuringSchedulingIgnoredDuringExecution: [
+                                            {
+                                                topologyKey: 'kubernetes.io/hostname',
+                                                labelSelector: {
+                                                    matchLabels: {
+                                                        'app.kubernetes.io/instance': 'juicefs-redis',
+                                                        'app.kubernetes.io/component': 'master',
+                                                    }
+                                                },
+                                                namespaces: ['kube-system']
+                                            }
+                                        ]
                                     },
-                                    namespaces: ['kube-system']
-                                }
-                            ]
+                                },
+                            },
+                            containers: {
+                                main: {
+                                    // To make all running on vps for minimum juicefs access latency and stability
+                                    resources: {
+                                        requests: { cpu: "10m", memory: "384Mi" },
+                                        limits: { cpu: "1", memory: "384Mi"  },
+                                    },
+                                    /*
+                                    // Large requirements for running on homelab
+                                    resources: {
+                                        requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
+                                        limits: { cpu: "2", memory: "2Gi", 'gpu.intel.com/i915': '1' },
+                                    },
+                                    */
+                                },
+                            },
                         },
                     },
-                    */
-                    /*
-                    // Large requirements for running on homelab
-                    resources: {
-                        requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
-                        limits: { cpu: "2", memory: "2Gi", 'gpu.intel.com/i915': '1' },
-                    },
-                    */
                     persistence: {
                         library: {
-                            enable: false,
+                            enabled: false,
                         },
                         cache: {
-                            type: '', // empty defaults to PVC
+                            type: 'persistentVolumeClaim',
                             accessMode: 'ReadWriteOnce',
                             storageClass: args.cacheStorageClass,
-                        }
-                    }
+                            size: "6Gi"
+                        },
+                    },
                 },
             }
         }, { parent: this });
