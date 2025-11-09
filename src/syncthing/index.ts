@@ -308,7 +308,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                     'gdrive:Stuff',
                     '--config', '/config/rclone.conf',
                     '--check-access',
-                    '--check-filename', 'AetfKeeDb.old.kdbx',
+                    '--check-filename', 'stignore.txt',
                     '--create-empty-src-dirs',
                     '--compare',
                     'size,modtime,checksum',
@@ -340,10 +340,12 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
 
         const rcloneCron = new k8s.batch.v1.CronJob('rclone-sync', {
             spec: {
-                schedule: "0 * * * *",
+                schedule: "*/2 * * * *",
                 concurrencyPolicy: "Forbid",
                 jobTemplate: {
-                    spec: rclonePod.asJobSpec(),
+                    spec: rclonePod.asJobSpec({
+                        backoffLimit: 0
+                    }),
                 },
                 failedJobsHistoryLimit: 1,
                 successfulJobsHistoryLimit: 2,
