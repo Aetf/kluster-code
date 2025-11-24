@@ -1,0 +1,16 @@
+redactions = ["*_PASSPHRASE"]
+
+[tools]
+node = "latest"
+
+[env]
+PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS = "1"
+PULUMI_CONFIG_PASSPHRASE = """
+{{-
+exec(
+    command="secret-tool lookup xdg:service pulumi",
+    cache_key="PULUMI_CONFIG_PASSPHRASE",
+    cache_duration="1d"
+)
+-}}
+"""
