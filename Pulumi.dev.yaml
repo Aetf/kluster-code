@@ -34,8 +34,8 @@ config:
   image:authelia: ghcr.io/authelia/authelia:4.39.4
   image:shoko: docker.io/shokoanime/server:v5.1.0
   image:yq: docker.io/mikefarah/yq:4.45.1
-  image:syncthing: docker.io/syncthing/syncthing:1.29.2
-  image:stdiscosrv: docker.io/syncthing/discosrv:1.29.2
+  image:syncthing: docker.io/syncthing/syncthing:2.0.11
+  image:stdiscosrv: docker.io/syncthing/discosrv:2.0.11
   image:ukulele: ghcr.io/freyacodes/ukulele:master
   image:rclone: docker.io/rclone/rclone:1.70.1
   image:spoolman: ghcr.io/donkie/spoolman:0.22.1
