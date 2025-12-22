@@ -34,6 +34,9 @@ export class Spoolman extends pulumi.ComponentResource<SpoolmanArgs> {
         }, { parent: this });
 
         const pb = new kx.PodBuilder({
+            // Don't expose env vars for services in the same namespace
+            // See https://github.com/Donkie/Spoolman/issues/647#issuecomment-2730793211
+            enableServiceLinks: false,
             containers: [{
                 name,
                 image: versions.image.spoolman,
