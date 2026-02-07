@@ -47,6 +47,10 @@ export class Spoolman extends pulumi.ComponentResource<SpoolmanArgs> {
                 ports: {
                     http: this.port,
                 },
+                env: {
+                    'SPOOLMAN_PORT': pulumi.interpolate`${this.port}`,
+                    'EXTERNAL_DB_URL': 'https://donkie.github.io/SpoolmanDB/',
+                },
                 volumeMounts: [
                     {
                         name: dataPv.metadata.name,
