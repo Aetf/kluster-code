@@ -7,7 +7,7 @@
         "crds": "scripts/update-crds.sh"
     },
     "devDependencies": {
-        "@types/node": "^22.0.0"
+        "@types/node": "^24.0.0"
     },
     "dependencies": {
         "@pulumi/kubernetes": "^3.7.2",
@@ -24,6 +24,6 @@
         "tsx": "^4.16.2"
     },
     "volta": {
-        "node": "22.22.0"
+        "node": "24.13.0"
     }
 }
