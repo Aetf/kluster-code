@@ -2,6 +2,7 @@ redactions = ["*_PASSPHRASE"]
 
 [tools]
 node = "latest"
+pulumi = "latest"
 
 [env]
 PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS = "1"
