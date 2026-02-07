@@ -7,7 +7,6 @@ import * as k8s from "@pulumi/kubernetes";
 import { config } from "./config";
 import { BaseCluster, NodePV } from "./base-cluster";
 import { Serving } from "./serving";
-import { K8sDashboard } from "./k8s-dashboard";
 import { Nginx } from "./nginx";
 import { Exim } from "./mail";
 import { Genshin } from "./genshin";
@@ -112,14 +111,6 @@ function setup() {
         smtp: mailer.smtpService,
     }, {
         provider: namespaced("mon"),
-    });
-
-    // dashboard
-    const k8sDashboard = new K8sDashboard("dashboard", {
-        serving,
-        host: 'k8s.unlimited-code.works',
-    }, {
-        provider: namespaced("dashboard"),
     });
 
     // admin user
