@@ -1,6 +1,6 @@
 {
     "$schema": "https://json.schemastore.org/tsconfig",
-    // "extends": "@tsconfig/node20/tsconfig.json",
+    // "extends": "@tsconfig/node22/tsconfig.json",
     "compilerOptions": {
         // ts-node doesn't support extends array yet.
         // And using a pre-release version breaks pulumi peer dependency
