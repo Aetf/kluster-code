@@ -24,7 +24,7 @@ config:
   image:dufs: docker.io/sigoden/dufs:v0.45.0
   image:genshinhelper: docker.io/yindan/genshinhelper:2.1.3
   image:hath: docker.io/tdcpf/hath:v1.6.4
-  image:immich: ghcr.io/immich-app/immich-server:v2.5.5
+  image:immich: ghcr.io/immich-app/immich-server:v2.6.3
   image:jellyfin: ghcr.io/jellyfin/jellyfin:10.11.4
   image:localpath: rancher/local-path-provisioner:v0.0.22
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
