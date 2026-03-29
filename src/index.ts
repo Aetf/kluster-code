@@ -24,6 +24,8 @@ import { Immich } from "./immich";
 import { Hath } from "./hath";
 import { Service } from "./utils";
 import { Spoolman } from "./spoolman";
+import { Haos } from "./haos";
+
 
 function namespaced(ns: string, createNs?: boolean, args?: k8s.ProviderArgs): k8s.Provider {
     if (createNs ?? true) {
@@ -262,29 +264,12 @@ function setup() {
     }, { provider: namespaced('hath') });
 
     // HaOS
-    const haosProvider = namespaced('haos');
-    const haosService = new Service(`haos`, {
-        metadata: {
-            name: 'haos'
-        },
-        spec: {
-            type: k8s.types.enums.core.v1.ServiceSpecType.ExternalName,
-            externalName: 'haos.zt.unlimited-code.works',
-            ports: [
-                { name: 'http', port: 8123 },
-            ],
-        }
-    }, { parent: haosProvider, provider: haosProvider, deleteBeforeReplace: true });
-    serving.createFrontendService('haos', {
+    const haos = new Haos("haos", {
+        serving,
         host: 'haos.unlimited-code.works',
-        targetService: haosService,
-        // HAOS doesn't support TLS
-        enableTls: false,
-        // HAOS has its own auth
-        // Check out https://github.com/christiaangoossens/hass-oidc-auth when
-        // it is mature.
-        enableAuth: false,
-    });
+        externalName: 'haos.zt.unlimited-code.works',
+    }, { provider: namespaced('haos') });
+
 
     const spoolman = new Spoolman("spoolman", {
         serving,
