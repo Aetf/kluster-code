@@ -1,6 +1,7 @@
 redactions = ["*_PASSPHRASE"]
 
 [tools]
+gemini-cli = "latest"
 node = "latest"
 pulumi = "latest"
 
