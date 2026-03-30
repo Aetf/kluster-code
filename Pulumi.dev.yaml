@@ -5,7 +5,7 @@ config:
   kluster-code:smtpPassword:
     secure: v1:+V43BCWXufREi2V+:4GWjNe3g5XS7GsqamNdMQd4TxgkmzLoVajn4bUbUKy4=
   kluster-code:staging: false
-  kluster-code:enableMc: true
+  kluster-code:enableMc: false
   chart:sealed-secrets: https://bitnami-labs.github.io/sealed-secrets:2.18.0
   chart:cert-manager: https://charts.jetstack.io:v1.19.2
   chart:reloader: https://stakater.github.io/stakater-charts:1.3.0
