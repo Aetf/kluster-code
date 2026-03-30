@@ -15,9 +15,28 @@ interface TraefikArgs {
     backendIssuer?: crds.cert_manager.v1.ClusterIssuer | crds.cert_manager.v1.Issuer,
 }
 
+// Remove Gateway API CRDs from the chart. We define our own.
+function removeGatewayCrd(obj: any, opts: pulumi.CustomResourceOptions) {
+    // Safely check if the resource is a CRD and its name ends with the Gateway API group
+    if (
+        obj.kind === "CustomResourceDefinition" &&
+        obj.metadata?.name?.endsWith("gateway.networking.k8s.io")
+    ) {
+        // Omit the resource by transforming it into an empty List
+        obj.apiVersion = "v1";
+        obj.kind = "List";
+        obj.items = [];
+    }
+}
+
 export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
     public readonly chart: HelmChart;
     public readonly certificate: BackendCertificate;
+    /**
+     * The name of the GatewayClass created by this Traefik deployment.
+     * Pass this into Serving so the Gateway resource can reference it.
+     */
+    public readonly gatewayClassName!: pulumi.Output<string>;
 
     public readonly ready!: pulumi.Output<pulumi.CustomResource[]>;
 
@@ -39,12 +58,21 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     limits: { cpu: "50m", memory: "256Mi" }
                 },
                 providers: {
+                    kubernetesGateway: {
+                        enabled: true,
+                        // TLSRoute and TCPRoute support (experimental channel)
+                        // Required for stdiscosrv TLS passthrough via TLSRoute
+                        experimentalChannel: true,
+                    },
                     kubernetesCRD: {
                         enabled: true,
                         // traefik by default do not allow ExternalName service due to minor CVE
                         // see https://github.com/traefik/traefik/pull/8261
                         // see https://doc.traefik.io/traefik/migration/v2/#k8s-externalname-service
                         allowExternalNameServices: true,
+                        // Allow Middleware CRDs in app namespaces to reference middlewares in
+                        // serving-system (used for auth Chain delegates)
+                        allowCrossNamespace: true,
                     },
                     kubernetesIngress: {
                         enabled: true,
@@ -73,9 +101,17 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     web: {
                         exposedPort: args.httpPort,
                         // permanent redirection by default
+                        // TODO: remove redirectTO after traefik helm chart upgrade past v34
                         redirectTo: {
                             port: "websecure"
-                        }
+                        },
+                        redirections: {
+                            entryPoint: {
+                                to: "websecure",
+                                scheme: "https",
+                                permanent: true,
+                            }
+                        },
                     },
                     websecure: {
                         exposedPort: args.httpsPort,
@@ -122,6 +158,10 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                         enabled: true
                     }
                 },
+                // We create our own Gateway resource at Serving level.
+                gateway: {
+                    enabled: false,
+                },
                 // disable traefik pilot which is a paid feature
                 pilot: {
                     enabled: false,
@@ -132,6 +172,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
             },
             transformations: [
                 removeHelmTestAnnotation,
+                removeGatewayCrd,
             ]
         }, {
             parent: this,
@@ -139,6 +180,8 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
 
         setAndRegisterOutputs(this, {
             ready: this.chart.ready,
+            // 'traefik' is the GatewayClass name the Helm chart registers by default
+            gatewayClassName: pulumi.output('traefik'),
         });
     }
 

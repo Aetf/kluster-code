@@ -2,6 +2,12 @@
 
 This project manages a k3s cluster configuration using Pulumi with the Node.js runtime. It's structured as a set of modular components for infrastructure and applications.
 
+## Development Environment
+
+- **Runtime manager**: This project uses [`mise`](https://mise.jdx.dev/) to manage the Node.js runtime and tool versions. **Do NOT use `npx`** to run project tools — use the binaries directly (use `mise x <tool>`)
+- **TypeScript check**: `pulumi preview --diff --json` will check the code for syntax errors before generating the preview.
+- **Package manager**: `npm`
+
 ## Core Structure
 
 - **`src/index.ts`**: The main entry point. It orchestrates the deployment of the base cluster, infrastructure services, and various user applications.
@@ -9,6 +15,7 @@ This project manages a k3s cluster configuration using Pulumi with the Node.js r
   - **`BaseCluster`**: Installs essential services: `cert-manager` (with Let's Encrypt and private CA), `sealed-secrets`, `local-path-provisioner`, `JuiceFS`, `reloader`, and `node-feature-discovery`.
   - **`Nodes`**: Manages cluster node information and provides selectors.
   - **`Certs`**: Handles frontend and backend certificate generation.
+
 ## Serving & Ingress
 
 This area manages external access, SSL/TLS termination, and authentication.
@@ -65,6 +72,7 @@ The cluster uses the industry-standard Prometheus stack for metrics collection a
   - **Alertmanager**: Provides alert deduplication, grouping, and routing to various receivers.
   - **Node Exporter**: Deployed on all nodes to collect host-level metrics, with relabeling to include node names in metrics.
   - **Admission Webhooks**: Secured using `cert-manager` with the cluster's internal private CA.
+
 ## Database & State Management
 
 The cluster leverages operators and standardized Helm charts to manage stateful workloads.
@@ -81,6 +89,7 @@ The cluster leverages operators and standardized Helm charts to manage stateful 
     - Dedicated `masterService` abstraction for easy internal connectivity.
     - Integration with `SealedSecret` for password management.
     - Used by **Authelia** for session caching and **JuiceFS** for metadata storage.
+
 ## Storage Infrastructure
 
 The cluster employs a tiered storage strategy to balance performance, persistence, and scalability.
@@ -113,6 +122,7 @@ The cluster employs a tiered storage strategy to balance performance, persistenc
 The cluster hosts a variety of user-facing applications, each with tailored infrastructure requirements.
 
 ### Photo & Media Management
+
 - **Immich (Photos)**:
   - **Database**: Uses a dedicated **CloudNativePG** cluster with a custom image containing `pgvecto.rs` for AI-powered features. Backups are stored in **Google Cloud Storage (GCS)**.
   - **Cache**: Employs a dedicated **Redis** instance for high-performance task queuing.
@@ -129,6 +139,7 @@ The cluster hosts a variety of user-facing applications, each with tailored infr
   - **Certificate**: Uses `BackendCertificate` with **PKCS12** support for native TLS.
 
 ### Synchronization & File Sharing
+
 - **Syncthing**:
   - Provides peer-to-peer file synchronization.
   - Uses a dedicated discovery server (`stdiscosrv`) for efficient peer finding.
@@ -138,9 +149,11 @@ The cluster hosts a variety of user-facing applications, each with tailored infr
   - Integrated with **Authelia** for secure file browsing.
 
 ### Utility & Specialized Apps
+
 - **Spoolman**: Manages 3D printing filament inventory, integrated with the cluster's database and ingress.
 - **Hath (Hentai@Home)**: A specialized client for a distributed image hosting network, utilizing cluster storage and networking.
 - **Genshin Everyday**: An automation service for daily tasks in Genshin Impact.
+
 ## Internal Mail Services
 
 To ensure reliable alert delivery and system notifications, the cluster maintains a centralized mail relay.
