@@ -13,7 +13,7 @@ import * as utilities from "../../utilities";
  * Conflicts will result in an error by default, but can be forced using the "pulumi.com/patchForce" annotation. See the
  * [Server-Side Apply Docs](https://www.pulumi.com/registry/packages/kubernetes/how-to-guides/managing-resources-with-server-side-apply/) for
  * additional information about using Server-Side Apply to manage Kubernetes resources with Pulumi.
- * Backup is the Schema for the backups API
+ * A Backup resource is a request for a PostgreSQL backup by the user.
  */
 export class BackupPatch extends pulumi.CustomResource {
     /**
@@ -45,17 +45,17 @@ export class BackupPatch extends pulumi.CustomResource {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly apiVersion!: pulumi.Output<"postgresql.cnpg.io/v1">;
+    declare public readonly apiVersion: pulumi.Output<"postgresql.cnpg.io/v1">;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly kind!: pulumi.Output<"Backup">;
+    declare public readonly kind: pulumi.Output<"Backup">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
-    public readonly spec!: pulumi.Output<outputs.postgresql.v1.BackupSpecPatch>;
-    public /*out*/ readonly status!: pulumi.Output<outputs.postgresql.v1.BackupStatusPatch>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
+    declare public readonly spec: pulumi.Output<outputs.postgresql.v1.BackupSpecPatch>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.postgresql.v1.BackupStatusPatch>;
 
     /**
      * Create a BackupPatch resource with the given unique name, arguments, and options.
@@ -70,8 +70,8 @@ export class BackupPatch extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "postgresql.cnpg.io/v1";
             resourceInputs["kind"] = "Backup";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
             resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;

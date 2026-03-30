@@ -5,6 +5,21 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "../../utilities";
 
 // Export members:
+export { BackendTLSPolicyArgs } from "./backendTLSPolicy";
+export type BackendTLSPolicy = import("./backendTLSPolicy").BackendTLSPolicy;
+export const BackendTLSPolicy: typeof import("./backendTLSPolicy").BackendTLSPolicy = null as any;
+utilities.lazyLoad(exports, ["BackendTLSPolicy"], () => require("./backendTLSPolicy"));
+
+export { BackendTLSPolicyListArgs } from "./backendTLSPolicyList";
+export type BackendTLSPolicyList = import("./backendTLSPolicyList").BackendTLSPolicyList;
+export const BackendTLSPolicyList: typeof import("./backendTLSPolicyList").BackendTLSPolicyList = null as any;
+utilities.lazyLoad(exports, ["BackendTLSPolicyList"], () => require("./backendTLSPolicyList"));
+
+export { BackendTLSPolicyPatchArgs } from "./backendTLSPolicyPatch";
+export type BackendTLSPolicyPatch = import("./backendTLSPolicyPatch").BackendTLSPolicyPatch;
+export const BackendTLSPolicyPatch: typeof import("./backendTLSPolicyPatch").BackendTLSPolicyPatch = null as any;
+utilities.lazyLoad(exports, ["BackendTLSPolicyPatch"], () => require("./backendTLSPolicyPatch"));
+
 export { GatewayArgs } from "./gateway";
 export type Gateway = import("./gateway").Gateway;
 export const Gateway: typeof import("./gateway").Gateway = null as any;
@@ -70,6 +85,12 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
+            case "kubernetes:gateway.networking.k8s.io/v1:BackendTLSPolicy":
+                return new BackendTLSPolicy(name, <any>undefined, { urn })
+            case "kubernetes:gateway.networking.k8s.io/v1:BackendTLSPolicyList":
+                return new BackendTLSPolicyList(name, <any>undefined, { urn })
+            case "kubernetes:gateway.networking.k8s.io/v1:BackendTLSPolicyPatch":
+                return new BackendTLSPolicyPatch(name, <any>undefined, { urn })
             case "kubernetes:gateway.networking.k8s.io/v1:GRPCRoute":
                 return new GRPCRoute(name, <any>undefined, { urn })
             case "kubernetes:gateway.networking.k8s.io/v1:GRPCRouteList":

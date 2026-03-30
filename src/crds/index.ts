@@ -21,6 +21,7 @@ import * as gateway from "./gateway";
 import * as helm from "./helm";
 import * as hub from "./hub";
 import * as k3s from "./k3s";
+import * as monitoring from "./monitoring";
 import * as nfd from "./nfd";
 import * as postgresql from "./postgresql";
 import * as traefik from "./traefik";
@@ -36,6 +37,7 @@ export {
     helm,
     hub,
     k3s,
+    monitoring,
     nfd,
     postgresql,
     traefik,

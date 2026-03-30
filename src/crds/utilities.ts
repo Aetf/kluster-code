@@ -41,7 +41,7 @@ export function getEnvNumber(...vars: string[]): number | undefined {
     return undefined;
 }
 
-export const getVersion: () => string = () => "4.18.0"
+export const getVersion: () => string = () => "4.23.0"
 
 function unusedGetVersion(): string {
     let version = require('./package.json').version;
@@ -70,6 +70,7 @@ export function lazyLoad(exports: any, props: string[], loadModule: any) {
     }
 }
 
+/** @internal */
 export async function callAsync<T>(
     tok: string,
     props: pulumi.Inputs,

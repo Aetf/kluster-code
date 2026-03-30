@@ -13,6 +13,9 @@ import * as utilities from "../../utilities";
  * Conflicts will result in an error by default, but can be forced using the "pulumi.com/patchForce" annotation. See the
  * [Server-Side Apply Docs](https://www.pulumi.com/registry/packages/kubernetes/how-to-guides/managing-resources-with-server-side-apply/) for
  * additional information about using Server-Side Apply to manage Kubernetes resources with Pulumi.
+ * Addon is used to track application of a manifest file on disk. It mostly exists so that the wrangler DesiredSet
+ * Apply controller has an object to track as the owner, and ensure that all created resources are tracked when the
+ * manifest is modified or removed.
  */
 export class AddonPatch extends pulumi.CustomResource {
     /**
@@ -44,16 +47,16 @@ export class AddonPatch extends pulumi.CustomResource {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly apiVersion!: pulumi.Output<"k3s.cattle.io/v1">;
+    declare public readonly apiVersion: pulumi.Output<"k3s.cattle.io/v1">;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly kind!: pulumi.Output<"Addon">;
+    declare public readonly kind: pulumi.Output<"Addon">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
-    public readonly spec!: pulumi.Output<outputs.k3s.v1.AddonSpecPatch>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
+    declare public readonly spec: pulumi.Output<outputs.k3s.v1.AddonSpecPatch>;
 
     /**
      * Create a AddonPatch resource with the given unique name, arguments, and options.
@@ -68,8 +71,8 @@ export class AddonPatch extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "k3s.cattle.io/v1";
             resourceInputs["kind"] = "Addon";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;

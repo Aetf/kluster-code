@@ -80,6 +80,21 @@ export type IaaDevicePluginPatch = import("./iaaDevicePluginPatch").IaaDevicePlu
 export const IaaDevicePluginPatch: typeof import("./iaaDevicePluginPatch").IaaDevicePluginPatch = null as any;
 utilities.lazyLoad(exports, ["IaaDevicePluginPatch"], () => require("./iaaDevicePluginPatch"));
 
+export { NpuDevicePluginArgs } from "./npuDevicePlugin";
+export type NpuDevicePlugin = import("./npuDevicePlugin").NpuDevicePlugin;
+export const NpuDevicePlugin: typeof import("./npuDevicePlugin").NpuDevicePlugin = null as any;
+utilities.lazyLoad(exports, ["NpuDevicePlugin"], () => require("./npuDevicePlugin"));
+
+export { NpuDevicePluginListArgs } from "./npuDevicePluginList";
+export type NpuDevicePluginList = import("./npuDevicePluginList").NpuDevicePluginList;
+export const NpuDevicePluginList: typeof import("./npuDevicePluginList").NpuDevicePluginList = null as any;
+utilities.lazyLoad(exports, ["NpuDevicePluginList"], () => require("./npuDevicePluginList"));
+
+export { NpuDevicePluginPatchArgs } from "./npuDevicePluginPatch";
+export type NpuDevicePluginPatch = import("./npuDevicePluginPatch").NpuDevicePluginPatch;
+export const NpuDevicePluginPatch: typeof import("./npuDevicePluginPatch").NpuDevicePluginPatch = null as any;
+utilities.lazyLoad(exports, ["NpuDevicePluginPatch"], () => require("./npuDevicePluginPatch"));
+
 export { QatDevicePluginArgs } from "./qatDevicePlugin";
 export type QatDevicePlugin = import("./qatDevicePlugin").QatDevicePlugin;
 export const QatDevicePlugin: typeof import("./qatDevicePlugin").QatDevicePlugin = null as any;
@@ -145,6 +160,12 @@ const _module = {
                 return new IaaDevicePluginList(name, <any>undefined, { urn })
             case "kubernetes:deviceplugin.intel.com/v1:IaaDevicePluginPatch":
                 return new IaaDevicePluginPatch(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:NpuDevicePlugin":
+                return new NpuDevicePlugin(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:NpuDevicePluginList":
+                return new NpuDevicePluginList(name, <any>undefined, { urn })
+            case "kubernetes:deviceplugin.intel.com/v1:NpuDevicePluginPatch":
+                return new NpuDevicePluginPatch(name, <any>undefined, { urn })
             case "kubernetes:deviceplugin.intel.com/v1:QatDevicePlugin":
                 return new QatDevicePlugin(name, <any>undefined, { urn })
             case "kubernetes:deviceplugin.intel.com/v1:QatDevicePluginList":

@@ -13,6 +13,9 @@ import * as utilities from "../../utilities";
  * Conflicts will result in an error by default, but can be forced using the "pulumi.com/patchForce" annotation. See the
  * [Server-Side Apply Docs](https://www.pulumi.com/registry/packages/kubernetes/how-to-guides/managing-resources-with-server-side-apply/) for
  * additional information about using Server-Side Apply to manage Kubernetes resources with Pulumi.
+ * HelmChartConfig represents additional configuration for the installation of Helm chart release.
+ * This resource is intended for use when additional configuration needs to be passed to a HelmChart
+ * that is managed by an external system.
  */
 export class HelmChartConfigPatch extends pulumi.CustomResource {
     /**
@@ -44,16 +47,16 @@ export class HelmChartConfigPatch extends pulumi.CustomResource {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly apiVersion!: pulumi.Output<"helm.cattle.io/v1">;
+    declare public readonly apiVersion: pulumi.Output<"helm.cattle.io/v1">;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly kind!: pulumi.Output<"HelmChartConfig">;
+    declare public readonly kind: pulumi.Output<"HelmChartConfig">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
-    public readonly spec!: pulumi.Output<outputs.helm.v1.HelmChartConfigSpecPatch>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
+    declare public readonly spec: pulumi.Output<outputs.helm.v1.HelmChartConfigSpecPatch>;
 
     /**
      * Create a HelmChartConfigPatch resource with the given unique name, arguments, and options.
@@ -68,8 +71,8 @@ export class HelmChartConfigPatch extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "helm.cattle.io/v1";
             resourceInputs["kind"] = "HelmChartConfig";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;

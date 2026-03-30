@@ -42,17 +42,17 @@ export class Issuer extends pulumi.CustomResource {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly apiVersion!: pulumi.Output<"cert-manager.io/v1">;
+    declare public readonly apiVersion: pulumi.Output<"cert-manager.io/v1">;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly kind!: pulumi.Output<"Issuer">;
+    declare public readonly kind: pulumi.Output<"Issuer">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
-    public readonly spec!: pulumi.Output<outputs.cert_manager.v1.IssuerSpec>;
-    public /*out*/ readonly status!: pulumi.Output<outputs.cert_manager.v1.IssuerStatus>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    declare public readonly spec: pulumi.Output<outputs.cert_manager.v1.IssuerSpec>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.cert_manager.v1.IssuerStatus>;
 
     /**
      * Create a Issuer resource with the given unique name, arguments, and options.
@@ -67,8 +67,8 @@ export class Issuer extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "cert-manager.io/v1";
             resourceInputs["kind"] = "Issuer";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
             resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;

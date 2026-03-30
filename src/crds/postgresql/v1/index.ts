@@ -65,6 +65,21 @@ export type DatabasePatch = import("./databasePatch").DatabasePatch;
 export const DatabasePatch: typeof import("./databasePatch").DatabasePatch = null as any;
 utilities.lazyLoad(exports, ["DatabasePatch"], () => require("./databasePatch"));
 
+export { FailoverQuorumArgs } from "./failoverQuorum";
+export type FailoverQuorum = import("./failoverQuorum").FailoverQuorum;
+export const FailoverQuorum: typeof import("./failoverQuorum").FailoverQuorum = null as any;
+utilities.lazyLoad(exports, ["FailoverQuorum"], () => require("./failoverQuorum"));
+
+export { FailoverQuorumListArgs } from "./failoverQuorumList";
+export type FailoverQuorumList = import("./failoverQuorumList").FailoverQuorumList;
+export const FailoverQuorumList: typeof import("./failoverQuorumList").FailoverQuorumList = null as any;
+utilities.lazyLoad(exports, ["FailoverQuorumList"], () => require("./failoverQuorumList"));
+
+export { FailoverQuorumPatchArgs } from "./failoverQuorumPatch";
+export type FailoverQuorumPatch = import("./failoverQuorumPatch").FailoverQuorumPatch;
+export const FailoverQuorumPatch: typeof import("./failoverQuorumPatch").FailoverQuorumPatch = null as any;
+utilities.lazyLoad(exports, ["FailoverQuorumPatch"], () => require("./failoverQuorumPatch"));
+
 export { ImageCatalogArgs } from "./imageCatalog";
 export type ImageCatalog = import("./imageCatalog").ImageCatalog;
 export const ImageCatalog: typeof import("./imageCatalog").ImageCatalog = null as any;
@@ -169,6 +184,12 @@ const _module = {
                 return new DatabaseList(name, <any>undefined, { urn })
             case "kubernetes:postgresql.cnpg.io/v1:DatabasePatch":
                 return new DatabasePatch(name, <any>undefined, { urn })
+            case "kubernetes:postgresql.cnpg.io/v1:FailoverQuorum":
+                return new FailoverQuorum(name, <any>undefined, { urn })
+            case "kubernetes:postgresql.cnpg.io/v1:FailoverQuorumList":
+                return new FailoverQuorumList(name, <any>undefined, { urn })
+            case "kubernetes:postgresql.cnpg.io/v1:FailoverQuorumPatch":
+                return new FailoverQuorumPatch(name, <any>undefined, { urn })
             case "kubernetes:postgresql.cnpg.io/v1:ImageCatalog":
                 return new ImageCatalog(name, <any>undefined, { urn })
             case "kubernetes:postgresql.cnpg.io/v1:ImageCatalogList":

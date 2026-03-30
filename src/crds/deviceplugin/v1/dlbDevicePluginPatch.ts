@@ -13,7 +13,7 @@ import * as utilities from "../../utilities";
  * Conflicts will result in an error by default, but can be forced using the "pulumi.com/patchForce" annotation. See the
  * [Server-Side Apply Docs](https://www.pulumi.com/registry/packages/kubernetes/how-to-guides/managing-resources-with-server-side-apply/) for
  * additional information about using Server-Side Apply to manage Kubernetes resources with Pulumi.
- * DlbDevicePlugin is the Schema for the dlbdeviceplugins API. It represents
+ * DEPRECATED: DlbDevicePlugin is the Schema for the dlbdeviceplugins API. It represents
  * the DLB device plugin responsible for advertising Intel DLB hardware resources to
  * the kubelet.
  */
@@ -47,17 +47,17 @@ export class DlbDevicePluginPatch extends pulumi.CustomResource {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly apiVersion!: pulumi.Output<"deviceplugin.intel.com/v1">;
+    declare public readonly apiVersion: pulumi.Output<"deviceplugin.intel.com/v1">;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly kind!: pulumi.Output<"DlbDevicePlugin">;
+    declare public readonly kind: pulumi.Output<"DlbDevicePlugin">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
-    public readonly spec!: pulumi.Output<outputs.deviceplugin.v1.DlbDevicePluginSpecPatch>;
-    public /*out*/ readonly status!: pulumi.Output<outputs.deviceplugin.v1.DlbDevicePluginStatusPatch>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
+    declare public readonly spec: pulumi.Output<outputs.deviceplugin.v1.DlbDevicePluginSpecPatch>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.deviceplugin.v1.DlbDevicePluginStatusPatch>;
 
     /**
      * Create a DlbDevicePluginPatch resource with the given unique name, arguments, and options.
@@ -72,8 +72,8 @@ export class DlbDevicePluginPatch extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "deviceplugin.intel.com/v1";
             resourceInputs["kind"] = "DlbDevicePlugin";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
             resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;

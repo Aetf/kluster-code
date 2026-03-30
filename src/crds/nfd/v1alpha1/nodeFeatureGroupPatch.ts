@@ -45,17 +45,17 @@ export class NodeFeatureGroupPatch extends pulumi.CustomResource {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly apiVersion!: pulumi.Output<"nfd.k8s-sigs.io/v1alpha1">;
+    declare public readonly apiVersion: pulumi.Output<"nfd.k8s-sigs.io/v1alpha1">;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly kind!: pulumi.Output<"NodeFeatureGroup">;
+    declare public readonly kind: pulumi.Output<"NodeFeatureGroup">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
-    public readonly spec!: pulumi.Output<outputs.nfd.v1alpha1.NodeFeatureGroupSpecPatch>;
-    public /*out*/ readonly status!: pulumi.Output<outputs.nfd.v1alpha1.NodeFeatureGroupStatusPatch>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
+    declare public readonly spec: pulumi.Output<outputs.nfd.v1alpha1.NodeFeatureGroupSpecPatch>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.nfd.v1alpha1.NodeFeatureGroupStatusPatch>;
 
     /**
      * Create a NodeFeatureGroupPatch resource with the given unique name, arguments, and options.
@@ -70,8 +70,8 @@ export class NodeFeatureGroupPatch extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "nfd.k8s-sigs.io/v1alpha1";
             resourceInputs["kind"] = "NodeFeatureGroup";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
             resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;

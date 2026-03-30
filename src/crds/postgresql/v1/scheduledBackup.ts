@@ -39,17 +39,17 @@ export class ScheduledBackup extends pulumi.CustomResource {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    public readonly apiVersion!: pulumi.Output<"postgresql.cnpg.io/v1">;
+    declare public readonly apiVersion: pulumi.Output<"postgresql.cnpg.io/v1">;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    public readonly kind!: pulumi.Output<"ScheduledBackup">;
+    declare public readonly kind: pulumi.Output<"ScheduledBackup">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    public readonly metadata!: pulumi.Output<outputs.meta.v1.ObjectMeta>;
-    public readonly spec!: pulumi.Output<outputs.postgresql.v1.ScheduledBackupSpec>;
-    public /*out*/ readonly status!: pulumi.Output<outputs.postgresql.v1.ScheduledBackupStatus>;
+    declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMeta>;
+    declare public readonly spec: pulumi.Output<outputs.postgresql.v1.ScheduledBackupSpec>;
+    declare public /*out*/ readonly status: pulumi.Output<outputs.postgresql.v1.ScheduledBackupStatus>;
 
     /**
      * Create a ScheduledBackup resource with the given unique name, arguments, and options.
@@ -64,8 +64,8 @@ export class ScheduledBackup extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["apiVersion"] = "postgresql.cnpg.io/v1";
             resourceInputs["kind"] = "ScheduledBackup";
-            resourceInputs["metadata"] = args ? args.metadata : undefined;
-            resourceInputs["spec"] = args ? args.spec : undefined;
+            resourceInputs["metadata"] = args?.metadata;
+            resourceInputs["spec"] = args?.spec;
             resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
