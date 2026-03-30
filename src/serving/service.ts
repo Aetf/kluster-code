@@ -14,7 +14,7 @@ export interface FrontendServiceArgs {
     targetPort?: string,
 
     // If disabled, force to http to upstream
-    enableTls?: boolean,
+    enableMTls?: boolean,
 
     tlsOption?: pulumi.Input<TLSOption>,
     middlewares?: pulumi.Input<Middleware[]>,
@@ -36,8 +36,8 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
 
     constructor(name: string, args: FrontendServiceArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:FrontendService', name, args, opts);
-        this.enableTls = args.enableTls ?? true;
-        this.schema = this.enableTls ? 'https' : 'http'
+        this.enableMTls = args.enableMTls ?? true;
+        this.schema = this.enableMTls ? 'https' : 'http'
         this.targetPort = args.targetPort;
 
         // Generate an external name service based on the target service
@@ -53,7 +53,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                         // name to be https
                         let name = port.port == 443 ? 'https' : port.name;
                         // if tls disabled, force to http
-                        if (!this.enableTls && name === "https" && !hasHttp) {
+                        if (!this.enableMTls && name === "https" && !hasHttp) {
                             name = "http"
                         }
                         return {

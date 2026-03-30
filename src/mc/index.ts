@@ -220,7 +220,7 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
             targetService: dynmapSvc,
             targetPort: 'dynmap',
             // Dynmap doesn't support TLS
-            enableTls: false,
+            enableMTls: false,
             // Dynmap is readonly data
             enableAuth: false,
         });

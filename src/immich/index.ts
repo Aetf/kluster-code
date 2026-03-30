@@ -388,7 +388,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             host,
             targetService: this.chart!.service(/server/),
             // Immich doesn't support TLS on its own.
-            enableTls: false,
+            enableMTls: false,
             // Immich will itself connect to Authelia using OpenID Connect
             enableAuth: false,
         });

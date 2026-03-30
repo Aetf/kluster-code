@@ -220,7 +220,7 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
             // Grafana will itself connect to Authelia using oauth
             enableAuth: false,
             // Too much efforts to get probes updated to https
-            enableTls: false,
+            enableMTls: false,
         });
     }
 }

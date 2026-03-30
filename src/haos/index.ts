@@ -42,7 +42,7 @@ export class Haos extends pulumi.ComponentResource {
             host: args.host,
             targetService: haosService,
             // HAOS doesn't support TLS
-            enableTls: false,
+            enableMTls: false,
             // HAOS has its own auth
             // Check out https://github.com/christiaangoossens/hass-oidc-auth when
             // it is mature.
