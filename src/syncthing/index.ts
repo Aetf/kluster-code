@@ -245,7 +245,9 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             host: args.host,
             enableAuth: true,
             targetService: guiService,
-            useLegacyIngress: false,
+            backendCert: cert,
+            useLegacyIngress: true,
+            enableGatewayAPI: false,
         });
 
         // Create a cronjob pod to run rclone between syncthing stuff folder and

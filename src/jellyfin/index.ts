@@ -152,9 +152,11 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
                 host: args.host,
                 targetService: service,
                 enableMTls: true,
+                backendCert: cert,
                 // Jellyfin will itself connect to Authelia using OpenID Connect
                 enableAuth: false,
-                useLegacyIngress: false,
+                useLegacyIngress: true,
+                enableGatewayAPI: false,
             });
         });
     }

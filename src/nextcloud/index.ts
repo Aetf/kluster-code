@@ -244,8 +244,11 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
         const front = args.serving.createFrontendService(name, {
             host: args.host,
             targetService: service,
+            backendCert: this.certificate,
             // TODO: enable auth after authelia odic GA
             enableAuth: false,
+            useLegacyIngress: true,
+            enableGatewayAPI: false,
         });
 
         // cron job
