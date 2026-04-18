@@ -29,6 +29,9 @@ function removeGatewayCrd(obj: any, opts: pulumi.CustomResourceOptions) {
     }
 }
 
+const HTTP_CONTAINER_PORT = 8000;
+const HTTPS_CONTAINER_PORT = 8443;
+
 export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
     public readonly chart: HelmChart;
     public readonly certificate: BackendCertificate;
@@ -39,6 +42,8 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
     public readonly gatewayClassName!: pulumi.Output<string>;
 
     public readonly ready!: pulumi.Output<pulumi.CustomResource[]>;
+    public get httpPort(): number { return HTTP_CONTAINER_PORT; }
+    public get httpsPort(): number { return HTTPS_CONTAINER_PORT; }
 
     constructor(name: string, args: TraefikArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:serving:Traefik', name, args, opts);
@@ -99,6 +104,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                 },
                 ports: {
                     web: {
+                        port: HTTP_CONTAINER_PORT,
                         exposedPort: args.httpPort,
                         // permanent redirection by default
                         // TODO: remove redirectTO after traefik helm chart upgrade past v34
@@ -114,6 +120,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                         },
                     },
                     websecure: {
+                        port: HTTPS_CONTAINER_PORT,
                         exposedPort: args.httpsPort,
                         tls: {
                             enabled: true
@@ -121,6 +128,7 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     }
                 },
                 // automatically created as TLSOptions CR
+                // TODO: remove this AFTER kubernetesingress is disabled.
                 tlsOptions: {
                     default: {
                         sniStrict: true
