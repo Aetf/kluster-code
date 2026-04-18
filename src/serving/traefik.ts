@@ -199,9 +199,12 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
 }
 
 export class Middleware extends crds.traefik.v1alpha1.Middleware {
-    constructor(name: string, spec: crds.types.input.traefik.v1alpha1.MiddlewareSpec, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, spec: crds.types.input.traefik.v1alpha1.MiddlewareSpec, opts?: pulumi.CustomResourceOptions & { namespace?: pulumi.Input<string> }) {
         super(name, {
-            metadata: { name, },
+            metadata: { 
+                name,
+                namespace: opts?.namespace,
+            },
             spec,
         }, {
             deleteBeforeReplace: true,

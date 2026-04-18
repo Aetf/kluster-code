@@ -26,6 +26,10 @@ export interface FrontendServiceArgs {
     // Useful for services that need TLSRoute or TCPRoute (e.g. stdiscosrv Phase 4).
     skipHttpRoute?: boolean;
 
+    // If true, legacy Ingress resource will be created.
+    // Default to true for dual-emission, set to false for migrated services.
+    useLegacyIngress?: boolean;
+
     gatewayRef: GatewayRef,
 }
 
@@ -95,19 +99,25 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
             .apply(names => names.join(','));
 
         // === LEGACY INGRESS (Phase 1 dual-emit active) ===
-        new k8s.networking.v1.Ingress(name, {
-            metadata: {
-                annotations: pulumi.output(args.tlsOption)
-                    .apply(tls => ({
-                        "traefik.ingress.kubernetes.io/router.entrypoints": "websecure",
-                        "traefik.ingress.kubernetes.io/router.middlewares": middlewareList,
-                        ...tls?.asAnnotation() ?? {}
-                    }))
-            },
-            spec: this.ingressSpecFromHosts(args.host),
-        }, { parent: this });
+        if (args.useLegacyIngress ?? true) {
+            new k8s.networking.v1.Ingress(name, {
+                metadata: {
+                    annotations: pulumi.output(args.tlsOption)
+                        .apply(tls => ({
+                            "traefik.ingress.kubernetes.io/router.entrypoints": "websecure",
+                            "traefik.ingress.kubernetes.io/router.middlewares": middlewareList,
+                            ...tls?.asAnnotation() ?? {}
+                        }))
+                },
+                spec: this.ingressSpecFromHosts(args.host),
+            }, { parent: this });
+        }
 
         // === GATEWAY API HTTPRoute ===
+        const serviceOut = pulumi.output(args.targetService);
+        const targetName = serviceOut.apply(s => s.metadata.name);
+        const targetNamespace = serviceOut.apply(s => s.metadata.namespace || 'default');
+
         let localChainMiddlewareName: pulumi.Output<string> | undefined;
 
         if (this.middlewares) {
@@ -118,25 +128,20 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                         namespace: m.metadata.namespace,
                     })))
                 }
-            }, { parent: this });
+            }, { parent: this, namespace: targetNamespace });
             localChainMiddlewareName = pulumi.output(chainMiddleware.metadata.name).apply(n => n!);
         }
-
-        const serviceOut = pulumi.output(args.targetService);
 
         const targetPortNumber = serviceOut.apply(service => service.spec.ports).apply(ports => {
             const matching = ports.find(p => p.name === this.targetPort || p.name === this.schema || p.port == 443 || p.port == 80) ?? ports[0];
             return matching.port;
         });
 
-        const targetName = serviceOut.apply(s => s.metadata.name);
-        const targetNamespace = serviceOut.apply(s => s.metadata.namespace || 'default');
-
         if (!args.skipHttpRoute) {
-            this.createHttpRoute(name, args.host, targetName, targetPortNumber, localChainMiddlewareName);
+            this.createHttpRoute(name, args.host, targetNamespace, targetName, targetNamespace, targetPortNumber, localChainMiddlewareName);
 
             if (this.suppressAccessLogPaths) {
-                this.createHttpRoute(`${name}-nolog`, args.host, targetName, targetPortNumber, localChainMiddlewareName, this.suppressAccessLogPaths);
+                this.createHttpRoute(`${name}-nolog`, args.host, targetNamespace, targetName, targetNamespace, targetPortNumber, localChainMiddlewareName, this.suppressAccessLogPaths);
             }
         }
 
@@ -191,7 +196,9 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
     private createHttpRoute(
         name: string,
         host: pulumi.Input<string | pulumi.Input<string>[]>,
+        namespace: pulumi.Output<string>,
         backendName: pulumi.Output<string>,
+        backendNamespace: pulumi.Output<string>,
         backendPort: pulumi.Output<number>,
         localChain?: pulumi.Output<string>,
         suppressPaths?: pulumi.Input<string[]>
@@ -199,6 +206,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
         return new crds.gateway.v1.HTTPRoute(name, {
             metadata: {
                 // omit name to let pulumi auto-name it, avoiding replace conflicts
+                namespace,
                 annotations: {
                     "traefik.io/router.observability.accesslogs": suppressPaths ? "false" : "true"
                 },
@@ -226,6 +234,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                     backendRefs: [{
                         kind: "Service",
                         name: backendName,
+                        namespace: backendNamespace,
                         port: backendPort,
                     }],
                 }],
