@@ -108,6 +108,7 @@ export class Spoolman extends pulumi.ComponentResource<SpoolmanArgs> {
             targetService: service,
             enableAuth: true,
             enableMTls: false,
+            useLegacyIngress: false,
         });
 
         // Also a lan service without auth and proxy for printers to connect
