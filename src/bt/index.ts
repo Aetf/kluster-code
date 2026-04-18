@@ -128,6 +128,7 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
             host: args.host,
             targetService: service,
             enableAuth: true,
+            useLegacyIngress: false,
         });
     }
 }

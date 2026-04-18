@@ -80,6 +80,7 @@ export class K8sDashboard extends pulumi.ComponentResource<K8sDashboardArgs> {
             host: args.host,
             targetService: this.chart.service(),
             enableAuth: true,
+            useLegacyIngress: false,
         });
     }
 }

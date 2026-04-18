@@ -221,6 +221,7 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
             enableAuth: false,
             // Too much efforts to get probes updated to https
             enableMTls: false,
+            useLegacyIngress: false,
         });
     }
 }
