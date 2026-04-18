@@ -44,8 +44,8 @@ export class IntelDevicePlugins extends pulumi.ComponentResource<IntelDevicePlug
                             {
                                 feature: "pci.device",
                                 matchExpressions: {
-                                    vendor: { op: "In", value: ["8086"] },
-                                    class: { op: "In", value: ["0380", "0300"] },
+                                    vendor: { op: "In", value: ["8086"] as any },
+                                    class: { op: "In", value: ["0380", "0300"] as any },
                                 }
                             },
                             { feature: "kernel.loadedmodule", matchExpressions: { i915: { op: "Exists" } } },
