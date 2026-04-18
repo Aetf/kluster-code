@@ -15,7 +15,7 @@ export { FrontendService } from "./service";
 
 /** Reference to the shared Gateway, injected into HTTPRoute resources. */
 export interface GatewayRef {
-    name: string,
+    name: pulumi.Output<string>,
     namespace: pulumi.Output<string>,
 }
 
@@ -66,12 +66,81 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
         }, { parent: this, dependsOn: [gatewayApiCrds] });
         this.crdsReady = traefik.ready;
 
+        this.certificates = args.certificates.map(cert => {
+            return args.base.createFrontendCertificate(cert.main, cert, { parent: this });
+        });
+
+        // Build Gateway listeners — one HTTPS (Terminate) listener per TLD cert,
+        // plus optional TLS Passthrough listeners for special services (e.g. stdiscosrv).
+        const httpsListeners = args.certificates.flatMap((certArgs, i) => {
+            const certObj = this.certificates[i];
+            const baseProperties = {
+                protocol: 'HTTPS' as const,
+                port: traefik.httpsPort,
+                allowedRoutes: {
+                    namespaces: { from: 'All' as const },
+                },
+                tls: {
+                    mode: 'Terminate' as const,
+                    certificateRefs: [
+                        { kind: 'Secret', name: certObj.secretName },
+                    ],
+                },
+            };
+
+            return [
+                // Generic listener for the root domain
+                {
+                    ...baseProperties,
+                    name: `websecure-${certArgs.main.replace(/\./g, '-')}-root`,
+                    hostname: certArgs.main,
+                },
+                // Wildcard listener for subdomains
+                {
+                    ...baseProperties,
+                    name: `websecure-${certArgs.main.replace(/\./g, '-')}-wildcard`,
+                    hostname: `*.${certArgs.main}`,
+                },
+            ];
+        });
+        const passthroughListeners = (args.passthroughHosts ?? []).map(hostname => ({
+            name: `tls-passthrough-${hostname.replace(/\./g, '-')}`,
+            protocol: 'TLS' as const,
+            port: traefik.httpsPort,
+            hostname,
+            allowedRoutes: {
+                namespaces: { from: 'All' as const },
+            },
+            tls: {
+                // No certificateRefs: the backend owns and terminates its own TLS.
+                mode: 'Passthrough' as const,
+            },
+        }));
+
+        const gateway = new crds.gateway.v1.Gateway(name, {
+            spec: {
+                // gatewayClassName matches the class registered by the Traefik Helm chart
+                gatewayClassName: traefik.gatewayClassName,
+                listeners: [...httpsListeners, ...passthroughListeners],
+            },
+        }, {
+            parent: this,
+            // Wait for Traefik (and its GatewayClass) to be ready before creating the Gateway
+            dependsOn: [gatewayApiCrds],
+        });
+
+        this.gateway = {
+            name: gateway.metadata.name,
+            namespace: gateway.metadata.namespace,
+        };
+
         const authelia = new Authelia('authelia', {
             base: args.base,
             crdsReady: this.crdsReady,
             domain: args.domain,
             subdomain: 'auth',
             smtp: args.smtp,
+            gatewayRef: this.gateway,
         }, { parent: this });
 
         this.middlewareAuth = new Middleware('auth', {
@@ -111,66 +180,6 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
             }
         }, { parent: authelia });
 
-        this.certificates = args.certificates.map(cert => {
-            return args.base.createFrontendCertificate(cert.main, cert, { parent: this });
-        });
-
-        // Build Gateway listeners — one HTTPS (Terminate) listener per TLD cert,
-        // plus optional TLS Passthrough listeners for special services (e.g. stdiscosrv).
-        const httpsListeners = args.certificates.map((certArgs, i) => {
-            const certObj = this.certificates[i];
-            return {
-                name: `websecure-${certArgs.main.replace(/\./g, '-')}`,
-                protocol: 'HTTPS',
-                port: 443,
-                hostname: `*.${certArgs.main}`,
-                allowedRoutes: {
-                    namespaces: { from: 'All' },
-                },
-                tls: {
-                    mode: 'Terminate',
-                    certificateRefs: [
-                        { kind: 'Secret', name: certObj.secretName },
-                    ],
-                },
-            };
-        });
-
-        const passthroughListeners = (args.passthroughHosts ?? []).map(hostname => ({
-            name: `tls-passthrough-${hostname.replace(/\./g, '-')}`,
-            protocol: 'TLS',
-            port: 443,
-            hostname,
-            allowedRoutes: {
-                namespaces: { from: 'All' },
-            },
-            tls: {
-                // No certificateRefs: the backend owns and terminates its own TLS.
-                mode: 'Passthrough',
-            },
-        }));
-
-        const gatewayResource = new crds.gateway.v1.Gateway('traefik', {
-            metadata: {
-                name: 'traefik',
-            },
-            spec: {
-                // gatewayClassName matches the class registered by the Traefik Helm chart
-                gatewayClassName: traefik.gatewayClassName,
-                listeners: [...httpsListeners, ...passthroughListeners],
-            },
-        }, {
-            parent: this,
-            // Wait for Traefik (and its GatewayClass) to be ready before creating the Gateway
-            dependsOn: [traefik.chart],
-        });
-
-        const gatewayNamespace = pulumi.output(gatewayResource.metadata).apply(m => m.namespace!);
-        this.gateway = {
-            name: 'traefik',
-            namespace: gatewayNamespace,
-        };
-
         this.registerOutputs({
             crdsReady: this.crdsReady,
         });
@@ -182,7 +191,7 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
 
     public createFrontendService(
         name: string,
-        args: FrontendServiceArgs & { enableAuth?: boolean, enableBasicAuth?: boolean },
+        args: Omit<FrontendServiceArgs, 'gatewayRef'> & { enableAuth?: boolean, enableBasicAuth?: boolean },
         opts?: Omit<pulumi.ComponentResourceOptions, 'parent'>
     ): FrontendService {
         const enableAuth = args.enableAuth ?? false;
@@ -191,6 +200,7 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
         delete args['enableBasicAuth'];
         return new FrontendService(name, {
             ...args,
+            gatewayRef: this.gateway,
             middlewares: pulumi.output(args.middlewares)
                 .apply(ms => [
                     ...(enableAuth ?? false) ? [this.middlewareAuth] : [],
