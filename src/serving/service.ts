@@ -9,6 +9,7 @@ import { Service, setAndRegisterOutputs } from "#src/utils";
 
 import { Middleware, TLSOption } from "./traefik";
 import { GatewayRef } from "./index";
+import { BackendCertificate } from "#src/base-cluster";
 
 export interface FrontendServiceArgs {
     host: pulumi.Input<string | pulumi.Input<string>[]>,
@@ -29,6 +30,13 @@ export interface FrontendServiceArgs {
     // If true, legacy Ingress resource will be created.
     // Default to true for dual-emission, set to false for migrated services.
     useLegacyIngress?: boolean;
+
+    // If false, Gateway API resources (HTTPRoute, BackendTLSPolicy) won't be created.
+    // Use this to revert to legacy Ingress for services blocked by Gateway API limitations.
+    enableGatewayAPI?: boolean;
+
+    // Optional backend certificate to use for CA validation
+    backendCert?: BackendCertificate;
 
     gatewayRef: GatewayRef,
 }
@@ -113,42 +121,44 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
             }, { parent: this });
         }
 
-        // === GATEWAY API HTTPRoute ===
-        const serviceOut = pulumi.output(args.targetService);
-        const targetName = serviceOut.apply(s => s.metadata.name);
-        const targetNamespace = serviceOut.apply(s => s.metadata.namespace || 'default');
+        const enableGatewayAPI = args.enableGatewayAPI ?? true;
 
-        let localChainMiddlewareName: pulumi.Output<string> | undefined;
+        if (enableGatewayAPI) {
+            // === GATEWAY API HTTPRoute ===
+            const serviceOut = pulumi.output(args.targetService);
+            const targetName = serviceOut.apply(s => s.metadata.name);
+            const targetNamespace = serviceOut.apply(s => s.metadata.namespace || 'default');
 
-        if (this.middlewares) {
-            const chainMiddleware = new Middleware(`${name}-chain`, {
-                chain: {
-                    middlewares: this.middlewares.apply(ms => ms.map(m => ({
-                        name: m.metadata.name,
-                        namespace: m.metadata.namespace,
-                    })))
-                }
-            }, { parent: this, namespace: targetNamespace });
-            localChainMiddlewareName = pulumi.output(chainMiddleware.metadata.name).apply(n => n!);
-        }
+            let localChainMiddlewareName: pulumi.Output<string> | undefined;
 
-        const targetPortNumber = serviceOut.apply(service => service.spec.ports).apply(ports => {
-            const matching = ports.find(p => p.name === this.targetPort || p.name === this.schema || p.port == 443 || p.port == 80) ?? ports[0];
-            return matching.port;
-        });
-
-        if (!args.skipHttpRoute) {
-            this.createHttpRoute(name, args.host, targetNamespace, targetName, targetNamespace, targetPortNumber, localChainMiddlewareName);
-
-            if (this.suppressAccessLogPaths) {
-                this.createHttpRoute(`${name}-nolog`, args.host, targetNamespace, targetName, targetNamespace, targetPortNumber, localChainMiddlewareName, this.suppressAccessLogPaths);
+            if (this.middlewares) {
+                const chainMiddleware = new Middleware(`${name}-chain`, {
+                    chain: {
+                        middlewares: this.middlewares.apply(ms => ms.map(m => ({
+                            name: m.metadata.name,
+                            namespace: m.metadata.namespace,
+                        })))
+                    }
+                } as any, { parent: this, namespace: targetNamespace });
+                localChainMiddlewareName = pulumi.output(chainMiddleware.metadata.name).apply(n => n!);
             }
-        }
 
-        // Apply Gateway API BackendTLSPolicy to instruct Traefik to use HTTPS towards the backend
-        if (this.enableMTls) {
-            new crds.gateway.v1.BackendTLSPolicy(`${name}-tls`, {
-                spec: {
+            const targetPortNumber = serviceOut.apply(service => service.spec.ports).apply(ports => {
+                const matching = ports.find(p => p.name === this.targetPort || p.name === this.schema || p.port == 443 || p.port == 80) ?? ports[0];
+                return matching.port;
+            });
+
+            if (!args.skipHttpRoute) {
+                this.createHttpRoute(name, args.host, targetNamespace, targetName, targetNamespace, targetPortNumber, localChainMiddlewareName);
+
+                if (this.suppressAccessLogPaths) {
+                    this.createHttpRoute(`${name}-nolog`, args.host, targetNamespace, targetName, targetNamespace, targetPortNumber, localChainMiddlewareName, this.suppressAccessLogPaths);
+                }
+            }
+
+            // Apply Gateway API BackendTLSPolicy to instruct Traefik to use HTTPS towards the backend
+            if (this.enableMTls) {
+                const backendTLSPolicySpec: crds.types.input.gateway.v1.BackendTLSPolicySpec = {
                     targetRefs: [{
                         group: "",
                         kind: "Service",
@@ -156,10 +166,22 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                     }],
                     validation: {
                         hostname: pulumi.interpolate`${targetName}.${targetNamespace}.svc.cluster.local`,
-                        wellKnownCACertificates: "System",
+                        wellKnownCACertificates: args.backendCert ? undefined : "System",
+                        caCertificateRefs: args.backendCert ? [{
+                            group: "",
+                            kind: "Secret",
+                            name: args.backendCert.secretName,
+                        }] : undefined,
                     }
-                }
-            }, { parent: this });
+                };
+
+                new crds.gateway.v1.BackendTLSPolicy(`${name}-tls`, {
+                    metadata: {
+                        namespace: targetNamespace,
+                    },
+                    spec: backendTLSPolicySpec,
+                }, { parent: this });
+            }
         }
 
         setAndRegisterOutputs(this, {
