@@ -391,6 +391,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             enableMTls: false,
             // Immich will itself connect to Authelia using OpenID Connect
             enableAuth: false,
+            useLegacyIngress: false,
         });
     }
 }
