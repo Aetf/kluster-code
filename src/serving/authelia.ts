@@ -10,6 +10,7 @@ import { versions } from '#src/config';
 
 import { FrontendService } from './service';
 import { Middleware } from './traefik';
+import { GatewayRef } from './index';
 
 interface AutheliaArgs {
     base: BaseCluster,
@@ -19,6 +20,8 @@ interface AutheliaArgs {
 
     domain: pulumi.Input<string>,
     subdomain: pulumi.Input<string>,
+    
+    gatewayRef: GatewayRef,
 }
 
 export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
@@ -85,6 +88,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             host: this.authHost,
             targetService: this.service,
             middlewares: [middlewareAuthelia],
+            gatewayRef: args.gatewayRef,
         }, { parent: this });
 
         // urls used for verify
