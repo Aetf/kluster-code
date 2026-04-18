@@ -444,6 +444,7 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
             host: args.host,
             targetService: service,
             tlsOption,
+            skipHttpRoute: true,
             enableMTls: false,
             middlewares: [
                 // stdiscosrv needs client cert info
