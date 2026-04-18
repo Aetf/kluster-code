@@ -47,7 +47,8 @@ export class Haos extends pulumi.ComponentResource {
             // Check out https://github.com/christiaangoossens/hass-oidc-auth when
             // it is mature.
             enableAuth: false,
-            useLegacyIngress: false,
+            useLegacyIngress: true,
+            enableGatewayAPI: false,
         });
 
         this.registerOutputs({});
