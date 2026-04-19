@@ -4,7 +4,7 @@ This document tracks the progress, architecture, and current blockers for migrat
 
 ---
 
-## Current Migration Status (As of April 18, 2026)
+## Current Migration Status
 
 Most mTLS-enabled services have been **reverted** to legacy Ingress due to a technical blocker in Traefik v3's handling of backend CA certificates.
 
@@ -20,7 +20,7 @@ Most mTLS-enabled services have been **reverted** to legacy Ingress due to a tec
 | **Syncthing GUI**      | Reverted    | Legacy Ingress | Regressed due to mTLS blocker.                                                                         |
 | **Immich**             | Migrated    | Gateway API    | No mTLS required.                                                                                      |
 | **Syncthing Discosrv** | Migrated    | Gateway API    | Uses custom TLS passthrough.                                                                           |
-| **Home Assistant**     | In Progress | Mixed          | Blocked due to no ExternalName support in Gateway API. https://github.com/traefik/traefik/issues/12950 |
+| **Home Assistant**     | Migrated    | Gateway API    | Uses selector-less service + manual endpoints to bypass ExternalName limitation.                       |
 
 ### Technical Blockers (The "mTLS Problem")
 
@@ -120,4 +120,4 @@ The `FrontendService` component (`src/serving/service.ts`) handles resource emis
 
 ---
 
-_Last Updated: April 18, 2026_
+_Last Updated: April 19, 2026_

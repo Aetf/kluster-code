@@ -5,7 +5,7 @@ This project manages a k3s cluster configuration using Pulumi with the Node.js r
 ## Development Environment
 
 - **Runtime manager**: This project uses [`mise`](https://mise.jdx.dev/) to manage the Node.js runtime and tool versions. **Do NOT use `npx`** to run project tools — use the binaries directly (use `mise x <tool>`)
-- **TypeScript check**: `pulumi preview --diff --json` will check the code for syntax errors before generating the preview.
+- **TypeScript check**: `mise x -- pulumi preview --diff --json` will check the code for syntax errors before generating the preview.
 - **Package manager**: `npm`
 
 ## Core Structure
