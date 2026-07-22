@@ -10,7 +10,26 @@ import { versions } from '#src/config';
 interface SyncthingArgs {
     serving: Serving,
     host: pulumi.Input<string>,
-    storageClassName: pulumi.Input<string>,
+    // File data storage. Provide exactly one of:
+    //  - storageClassName: dynamically provision the data PVC
+    //  - dataPvc: reuse an existing PVC (e.g. a static NodePV on a host path)
+    storageClassName?: pulumi.Input<string>,
+    dataPvc?: kx.PersistentVolumeClaim,
+    // Sealed private key that fixes this device's ID. Omit to let syncthing
+    // generate its own on first start (persisted in the local DB PVC).
+    deviceKeyEncrypted?: pulumi.Input<string>,
+    // Optional gdrive bisync sidecar bridging <files>/Stuff <-> gdrive:Stuff.
+    gdriveSync?: {
+        guiApiKeyEncrypted: pulumi.Input<string>,
+        rcloneServiceAccountEncrypted: pulumi.Input<string>,
+        rcloneTeamDriveEncrypted: pulumi.Input<string>,
+    },
+    // Co-locate with the juicefs-redis master for metadata perf. Only relevant
+    // for a jfs-backed instance; a NodePV-backed pod is already node-pinned by
+    // the PV's nodeAffinity.
+    juicefsColocation?: boolean,
+    // lbpool for the sync-protocol (22000) LoadBalancer.
+    syncLbPool?: 'internet' | 'homelan',
 }
 
 export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
@@ -19,18 +38,19 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
         // Need a frontend service for web ui, and a loadbalancer service for
         // other ports
 
-        const secrets = new SealedSecret(name, {
+        if ((args.storageClassName === undefined) === (args.dataPvc === undefined)) {
+            throw new Error("Syncthing requires exactly one of storageClassName or dataPvc");
+        }
+
+        // Device identity: the private key determines the local device ID. When
+        // provided it is sealed and mounted so the ID stays stable; otherwise
+        // syncthing generates its own on first start (kept in the DB PVC).
+        const deviceKeySecret = args.deviceKeyEncrypted === undefined ? undefined : new SealedSecret(name, {
             spec: {
                 encryptedData: {
-                    // This is the private key that determins local device ID
-                    'key.pem': "AgACZGpBExpkr6biwFKd2n25WUdqmNrlu75DZsqRyJfCEbRah2mrGlhSNgOboVSiRr4lSC7WvGieud8Vqo8JtqIjfAmToLCs0zgYW/2+/jQoqsnIygFnJBel9v9ZXTEm89jI2tSJjQSOASD7NWm/J8fknV7o44BNBYf8zde844JGUQaGDkYNhPvdflmCoL3EPlle5Qi22G0QtcL8UOANEH0RJvOhyQZKWZxBerITg36OPAVPVRcIdN4HTeQ6DuDf21je+AwozhhRhCIz35z0FKA0bN7vwKMF3ixTAry+8vLIi78H1zmhC1+nFuN02GzJcyfvQeL5I4XV1aS1CwOTPRRzoVH3UfdJ6hp8SU+H1malhzAquAKMmJO+Q9NVDtgrRXERa7xRvGOZdvkUHwxDzAmiifvDEpFThywxnqQxy4ECQohWPxLU1uTssd07ldbm0oRIhDiwShPr2qOwwnCBagsWAbk9b3geBtJP+NJEYCOgbGLJaPXjMhOdx6YRyyVvCLQsJ8ilFt+a+ksIoUuatp0S6zGv+g/UVp0dWYUDiwXwImQtr29f/Lytf0Ij7T6CiqztuFu7y93eCeeVD7QFIdWNt2LPjeK0iAAayTw6o115tCOLqjp0WcRSt3kmwTkNhMTyQT4SlzkZEXF6A/oH3tqJE7GcF01bNE/BQfcQXSn/jx4L9gEa3cA/8K9sxt/XQlxFoYGZLFcUvkNsZgAo0cEvC8LdnPQYQ0a5N+7yd0s/T6ntSRRU5Vyl1iTOIObxuTsJQC+gaEICy/bIeNE7rCYDjTnNtNSOqq5aYKBNVSZmL5Qus1MRYYO65jW2/gaPGZNme3XIjOnRsjLC1BfOpHDqIec7xLOzPGbK5/INxdzbfCgDTJWBRTB6mOd9QZYSaaRu0LxdD503wcdl1HXOvL7SQjyg04MWOkBYC2xwCQdRJAbbNmJvMT8/rDqDJJsXONoJHCsQ+FiiHw4M3qGlW9WAodW0CBccituaxOkQut+wCMkj/A0Z3SwU1QPvWRF+cyLIt3rrpT53BX2Nz2DzNtQEn/+89xfGhBL944Ye4c0pAdZ0fNO3+rdYPnCSoYsafQ==",
+                    'key.pem': args.deviceKeyEncrypted,
                 }
             }
-        }, { parent: this });
-
-        // certificate for https to/from traefik
-        const cert = args.serving.base.createBackendCertificate(`${name}-gui`, {
-            namespace: pulumi.output(secrets.metadata).apply(m => m.namespace!),
         }, { parent: this });
 
         // local db storage
@@ -42,8 +62,14 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             }
         }, { parent: this, });
 
-        // file storage
-        const pvc = new kx.PersistentVolumeClaim(name, {
+        // certificate for https to/from traefik
+        const cert = args.serving.base.createBackendCertificate(`${name}-gui`, {
+            namespace: pulumi.output(localDbPvc.metadata).apply(m => m.namespace!),
+        }, { parent: this });
+
+        // file storage: either a provided (e.g. static NodePV) PVC or a
+        // dynamically provisioned one.
+        const pvc = args.dataPvc ?? new kx.PersistentVolumeClaim(name, {
             metadata: {
                 name: `${name}-data`,
             },
@@ -83,21 +109,22 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
 
         // API key shared between the syncthing container and the gdrive
         // sync-loop sidecar (needed for the events API; the GUI has no other
-        // auth configured, real auth happens at the ingress).
-        const guiApiKey = new SealedSecret(`${name}-gui-apikey`, {
+        // auth configured, real auth happens at the ingress). Only created when
+        // the gdrive bridge is enabled for this instance.
+        const guiApiKey = args.gdriveSync === undefined ? undefined : new SealedSecret(`${name}-gui-apikey`, {
             spec: {
                 encryptedData: {
-                    apikey: "AgCVwizCACarbMM/AEOnbYbhP7CaHCNC70Se+oVY4LnX1AyhNzUvoi0jUGfbxdvEy6QCaOTvW4bzDAhtMXna/N134Hv8aq3XwDfb1b1+spODSudfcK7ElcSaTzAb4+bS065Ls01TGs5zRv5I5zKszUNSuWKyk3cXptUKpL+ZZSrRX0msavX3Uo1GOdgZyfdLjA/Q6HMgn013eaHz8lnDEL2lUh99sXnCI9afCFu+J5dTsa8FlVAeecsEZpJ6irbvMTmULekvhxg2qEeeWgobiZF9eTZOdn9jq8vGJ0Zlugd5emSPOE7bLxIDm0wsr6seZlkaIvz8pjE7NdnEvGo3uliK6/alcgGdunZiOoXUfHVJusDhevKZS42BZgUcX1ad9zZCUDSbkg1TJ5aHomOHkRA3Dd/E8X2YB603W+U3R7XvxuwNORbr4WdOX14Uw3EGOSOWFJBbrAoqzzkT8y3ArfS0S7oddz+hHCD8kStX/VmIQrrLVahh2nrI7CLLIa4G7sps53vIDa/slaBYvzJ2dYkwKvOSobtnYWfppvEdstNLoBwtdaNbLurRzb2EiwRCx/qadhXAV2QKHO/1o+ACqGrHzLxEbHsxs9QYNMor9SV0uIbIr25JT2qRmvXDO1mgga+Z9x20WmThhr5HrRcikJoR6ccnC8vQ+8JHxaFBXX8Xtt01xmg24pv0zwSLwgwtmAzpy9zNFsGaYG341TpLwU0uSSJXJX+8OBSy7E+8zcgsBojL/UJqMri3Tl7oRygHBOM=",
+                    apikey: args.gdriveSync.guiApiKeyEncrypted,
                 },
             },
         }, { parent: this });
 
         // rclone credentials for the gdrive sync-loop sidecar
-        const rcloneConfig = new SealedSecret(`${name}-rclone`, {
+        const rcloneConfig = args.gdriveSync === undefined ? undefined : new SealedSecret(`${name}-rclone`, {
             spec: {
                 encryptedData: {
-                    "service_account_credentials": "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",
-                    "team_drive": "AgCZPy+Wq2f1oS9dOX2x7Q60XhierD1+wqrxcNrTgFii5WvBmHeW2H1YXrB/9KAs7L8CiAmlvIf92++cXeDEfEqLqsSgHISGeKARhPnkJe4kNSblJVOhrCAQ5G04CEmd1eepeyfOaf06SYrSO6cjfCXxp1YjnjzGx0gWa9ST9K8qvUng0MzBfKPVAjF8gaSjUkp70DPREOltHArsBcyAtMc5pAsCWKkBQiMldm777uDR+CVsnn0S6D8xownMq9A/BYaFH83WzkIxW49gXaA83iG/6iMTASFWOyOBDx3Ao6VLsN08SXeoYL88/uJIdrHHX41ScIbecT/LxQq3NQDZTJCcCNXgmgrXV7PPekLw09ASS8cdolyN1qfpU2GWaCdUP1dBLhevEHTMTLXdBWt38HLOT8Vwi5N//vjl1z2ZPtQEi7vir8pUxU9Oj63ZxL44nILi085Q64FG+TUqmP1iR+ZtgoEe4aL5bkB4/hkR6oZdhSugnJhvV8qY4y6RhbRRMd47p/zi7LgfIWSI+MH3Wyj2hEVpiztUGIcS3E9fmYTc2ti35IuFqS6hdTKpimyOkiE1fsvNAsJZoR71BVEUcvqTvCajQwRH8JhHankSycsxjmg5UGAGLPSbsguYs/obT9R7MFCYh+RPUFkjh/sTaCp/1JcrVylHB0mU5AAdbBWOUPP8oRCMf/lMs4ITrlVDgHpeKsMms3O5810c3dGHt6QOxra/",
+                    "service_account_credentials": args.gdriveSync.rcloneServiceAccountEncrypted,
+                    "team_drive": args.gdriveSync.rcloneTeamDriveEncrypted,
                 },
                 template: {
                     data: {
@@ -117,8 +144,9 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
 
         const pb = new kx.PodBuilder({
             restartPolicy: 'Always',
-            // Place it close to jfs matadata
-            affinity: {
+            // Place it close to jfs metadata (jfs-backed instance only; a
+            // NodePV-backed pod is already node-pinned by the PV's nodeAffinity).
+            affinity: args.juicefsColocation ? {
                 podAffinity: {
                     // This is a hack to run the pod on the same node as juicefs
                     // redis master, because otherwise the metadata server
@@ -136,7 +164,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                         }
                     ]
                 },
-            },
+            } : undefined,
             securityContext: {
                 fsGroup: 1000,
                 fsGroupChangePolicy: 'OnRootMismatch',
@@ -165,12 +193,16 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             initContainers: [{
                 name: `${name}-config`,
                 image: versions.image.yq,
+                // On a fresh instance the DB PVC has no config.xml yet, so seed
+                // it from the partial (syncthing completes the rest — local
+                // device, version — on first start). On subsequent starts merge
+                // the partial overrides into the existing config.
+                command: ['/bin/sh', '-c'],
                 args: [
-                    '--inplace',
-                    '--input-format', 'xml',
-                    '--output-format', 'xml',
-                    '(.configuration) += load_xml("/newconfig/config.xml").configuration',
-                    `${sthomePrefix}/config.xml`,
+                    `if [ -f ${sthomePrefix}/config.xml ]; then ` +
+                    `yq --inplace --input-format xml --output-format xml ` +
+                    `'(.configuration) += load_xml("/newconfig/config.xml").configuration' ${sthomePrefix}/config.xml; ` +
+                    `else cp /newconfig/config.xml ${sthomePrefix}/config.xml; fi`,
                 ],
                 volumeMounts: [
                     {
@@ -196,7 +228,9 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                     `--home=${sthomePrefix}`,
                 ],
                 env: {
-                    STGUIAPIKEY: guiApiKey.asEnvValue('apikey'),
+                    // Only pinned when the gdrive sidecar needs to share it;
+                    // otherwise syncthing generates a random GUI API key.
+                    ...(guiApiKey ? { STGUIAPIKEY: guiApiKey.asEnvValue('apikey') } : {}),
                 },
                 volumeMounts: [
                     {
@@ -208,7 +242,9 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                         mountPath: filePrefix,
                         mountPropagation: "HostToContainer",
                     },
-                    secrets.mount(`${sthomePrefix}/key.pem`, 'key.pem'),
+                    // Mount a fixed device key only when provided; otherwise
+                    // syncthing generates its own on first start.
+                    ...(deviceKeySecret ? [deviceKeySecret.mount(`${sthomePrefix}/key.pem`, 'key.pem')] : []),
                     {
                         name: pulumi.output(cert.metadata.name).apply(n => n!),
                         mountPath: `${sthomePrefix}/https-cert.pem`,
@@ -231,7 +267,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                     periodSeconds: 60,
                     timeoutSeconds: 10,
                 },
-            }, {
+            }, ...(args.gdriveSync ? [{
                 // Event-driven gdrive sync: long-polls the syncthing events
                 // API and runs rclone bisync on every change, with the poll
                 // timeout as the fallback cadence for gdrive-side changes.
@@ -246,7 +282,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                     limits: { cpu: "200m", memory: "128Mi" },
                 },
                 env: {
-                    STGUIAPIKEY: guiApiKey.asEnvValue('apikey'),
+                    STGUIAPIKEY: guiApiKey!.asEnvValue('apikey'),
                 },
                 volumeMounts: [
                     {
@@ -254,7 +290,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                         mountPath: filePrefix,
                         mountPropagation: "HostToContainer",
                     },
-                    rcloneConfig.mount('/config'),
+                    rcloneConfig!.mount('/config'),
                     // cm is already mounted (and its pod volume created) by the
                     // init container above; kx does not dedupe volumes across
                     // containers, so reference the existing volume by name here
@@ -264,7 +300,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                         mountPath: '/scripts',
                     },
                 ],
-            }]
+            }] : [])]
         });
 
         const deployment = new kx.Deployment(name, {
@@ -281,16 +317,20 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             }),
         }, { parent: this });
 
-        // Syncthing exposed to internet directly
+        // Syncthing sync protocol exposed via LoadBalancer. 'internet' routes
+        // via the VPS node; 'homelan' binds the port on the homelab node
+        // (reachable on its home-LAN and ZeroTier IPs).
+        const syncLbPool = args.syncLbPool ?? 'internet';
         const service = new kx.Service(name, {
             metadata: {
                 name,
                 labels: {
-                    'svccontroller.k3s.cattle.io/lbpool': 'internet',
+                    'svccontroller.k3s.cattle.io/lbpool': syncLbPool,
                 },
             },
             spec: {
                 type: "LoadBalancer",
+                ...(syncLbPool === 'homelan' ? { allocateLoadBalancerNodePorts: false } : {}),
                 ports: {
                     syncthing: ports.syncthing,
                 },
