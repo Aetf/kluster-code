@@ -173,7 +173,7 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                 image: versions.image.authelia,
                 resources: {
                     requests: { cpu: "20m", memory: "128Mi" },
-                    limits: { cpu: "50m", memory: "128Mi" }
+                    limits: { cpu: "500m", memory: "128Mi" }
                 },
                 command: ["authelia"],
                 ports: {

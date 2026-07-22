@@ -77,7 +77,7 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
                 image: versions.image.hath,
                 resources: {
                     requests: { cpu: "20m", memory: "196Mi" },
-                    limits: { cpu: "50m", memory: "256Mi" },
+                    limits: { cpu: "200m", memory: "512Mi" },
                 },
                 ports: {
                     hath: port,
