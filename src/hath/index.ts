@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as kx from "@pulumi/kubernetesx";
 
 import { BaseCluster } from '#src/base-cluster';
-import { SealedSecret, ConfigMap, serviceFromDeployment } from "#src/utils";
+import { SealedSecret, serviceFromDeployment } from "#src/utils";
 import { versions } from "#src/config";
 
 interface HathArgs {
@@ -24,13 +24,6 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
                     client_login: "AgClcYmu99AVzk4fbx0oNsoAakNqODAOaHSCND8WOQKBSQIgMHx0cbvoAd8meRSHJ03mfoDmFTmsCzh2WI/tlJaJIFUiMUnfoRIB/ZrQ+XQiBWR1dP6j9s0V1Wk1iKpRv1RurunvQio94wLDm76+SOL7x8KZA2XL/nvdgrfLwM34jS2QfY+7szn9/aq/en5pH+cbhhJZlZmD5wBjWVKgBy0L2GH4W3NPWi51cXRqI0a87fN08wf725ud1l1XVVC/qCDr1w6s4Ze+D/xj5yqGsAsOP3VCCIQp34fLXSlGZuJ4CppJUQlQRJyhCGsmBAKYynydedx0NfVaU9X8MS6sgsGVuw4uv2QL+/f5LP8HXWffDKmaKinWzr01jQmXNFISmR5DwwnlBRgdPUUb/lSX1PW60rYvnZfl7d36QLQF5nRdUESvG07Hin7gawqvdXdt2vp+bySHQx9W4b38JwAHNKOaiTeGZagQ8ZVeEhCeanw4TWZuhjq2uu+pDBu5VrP8pBDccO8wFEaiyW82ms8KhMreho5pnGHsJOwVkCHQTGvSxMalmGtTs1oLxiFRvUsGv5R/A4pGhjfC4OBtDlYxQsq8V4zE3HhYGHiobx3bmFH5yOoJqI16ADDOUm+AmTEabURSeEK4ekgpSudS/tIWcAC0EjjQYhBqo+2GIYqXp9VfmLWailRs9lPUOHMjEwo/hjc3P8jWdm+WSpsDAC3un8kz7QOWogk4kSiiKQ==",
                 }
             }
-        }, { parent: this });
-
-        // configmap for entrypoint script
-        const cm = new ConfigMap(name, {
-            ref_file: __filename,
-            data: 'static/*',
-            stripComponents: 1,
         }, { parent: this });
 
         const pvc = args.base.createLocalStoragePVC(`${name}`, {
@@ -82,36 +75,30 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
                 ports: {
                     hath: port,
                 },
-                // will exec hath jar
-                command: [
-                    '/bin/ash',
-                    '/entrypoint.sh',
-                    '--',
-                ],
-                // Hath jar arguments: https://ehwiki.org/wiki/Hentai@Home#Software
-                args: [
-                    // Hath will see IP address from servicelb daemonset, not
-                    // the original IP, so disable the check.
-                    '--disable-ip-origin-check',
-                    // explicitly set every dir path
-                    ...[
-                        'data', 'cache', 'log', 'temp', 'download',
-                    ].map(d => `--${d}-dir=${hathPrefix}/${d}`),
-                ],
+                // The frosty5689/hath image's default CMD (/opt/hath/start.sh)
+                // sets the jar path and every --*-dir flag, and appends
+                // ${EXTRA_ARGS} to the java invocation. Hath jar arguments:
+                // https://ehwiki.org/wiki/Hentai@Home#Software
                 env: {
-                    HatH_PORT: `${port}`,
+                    // - disable-ip-origin-check: hath sees the servicelb
+                    //   daemonset IP, not the original client IP.
+                    // - port: pin to the container/LoadBalancer port.
+                    EXTRA_ARGS: `--disable-ip-origin-check --port=${port}`,
                 },
-                envFrom: [
-                    // secrets.asEnvFromSource(),
-                ],
+                // The image declares /hath/{cache,data,download,log,tmp} as
+                // VOLUMEs, which shadow a single /hath mount and hide the
+                // JuiceFS cache/data. Mount each dir via subPath so the real
+                // data stays visible. start.sh uses --temp-dir=/hath/tmp (the
+                // old /hath/temp subdir is left orphaned; it was empty scratch).
                 volumeMounts: [
-                    {
-                        name: pvc.metadata.name,
-                        mountPath: hathPrefix,
-                        mountPropagation: "HostToContainer",
-                    },
+                    { name: pvc.metadata.name, mountPath: `${hathPrefix}/cache`, subPath: 'cache', mountPropagation: "HostToContainer" },
+                    { name: pvc.metadata.name, mountPath: `${hathPrefix}/data`, subPath: 'data', mountPropagation: "HostToContainer" },
+                    { name: pvc.metadata.name, mountPath: `${hathPrefix}/download`, subPath: 'download', mountPropagation: "HostToContainer" },
+                    { name: pvc.metadata.name, mountPath: `${hathPrefix}/log`, subPath: 'log', mountPropagation: "HostToContainer" },
+                    { name: pvc.metadata.name, mountPath: `${hathPrefix}/tmp`, subPath: 'tmp', mountPropagation: "HostToContainer" },
+                    // start.sh only writes client_login when absent, so the
+                    // mounted secret file is respected. Nests on the data subPath.
                     secrets.mount(`${hathPrefix}/data/client_login`, 'client_login'),
-                    cm.mount('/entrypoint.sh', 'entrypoint.sh'),
                 ],
             }],
             volumes: [
