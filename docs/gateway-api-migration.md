@@ -1,123 +1,120 @@
-# Gateway API Migration Status and Reference
+# Gateway API Migration — Complete
 
-This document tracks the progress, architecture, and current blockers for migrating cluster services from legacy Ingress to Kubernetes Gateway API (`HTTPRoute` + `BackendTLSPolicy`), using Traefik v3 as the implementation.
+This document records the (now finished) migration of cluster services from
+legacy Ingress to the Kubernetes Gateway API (`HTTPRoute` / `TLSRoute` /
+`BackendTLSPolicy`), implemented with Traefik v3.7.
 
----
-
-## Current Migration Status
-
-Most mTLS-enabled services have been **reverted** to legacy Ingress due to a technical blocker in Traefik v3's handling of backend CA certificates.
-
-| Service                | Status      | Ingress Type   | Notes                                                                                                  |
-| :--------------------- | :---------- | :------------- | :----------------------------------------------------------------------------------------------------- |
-| **Authelia**           | Reverted    | Legacy Ingress | Regressed due to mTLS blocker.                                                                         |
-| **Nextcloud**          | Reverted    | Legacy Ingress | Regressed due to mTLS blocker.                                                                         |
-| **Jellyfin**           | Reverted    | Legacy Ingress | Regressed due to mTLS blocker.                                                                         |
-| **K8s Dashboard**      | Reverted    | Legacy Ingress | Regressed due to mTLS blocker.                                                                         |
-| **Dufs (dav)**         | Reverted    | Legacy Ingress | Regressed due to mTLS blocker.                                                                         |
-| **Transmission**       | Reverted    | Legacy Ingress | Regressed due to mTLS blocker.                                                                         |
-| **Nginx Static**       | Reverted    | Legacy Ingress | Regressed due to mTLS blocker.                                                                         |
-| **Syncthing GUI**      | Reverted    | Legacy Ingress | Regressed due to mTLS blocker.                                                                         |
-| **Immich**             | Migrated    | Gateway API    | No mTLS required.                                                                                      |
-| **Syncthing Discosrv** | Migrated    | Gateway API    | Uses custom TLS passthrough.                                                                           |
-| **Home Assistant**     | Migrated    | Gateway API    | Uses selector-less service + manual endpoints to bypass ExternalName limitation.                       |
-
-### Technical Blockers (The "mTLS Problem")
-
-A full migration is currently blocked by a discrepancy in how Traefik v3 and `cert-manager` handle root CA certificates for backend TLS verification:
-
-1. **Traefik v3 (pre-3.7)**: Requires root CA certificates for `BackendTLSPolicy` to be provided via a `ConfigMap`. It does not yet support mounting from a `Secret`.
-2. **Cert-Manager**: Only supports writing CA certificates to `Secret` resources.
-3. **Internal TLS Regressions**: Services using mTLS (backend verification) fail with 500 Internal Server Errors because Traefik cannot verify the backend certificate without the root CA.
-
-**Tracking Issues**:
-
-- [Traefik PR #12927](https://github.com/traefik/traefik/pull/12927) (Support Secrets in BackendTLSPolicy) - **Required for 3.7 upgrade**
-- [Local Tracking Issue #134](https://github.com/Aetf/kluster-code/issues/134)
+The blocker that stalled this migration in early 2026 — Traefik pre-3.7 only
+accepting `BackendTLSPolicy` root CAs from a `ConfigMap` while `cert-manager`
+writes them to a `Secret` — was resolved by
+[Traefik #12927](https://github.com/traefik/traefik/pull/12927), shipped in
+Traefik 3.7. The migration was then completed in full; the
+`kubernetesIngress` provider is disabled and the legacy code path is removed.
 
 ---
 
-## Resolved Design Decisions
+## Final State
 
-| Decision                    | Resolution                                                                          |
-| --------------------------- | ----------------------------------------------------------------------------------- |
-| **HTTPRoute placement**     | **App namespace** — App owns its route, no ExternalName proxy needed.               |
-| **Single vs multi-Gateway** | **Single Gateway** with one HTTPS listener per TLD.                                 |
-| **Gateway permissions**     | Allows all namespaces — acceptable since all are managed by this stack.             |
-| **Migration strategy**      | **Phased**: keep Ingress + HTTPRoute co-existing; migrate one app at a time.        |
-| **Cert-manager approach**   | **Certificate CRD** (explicit) — required for wildcard listener support.            |
-| **Log format**              | **Text (CLF)** — human-readable, interleaved general and access logs.               |
-| **HTTP Redirects**          | Handled at the **Entrypoint level** (Traefik static config), not Gateway listeners. |
+| Service                | Ingress Type | Notes                                                           |
+| :--------------------- | :----------- | :------------------------------------------------------------- |
+| **Authelia**           | Gateway API  | HTTPRoute + BackendTLSPolicy (mTLS).                            |
+| **Jellyfin**           | Gateway API  | HTTPRoute + BackendTLSPolicy (mTLS).                            |
+| **K8s Dashboard**      | Gateway API  | HTTPRoute + BackendTLSPolicy (mTLS). Not currently deployed.   |
+| **Dufs (dav)**         | Gateway API  | HTTPRoute + BackendTLSPolicy (mTLS), basic auth.               |
+| **Transmission (bt)**  | Gateway API  | HTTPRoute + BackendTLSPolicy (mTLS). Not currently deployed.   |
+| **Nginx Static**       | Gateway API  | One HTTPRoute + BackendTLSPolicy per static site.              |
+| **Syncthing GUI**      | Gateway API  | HTTPRoute + BackendTLSPolicy (mTLS).                           |
+| **Immich**             | Gateway API  | HTTPRoute, no mTLS.                                            |
+| **Home Assistant**     | Gateway API  | HTTPRoute; selector-less service + manual endpoints; access-log suppression on `/api/webhook/` via IngressRoute. |
+| **Spoolman**           | Gateway API  | HTTPRoute, auth.                                               |
+| **Grafana (mon)**      | Gateway API  | HTTPRoute.                                                     |
+| **Minecraft dynmap**   | Gateway API  | HTTPRoute.                                                     |
+| **Syncthing Discosrv** | Gateway API  | **TLSRoute passthrough** — backend terminates TLS itself.     |
+
+Nextcloud is defined in `src/nextcloud/index.ts` but not instantiated
+(commented out in `src/index.ts`), so nothing is deployed for it.
 
 ---
 
 ## Architecture
 
-### Gateway Resource
+### Traefik (`src/serving/traefik.ts`)
 
-The `Gateway` resource (owned by `Serving` in `src/serving/index.ts`) is the central entry point.
+- Helm chart `41.0.2` (Traefik v3.7).
+- Providers: `kubernetesGateway` (with `experimentalChannel: true` for
+  `TLSRoute`) and `kubernetesCRD` (for `IngressRoute` / `Middleware` /
+  `TLSOption`). **`kubernetesIngress` is disabled.**
+- HTTP→HTTPS redirect at the entrypoint (`ports.web.http.redirections`).
+- A default `TLSOption` with `sniStrict: true` is kept; the
+  `kubernetesGateway` provider honors it and it enforces that clients send
+  SNI (a no-SNI connection to `:443` is rejected).
+- Global backend CA is still mounted at `/tls` and passed as
+  `--serversTransport.rootCAs=/tls/ca.crt` (used as a fallback / for any
+  non-Gateway transport).
 
-- **Listeners**: One HTTPS (Terminate) listener per TLD certificate (e.g., `*.unlimited-code.works`).
-- **SNI Demultiplexing**: Traefik maps listeners to entrypoints by port (443) and demultiplexes via SNI hostnames.
-- **Certificate Refs**: Explicitly references `Secret` resources created by the wildcard `Certificate` CRDs.
+### Gateway (`src/serving/index.ts`)
 
-### FrontendService Implementation
+- One `Gateway` in `serving-system`, `gatewayClassName: traefik`.
+- **HTTPS listeners**: for each TLD certificate, a root + wildcard
+  `HTTPS`/`Terminate` listener on port 8443, referencing the wildcard
+  `Certificate` Secret. SNI demultiplexes to the matching listener.
+- **Passthrough listeners**: for each host in `passthroughHosts`, a
+  `TLS`/`Passthrough` listener with no `certificateRefs`. Currently
+  `syncapi.unlimited-code.works` (stdiscosrv).
+- Gateway API CRDs are installed from the **experimental** channel and must
+  match the `sigs.k8s.io/gateway-api` version linked into the deployed
+  Traefik (currently **v1.5.1** for Traefik 3.7.x) — a mismatch breaks the
+  provider (e.g. it fails to watch `v1` `TLSRoute` and serves no routes).
 
-The `FrontendService` component (`src/serving/service.ts`) handles resource emission based on service needs.
+### FrontendService (`src/serving/service.ts`)
 
-**Key Parameters**:
+Single emission path (no more dual-emit). Depending on args it emits:
 
-- `useLegacyIngress`: Emits a standard `Ingress` + `ExternalName` service.
-- `enableGatewayAPI`: Emits `HTTPRoute` and (if `backendCert` is present) `BackendTLSPolicy`.
-- `suppressAccessLogPaths`: Creates a split `HTTPRoute` with `traefik.io/router.observability.accesslogs: "false"`.
+- `<name>`: an `HTTPRoute` targeting the backend Service directly, or a
+  `TLSRoute` when `tlsPassthrough` is set.
+- `<name>-tls`: a `BackendTLSPolicy` when `enableMTls`, with
+  `caCertificateRefs` pointing at the backend certificate **Secret**
+  (`kind: Secret`) — the thing Traefik 3.7 unblocked. Its
+  `validation.hostname` matches the backend certificate SAN, i.e.
+  `<service>.<namespace>` (see `src/base-cluster/certs.ts`), **not** the
+  fully-qualified `...svc.cluster.local`.
+- `<name>-nolog`: for `suppressAccessLogPaths`, a traefik `IngressRoute`
+  (not a second HTTPRoute) at high priority with
+  `route.observability.accessLogs: false`. The `kubernetesGateway` provider
+  ignores per-route observability annotations on HTTPRoute, so an
+  IngressRoute is required to actually disable access logging for a path.
 
-### stdiscosrv: TLSRoute Passthrough
+### stdiscosrv TLS passthrough
 
-`SyncthingDiscosrv` requires specialized mTLS (client device certs). It is migrated using **TLS Passthrough via `TLSRoute`** (experimental channel).
-
-- **Architecture**: Gateway routes by SNI but does NOT terminate TLS. The stream is passed unchanged to `stdiscosrv`.
-- **Infrastructure**: Requires `experimentalChannel: true` in Traefik and a `Passthrough` listener on the Gateway.
-
----
-
-## Phased Migration Roadmap
-
-### Phase 0: Foundation
-
-- Enable `kubernetesGateway` and `experimentalChannel` in Traefik.
-- Create the shared `Gateway` resource in `serving-system`.
-
-### Phase 1: Parallel Emission
-
-- Refactor `FrontendService` to emit both `Ingress` and `HTTPRoute` for non-mTLS services.
-- Verify `Accepted` status on all routes.
-
-### Phase 2: Pilot Migration (spoolman)
-
-- Disable legacy ingress for the pilot app.
-- Verify HTTPS access, auth redirects, and access logs.
-
-### Phase 3: mTLS Blocked Services (Current Status)
-
-- These services (Authelia, Nextcloud, etc.) remain on **Legacy Ingress** until Traefik 3.7.
-- `enableGatewayAPI` is set to `false` to avoid TLS handshake failures.
-
-### Phase 4: Full Cutover (Post-Traefik 3.7)
-
-1. **Upgrade Traefik** to 3.7+.
-2. **Update Infrastructure**: Modify `service.ts` to use `Secret` references in `BackendTLSPolicy`.
-3. **Toggle Flags**: Switch all services to `enableGatewayAPI: true` and `useLegacyIngress: false`.
-4. **Cleanup**: Remove `useLegacyIngress` logic and disable `kubernetesIngress` provider in Traefik.
+`SyncthingDiscosrv` needs client device certificates. It terminates TLS
+itself using a dedicated Let's Encrypt `FrontendCertificate` and is exposed
+via a `TLSRoute` on the Gateway's Passthrough listener — the Gateway routes
+by SNI without terminating TLS, so client device certs reach stdiscosrv
+directly (no `passTLSClientCert` header forwarding).
 
 ---
 
-## Troubleshooting Reference
+## mTLS backend trust
 
-- **Check Gateway Status**: `kubectl get gateway traefik -n serving-system -o yaml`
-- **Check HTTPRoutes**: `kubectl get httproute -A`
-- **Check BackendTLSPolicy**: `kubectl get backendtlspolicy -A`
-- **Access Logs**: View interleaved logs in the Traefik pod stdout. Filter by app hostname.
+- Private CA bootstrapped in `src/base-cluster/base.ts` (`setupPrivateCA`),
+  exposed as `base.rootIssuer`.
+- Each mTLS backend gets a `cert-svc-<name>` Certificate
+  (`src/base-cluster/certs.ts`, DNS name `<service>.<namespace>`), whose
+  Secret carries `tls.crt` / `tls.key` / `ca.crt`.
+- The backend serves HTTPS with its `cert-svc-*` Secret; the Gateway
+  verifies it via the `BackendTLSPolicy` `caCertificateRefs` Secret.
 
 ---
 
-_Last Updated: April 19, 2026_
+## Troubleshooting
+
+- Gateway status: `kubectl get gateway -n serving-system -o yaml`
+- Routes: `kubectl get httproute,tlsroute -A`
+- Backend policies: `kubectl get backendtlspolicy -A` (all should be
+  `Accepted`; identical policies over a shared Service may report
+  `Conflicted` on the extras — harmless, one wins).
+- Access logs: interleaved on the Traefik pod stdout; the router name in
+  each line ends with `@kubernetesgateway` (Gateway) or `@kubernetescrd`
+  (IngressRoute / Middleware).
+
+_Last Updated: July 22, 2026_
