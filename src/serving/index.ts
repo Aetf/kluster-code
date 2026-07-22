@@ -53,9 +53,12 @@ export class Serving extends pulumi.ComponentResource<ServingArgs> {
         super('kluster:Serving', name, args, opts);
         this.base = args.base;
 
-        // Install Gateway API CRDs (Experimental channel, for TLSRoute)
+        // Install Gateway API CRDs (Experimental channel, for TLSRoute).
+        // Keep in sync with the gateway-api library version linked into the
+        // deployed Traefik (see go.mod of the traefik release), otherwise the
+        // provider fails to watch (e.g. v1 TLSRoute) and serves no routes.
         const gatewayApiCrds = new k8s.yaml.ConfigFile("gateway-api-crds", {
-            file: "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/experimental-install.yaml",
+            file: "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/experimental-install.yaml",
         }, { parent: this });
 
         const traefik = new Traefik('traefik', {

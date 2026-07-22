@@ -96,14 +96,14 @@ export interface PodMonitorPatchArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1">;
+    apiVersion?: pulumi.Input<"monitoring.coreos.com/v1" | undefined>;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"PodMonitor">;
+    kind?: pulumi.Input<"PodMonitor" | undefined>;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch>;
-    spec?: pulumi.Input<inputs.monitoring.v1.PodMonitorSpecPatch>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch | undefined>;
+    spec?: pulumi.Input<inputs.monitoring.v1.PodMonitorSpecPatch | undefined>;
 }

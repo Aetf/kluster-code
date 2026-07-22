@@ -16,7 +16,7 @@ import * as utilities from "../../utilities";
  * TLSStore is the CRD implementation of a Traefik TLS Store.
  * For the time being, only the TLSStore named default is supported.
  * This means that you cannot have two stores that are named default in different Kubernetes namespaces.
- * More info: https://doc.traefik.io/traefik/v3.2/https/tls/#certificates-stores
+ * More info: https://doc.traefik.io/traefik/v3.7/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#certificates-stores
  */
 export class TLSStorePatch extends pulumi.CustomResource {
     /**
@@ -92,14 +92,14 @@ export interface TLSStorePatchArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    apiVersion?: pulumi.Input<"traefik.io/v1alpha1">;
+    apiVersion?: pulumi.Input<"traefik.io/v1alpha1" | undefined>;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"TLSStore">;
+    kind?: pulumi.Input<"TLSStore" | undefined>;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch>;
-    spec?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecPatch>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch | undefined>;
+    spec?: pulumi.Input<inputs.traefik.v1alpha1.TLSStoreSpecPatch | undefined>;
 }

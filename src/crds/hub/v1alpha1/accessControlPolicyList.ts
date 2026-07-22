@@ -89,7 +89,7 @@ export interface AccessControlPolicyListArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    apiVersion?: pulumi.Input<"hub.traefik.io/v1alpha1">;
+    apiVersion?: pulumi.Input<"hub.traefik.io/v1alpha1" | undefined>;
     /**
      * List of accesscontrolpolicies. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md
      */
@@ -97,9 +97,9 @@ export interface AccessControlPolicyListArgs {
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"AccessControlPolicyList">;
+    kind?: pulumi.Input<"AccessControlPolicyList" | undefined>;
     /**
      * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ListMeta>;
+    metadata?: pulumi.Input<inputs.meta.v1.ListMeta | undefined>;
 }

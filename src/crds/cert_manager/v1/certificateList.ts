@@ -89,7 +89,7 @@ export interface CertificateListArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    apiVersion?: pulumi.Input<"cert-manager.io/v1">;
+    apiVersion?: pulumi.Input<"cert-manager.io/v1" | undefined>;
     /**
      * List of certificates. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md
      */
@@ -97,9 +97,9 @@ export interface CertificateListArgs {
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"CertificateList">;
+    kind?: pulumi.Input<"CertificateList" | undefined>;
     /**
      * Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ListMeta>;
+    metadata?: pulumi.Input<inputs.meta.v1.ListMeta | undefined>;
 }

@@ -13,119 +13,107 @@ import * as utilities from "../../utilities";
  * Conflicts will result in an error by default, but can be forced using the "pulumi.com/patchForce" annotation. See the
  * [Server-Side Apply Docs](https://www.pulumi.com/registry/packages/kubernetes/how-to-guides/managing-resources-with-server-side-apply/) for
  * additional information about using Server-Side Apply to manage Kubernetes resources with Pulumi.
- * XListenerSet defines a set of additional listeners to attach to an existing Gateway.
- * This resource provides a mechanism to merge multiple listeners into a single Gateway.
+ * ReferenceGrant identifies kinds of resources in other namespaces that are
+ * trusted to reference the specified kinds of resources in the same namespace
+ * as the policy.
  *
- * The parent Gateway must explicitly allow ListenerSet attachment through its
- * AllowedListeners configuration. By default, Gateways do not allow ListenerSet
- * attachment.
+ * Each ReferenceGrant can be used to represent a unique trust relationship.
+ * Additional Reference Grants can be used to add to the set of trusted
+ * sources of inbound references for the namespace they are defined within.
  *
- * Routes can attach to a ListenerSet by specifying it as a parentRef, and can
- * optionally target specific listeners using the sectionName field.
+ * All cross-namespace references in Gateway API (with the exception of cross-namespace
+ * Gateway-route attachment) require a ReferenceGrant.
  *
- * Policy Attachment:
- * - Policies that attach to a ListenerSet apply to all listeners defined in that resource
- * - Policies do not impact listeners in the parent Gateway
- * - Different ListenerSets attached to the same Gateway can have different policies
- * - If an implementation cannot apply a policy to specific listeners, it should reject the policy
- *
- * ReferenceGrant Semantics:
- * - ReferenceGrants applied to a Gateway are not inherited by child ListenerSets
- * - ReferenceGrants applied to a ListenerSet do not grant permission to the parent Gateway's listeners
- * - A ListenerSet can reference secrets/backends in its own namespace without a ReferenceGrant
- *
- * Gateway Integration:
- * - The parent Gateway's status will include an "AttachedListenerSets" condition
- * - This condition will be:
- *   - True: when AllowedListeners is set and at least one child ListenerSet is attached
- *   - False: when AllowedListeners is set but no valid listeners are attached, or when AllowedListeners is not set or false
- *   - Unknown: when no AllowedListeners config is present
+ * ReferenceGrant is a form of runtime verification allowing users to assert
+ * which cross-namespace object references are permitted. Implementations that
+ * support ReferenceGrant MUST NOT permit cross-namespace references which have
+ * no grant, and MUST respond to the removal of a grant by revoking the access
+ * that the grant allowed.
  */
-export class XListenerSetPatch extends pulumi.CustomResource {
+export class ReferenceGrantPatch extends pulumi.CustomResource {
     /**
-     * Get an existing XListenerSetPatch resource's state with the given name, ID, and optional extra
+     * Get an existing ReferenceGrantPatch resource's state with the given name, ID, and optional extra
      * properties used to qualify the lookup.
      *
      * @param name The _unique_ name of the resulting resource.
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param opts Optional settings to control the behavior of the CustomResource.
      */
-    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): XListenerSetPatch {
-        return new XListenerSetPatch(name, undefined as any, { ...opts, id: id });
+    public static get(name: string, id: pulumi.Input<pulumi.ID>, opts?: pulumi.CustomResourceOptions): ReferenceGrantPatch {
+        return new ReferenceGrantPatch(name, undefined as any, { ...opts, id: id });
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'kubernetes:gateway.networking.x-k8s.io/v1alpha1:XListenerSetPatch';
+    public static readonly __pulumiType = 'kubernetes:gateway.networking.k8s.io/v1:ReferenceGrantPatch';
 
     /**
-     * Returns true if the given object is an instance of XListenerSetPatch.  This is designed to work even
+     * Returns true if the given object is an instance of ReferenceGrantPatch.  This is designed to work even
      * when multiple copies of the Pulumi SDK have been loaded into the same process.
      */
-    public static isInstance(obj: any): obj is XListenerSetPatch {
+    public static isInstance(obj: any): obj is ReferenceGrantPatch {
         if (obj === undefined || obj === null) {
             return false;
         }
-        return obj['__pulumiType'] === XListenerSetPatch.__pulumiType;
+        return obj['__pulumiType'] === ReferenceGrantPatch.__pulumiType;
     }
 
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    declare public readonly apiVersion: pulumi.Output<"gateway.networking.x-k8s.io/v1alpha1">;
+    declare public readonly apiVersion: pulumi.Output<"gateway.networking.k8s.io/v1">;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    declare public readonly kind: pulumi.Output<"XListenerSet">;
+    declare public readonly kind: pulumi.Output<"ReferenceGrant">;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
     declare public readonly metadata: pulumi.Output<outputs.meta.v1.ObjectMetaPatch>;
-    declare public readonly spec: pulumi.Output<outputs.gateway.v1alpha1.XListenerSetSpecPatch>;
-    declare public /*out*/ readonly status: pulumi.Output<outputs.gateway.v1alpha1.XListenerSetStatusPatch>;
+    declare public readonly spec: pulumi.Output<outputs.gateway.v1.ReferenceGrantSpecPatch>;
 
     /**
-     * Create a XListenerSetPatch resource with the given unique name, arguments, and options.
+     * Create a ReferenceGrantPatch resource with the given unique name, arguments, and options.
      *
      * @param name The _unique_ name of the resource.
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: XListenerSetPatchArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args?: ReferenceGrantPatchArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            resourceInputs["apiVersion"] = "gateway.networking.x-k8s.io/v1alpha1";
-            resourceInputs["kind"] = "XListenerSet";
+            resourceInputs["apiVersion"] = "gateway.networking.k8s.io/v1";
+            resourceInputs["kind"] = "ReferenceGrant";
             resourceInputs["metadata"] = args?.metadata;
             resourceInputs["spec"] = args?.spec;
-            resourceInputs["status"] = undefined /*out*/;
         } else {
             resourceInputs["apiVersion"] = undefined /*out*/;
             resourceInputs["kind"] = undefined /*out*/;
             resourceInputs["metadata"] = undefined /*out*/;
             resourceInputs["spec"] = undefined /*out*/;
-            resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        super(XListenerSetPatch.__pulumiType, name, resourceInputs, opts);
+        const aliasOpts = { aliases: [{ type: "kubernetes:gateway.networking.k8s.io/v1beta1:ReferenceGrantPatch" }] };
+        opts = pulumi.mergeOptions(opts, aliasOpts);
+        super(ReferenceGrantPatch.__pulumiType, name, resourceInputs, opts);
     }
 }
 
 /**
- * The set of arguments for constructing a XListenerSetPatch resource.
+ * The set of arguments for constructing a ReferenceGrantPatch resource.
  */
-export interface XListenerSetPatchArgs {
+export interface ReferenceGrantPatchArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    apiVersion?: pulumi.Input<"gateway.networking.x-k8s.io/v1alpha1">;
+    apiVersion?: pulumi.Input<"gateway.networking.k8s.io/v1" | undefined>;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"XListenerSet">;
+    kind?: pulumi.Input<"ReferenceGrant" | undefined>;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch>;
-    spec?: pulumi.Input<inputs.gateway.v1alpha1.XListenerSetSpecPatch>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch | undefined>;
+    spec?: pulumi.Input<inputs.gateway.v1.ReferenceGrantSpecPatch | undefined>;
 }

@@ -20,21 +20,6 @@ export type XBackendTrafficPolicyPatch = import("./xbackendTrafficPolicyPatch").
 export const XBackendTrafficPolicyPatch: typeof import("./xbackendTrafficPolicyPatch").XBackendTrafficPolicyPatch = null as any;
 utilities.lazyLoad(exports, ["XBackendTrafficPolicyPatch"], () => require("./xbackendTrafficPolicyPatch"));
 
-export { XListenerSetArgs } from "./xlistenerSet";
-export type XListenerSet = import("./xlistenerSet").XListenerSet;
-export const XListenerSet: typeof import("./xlistenerSet").XListenerSet = null as any;
-utilities.lazyLoad(exports, ["XListenerSet"], () => require("./xlistenerSet"));
-
-export { XListenerSetListArgs } from "./xlistenerSetList";
-export type XListenerSetList = import("./xlistenerSetList").XListenerSetList;
-export const XListenerSetList: typeof import("./xlistenerSetList").XListenerSetList = null as any;
-utilities.lazyLoad(exports, ["XListenerSetList"], () => require("./xlistenerSetList"));
-
-export { XListenerSetPatchArgs } from "./xlistenerSetPatch";
-export type XListenerSetPatch = import("./xlistenerSetPatch").XListenerSetPatch;
-export const XListenerSetPatch: typeof import("./xlistenerSetPatch").XListenerSetPatch = null as any;
-utilities.lazyLoad(exports, ["XListenerSetPatch"], () => require("./xlistenerSetPatch"));
-
 export { XMeshArgs } from "./xmesh";
 export type XMesh = import("./xmesh").XMesh;
 export const XMesh: typeof import("./xmesh").XMesh = null as any;
@@ -61,12 +46,6 @@ const _module = {
                 return new XBackendTrafficPolicyList(name, <any>undefined, { urn })
             case "kubernetes:gateway.networking.x-k8s.io/v1alpha1:XBackendTrafficPolicyPatch":
                 return new XBackendTrafficPolicyPatch(name, <any>undefined, { urn })
-            case "kubernetes:gateway.networking.x-k8s.io/v1alpha1:XListenerSet":
-                return new XListenerSet(name, <any>undefined, { urn })
-            case "kubernetes:gateway.networking.x-k8s.io/v1alpha1:XListenerSetList":
-                return new XListenerSetList(name, <any>undefined, { urn })
-            case "kubernetes:gateway.networking.x-k8s.io/v1alpha1:XListenerSetPatch":
-                return new XListenerSetPatch(name, <any>undefined, { urn })
             case "kubernetes:gateway.networking.x-k8s.io/v1alpha1:XMesh":
                 return new XMesh(name, <any>undefined, { urn })
             case "kubernetes:gateway.networking.x-k8s.io/v1alpha1:XMeshList":

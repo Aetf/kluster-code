@@ -40,20 +40,20 @@ export type API = import("./api").API;
 export const API: typeof import("./api").API = null as any;
 utilities.lazyLoad(exports, ["API"], () => require("./api"));
 
-export { APIAccessArgs } from "./apiaccess";
-export type APIAccess = import("./apiaccess").APIAccess;
-export const APIAccess: typeof import("./apiaccess").APIAccess = null as any;
-utilities.lazyLoad(exports, ["APIAccess"], () => require("./apiaccess"));
+export { APIAuthArgs } from "./apiauth";
+export type APIAuth = import("./apiauth").APIAuth;
+export const APIAuth: typeof import("./apiauth").APIAuth = null as any;
+utilities.lazyLoad(exports, ["APIAuth"], () => require("./apiauth"));
 
-export { APIAccessListArgs } from "./apiaccessList";
-export type APIAccessList = import("./apiaccessList").APIAccessList;
-export const APIAccessList: typeof import("./apiaccessList").APIAccessList = null as any;
-utilities.lazyLoad(exports, ["APIAccessList"], () => require("./apiaccessList"));
+export { APIAuthListArgs } from "./apiauthList";
+export type APIAuthList = import("./apiauthList").APIAuthList;
+export const APIAuthList: typeof import("./apiauthList").APIAuthList = null as any;
+utilities.lazyLoad(exports, ["APIAuthList"], () => require("./apiauthList"));
 
-export { APIAccessPatchArgs } from "./apiaccessPatch";
-export type APIAccessPatch = import("./apiaccessPatch").APIAccessPatch;
-export const APIAccessPatch: typeof import("./apiaccessPatch").APIAccessPatch = null as any;
-utilities.lazyLoad(exports, ["APIAccessPatch"], () => require("./apiaccessPatch"));
+export { APIAuthPatchArgs } from "./apiauthPatch";
+export type APIAuthPatch = import("./apiauthPatch").APIAuthPatch;
+export const APIAuthPatch: typeof import("./apiauthPatch").APIAuthPatch = null as any;
+utilities.lazyLoad(exports, ["APIAuthPatch"], () => require("./apiauthPatch"));
 
 export { APIBundleArgs } from "./apibundle";
 export type APIBundle = import("./apibundle").APIBundle;
@@ -115,6 +115,21 @@ export type APIPortal = import("./apiportal").APIPortal;
 export const APIPortal: typeof import("./apiportal").APIPortal = null as any;
 utilities.lazyLoad(exports, ["APIPortal"], () => require("./apiportal"));
 
+export { APIPortalAuthArgs } from "./apiportalAuth";
+export type APIPortalAuth = import("./apiportalAuth").APIPortalAuth;
+export const APIPortalAuth: typeof import("./apiportalAuth").APIPortalAuth = null as any;
+utilities.lazyLoad(exports, ["APIPortalAuth"], () => require("./apiportalAuth"));
+
+export { APIPortalAuthListArgs } from "./apiportalAuthList";
+export type APIPortalAuthList = import("./apiportalAuthList").APIPortalAuthList;
+export const APIPortalAuthList: typeof import("./apiportalAuthList").APIPortalAuthList = null as any;
+utilities.lazyLoad(exports, ["APIPortalAuthList"], () => require("./apiportalAuthList"));
+
+export { APIPortalAuthPatchArgs } from "./apiportalAuthPatch";
+export type APIPortalAuthPatch = import("./apiportalAuthPatch").APIPortalAuthPatch;
+export const APIPortalAuthPatch: typeof import("./apiportalAuthPatch").APIPortalAuthPatch = null as any;
+utilities.lazyLoad(exports, ["APIPortalAuthPatch"], () => require("./apiportalAuthPatch"));
+
 export { APIPortalListArgs } from "./apiportalList";
 export type APIPortalList = import("./apiportalList").APIPortalList;
 export const APIPortalList: typeof import("./apiportalList").APIPortalList = null as any;
@@ -155,6 +170,36 @@ export type APIVersionPatch = import("./apiversionPatch").APIVersionPatch;
 export const APIVersionPatch: typeof import("./apiversionPatch").APIVersionPatch = null as any;
 utilities.lazyLoad(exports, ["APIVersionPatch"], () => require("./apiversionPatch"));
 
+export { ContentItemArgs } from "./contentItem";
+export type ContentItem = import("./contentItem").ContentItem;
+export const ContentItem: typeof import("./contentItem").ContentItem = null as any;
+utilities.lazyLoad(exports, ["ContentItem"], () => require("./contentItem"));
+
+export { ContentItemListArgs } from "./contentItemList";
+export type ContentItemList = import("./contentItemList").ContentItemList;
+export const ContentItemList: typeof import("./contentItemList").ContentItemList = null as any;
+utilities.lazyLoad(exports, ["ContentItemList"], () => require("./contentItemList"));
+
+export { ContentItemPatchArgs } from "./contentItemPatch";
+export type ContentItemPatch = import("./contentItemPatch").ContentItemPatch;
+export const ContentItemPatch: typeof import("./contentItemPatch").ContentItemPatch = null as any;
+utilities.lazyLoad(exports, ["ContentItemPatch"], () => require("./contentItemPatch"));
+
+export { ManagedApplicationArgs } from "./managedApplication";
+export type ManagedApplication = import("./managedApplication").ManagedApplication;
+export const ManagedApplication: typeof import("./managedApplication").ManagedApplication = null as any;
+utilities.lazyLoad(exports, ["ManagedApplication"], () => require("./managedApplication"));
+
+export { ManagedApplicationListArgs } from "./managedApplicationList";
+export type ManagedApplicationList = import("./managedApplicationList").ManagedApplicationList;
+export const ManagedApplicationList: typeof import("./managedApplicationList").ManagedApplicationList = null as any;
+utilities.lazyLoad(exports, ["ManagedApplicationList"], () => require("./managedApplicationList"));
+
+export { ManagedApplicationPatchArgs } from "./managedApplicationPatch";
+export type ManagedApplicationPatch = import("./managedApplicationPatch").ManagedApplicationPatch;
+export const ManagedApplicationPatch: typeof import("./managedApplicationPatch").ManagedApplicationPatch = null as any;
+utilities.lazyLoad(exports, ["ManagedApplicationPatch"], () => require("./managedApplicationPatch"));
+
 export { ManagedSubscriptionArgs } from "./managedSubscription";
 export type ManagedSubscription = import("./managedSubscription").ManagedSubscription;
 export const ManagedSubscription: typeof import("./managedSubscription").ManagedSubscription = null as any;
@@ -170,6 +215,21 @@ export type ManagedSubscriptionPatch = import("./managedSubscriptionPatch").Mana
 export const ManagedSubscriptionPatch: typeof import("./managedSubscriptionPatch").ManagedSubscriptionPatch = null as any;
 utilities.lazyLoad(exports, ["ManagedSubscriptionPatch"], () => require("./managedSubscriptionPatch"));
 
+export { UplinkArgs } from "./uplink";
+export type Uplink = import("./uplink").Uplink;
+export const Uplink: typeof import("./uplink").Uplink = null as any;
+utilities.lazyLoad(exports, ["Uplink"], () => require("./uplink"));
+
+export { UplinkListArgs } from "./uplinkList";
+export type UplinkList = import("./uplinkList").UplinkList;
+export const UplinkList: typeof import("./uplinkList").UplinkList = null as any;
+utilities.lazyLoad(exports, ["UplinkList"], () => require("./uplinkList"));
+
+export { UplinkPatchArgs } from "./uplinkPatch";
+export type UplinkPatch = import("./uplinkPatch").UplinkPatch;
+export const UplinkPatch: typeof import("./uplinkPatch").UplinkPatch = null as any;
+utilities.lazyLoad(exports, ["UplinkPatch"], () => require("./uplinkPatch"));
+
 
 const _module = {
     version: utilities.getVersion(),
@@ -183,12 +243,12 @@ const _module = {
                 return new AIServicePatch(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:API":
                 return new API(name, <any>undefined, { urn })
-            case "kubernetes:hub.traefik.io/v1alpha1:APIAccess":
-                return new APIAccess(name, <any>undefined, { urn })
-            case "kubernetes:hub.traefik.io/v1alpha1:APIAccessList":
-                return new APIAccessList(name, <any>undefined, { urn })
-            case "kubernetes:hub.traefik.io/v1alpha1:APIAccessPatch":
-                return new APIAccessPatch(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:APIAuth":
+                return new APIAuth(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:APIAuthList":
+                return new APIAuthList(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:APIAuthPatch":
+                return new APIAuthPatch(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:APIBundle":
                 return new APIBundle(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:APIBundleList":
@@ -213,6 +273,12 @@ const _module = {
                 return new APIPlanPatch(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:APIPortal":
                 return new APIPortal(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:APIPortalAuth":
+                return new APIPortalAuth(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:APIPortalAuthList":
+                return new APIPortalAuthList(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:APIPortalAuthPatch":
+                return new APIPortalAuthPatch(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:APIPortalList":
                 return new APIPortalList(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:APIPortalPatch":
@@ -235,12 +301,30 @@ const _module = {
                 return new AccessControlPolicyList(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:AccessControlPolicyPatch":
                 return new AccessControlPolicyPatch(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:ContentItem":
+                return new ContentItem(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:ContentItemList":
+                return new ContentItemList(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:ContentItemPatch":
+                return new ContentItemPatch(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:ManagedApplication":
+                return new ManagedApplication(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:ManagedApplicationList":
+                return new ManagedApplicationList(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:ManagedApplicationPatch":
+                return new ManagedApplicationPatch(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:ManagedSubscription":
                 return new ManagedSubscription(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:ManagedSubscriptionList":
                 return new ManagedSubscriptionList(name, <any>undefined, { urn })
             case "kubernetes:hub.traefik.io/v1alpha1:ManagedSubscriptionPatch":
                 return new ManagedSubscriptionPatch(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:Uplink":
+                return new Uplink(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:UplinkList":
+                return new UplinkList(name, <any>undefined, { urn })
+            case "kubernetes:hub.traefik.io/v1alpha1:UplinkPatch":
+                return new UplinkPatch(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

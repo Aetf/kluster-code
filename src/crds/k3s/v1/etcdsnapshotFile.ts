@@ -86,14 +86,14 @@ export interface ETCDSnapshotFileArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    apiVersion?: pulumi.Input<"k3s.cattle.io/v1">;
+    apiVersion?: pulumi.Input<"k3s.cattle.io/v1" | undefined>;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"ETCDSnapshotFile">;
+    kind?: pulumi.Input<"ETCDSnapshotFile" | undefined>;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta>;
-    spec?: pulumi.Input<inputs.k3s.v1.ETCDSnapshotFileSpec>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
+    spec?: pulumi.Input<inputs.k3s.v1.ETCDSnapshotFileSpec | undefined>;
 }

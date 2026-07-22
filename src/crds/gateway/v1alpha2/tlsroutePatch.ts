@@ -16,9 +16,6 @@ import * as utilities from "../../utilities";
  * The TLSRoute resource is similar to TCPRoute, but can be configured
  * to match against TLS-specific metadata. This allows more flexibility
  * in matching streams for a given TLS listener.
- *
- * If you need to forward traffic to a single target for a TLS listener, you
- * could choose to use a TCPRoute with a TLS listener.
  */
 export class TLSRoutePatch extends pulumi.CustomResource {
     /**
@@ -86,7 +83,7 @@ export class TLSRoutePatch extends pulumi.CustomResource {
             resourceInputs["status"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const aliasOpts = { aliases: [{ type: "kubernetes:gateway.networking.k8s.io/v1alpha3:TLSRoutePatch" }] };
+        const aliasOpts = { aliases: [{ type: "kubernetes:gateway.networking.k8s.io/v1:TLSRoutePatch" }, { type: "kubernetes:gateway.networking.k8s.io/v1alpha3:TLSRoutePatch" }] };
         opts = pulumi.mergeOptions(opts, aliasOpts);
         super(TLSRoutePatch.__pulumiType, name, resourceInputs, opts);
     }
@@ -99,14 +96,14 @@ export interface TLSRoutePatchArgs {
     /**
      * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
      */
-    apiVersion?: pulumi.Input<"gateway.networking.k8s.io/v1alpha2">;
+    apiVersion?: pulumi.Input<"gateway.networking.k8s.io/v1alpha2" | undefined>;
     /**
      * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
      */
-    kind?: pulumi.Input<"TLSRoute">;
+    kind?: pulumi.Input<"TLSRoute" | undefined>;
     /**
      * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
      */
-    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch>;
-    spec?: pulumi.Input<inputs.gateway.v1alpha2.TLSRouteSpecPatch>;
+    metadata?: pulumi.Input<inputs.meta.v1.ObjectMetaPatch | undefined>;
+    spec?: pulumi.Input<inputs.gateway.v1alpha2.TLSRouteSpecPatch | undefined>;
 }
