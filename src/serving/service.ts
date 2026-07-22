@@ -52,7 +52,9 @@ export interface FrontendServiceArgs {
  * - <name>-dns: Service of type ExternalName, targeting the corresponding backend Service (Legacy)
  * - <name>-ingress: Ingress rule (Legacy)
  * - <name>: HTTPRoute targeting the backend Service directly (Gateway API)
- * - <name>-nolog: Optional second HTTPRoute for paths overriding access logging
+ * - <name>-nolog: Optional traefik IngressRoute for paths that disable access
+ *   logging. The kubernetesGateway provider ignores per-route observability,
+ *   so this uses an IngressRoute (which supports it) at a higher priority.
  */
 export class FrontendService extends pulumi.ComponentResource<FrontendServiceArgs> {
     public readonly service: Service;
@@ -179,7 +181,46 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                 this.createHttpRoute(name, args.host, targetNamespace, targetName, targetNamespace, targetPortNumber, localChainMiddlewareName);
 
                 if (this.suppressAccessLogPaths) {
-                    this.createHttpRoute(`${name}-nolog`, args.host, targetNamespace, targetName, targetNamespace, targetPortNumber, localChainMiddlewareName, this.suppressAccessLogPaths);
+                    // The kubernetesGateway provider ignores observability
+                    // annotations on HTTPRoute (only service.nativeLB is
+                    // parsed), so split these paths onto a traefik
+                    // IngressRoute, which does support per-route
+                    // observability. Priority must outrank the Gateway
+                    // router for the same host (host+path length based,
+                    // i.e. double digits).
+                    const rule = pulumi.all([pulumi.output(args.host), pulumi.output(this.suppressAccessLogPaths)])
+                        .apply(([hosts, paths]) => {
+                            const hostList = _.isString(hosts) ? [hosts] : hosts as string[];
+                            const hostRule = hostList.map(h => `Host(\`${h}\`)`).join(' || ');
+                            const pathRule = paths.map(p => `PathPrefix(\`${p}\`)`).join(' || ');
+                            return `(${hostRule}) && (${pathRule})`;
+                        });
+                    new crds.traefik.v1alpha1.IngressRoute(`${name}-nolog`, {
+                        metadata: {
+                            namespace: targetNamespace,
+                        },
+                        spec: {
+                            entryPoints: ['websecure'],
+                            routes: [{
+                                match: rule,
+                                kind: 'Rule',
+                                priority: 10000,
+                                observability: {
+                                    accessLogs: false,
+                                },
+                                middlewares: localChainMiddlewareName ? [{
+                                    name: localChainMiddlewareName,
+                                    namespace: targetNamespace,
+                                }] : undefined,
+                                services: [{
+                                    name: targetName,
+                                    namespace: targetNamespace,
+                                    port: targetPortNumber,
+                                    scheme: this.schema,
+                                }],
+                            }],
+                        },
+                    }, { parent: this });
                 }
             }
 
@@ -252,15 +293,11 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
         backendNamespace: pulumi.Output<string>,
         backendPort: pulumi.Output<number>,
         localChain?: pulumi.Output<string>,
-        suppressPaths?: pulumi.Input<string[]>
     ): crds.gateway.v1.HTTPRoute {
         return new crds.gateway.v1.HTTPRoute(name, {
             metadata: {
                 // omit name to let pulumi auto-name it, avoiding replace conflicts
                 namespace,
-                annotations: {
-                    "traefik.io/router.observability.accesslogs": suppressPaths ? "false" : "true"
-                },
             },
             spec: {
                 parentRefs: [{
@@ -269,11 +306,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                 }],
                 hostnames: pulumi.output(host).apply(h => _.isString(h) ? [h] : h),
                 rules: [{
-                    matches: suppressPaths 
-                        ? pulumi.output(suppressPaths).apply(paths => paths.map(p => ({
-                            path: { type: "PathPrefix", value: p }
-                          })))
-                        : [{ path: { type: "PathPrefix", value: "/" } }],
+                    matches: [{ path: { type: "PathPrefix", value: "/" } }],
                     filters: localChain ? [{
                         type: "ExtensionRef",
                         extensionRef: {

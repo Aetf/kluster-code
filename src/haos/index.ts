@@ -76,6 +76,8 @@ export class Haos extends pulumi.ComponentResource {
             enableAuth: false,
             useLegacyIngress: false,
             enableGatewayAPI: true,
+            // go-hass-agent sensor updates flood the access log (~40 POSTs/min)
+            suppressAccessLogPaths: ['/api/webhook/'],
         });
 
         this.registerOutputs({});
