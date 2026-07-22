@@ -255,7 +255,14 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                         mountPropagation: "HostToContainer",
                     },
                     rcloneConfig.mount('/config'),
-                    cm.mount('/scripts'),
+                    // cm is already mounted (and its pod volume created) by the
+                    // init container above; kx does not dedupe volumes across
+                    // containers, so reference the existing volume by name here
+                    // instead of calling cm.mount() a second time.
+                    {
+                        name: cm.metadata.name,
+                        mountPath: '/scripts',
+                    },
                 ],
             }]
         });
