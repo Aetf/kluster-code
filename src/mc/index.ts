@@ -223,7 +223,6 @@ export class Mc extends pulumi.ComponentResource<McArgs> {
             enableMTls: false,
             // Dynmap is readonly data
             enableAuth: false,
-            useLegacyIngress: false,
         });
     }
 }

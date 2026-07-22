@@ -247,8 +247,6 @@ export class Nextcloud extends pulumi.ComponentResource<NextcloudArgs> {
             backendCert: this.certificate,
             // TODO: enable auth after authelia odic GA
             enableAuth: false,
-            useLegacyIngress: true,
-            enableGatewayAPI: false,
         });
 
         // cron job

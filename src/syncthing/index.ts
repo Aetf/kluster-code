@@ -316,8 +316,6 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             enableAuth: true,
             targetService: guiService,
             backendCert: cert,
-            useLegacyIngress: false,
-            enableGatewayAPI: true,
         });
 
     }
@@ -408,7 +406,6 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
             targetService: service,
             tlsPassthrough: true,
             enableMTls: false,
-            useLegacyIngress: false,
         });
     }
 }

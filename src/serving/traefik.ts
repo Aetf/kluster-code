@@ -79,20 +79,10 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                         // serving-system (used for auth Chain delegates)
                         allowCrossNamespace: true,
                     },
+                    // Legacy Ingress fully migrated to Gateway API (#134);
+                    // provider disabled to complete the cutover.
                     kubernetesIngress: {
-                        enabled: true,
-                        // traefik by default do not allow ExternalName service due to minor CVE
-                        // see https://github.com/traefik/traefik/pull/8261
-                        // see https://doc.traefik.io/traefik/migration/v2/#k8s-externalname-service
-                        allowExternalNameServices: true,
-                        // Chart v41 defaults publishedService on; keep the
-                        // explicit external IP behavior instead.
-                        publishedService: {
-                            enabled: false
-                        },
-                        ingressEndpoint: {
-                            ip: args.externalIPs[0],
-                        },
+                        enabled: false,
                     }
                 },
                 service: {
@@ -128,8 +118,11 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                         }
                     }
                 },
-                // automatically created as TLSOptions CR
-                // TODO: remove this AFTER kubernetesingress is disabled.
+                // Default TLSOption CR. Kept even after the Gateway API
+                // cutover: the kubernetesGateway provider honors the default
+                // TLSOption, and sniStrict enforces that clients send SNI
+                // (verified: a no-SNI connection to :443 is rejected), which
+                // the per-SNI Gateway listeners rely on.
                 tlsOptions: {
                     default: {
                         sniStrict: true

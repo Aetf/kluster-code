@@ -114,8 +114,6 @@ export class Dufs extends pulumi.ComponentResource<DufsArgs> {
             targetService: service,
             enableBasicAuth: true,
             backendCert: cert,
-            useLegacyIngress: false,
-            enableGatewayAPI: true,
         });
 
         this.address = pulumi.interpolate`${service.metadata.name}.${service.metadata.namespace}`;

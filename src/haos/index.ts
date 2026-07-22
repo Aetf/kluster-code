@@ -74,8 +74,6 @@ export class Haos extends pulumi.ComponentResource {
             // Check out https://github.com/christiaangoossens/hass-oidc-auth when
             // it is mature.
             enableAuth: false,
-            useLegacyIngress: false,
-            enableGatewayAPI: true,
             // go-hass-agent sensor updates flood the access log (~40 POSTs/min)
             suppressAccessLogPaths: ['/api/webhook/'],
         });
