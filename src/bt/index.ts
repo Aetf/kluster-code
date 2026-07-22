@@ -129,8 +129,8 @@ export class Bt extends pulumi.ComponentResource<BtArgs> {
             targetService: service,
             enableAuth: true,
             backendCert: this.certificate,
-            useLegacyIngress: true,
-            enableGatewayAPI: false,
+            useLegacyIngress: false,
+            enableGatewayAPI: true,
         });
     }
 }

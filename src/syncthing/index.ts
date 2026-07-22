@@ -316,8 +316,8 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             enableAuth: true,
             targetService: guiService,
             backendCert: cert,
-            useLegacyIngress: true,
-            enableGatewayAPI: false,
+            useLegacyIngress: false,
+            enableGatewayAPI: true,
         });
 
     }

@@ -90,8 +90,8 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
             middlewares: [middlewareAuthelia],
             backendCert: this.certificate,
             gatewayRef: args.gatewayRef,
-            useLegacyIngress: true,
-            enableGatewayAPI: false,
+            useLegacyIngress: false,
+            enableGatewayAPI: true,
         }, { parent: this });
 
         // urls used for verify
