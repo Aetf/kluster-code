@@ -85,13 +85,14 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                         // see https://github.com/traefik/traefik/pull/8261
                         // see https://doc.traefik.io/traefik/migration/v2/#k8s-externalname-service
                         allowExternalNameServices: true,
-                        // Use publishedService once traefik/traefik#7972 is
-                        // fixed.
-                        /*
+                        // Chart v41 defaults publishedService on; keep the
+                        // explicit external IP behavior instead.
                         publishedService: {
-                            enabled: true
-                        }
-                        */
+                            enabled: false
+                        },
+                        ingressEndpoint: {
+                            ip: args.externalIPs[0],
+                        },
                     }
                 },
                 service: {
@@ -106,24 +107,24 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                     web: {
                         port: HTTP_CONTAINER_PORT,
                         exposedPort: args.httpPort,
-                        // permanent redirection by default
-                        // TODO: remove redirectTO after traefik helm chart upgrade past v34
-                        redirectTo: {
-                            port: "websecure"
-                        },
-                        redirections: {
-                            entryPoint: {
-                                to: "websecure",
-                                scheme: "https",
-                                permanent: true,
-                            }
+                        http: {
+                            // permanent redirection by default
+                            redirections: {
+                                entryPoint: {
+                                    to: "websecure",
+                                    scheme: "https",
+                                    permanent: true,
+                                }
+                            },
                         },
                     },
                     websecure: {
                         port: HTTPS_CONTAINER_PORT,
                         exposedPort: args.httpsPort,
-                        tls: {
-                            enabled: true
+                        http: {
+                            tls: {
+                                enabled: true
+                            }
                         }
                     }
                 },
@@ -156,27 +157,22 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                 ],
                 additionalArguments: [
                     "--serversTransport.rootCAs=/tls/ca.crt",
-                    pulumi.interpolate`--providers.kubernetesingress.ingressendpoint.ip=${args.externalIPs[0]}`,
                 ],
-                logs: {
-                    general: {
-                        level: "INFO"
-                    },
-                    access: {
-                        enabled: true
-                    }
+                log: {
+                    level: "INFO"
+                },
+                accessLog: {
+                    enabled: true
                 },
                 // We create our own Gateway resource at Serving level.
                 gateway: {
                     enabled: false,
                 },
-                // disable traefik pilot which is a paid feature
-                pilot: {
-                    enabled: false,
-                    dashboard: false
-                },
                 // disable traefik data collection
-                globalArguments: null,
+                global: {
+                    checkNewVersion: false,
+                    sendAnonymousUsage: false,
+                },
             },
             transformations: [
                 removeHelmTestAnnotation,
