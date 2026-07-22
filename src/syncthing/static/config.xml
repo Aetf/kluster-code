@@ -1,4 +1,4 @@
-<configuration>
+<configuration version="52">
   <gui enabled="true" tls="true" debugging="false">
     <address>:{{ ports.gui }}</address>
     <theme>default</theme>
