@@ -56,7 +56,9 @@ export class ClusterCertificate extends crds.cert_manager.v1.Certificate {
             destPath,
             srcPath,
             volume: {
-                name: this.secretName,
+                // volume names must be RFC 1123 labels, but secret names may
+                // contain dots (e.g. cert-syncapi.unlimited-code.works)
+                name: this.secretName.apply(n => n.replace(/\./g, '-')),
                 secret: {
                     secretName: this.secretName
                 }

@@ -4,7 +4,7 @@ import * as kx from "@pulumi/kubernetesx";
 import * as dedent from "dedent";
 
 import { serviceFromDeployment, SealedSecret, ConfigMap } from "#src/utils";
-import { Serving, Middleware, TLSOption } from "#src/serving";
+import { Serving } from "#src/serving";
 import { versions } from '#src/config';
 
 interface SyncthingArgs {
@@ -335,8 +335,10 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
         const service_account = new k8s.core.v1.ServiceAccount(name, {}, { parent: this });
         const namespace = service_account.metadata.namespace;
 
-        const certificate = args.serving.base.createBackendCertificate(name, {
-            namespace,
+        // With TLS passthrough the backend terminates TLS itself, so it must
+        // present a publicly trusted certificate — clients keep validating the
+        // discovery server by CA without pinning a device id in the URL.
+        const certificate = args.serving.base.createFrontendCertificate(args.host, {
         }, { parent: this });
 
         const pvc = args.serving.base.createLocalStoragePVC(name, {
@@ -356,24 +358,22 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
                     limits: { cpu: "20m", memory: "64Mi" },
                 },
                 args: [
-                    //'-cert=/tls/tls.crt',
-                    //'-key=/tls/tls.key',
-                    '--http',
+                    '--cert=/tls/tls.crt',
+                    '--key=/tls/tls.key',
                     '--debug',
                 ],
                 ports: {
-                    //https: 8443,
-                    http: 8443,
+                    https: 8443,
                 },
                 volumeMounts: [
-                    //certificate.mount('/tls'),
+                    certificate.mount('/tls'),
                     pvc.mount('/var/stdiscosrv'),
                 ],
                 livenessProbe: {
                     httpGet: {
                         port: 8443,
                         path: '/ping',
-                        scheme: 'HTTP',
+                        scheme: 'HTTPS',
                     },
                     initialDelaySeconds: 10,
                     periodSeconds: 60,
@@ -399,33 +399,16 @@ export class SyncthingDiscosrv extends pulumi.ComponentResource<SyncthingDiscosr
                 name,
             },
         });
-        // stdiscosrv requires client certificate
-        const tlsOption = new TLSOption(name, {
-            sniStrict: true,
-            clientAuth: {
-                // Requires certificate from client, but don't verify it, as it
-                // is just a certificate signed by syncthing device key.
-                clientAuthType: 'RequireAnyClientCert',
-            }
-        }, { parent: this });
+        // TLS passthrough: the Gateway routes by SNI without terminating TLS,
+        // so syncthing clients do the TLS handshake (including their device
+        // client certificate) directly with stdiscosrv. No TLSOption or
+        // passTLSClientCert header forwarding needed anymore.
         args.serving.createFrontendService(name, {
             host: args.host,
             targetService: service,
-            tlsOption,
-            skipHttpRoute: true,
+            tlsPassthrough: true,
             enableMTls: false,
-            middlewares: [
-                // stdiscosrv needs client cert info
-                // note that X-Client-Port is only needed if connecting using http
-                // but we connect using https
-                // https://docs.syncthing.net/users/stdiscosrv.html#requirements
-                // https://github.com/syncthing/syncthing/pull/6065
-                new Middleware('client-cert', {
-                    passTLSClientCert: {
-                        pem: true
-                    }
-                }, { parent: this }),
-            ],
+            useLegacyIngress: false,
         });
     }
 }

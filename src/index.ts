@@ -81,6 +81,11 @@ function setup() {
         httpsPort: config.staging ? 10443 : 443,
 
         domain: 'unlimited-code.works',
+        // TLS passthrough listeners (SNI routing, no termination).
+        // Keep in sync with the hosts of tlsPassthrough FrontendServices.
+        passthroughHosts: [
+            'syncapi.unlimited-code.works',
+        ],
         certificates: [{
             main: 'unlimited-code.works',
             sans: [

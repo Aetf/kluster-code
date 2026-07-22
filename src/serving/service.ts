@@ -27,6 +27,12 @@ export interface FrontendServiceArgs {
     // Useful for services that need TLSRoute or TCPRoute (e.g. stdiscosrv Phase 4).
     skipHttpRoute?: boolean;
 
+    // If true, emit a TLSRoute attached to the Gateway's Passthrough listener
+    // instead of an HTTPRoute. The backend owns and terminates TLS itself, so
+    // no middlewares or BackendTLSPolicy apply. The host must also be listed
+    // in Serving's passthroughHosts so the matching listener exists.
+    tlsPassthrough?: boolean;
+
     // If true, legacy Ingress resource will be created.
     // Default to true for dual-emission, set to false for migrated services.
     useLegacyIngress?: boolean;
@@ -148,7 +154,28 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                 return matching.port;
             });
 
-            if (!args.skipHttpRoute) {
+            if (args.tlsPassthrough) {
+                new crds.gateway.v1.TLSRoute(name, {
+                    metadata: {
+                        namespace: targetNamespace,
+                    },
+                    spec: {
+                        parentRefs: [{
+                            name: this.gatewayRef.name,
+                            namespace: this.gatewayRef.namespace,
+                        }],
+                        hostnames: pulumi.output(args.host).apply(h => _.isString(h) ? [h] : h),
+                        rules: [{
+                            backendRefs: [{
+                                kind: "Service",
+                                name: targetName,
+                                namespace: targetNamespace,
+                                port: targetPortNumber,
+                            }],
+                        }],
+                    }
+                }, { parent: this });
+            } else if (!args.skipHttpRoute) {
                 this.createHttpRoute(name, args.host, targetNamespace, targetName, targetNamespace, targetPortNumber, localChainMiddlewareName);
 
                 if (this.suppressAccessLogPaths) {
@@ -157,7 +184,7 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
             }
 
             // Apply Gateway API BackendTLSPolicy to instruct Traefik to use HTTPS towards the backend
-            if (this.enableMTls) {
+            if (this.enableMTls && !args.tlsPassthrough) {
                 const backendTLSPolicySpec: crds.types.input.gateway.v1.BackendTLSPolicySpec = {
                     targetRefs: [{
                         group: "",
