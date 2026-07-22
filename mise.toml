@@ -8,6 +8,10 @@ pulumi = "latest"
 [env]
 PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS = "1"
 PULUMI_CONFIG_PASSPHRASE = """
+{%- set secret_file = [config_root, '.pulumi.secret'] | join_path -%}
+{%- if secret_file is file -%}
+{{- read_file(path=secret_file) -}}
+{%- else -%}
 {{-
 exec(
     command="secret-tool lookup xdg:service pulumi",
@@ -15,4 +19,5 @@ exec(
     cache_duration="1d"
 )
 -}}
+{%- endif -%}
 """
