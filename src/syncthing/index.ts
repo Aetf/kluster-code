@@ -84,11 +84,11 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
         // API key shared between the syncthing container and the gdrive
         // sync-loop sidecar (needed for the events API; the GUI has no other
         // auth configured, real auth happens at the ingress).
-        // Set once with: pulumi config set --secret syncthing:guiApiKey $(openssl rand -hex 24)
-        const stConfig = new pulumi.Config('syncthing');
-        const guiApiKey = new kx.Secret(`${name}-gui-apikey`, {
-            stringData: {
-                apikey: stConfig.requireSecret('guiApiKey'),
+        const guiApiKey = new SealedSecret(`${name}-gui-apikey`, {
+            spec: {
+                encryptedData: {
+                    apikey: "AgCVwizCACarbMM/AEOnbYbhP7CaHCNC70Se+oVY4LnX1AyhNzUvoi0jUGfbxdvEy6QCaOTvW4bzDAhtMXna/N134Hv8aq3XwDfb1b1+spODSudfcK7ElcSaTzAb4+bS065Ls01TGs5zRv5I5zKszUNSuWKyk3cXptUKpL+ZZSrRX0msavX3Uo1GOdgZyfdLjA/Q6HMgn013eaHz8lnDEL2lUh99sXnCI9afCFu+J5dTsa8FlVAeecsEZpJ6irbvMTmULekvhxg2qEeeWgobiZF9eTZOdn9jq8vGJ0Zlugd5emSPOE7bLxIDm0wsr6seZlkaIvz8pjE7NdnEvGo3uliK6/alcgGdunZiOoXUfHVJusDhevKZS42BZgUcX1ad9zZCUDSbkg1TJ5aHomOHkRA3Dd/E8X2YB603W+U3R7XvxuwNORbr4WdOX14Uw3EGOSOWFJBbrAoqzzkT8y3ArfS0S7oddz+hHCD8kStX/VmIQrrLVahh2nrI7CLLIa4G7sps53vIDa/slaBYvzJ2dYkwKvOSobtnYWfppvEdstNLoBwtdaNbLurRzb2EiwRCx/qadhXAV2QKHO/1o+ACqGrHzLxEbHsxs9QYNMor9SV0uIbIr25JT2qRmvXDO1mgga+Z9x20WmThhr5HrRcikJoR6ccnC8vQ+8JHxaFBXX8Xtt01xmg24pv0zwSLwgwtmAzpy9zNFsGaYG341TpLwU0uSSJXJX+8OBSy7E+8zcgsBojL/UJqMri3Tl7oRygHBOM=",
+                },
             },
         }, { parent: this });
 
