@@ -165,7 +165,9 @@ export class FrontendService extends pulumi.ComponentResource<FrontendServiceArg
                         name: targetName,
                     }],
                     validation: {
-                        hostname: pulumi.interpolate`${targetName}.${targetNamespace}.svc.cluster.local`,
+                        // Must match the SAN of the BackendCertificate, which
+                        // is issued for `<service>.<namespace>` (see certs.ts).
+                        hostname: pulumi.interpolate`${targetName}.${targetNamespace}`,
                         wellKnownCACertificates: args.backendCert ? undefined : "System",
                         caCertificateRefs: args.backendCert ? [{
                             group: "",

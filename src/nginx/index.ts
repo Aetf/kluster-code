@@ -111,8 +111,8 @@ export class Nginx extends pulumi.ComponentResource<NginxArgs> {
                 targetService: service,
                 enableAuth: site.enableAuth ?? false,
                 backendCert: this.certificate,
-                useLegacyIngress: true,
-                enableGatewayAPI: false,
+                useLegacyIngress: false,
+                enableGatewayAPI: true,
             });
         }
         /*
