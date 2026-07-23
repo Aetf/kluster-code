@@ -61,6 +61,10 @@ export class Shoko extends pulumi.ComponentResource<ShokoArgs> {
                             configPvc.mount('/home/shoko/.shoko'),
                         ],
                         ports,
+                        resources: {
+                            requests: { cpu: "200m", memory: "512Mi" },
+                            limits: { cpu: "2", memory: "1.5Gi" },
+                        },
                         /* livenessProbe: this.configureProbe(), */
                         /* readinessProbe: this.configureProbe(), */
                     },

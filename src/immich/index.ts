@@ -138,7 +138,8 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                                 main: {
                                     resources: {
                                         requests: { cpu: "1", memory: "1Gi" },
-                                        limits: { cpu: "1.5", memory: "2Gi" },
+                                        // ffmpeg tonemap transcoding pushes past 2Gi and gets OOMKilled
+                                        limits: { cpu: "1.5", memory: "3Gi" },
                                     },
                                     probes: {
                                         liveness: {

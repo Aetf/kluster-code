@@ -113,9 +113,12 @@ export class Jellyfin extends pulumi.ComponentResource<JellyfinArgs> {
                         ],
                         ports,
                         resources: {
+                            requests: { cpu: "200m", memory: "512Mi" },
                             limits: {
-                                'gpu.intel.com/i915': '1'
-                            }
+                                cpu: "4",
+                                memory: "4Gi",
+                                'gpu.intel.com/i915': '1',
+                            },
                         },
                         livenessProbe: this.configureProbe(),
                         readinessProbe: this.configureProbe(),

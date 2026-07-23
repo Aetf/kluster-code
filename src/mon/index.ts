@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
 import { BackendCertificate } from '#src/base-cluster';
-import { NamespaceProbe, HelmChart, SealedSecret, Service, dedent } from "#src/utils";
+import { NamespaceProbe, HelmChart, SealedSecret, Service } from "#src/utils";
 import { Serving } from "#src/serving";
 
 interface PrometheusArgs {
@@ -190,14 +190,17 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                 },
                 "kube-state-metrics": {
                     resources: {
-                        requests: { cpu: "5m", memory: "32Mi" },
-                        limits: { cpu: "10m", memory: "64Mi" },
+                        requests: { cpu: "10m", memory: "32Mi" },
+                        // was 10m, throttled the container so hard its own
+                        // liveness/readiness probes timed out, causing a
+                        // permanent CrashLoopBackOff
+                        limits: { cpu: "100m", memory: "64Mi" },
                     },
                 },
                 "prometheus-node-exporter": {
                     resources: {
                         requests: { cpu: "20m", memory: "32Mi" },
-                        limits: { cpu: "50m", memory: "32Mi" },
+                        limits: { cpu: "100m", memory: "32Mi" },
                     },
                     prometheus: {
                         monitor: {
