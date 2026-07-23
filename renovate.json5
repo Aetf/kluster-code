@@ -20,6 +20,18 @@
   ],
   packageRules: [
     {
+      // @pulumi/pulumi 3.253.0 silently dropped 238 resources from
+      // `pulumi preview` with no diagnostics due to incompatibility with the
+      // pinned @pulumi/kubernetes 3.30 / kubernetesx stack (see commit
+      // c93d8d78). Require manual review for any bump until that's verified.
+      matchPackageNames: [
+        '@pulumi/pulumi',
+        '@pulumi/kubernetes',
+        '@pulumi/kubernetesx',
+      ],
+      dependencyDashboardApproval: true,
+    },
+    {
       matchUpdateTypes: [
         'minor',
         'patch',
