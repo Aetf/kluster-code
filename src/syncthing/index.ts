@@ -6,6 +6,7 @@ import * as dedent from "dedent";
 import { serviceFromDeployment, SealedSecret, ConfigMap } from "#src/utils";
 import { Serving } from "#src/serving";
 import { versions } from '#src/config';
+import { juicefsColocationAffinity } from "#src/juicefs";
 
 interface SyncthingArgs {
     serving: Serving,
@@ -146,25 +147,7 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             restartPolicy: 'Always',
             // Place it close to jfs metadata (jfs-backed instance only; a
             // NodePV-backed pod is already node-pinned by the PV's nodeAffinity).
-            affinity: args.juicefsColocation ? {
-                podAffinity: {
-                    // This is a hack to run the pod on the same node as juicefs
-                    // redis master, because otherwise the metadata server
-                    // performance is very bad.
-                    requiredDuringSchedulingIgnoredDuringExecution: [
-                        {
-                            topologyKey: 'kubernetes.io/hostname',
-                            labelSelector: {
-                                matchLabels: {
-                                    'app.kubernetes.io/instance': 'juicefs-redis',
-                                    'app.kubernetes.io/component': 'master',
-                                }
-                            },
-                            namespaces: ['kube-system']
-                        }
-                    ]
-                },
-            } : undefined,
+            affinity: args.juicefsColocation ? juicefsColocationAffinity() : undefined,
             securityContext: {
                 fsGroup: 1000,
                 fsGroupChangePolicy: 'OnRootMismatch',

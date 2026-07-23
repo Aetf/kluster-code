@@ -7,6 +7,7 @@ import { ConfigMap, SealedSecret, serviceFromDeployment } from "#src/utils";
 import { Serving } from "#src/serving";
 import * as crds from "#src/crds";
 import { versions } from "#src/config";
+import { juicefsColocationAffinity } from "#src/juicefs";
 
 interface DufsArgs {
     serving: Serving,
@@ -73,25 +74,7 @@ export class Dufs extends pulumi.ComponentResource<DufsArgs> {
                     },
                 },
             ],
-            affinity: {
-                podAffinity: {
-                    // This is a hack to run the pod on the same node as juicefs
-                    // redis master, because otherwise the metadata server
-                    // performance is very bad.
-                    requiredDuringSchedulingIgnoredDuringExecution: [
-                        {
-                            topologyKey: 'kubernetes.io/hostname',
-                            labelSelector: {
-                                matchLabels: {
-                                    'app.kubernetes.io/instance': 'juicefs-redis',
-                                    'app.kubernetes.io/component': 'master',
-                                }
-                            },
-                            namespaces: ['kube-system']
-                        }
-                    ]
-                },
-            },
+            affinity: juicefsColocationAffinity(),
         });
 
         const deployment = new kx.Deployment(name, {

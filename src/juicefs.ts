@@ -12,6 +12,29 @@ export interface JuiceFsArgs {
     metadataStorageClass: pulumi.Input<string>,
 }
 
+/**
+ * Pod affinity that colocates a pod with the juicefs-redis master, because
+ * otherwise the metadata server performance is very bad.
+ */
+export function juicefsColocationAffinity(): k8s.types.input.core.v1.Affinity {
+    return {
+        podAffinity: {
+            requiredDuringSchedulingIgnoredDuringExecution: [
+                {
+                    topologyKey: 'kubernetes.io/hostname',
+                    labelSelector: {
+                        matchLabels: {
+                            'app.kubernetes.io/instance': 'juicefs-redis',
+                            'app.kubernetes.io/component': 'master',
+                        }
+                    },
+                    namespaces: ['kube-system']
+                }
+            ]
+        },
+    };
+}
+
 // enable format-in-pod which is required for data encryption
 function patchCsiNode(obj: any, opts: pulumi.CustomResourceOptions) {
     if (obj.kind === "StatefulSet" && obj.metadata.name === "juicefs-csi-controller") {

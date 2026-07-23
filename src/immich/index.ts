@@ -8,6 +8,7 @@ import { BaseCluster } from '#src/base-cluster';
 import { Redis } from '#src/redis';
 import { Serving } from '#src/serving';
 import { versions } from "#src/config";
+import { juicefsColocationAffinity } from "#src/juicefs";
 
 interface ImmichArgs {
     serving: Serving,
@@ -114,25 +115,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     controllers: {
                         main: {
                             pod: {
-                                affinity: {
-                                    podAffinity: {
-                                        // This is a hack to run the pod on the same node as juicefs
-                                        // redis master, because otherwise the metadata server
-                                        // performance is very bad.
-                                        requiredDuringSchedulingIgnoredDuringExecution: [
-                                            {
-                                                topologyKey: 'kubernetes.io/hostname',
-                                                labelSelector: {
-                                                    matchLabels: {
-                                                        'app.kubernetes.io/instance': 'juicefs-redis',
-                                                        'app.kubernetes.io/component': 'master',
-                                                    }
-                                                },
-                                                namespaces: ['kube-system']
-                                            }
-                                        ]
-                                    },
-                                },
+                                affinity: juicefsColocationAffinity(),
                             },
                             containers: {
                                 main: {
@@ -183,25 +166,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     controllers: {
                         main: {
                             pod: {
-                                affinity: {
-                                    podAffinity: {
-                                        // This is a hack to run the pod on the same node as juicefs
-                                        // redis master, because otherwise the metadata server
-                                        // performance is very bad.
-                                        requiredDuringSchedulingIgnoredDuringExecution: [
-                                            {
-                                                topologyKey: 'kubernetes.io/hostname',
-                                                labelSelector: {
-                                                    matchLabels: {
-                                                        'app.kubernetes.io/instance': 'juicefs-redis',
-                                                        'app.kubernetes.io/component': 'master',
-                                                    }
-                                                },
-                                                namespaces: ['kube-system']
-                                            }
-                                        ]
-                                    },
-                                },
+                                affinity: juicefsColocationAffinity(),
                             },
                             containers: {
                                 main: {
