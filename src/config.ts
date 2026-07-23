@@ -46,6 +46,8 @@ interface Config {
     readonly setupSecrets: boolean
     readonly staging: boolean
     readonly enableMc: boolean
+    readonly enableUkulele: boolean
+    readonly enableBt: boolean
 }
 class ConfigHandler implements ProxyHandler<Config> {
     private _config: pulumi.Config

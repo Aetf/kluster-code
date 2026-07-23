@@ -74,9 +74,7 @@ function setup() {
         base: cluster,
         smtp: mailer.smtpService,
 
-        externalIPs: [
-            "45.77.144.92",
-        ],
+        externalIPs: new pulumi.Config().requireObject<string[]>('servingExternalIPs'),
         httpPort: config.staging ? 10000 : 80,
         httpsPort: config.staging ? 10443 : 443,
 
@@ -236,9 +234,11 @@ function setup() {
 
     // ukulele, a discord music bot
     // install into default namespace
-    // const ukulele = new Ukulele("ukulele", {
-    //     base: cluster,
-    // });
+    if (config.enableUkulele) {
+        const ukulele = new Ukulele("ukulele", {
+            base: cluster,
+        });
+    }
 
     // Minecraft server
     if (config.enableMc) {
@@ -262,13 +262,13 @@ function setup() {
     }, { provider: mediaProvider });
 
     // transmission bt with openvpn
-    /*
-    const bt = new Bt("bt", {
-        serving,
-        host: 'bt.unlimited-code.works',
-        pvc: mediaPv.pvc,
-    }, { provider: mediaProvider, });
-    */
+    if (config.enableBt) {
+        const bt = new Bt("bt", {
+            serving,
+            host: 'bt.unlimited-code.works',
+            pvc: mediaPv.pvc,
+        }, { provider: mediaProvider, });
+    }
 
     // media serving using jellyfin
     const jellyfin = new Jellyfin("jellyfin", {

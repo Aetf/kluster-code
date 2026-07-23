@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 import * as pulumi from "@pulumi/pulumi";
 import * as kx from "@pulumi/kubernetesx";
 
