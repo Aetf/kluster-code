@@ -159,7 +159,7 @@ The cluster hosts a variety of user-facing applications, each with tailored infr
 To ensure reliable alert delivery and system notifications, the cluster maintains a centralized mail relay.
 
 - **Exim SMTP Relay**:
-  - Acts as a "smarthost" relay for all internal cluster services (e.g., Authelia, Grafana, Nextcloud).
+  - Acts as a "smarthost" relay for all internal cluster services (e.g., Authelia, Grafana).
   - **Upstream Relay**: Configured to use **Gmail** (smtp.gmail.com:587) for final delivery, authenticated via `SealedSecret`.
   - **Security**:
     - **TLS**: Uses `BackendCertificate` for encrypted communication within the cluster.

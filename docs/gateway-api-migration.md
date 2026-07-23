@@ -31,9 +31,6 @@ Traefik 3.7. The migration was then completed in full; the
 | **Minecraft dynmap**   | Gateway API  | HTTPRoute.                                                     |
 | **Syncthing Discosrv** | Gateway API  | **TLSRoute passthrough** — backend terminates TLS itself.     |
 
-Nextcloud is defined in `src/nextcloud/index.ts` but not instantiated
-(commented out in `src/index.ts`), so nothing is deployed for it.
-
 ---
 
 ## Architecture
