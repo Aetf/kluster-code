@@ -331,7 +331,135 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                 },
             }
         }, { parent: this });
+
+        this.setupRestoreDrill(name, db, catalog, gcsSecret, storageClass);
         return db;
+    }
+
+    // A monthly "restore drill": recover the database from the barman object
+    // store into a throwaway cluster and verify the recovered data, proving the
+    // backups are actually restorable (WAL archiving alone doesn't prove that).
+    // See docs/cnpg-restore-drill.md.
+    private setupRestoreDrill(
+        name: string,
+        db: crds.postgresql.v1.Cluster,
+        catalog: crds.postgresql.v1.ImageCatalog,
+        gcsSecret: SealedSecret,
+        storageClass: pulumi.Input<string>,
+    ) {
+        const cm = new ConfigMap(`${name}-restore-drill`, {
+            ref_file: __filename,
+            data: 'static/restore-drill/*',
+            stripComponents: 2,
+            tplVariables: {
+                catalogName: catalog.metadata.name,
+                gcsSecretName: gcsSecret.metadata.name,
+                // The source cluster is Pulumi auto-named (e.g. immich-db-xxxxx);
+                // its metadata.name is the barman serverName the recovery reads.
+                serverName: db.metadata.name,
+                storageClass,
+            },
+        }, { parent: this });
+
+        // The drill Job creates/deletes the throwaway cluster + its PVCs and
+        // execs psql into the recovered pod.
+        const sa = new k8s.core.v1.ServiceAccount(`${name}-restore-drill`, {}, { parent: this });
+        const role = new k8s.rbac.v1.Role(`${name}-restore-drill`, {
+            rules: [{
+                apiGroups: ["postgresql.cnpg.io"],
+                resources: ["clusters"],
+                verbs: ["create", "get", "list", "watch", "update", "patch", "delete"],
+            }, {
+                apiGroups: [""],
+                resources: ["persistentvolumeclaims"],
+                // watch is needed because `kubectl delete pvc` waits for finalization
+                verbs: ["get", "list", "watch", "delete"],
+            }, {
+                apiGroups: [""],
+                resources: ["pods"],
+                verbs: ["get", "list"],
+            }, {
+                apiGroups: [""],
+                resources: ["pods/exec"],
+                verbs: ["create"],
+            }],
+        }, { parent: this });
+        new k8s.rbac.v1.RoleBinding(`${name}-restore-drill`, {
+            roleRef: {
+                apiGroup: "rbac.authorization.k8s.io",
+                kind: "Role",
+                name: role.metadata.name,
+            },
+            subjects: [{
+                kind: "ServiceAccount",
+                name: sa.metadata.name,
+                namespace: sa.metadata.namespace,
+            }],
+        }, { parent: this });
+
+        const pb = new kx.PodBuilder({
+            serviceAccountName: sa.metadata.name,
+            restartPolicy: 'Never',
+            containers: [{
+                name: 'restore-drill',
+                image: versions.image.kubectl,
+                command: ['sh', '/manifests/drill.sh'],
+                env: {
+                    NAMESPACE: {
+                        fieldRef: { fieldPath: "metadata.namespace" },
+                    },
+                },
+                volumeMounts: [cm.mount("/manifests")],
+            }],
+        });
+        new k8s.batch.v1.CronJob(`${name}-restore-drill`, {
+            spec: {
+                schedule: "0 4 1 * *",
+                concurrencyPolicy: 'Forbid',
+                failedJobsHistoryLimit: 1,
+                successfulJobsHistoryLimit: 1,
+                jobTemplate: {
+                    // hard ceiling on the whole drill; never retry a failed drill
+                    // (we want the failure surfaced, not masked by a retry)
+                    spec: pb.asJobSpec({
+                        backoffLimit: 0,
+                        activeDeadlineSeconds: 1800,
+                    }),
+                },
+            },
+        }, { parent: this });
+
+        // Surface failures/staleness through the existing kube-prometheus-stack
+        // Alertmanager (ruleSelector matchLabels release=prometheus).
+        new crds.monitoring.v1.PrometheusRule(`${name}-restore-drill`, {
+            metadata: {
+                labels: { release: "prometheus" },
+            },
+            spec: {
+                groups: [{
+                    name: "immich-db-restore-drill",
+                    rules: [{
+                        alert: "ImmichDbRestoreDrillFailed",
+                        expr: 'kube_job_status_failed{namespace="immich", job_name=~"immich-restore-drill.*"} > 0',
+                        for: "15m",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "Immich DB restore drill failed",
+                            description: "The monthly CNPG restore drill job {{ $labels.job_name }} failed; backups may not be restorable. Check the Job logs.",
+                        },
+                    }, {
+                        alert: "ImmichDbRestoreDrillStale",
+                        expr: 'time() - max(kube_job_status_completion_time{namespace="immich", job_name=~"immich-restore-drill.*"}) > 3888000',
+                        for: "1h",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "Immich DB restore drill has not succeeded in 45d",
+                            description: "No successful CNPG restore drill completed in the last 45 days.",
+                        },
+                    }],
+                }],
+            },
+        }, { parent: this });
     }
 
     // create a redis instance, and then create an ExternalName service, so it has a stable url to refer to in the

@@ -1,0 +1,55 @@
+# Throwaway cluster used by the monthly restore drill. Recovers the immich
+# database from the GCS barman object store into a fresh single-instance
+# cluster so we can prove the backups are actually restorable.
+#
+# Rendered from a Handlebars template by src/utils.ts ConfigMap (tplVariables).
+# IMPORTANT: this cluster has NO `.spec.backup` on purpose — it must never
+# archive WAL back to the source object store (same serverName would corrupt
+# the real backups).
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-db-restore
+  labels:
+    app.kubernetes.io/component: immich-db-restore-drill
+spec:
+  instances: 1
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ImageCatalog
+    name: {{{catalogName}}}
+    major: 15
+  storage:
+    storageClass: {{{storageClass}}}
+    size: 5Gi
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+  # vchord/vectors are in the source's shared_preload_libraries, so the
+  # recovered instance must preload them too or it will refuse to start.
+  postgresql:
+    shared_preload_libraries:
+      - vectors
+      - vchord.so
+  bootstrap:
+    recovery:
+      source: immich-source
+  externalClusters:
+    - name: immich-source
+      barmanObjectStore:
+        destinationPath: gs://immich-postgresql-backup
+        # The source cluster's real name (Pulumi auto-suffixed) == barman serverName.
+        serverName: {{{serverName}}}
+        googleCredentials:
+          applicationCredentials:
+            name: {{{gcsSecretName}}}
+            key: gcs_credentials
+        wal:
+          compression: snappy
+          encryption: AES256
+  monitoring:
+    enablePodMonitor: false

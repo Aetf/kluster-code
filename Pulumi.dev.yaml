@@ -30,6 +30,7 @@ config:
   image:hath: docker.io/frosty5689/hath:1.6.5
   image:immich: ghcr.io/immich-app/immich-server:v3.0.3
   image:jellyfin: ghcr.io/jellyfin/jellyfin:10.11.4
+  image:kubectl: docker.io/alpine/k8s:1.34.7
   image:localpath: rancher/local-path-provisioner:v0.0.22
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
   image:authelia: ghcr.io/authelia/authelia:4.39.4
