@@ -10,7 +10,7 @@ config:
   kluster-code:enableBt: false
   kluster-code:servingExternalIPs:
     - "45.77.144.92"
-  chart:sealed-secrets: https://bitnami.github.io/sealed-secrets:2.18.0
+  chart:sealed-secrets: https://bitnami.github.io/sealed-secrets:2.19.1
   chart:cert-manager: https://charts.jetstack.io:v1.21.0
   chart:reloader: https://stakater.github.io/stakater-charts:2.2.11
   chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.36.0
@@ -21,7 +21,7 @@ config:
   chart:traefik: https://helm.traefik.io/traefik:41.0.2
   chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.32.0
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.29.0
-  chart:redis: https://charts.bitnami.com/bitnami:20.3.0
+  chart:redis: https://charts.bitnami.com/bitnami:20.13.4
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.19.0
   image:transmission: docker.io/haugene/transmission-openvpn:5.4.1
   image:nginx: docker.io/bitnami/nginx:1.28.0-debian-12-r3
@@ -30,7 +30,7 @@ config:
   image:hath: docker.io/frosty5689/hath:1.6.5
   image:immich: ghcr.io/immich-app/immich-server:v3.0.3
   image:jellyfin: ghcr.io/jellyfin/jellyfin:10.11.4
-  image:kubectl: docker.io/alpine/k8s:1.34.7
+  image:kubectl: docker.io/alpine/k8s:1.36.2
   image:localpath: rancher/local-path-provisioner:v0.0.22
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
   image:authelia: ghcr.io/authelia/authelia:4.39.4
@@ -40,4 +40,4 @@ config:
   image:stdiscosrv: docker.io/syncthing/discosrv:2.1.2
   image:ukulele: ghcr.io/freyacodes/ukulele:master
   image:rclone: docker.io/rclone/rclone:1.74.4
-  image:spoolman: ghcr.io/donkie/spoolman:0.24.0
+  image:spoolman: ghcr.io/donkie/spoolman:0.25.0
