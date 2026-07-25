@@ -2,7 +2,9 @@
 
 A lightweight PostgreSQL container that holds this project's Pulumi state (DIY
 `postgres://` backend). It replaces the old local file backend so the stack can
-be driven from any host on the LAN / ZeroTier and, later, from GitHub CI.
+be driven from any host on the LAN / ZeroTier and from GitHub CI (the
+`.github/workflows/` jobs reach this backend over ZeroTier — see the
+"Continuous deployment" section of the top-level `README.md`).
 
 It is a **bootstrap dependency**: Pulumi needs it running to do anything, so it
 is *not* managed by Pulumi. It runs directly on the homelab host via Podman,

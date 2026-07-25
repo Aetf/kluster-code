@@ -6,10 +6,48 @@ k3s uses a config file `k3s-kluster.yml`, this file needs to be copied to `/etc/
 
 ## Use pulumi to deploy the configurations
 
+State lives in a self-hosted Postgres backend (see `deploy/state-backend/`), and
+[`mise`](https://mise.jdx.dev/) injects the backend URL and the config passphrase from
+the git-ignored `.pulumi.backend` / `.pulumi.secret` files (falling back to `secret-tool`).
+So a local deploy is just:
+
 ```
-$ secret-tool lookup xdg:service pulumi | read -r PULUMI_CONFIG_PASSPHRASE; export PULUMI_CONFIG_PASSPHRASE
-$ pulumi up
+$ mise run state-db:up          # first time / after a reboot: start the state backend
+$ mise x -- pulumi preview --diff
+$ mise x -- pulumi up
 ```
+
+The k8s provider uses the ambient kubeconfig (`~/.kube/config`), which points at the k3s
+API over ZeroTier (`https://10.144.180.10:6443`).
+
+## Continuous deployment (GitHub Actions)
+
+Deploys can also be driven from GitHub CI. Two workflows under `.github/workflows/` use
+[`pulumi/actions`](https://github.com/pulumi/actions) (not `mise`; the pinned
+`@pulumi/pulumi` SDK is reproduced via `npm ci`):
+
+- **`pulumi-preview.yml`** — on every PR to `main`, runs `pulumi preview` and posts the
+  diff as a PR comment. Its `preview` job is a **required status check** for `main`.
+- **`pulumi-deploy.yml`** — on push to `main`, runs `pulumi up`, gated behind the
+  `production` GitHub Environment (**manual approval required** before anything applies).
+
+Runners reach the homelab over ZeroTier: [`zerotier/github-action`](https://github.com/zerotier/github-action)
+authorizes an ephemeral member (auto-removed in its post step), the job waits for TCP
+`10.144.180.10:5432`, then Pulumi talks to the Postgres state backend and the k3s API
+(`:6443`) over that same ZeroTier path.
+
+### Required configuration
+
+| GitHub secret | Value |
+|---------------|-------|
+| `PULUMI_BACKEND_URL` | contents of `.pulumi.backend` (`postgres://…?sslmode=require`) |
+| `PULUMI_CONFIG_PASSPHRASE` | contents of `.pulumi.secret` |
+| `KUBECONFIG` | a self-contained kubeconfig whose server is `https://10.144.180.10:6443` |
+| `ZEROTIER_NETWORK_ID` | the ZeroTier network id for `10.144.0.0/16` |
+| `ZEROTIER_CENTRAL_TOKEN` | ZeroTier Central API token (my.zerotier.com → Account) |
+
+Plus: a `production` Environment with yourself as a **required reviewer**, and a `main`
+branch ruleset (block direct pushes, require a PR, require the `preview` check).
 
 ## Per Pod Cert for mTLS
 This is done by bootstraping a self-signed CA in the cluster using cert-manager,

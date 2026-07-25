@@ -7,6 +7,8 @@ This project manages a k3s cluster configuration using Pulumi with the Node.js r
 - **Runtime manager**: This project uses [`mise`](https://mise.jdx.dev/) to manage the Node.js runtime and tool versions. **Do NOT use `npx`** to run project tools — use the binaries directly (use `mise x <tool>`)
 - **TypeScript check**: `mise x -- pulumi preview --diff --json` will check the code for syntax errors before generating the preview.
 - **Package manager**: `npm`
+- **State backend**: Pulumi state lives in a self-hosted Postgres backend (`deploy/state-backend/`); `mise` injects `PULUMI_BACKEND_URL` + `PULUMI_CONFIG_PASSPHRASE` automatically. The k8s provider uses the ambient kubeconfig (k3s API over ZeroTier at `https://10.144.180.10:6443`).
+- **CI/CD**: `.github/workflows/` run `pulumi preview` on PRs (posted as a PR comment; required `preview` check on `main`) and a manually-approved `pulumi up` on push to `main`, via `pulumi/actions` over ZeroTier. Details and required secrets are in `README.md`.
 
 ## Core Structure
 
