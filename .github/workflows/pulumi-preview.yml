@@ -33,13 +33,22 @@ jobs:
 
       - name: Wait for state backend over ZeroTier
         run: |
-          for i in $(seq 1 30); do
-            if ping -c1 -W1 10.144.180.10 >/dev/null 2>&1; then
-              echo "backend reachable"; exit 0
+          echo "ZeroTier networks:"; sudo zerotier-cli listnetworks || true
+          # Gate on the real dependency (TCP 5432), not ICMP. A fresh runner may
+          # need a while to establish a ZeroTier path to the NAT'd homelab peer.
+          for i in $(seq 1 60); do
+            if timeout 3 bash -c 'cat < /dev/null > /dev/tcp/10.144.180.10/5432' 2>/dev/null; then
+              echo "state backend 10.144.180.10:5432 reachable after ${i} tries"; exit 0
             fi
-            echo "waiting for ZeroTier route... ($i)"; sleep 2
+            if [ $((i % 10)) -eq 0 ]; then
+              echo "still waiting ($i); ZeroTier peers:"; sudo zerotier-cli peers || true
+            fi
+            sleep 3
           done
-          echo "state backend 10.144.180.10 unreachable over ZeroTier"; exit 1
+          echo "::error::state backend 10.144.180.10:5432 unreachable over ZeroTier after 180s"
+          sudo zerotier-cli listnetworks || true
+          sudo zerotier-cli peers || true
+          exit 1
 
       - name: Pulumi preview
         uses: pulumi/actions@v7
