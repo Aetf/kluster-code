@@ -1,0 +1,56 @@
+name: pulumi-preview
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: pulumi-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write   # for the PR comment
+
+jobs:
+  preview:                # <- this job name is the required status-check name
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.18.0'   # matches package.json volta pin
+          cache: npm
+
+      - run: npm ci
+
+      - name: Join ZeroTier
+        uses: zerotier/github-action@v1.0.1
+        with:
+          network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+          auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+
+      - name: Wait for state backend over ZeroTier
+        run: |
+          for i in $(seq 1 30); do
+            if ping -c1 -W1 10.144.180.10 >/dev/null 2>&1; then
+              echo "backend reachable"; exit 0
+            fi
+            echo "waiting for ZeroTier route... ($i)"; sleep 2
+          done
+          echo "state backend 10.144.180.10 unreachable over ZeroTier"; exit 1
+
+      - name: Pulumi preview
+        uses: pulumi/actions@v7
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS: '1'
+        with:
+          command: preview
+          stack-name: dev
+          cloud-url: ${{ secrets.PULUMI_BACKEND_URL }}
+          diff: true
+          comment-on-pr: true
+          comment-on-summary: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}

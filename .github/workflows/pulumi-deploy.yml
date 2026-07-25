@@ -1,0 +1,52 @@
+name: pulumi-deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: pulumi-deploy       # global: never overlap applies
+  cancel-in-progress: false  # let an in-flight apply finish
+
+permissions:
+  contents: read
+
+jobs:
+  up:
+    runs-on: ubuntu-latest
+    environment: production   # <- requires manual approval (see setup)
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.18.0'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Join ZeroTier
+        uses: zerotier/github-action@v1.0.1
+        with:
+          network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+          auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+
+      - name: Wait for state backend over ZeroTier
+        run: |
+          for i in $(seq 1 30); do
+            ping -c1 -W1 10.144.180.10 >/dev/null 2>&1 && { echo ok; exit 0; }
+            echo "waiting... ($i)"; sleep 2
+          done
+          echo "backend unreachable"; exit 1
+
+      - name: Pulumi up
+        uses: pulumi/actions@v7
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS: '1'
+        with:
+          command: up
+          stack-name: dev
+          cloud-url: ${{ secrets.PULUMI_BACKEND_URL }}
+          diff: true
+          comment-on-summary: true
