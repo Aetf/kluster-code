@@ -1,6 +1,9 @@
 import * as tsConfigPaths from "tsconfig-paths";
 tsConfigPaths.register(undefined as any);
 
+import * as fs from "fs";
+import * as os from "os";
+
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
@@ -27,6 +30,15 @@ import { Spoolman } from "./spoolman";
 import { Haos } from "./haos";
 
 
+// All k8s providers connect using the ambient kubeconfig. We pass its *content*
+// (not the resolved path) so provider state is identical no matter where Pulumi
+// runs: locally the path is ~/.config/kube/config, in CI it is
+// /home/runner/.kube/config, and storing the path churns the state on every run.
+// Wrapped in pulumi.secret() so the admin credentials stay encrypted in state.
+const kubeconfig = pulumi.secret(
+    fs.readFileSync(process.env["KUBECONFIG"] ?? `${os.homedir()}/.kube/config`, "utf8"),
+);
+
 function namespaced(ns: string, createNs?: boolean, args?: k8s.ProviderArgs): k8s.Provider {
     if (createNs ?? true) {
         const namespace = new k8s.core.v1.Namespace(ns, {
@@ -37,6 +49,7 @@ function namespaced(ns: string, createNs?: boolean, args?: k8s.ProviderArgs): k8
     }
     return new k8s.Provider(`${ns}-provider`, {
         ...args,
+        kubeconfig,
         suppressDeprecationWarnings: true,
         namespace: ns,
     });
@@ -46,6 +59,7 @@ function setup() {
     // base cluster
     const cluster = new BaseCluster("kluster", { isSetupSecrets: config.setupSecrets }, {
         provider: new k8s.Provider('k8s-provider', {
+            kubeconfig,
             suppressDeprecationWarnings: true,
             namespace: 'kube-system'
         }),
