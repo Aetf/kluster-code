@@ -50,6 +50,17 @@ jobs:
           sudo zerotier-cli peers || true
           exit 1
 
+      - name: Write kubeconfig
+        env:
+          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
+        run: |
+          # The Pulumi program's k8s provider uses the ambient kubeconfig to reach
+          # the k3s API (https://10.144.180.10:6443, over ZeroTier).
+          mkdir -p "$HOME/.kube"
+          printf '%s' "$KUBECONFIG_CONTENT" > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+          echo "KUBECONFIG=$HOME/.kube/config" >> "$GITHUB_ENV"
+
       - name: Pulumi up
         uses: pulumi/actions@v7
         env:
