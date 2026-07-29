@@ -55,6 +55,7 @@ access_control:
 
   - domain:
     - 'sync.{{ env "CONFIG_EXTRA_DOMAIN" }}'
+    - 'sync-nas.{{ env "CONFIG_EXTRA_DOMAIN" }}'
     subject: "group:users"
     policy: two_factor
 
