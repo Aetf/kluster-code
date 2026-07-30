@@ -115,7 +115,30 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
                             tls: {
                                 enabled: true
                             }
-                        }
+                        },
+                        transport: {
+                            respondingTimeouts: {
+                                // readTimeout covers reading the *entire* request,
+                                // including the body, and defaults to 60s (since
+                                // traefik v2.11.2). Any upload slower than that is
+                                // cut off mid-body and surfaces to the client as a
+                                // 502 -- e.g. Immich video uploads, which reliably
+                                // died at exactly 60s.
+                                //
+                                // This has to live on the entrypoint: readTimeout is
+                                // a property of the listening socket's http.Server,
+                                // applied before routing, so it cannot be scoped to a
+                                // single route. Gateway API's HTTPRoute `timeouts`
+                                // only caps the gateway->backend request and cannot
+                                // extend the client body deadline.
+                                //
+                                // 0 disables it, restoring the pre-2.11.2 behaviour.
+                                // Tradeoff: no upstream-imposed bound on how long a
+                                // client may take to send a body, on any service
+                                // behind websecure.
+                                readTimeout: 0,
+                            },
+                        },
                     }
                 },
                 // Default TLSOption CR. Kept even after the Gateway API
