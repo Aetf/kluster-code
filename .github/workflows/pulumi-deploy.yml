@@ -7,6 +7,12 @@ on:
 concurrency:
   group: pulumi-deploy       # global: never overlap applies
   cancel-in-progress: false  # let an in-flight apply finish
+  # `queue: single` is the default, so at most one run waits behind the applying
+  # one and a newer push cancels the older waiter. Bursts therefore collapse to
+  # "finish the current apply, then apply the newest main" instead of replaying
+  # intermediate commits. This only holds because nothing blocks on a human any
+  # more: a run parked on an approval gate counts as in-progress, which is how
+  # #147 sat here for 70 hours and stalled every deploy behind it.
 
 permissions:
   contents: read
@@ -14,7 +20,12 @@ permissions:
 jobs:
   up:
     runs-on: ubuntu-latest
-    environment: production   # <- requires manual approval (see setup)
+    # No `environment: production` gate. The approval used to run *before* any
+    # step, so there was no plan on screen to approve -- it only controlled when
+    # an apply happened, at the cost of letting main silently drift from the
+    # cluster. Review now lives on the PR: `preview` is a required check and the
+    # branch ruleset requires branches to be up to date with main, so the diff
+    # you read is computed from the same inputs this applies. Merging deploys.
     steps:
       - uses: actions/checkout@v4
 
@@ -72,3 +83,32 @@ jobs:
           cloud-url: ${{ secrets.PULUMI_BACKEND_URL }}
           diff: true
           comment-on-summary: true
+
+      - name: Alert on a failed apply
+        if: failure()
+        env:
+          WEBHOOK_URL: ${{ secrets.HAOS_DEPLOY_WEBHOOK_URL }}
+          # Via env, not `${{ }}` inline, so a commit message can't break out
+          # into the shell.
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # Nothing stands between a merge and a live apply now, so a broken
+          # apply is otherwise entirely silent -- you'd believe main was
+          # deployed when it isn't. Posts to a Home Assistant webhook, which
+          # drives the `kluster-code deploy failed` automation -> mobile push.
+          if [ -z "$WEBHOOK_URL" ]; then
+            echo '::warning::HAOS_DEPLOY_WEBHOOK_URL is unset; no alert sent'
+            exit 0
+          fi
+          jq -n \
+            --arg sha "${GITHUB_SHA:0:8}" \
+            --arg msg "$(printf '%s' "$COMMIT_MSG" | head -1)" \
+            --arg url "$RUN_URL" \
+            '{
+               title: "kluster-code deploy failed",
+               message: "pulumi up failed on \($sha): \($msg)",
+               url: $url,
+             }' \
+            | curl -sS --fail -m 15 -X POST "$WEBHOOK_URL" \
+                -H 'Content-Type: application/json' --data @-
