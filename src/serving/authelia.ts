@@ -170,8 +170,12 @@ export class Authelia extends pulumi.ComponentResource<AutheliaArgs> {
                 name: "authelia",
                 image: versions.image.authelia,
                 resources: {
+                    // Memory limit must leave burst headroom above the ~67Mi
+                    // steady state: a syncthing GUI polls many /rest/* endpoints
+                    // and each one is a forward-auth round trip, which OOMKilled
+                    // authelia at the old 128Mi (requests == limits, no burst).
                     requests: { cpu: "20m", memory: "128Mi" },
-                    limits: { cpu: "2000m", memory: "128Mi" }
+                    limits: { cpu: "2000m", memory: "512Mi" }
                 },
                 command: ["authelia"],
                 ports: {

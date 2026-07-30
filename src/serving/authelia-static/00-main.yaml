@@ -13,7 +13,10 @@ certificates_directory: /tls
 theme: "light"
 
 log:
-  level: "debug"
+  # debug logs several lines per forward-auth request, which is a lot of churn
+  # under a syncthing GUI's /rest/* polling. Raise back to debug temporarily when
+  # diagnosing an authorization decision.
+  level: "info"
 
 totp:
   issuer: {{ env "CONFIG_EXTRA_DOMAIN" | msquote }}
