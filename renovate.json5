@@ -32,6 +32,25 @@
       dependencyDashboardApproval: true,
     },
     {
+      // bitnami moved their charts to an OCI-only registry. 20.3.0 is the last
+      // redis version published as an https .tgz under charts.bitnami.com;
+      // every version from 20.13.4 up resolves to
+      // oci://registry-1.docker.io/bitnamicharts/redis. We render charts with
+      // helm.v3.Chart, which cannot pull OCI refs and dies with
+      // `invalid_reference: invalid tag`, taking down the whole preview rather
+      // than just that chart (see PR #139). Keep these frozen until #100 moves
+      // us to helm.v3.Release. Matched on the registry instead of on `redis` so
+      // any future chart from this host is covered too; note sealed-secrets
+      // lives on bitnami.github.io and is *not* affected.
+      matchDatasources: [
+        'helm',
+      ],
+      matchRegistryUrls: [
+        'https://charts.bitnami.com/bitnami',
+      ],
+      enabled: false,
+    },
+    {
       matchUpdateTypes: [
         'minor',
         'patch',
@@ -67,6 +86,12 @@
         'pin',
         'digest',
       ],
+      // A version bump here always produces a real Kubernetes diff, so the
+      // zero-diff automerge gate in pulumi-preview.yml can't be the reviewer.
+      // The `deps-non-major` rule above matches these too (it has no
+      // matchDepTypes) and would otherwise leak its `automerge: true` in here,
+      // so turn it back off explicitly: application updates get eyeballed.
+      automerge: false,
       groupName: 'applications with non-major changes',
       groupSlug: 'apps-non-major',
     },
