@@ -39,5 +39,5 @@ config:
   image:syncthing: docker.io/syncthing/syncthing:2.1.2
   image:stdiscosrv: docker.io/syncthing/discosrv:2.1.2
   image:ukulele: ghcr.io/freyacodes/ukulele:master
-  image:rclone: docker.io/rclone/rclone:1.74.4
-  image:spoolman: ghcr.io/donkie/spoolman:0.25.0
+  image:rclone: docker.io/rclone/rclone:1.75.0
+  image:spoolman: ghcr.io/donkie/spoolman:0.26.0
