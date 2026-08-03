@@ -27,7 +27,7 @@ jobs:
     # branch ruleset requires branches to be up to date with main, so the diff
     # you read is computed from the same inputs this applies. Merging deploys.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v7
         with:
