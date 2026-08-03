@@ -28,8 +28,21 @@ Deploys can also be driven from GitHub CI. Two workflows under `.github/workflow
 
 - **`pulumi-preview.yml`** — on every PR to `main`, runs `pulumi preview` and posts the
   diff as a PR comment. Its `preview` job is a **required status check** for `main`.
-- **`pulumi-deploy.yml`** — on push to `main`, runs `pulumi up`, gated behind the
-  `production` GitHub Environment (**manual approval required** before anything applies).
+- **`pulumi-deploy.yml`** — on push to `main`, runs `pulumi up`. There is no approval
+  step: **merging is what deploys**, and review happens on the PR. A failed apply posts
+  to a Home Assistant webhook (`HAOS_DEPLOY_WEBHOOK_URL`) → phone notification, since
+  nothing else would tell you `main` isn't actually deployed.
+- **`noop-automerge.yml`** — for a PR that touches neither `src/` nor `Pulumi.*` (lock
+  file maintenance, npm bumps, workflow or docs edits), runs a second
+  `preview --expect-no-changes` and, if it really is a no-op, approves the PR and arms
+  GitHub auto-merge (rebase). That zero-diff proof is the gate that would have caught
+  `@pulumi/pulumi` 3.253.0 silently dropping 238 resources instead of automerging it.
+  Label a PR `expect-changes` to opt out (and to disarm an already-armed one).
+  Renovate deliberately no longer automerges anything itself.
+
+Note that an auto-merge does not trigger `pulumi-deploy` — pushes made with
+`GITHUB_TOKEN` don't start workflow runs. That is consistent: those merges were proven
+to be no-ops, and the next PR with a real diff applies `main` again.
 
 Runners reach the homelab over ZeroTier: [`zerotier/github-action`](https://github.com/zerotier/github-action)
 authorizes an ephemeral member (auto-removed in its post step), the job waits for TCP
@@ -46,8 +59,9 @@ authorizes an ephemeral member (auto-removed in its post step), the job waits fo
 | `ZEROTIER_NETWORK_ID` | the ZeroTier network id for `10.144.0.0/16` |
 | `ZEROTIER_CENTRAL_TOKEN` | ZeroTier Central API token (my.zerotier.com → Account) |
 
-Plus: a `production` Environment with yourself as a **required reviewer**, and a `main`
-branch ruleset (block direct pushes, require a PR, require the `preview` check).
+Plus a `main` branch ruleset (block direct pushes, require a PR, require the `preview`
+check, require branches to be up to date), and **Allow auto-merge** enabled in the
+repository settings — without it `noop-automerge.yml` cannot arm a merge.
 
 ## Per Pod Cert for mTLS
 This is done by bootstraping a self-signed CA in the cluster using cert-manager,
