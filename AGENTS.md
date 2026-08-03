@@ -8,7 +8,7 @@ This project manages a k3s cluster configuration using Pulumi with the Node.js r
 - **TypeScript check**: `mise x -- pulumi preview --diff --json` will check the code for syntax errors before generating the preview.
 - **Package manager**: `npm`
 - **State backend**: Pulumi state lives in a self-hosted Postgres backend (`deploy/state-backend/`); `mise` injects `PULUMI_BACKEND_URL` + `PULUMI_CONFIG_PASSPHRASE` automatically. The k8s provider uses the ambient kubeconfig (k3s API over ZeroTier at `https://10.144.180.10:6443`).
-- **CI/CD**: `.github/workflows/` run `pulumi preview` on PRs (posted as a PR comment; required `preview` check on `main`) and a manually-approved `pulumi up` on push to `main`, via `pulumi/actions` over ZeroTier. Details and required secrets are in `README.md`.
+- **CI/CD**: `.github/workflows/` run `pulumi preview` on PRs (posted as a PR comment; required `preview` check on `main`) and `pulumi up` on push to `main` — merging deploys, there is no approval gate — via `pulumi/actions` over ZeroTier. A third workflow approves and auto-merges (rebase) PRs that touch neither `src/` nor `Pulumi.*`, after proving the preview is a no-op. Details and required secrets are in `README.md`.
 
 ## Core Structure
 

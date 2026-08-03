@@ -10,10 +10,14 @@
   patch: {
     enabled: false,
   },
-  automergeStrategy: 'squash',
+  // Merging is not renovate's job any more: .github/workflows/noop-automerge.yml
+  // merges any PR that leaves `src/` and `Pulumi.*` untouched once it has proven
+  // the preview is empty -- which covers every update renovate used to automerge
+  // here, and covers them with the zero-diff proof renovate cannot do. Two
+  // mechanisms racing would also mean whichever wins picks the merge strategy,
+  // and renovate's squash rewrites the committer to noreply@github.com.
   lockFileMaintenance: {
     enabled: true,
-    automerge: true,
   },
   ignorePaths: [
     'src/crds/**',
@@ -57,15 +61,8 @@
         'pin',
         'digest',
       ],
-      automerge: true,
       groupName: 'dependencies with non-major changes',
       groupSlug: 'deps-non-major',
-    },
-    {
-      matchDepTypes: [
-        'devDependencies',
-      ],
-      automerge: true,
     },
     {
       matchDepTypes: [
@@ -86,12 +83,9 @@
         'pin',
         'digest',
       ],
-      // A version bump here always produces a real Kubernetes diff, so the
-      // zero-diff automerge gate in pulumi-preview.yml can't be the reviewer.
-      // The `deps-non-major` rule above matches these too (it has no
-      // matchDepTypes) and would otherwise leak its `automerge: true` in here,
-      // so turn it back off explicitly: application updates get eyeballed.
-      automerge: false,
+      // These live in `Pulumi.dev.yaml` and always produce a real Kubernetes
+      // diff, so noop-automerge.yml classifies them as needing a human and
+      // never touches them. Application updates get eyeballed.
       groupName: 'applications with non-major changes',
       groupSlug: 'apps-non-major',
     },

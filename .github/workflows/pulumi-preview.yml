@@ -1,5 +1,10 @@
 name: pulumi-preview
 
+# Runs for every PR and only ever *reports*: it renders the diff so a human can
+# read it before merging. Its `preview` job is the required status check on
+# `main`. Deciding that a PR is harmless enough to merge unattended is a
+# separate concern and lives in noop-automerge.yml.
+
 on:
   pull_request:
     branches: [main]
@@ -62,38 +67,6 @@ jobs:
           chmod 600 "$HOME/.kube/config"
           echo "KUBECONFIG=$HOME/.kube/config" >> "$GITHUB_ENV"
 
-      - name: Classify the PR
-        id: classify
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Escape hatch: label a PR `expect-changes` when a dependency bump is
-          # *supposed* to move resources, e.g. a deliberate @pulumi/kubernetes
-          # upgrade that renders fields differently.
-          OVERRIDE: ${{ contains(github.event.pull_request.labels.*.name, 'expect-changes') }}
-        run: |
-          # Only the Pulumi program and its stack config can legitimately change
-          # what we deploy. A PR touching neither -- lock file maintenance, npm
-          # bumps, workflow or docs edits -- must preview as a no-op, and if it
-          # doesn't, something moved behind our back. This is the gate that
-          # would have caught @pulumi/pulumi 3.253.0 silently dropping 238
-          # resources (commit c93d8d78) instead of automerging it.
-          if [ "$OVERRIDE" = 'true' ]; then
-            echo 'expect-no-changes=false' >> "$GITHUB_OUTPUT"
-            echo 'PR is labelled expect-changes; skipping the no-op gate'
-            exit 0
-          fi
-          changed=$(gh api --paginate \
-            "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files" \
-            --jq '.[].filename')
-          echo "changed files:"; echo "$changed"
-          if grep -qE '^(src/|Pulumi\.)' <<<"$changed"; then
-            echo 'expect-no-changes=false' >> "$GITHUB_OUTPUT"
-            echo 'PR touches the Pulumi program or its config; a diff is expected'
-          else
-            echo 'expect-no-changes=true' >> "$GITHUB_OUTPUT"
-            echo 'PR cannot legitimately change infrastructure; requiring a no-op preview'
-          fi
-
       - name: Pulumi preview
         uses: pulumi/actions@v7
         env:
@@ -107,18 +80,3 @@ jobs:
           comment-on-pr: true
           comment-on-summary: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      # Deliberately a second preview rather than `expect-no-changes` on the
-      # step above: pulumi/actions awaits the preview before it posts the PR
-      # comment and the summary (src/main.ts:121 vs :160), so a non-zero exit
-      # there throws and we lose the diff in exactly the case we need to read
-      # it. The step above always reports; this one only decides pass/fail. The
-      # CLI and the login credentials are already on the runner from it.
-      - name: Require a no-op preview
-        if: steps.classify.outputs.expect-no-changes == 'true'
-        env:
-          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
-          PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS: '1'
-          PULUMI_BACKEND_URL: ${{ secrets.PULUMI_BACKEND_URL }}
-        run: |
-          pulumi preview --stack dev --non-interactive --diff --expect-no-changes

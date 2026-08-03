@@ -1,0 +1,173 @@
+name: noop-automerge
+
+# A PR that touches neither the Pulumi program (`src/`) nor its stack config
+# (`Pulumi.*`) -- lock file maintenance, npm bumps, workflow or docs edits --
+# cannot legitimately change what we deploy. This workflow proves that with a
+# `--expect-no-changes` preview and then merges the PR unattended.
+#
+# It is deliberately its own workflow rather than a step in pulumi-preview.yml,
+# which runs for *every* PR and only ever reports a diff. The decision "this may
+# merge without a human" gets its own trigger condition, its own log and its own
+# red X. The zero-diff proof is the gate that would have caught @pulumi/pulumi
+# 3.253.0 silently dropping 238 resources (commit c93d8d78) instead of
+# automerging it.
+#
+# Note the merge here does NOT run pulumi-deploy: pushes made with GITHUB_TOKEN
+# do not start new workflow runs. That is fine by construction -- we merged
+# precisely because the preview was empty, so the apply we skipped would have
+# been a no-op. main gets applied again on the next PR that carries a real diff.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, ready_for_review, labeled, unlabeled]
+
+concurrency:
+  group: noop-automerge-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write        # rebase-merge the PR
+  pull-requests: write   # approve, arm/disarm auto-merge
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_REPO: ${{ github.repository }}
+  PR: ${{ github.event.pull_request.number }}
+
+jobs:
+  classify:                 # cheap: no checkout, no ZeroTier, no npm
+    runs-on: ubuntu-latest
+    outputs:
+      noop: ${{ steps.classify.outputs.noop }}
+    steps:
+      - name: Classify the PR
+        id: classify
+        env:
+          # Escape hatch: label a PR `expect-changes` when a bump is *supposed*
+          # to move resources, e.g. a deliberate @pulumi/kubernetes upgrade that
+          # renders fields differently. Such a PR wants human eyes on the diff.
+          OVERRIDE: ${{ contains(github.event.pull_request.labels.*.name, 'expect-changes') }}
+          DRAFT: ${{ github.event.pull_request.draft }}
+        run: |
+          if [ "$OVERRIDE" = 'true' ]; then
+            echo 'noop=false' >> "$GITHUB_OUTPUT"
+            echo 'PR is labelled expect-changes; leaving it to a human'
+            exit 0
+          fi
+          if [ "$DRAFT" = 'true' ]; then
+            # Marking a PR draft is how you park one you are still editing;
+            # `ready_for_review` brings it back through here.
+            echo 'noop=false' >> "$GITHUB_OUTPUT"
+            echo 'PR is a draft; not merging it'
+            exit 0
+          fi
+          changed=$(gh api --paginate "repos/$GH_REPO/pulls/$PR/files" --jq '.[].filename')
+          echo "changed files:"; echo "$changed"
+          if grep -qE '^(src/|Pulumi\.)' <<<"$changed"; then
+            echo 'noop=false' >> "$GITHUB_OUTPUT"
+            echo 'PR touches the Pulumi program or its config; a diff is expected'
+          else
+            echo 'noop=true' >> "$GITHUB_OUTPUT"
+            echo 'PR cannot legitimately change infrastructure; requiring a no-op preview'
+          fi
+
+      - name: Disarm auto-merge if the PR stopped qualifying
+        if: steps.classify.outputs.noop != 'true'
+        run: |
+          # Arming is sticky. Once auto-merge is on GitHub merges the moment
+          # `preview` goes green, even if a later push started touching src/ or
+          # someone added `expect-changes` in the meantime. Take it back.
+          if [ "$(gh pr view "$PR" --json autoMergeRequest --jq '.autoMergeRequest != null')" = 'true' ]; then
+            gh pr merge --disable-auto "$PR"
+            echo "::warning::auto-merge disarmed; this PR now needs a human"
+          fi
+
+  merge:
+    needs: classify
+    if: needs.classify.outputs.noop == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.18.0'   # matches package.json volta pin
+          cache: npm
+
+      - run: npm ci
+
+      - name: Join ZeroTier
+        uses: zerotier/github-action@v1.0.1
+        with:
+          network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+          auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+
+      - name: Wait for state backend over ZeroTier
+        run: |
+          echo "ZeroTier networks:"; sudo zerotier-cli listnetworks || true
+          # Gate on the real dependency (TCP 5432), not ICMP. A fresh runner may
+          # need a while to establish a ZeroTier path to the NAT'd homelab peer.
+          for i in $(seq 1 60); do
+            if timeout 3 bash -c 'cat < /dev/null > /dev/tcp/10.144.180.10/5432' 2>/dev/null; then
+              echo "state backend 10.144.180.10:5432 reachable after ${i} tries"; exit 0
+            fi
+            if [ $((i % 10)) -eq 0 ]; then
+              echo "still waiting ($i); ZeroTier peers:"; sudo zerotier-cli peers || true
+            fi
+            sleep 3
+          done
+          echo "::error::state backend 10.144.180.10:5432 unreachable over ZeroTier after 180s"
+          sudo zerotier-cli listnetworks || true
+          sudo zerotier-cli peers || true
+          exit 1
+
+      - name: Write kubeconfig
+        env:
+          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
+        run: |
+          # The Pulumi program's k8s provider uses the ambient kubeconfig to reach
+          # the k3s API (https://10.144.180.10:6443, over ZeroTier). Without it,
+          # Helm templating falls back to kubeVersion 1.20.0 and charts fail.
+          mkdir -p "$HOME/.kube"
+          printf '%s' "$KUBECONFIG_CONTENT" > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+          echo "KUBECONFIG=$HOME/.kube/config" >> "$GITHUB_ENV"
+
+      - name: Require a no-op preview
+        uses: pulumi/actions@v7
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS: '1'
+        with:
+          command: preview
+          stack-name: dev
+          cloud-url: ${{ secrets.PULUMI_BACKEND_URL }}
+          diff: true
+          expect-no-changes: true
+          # No PR comment: pulumi-preview.yml already posts the readable diff for
+          # this same commit, and the action awaits the preview before it
+          # comments (src/main.ts:121 vs :160), so a failed expectation would
+          # throw before the comment lands anyway. The summary is enough here --
+          # this run only decides pass/fail.
+          comment-on-pr: false
+          comment-on-summary: true
+
+      - name: Approve
+        run: |
+          # Cosmetic today (the `main` ruleset requires 0 approvals) but it makes
+          # the PR read as "checked by something" rather than merged out of
+          # nowhere, and it keeps working if a review requirement is ever added.
+          gh pr review --approve "$PR" \
+            --body 'Preview is a no-op and the PR touches neither `src/` nor `Pulumi.*`.'
+
+      - name: Merge when the required checks pass
+        run: |
+          # Arm GitHub's auto-merge instead of merging outright: `preview` in
+          # pulumi-preview.yml is the required check and is still running at this
+          # point, and the ruleset also requires the branch to be up to date with
+          # main. GitHub applies both conditions and merges when they hold --
+          # cheaper and less racy than burning runner minutes polling for them.
+          # Rebase, not squash: it preserves the author and sets the committer to
+          # the account's primary address, unlike GitHub's squash commits.
+          gh pr merge --auto --rebase "$PR"
