@@ -168,6 +168,8 @@ jobs:
           # point, and the ruleset also requires the branch to be up to date with
           # main. GitHub applies both conditions and merges when they hold --
           # cheaper and less racy than burning runner minutes polling for them.
-          # Rebase, not squash: it preserves the author and sets the committer to
-          # the account's primary address, unlike GitHub's squash commits.
+          # Rebase, not squash: the original author survives onto main. A squash
+          # would rewrite it to renovate[bot] with a `(#NNN)` subject. The
+          # committer is github-actions[bot] either way -- that is whoever's
+          # token performed the merge, and it cannot be this one's own address.
           gh pr merge --auto --rebase "$PR"
