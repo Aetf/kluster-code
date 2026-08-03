@@ -414,7 +414,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         });
         new k8s.batch.v1.CronJob(`${name}-restore-drill`, {
             spec: {
-                schedule: "0 4 1 * *",
+                schedule: "0 4 1 */3 *",
                 concurrencyPolicy: 'Forbid',
                 failedJobsHistoryLimit: 1,
                 successfulJobsHistoryLimit: 1,
