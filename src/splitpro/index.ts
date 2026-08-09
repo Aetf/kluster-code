@@ -2,11 +2,15 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import { NamespaceProbe, SealedSecret, Service, serviceFromDeployment } from "#src/utils";
+import { NamespaceProbe, Node, SealedSecret, Service, serviceFromDeployment } from "#src/utils";
 import { Serving } from "#src/serving";
 import * as crds from "#src/crds";
 import { versions } from "#src/config";
-import { juicefsColocationAffinity } from "#src/juicefs";
+
+/** nodeSelector pinning a pod to one specific node. */
+function nodeHostname(node: Node): Record<string, pulumi.Output<string>> {
+    return { 'kubernetes.io/hostname': pulumi.output(node.metadata).apply(md => md.name!) };
+}
 
 /**
  * Opt-in: S3-compatible object storage is *not* used -- SplitPro keeps receipts
@@ -156,7 +160,6 @@ export class Splitpro extends pulumi.ComponentResource<SplitproArgs> {
                         // Receipts are written to `$PWD/uploads`, and the image's
                         // workdir is /app.
                         mountPath: "/app/uploads",
-                        mountPropagation: "HostToContainer",
                     },
                 ],
                 // Migrations run in-process on boot (src/instrumentation.ts), so
@@ -178,7 +181,12 @@ export class Splitpro extends pulumi.ComponentResource<SplitproArgs> {
                     },
                 },
             ],
-            affinity: juicefsColocationAffinity(),
+            // Both PVCs are node-local with a Retain policy, so wherever the pod
+            // first lands is where the data lives for good. Pin it to the
+            // homelab: the VPS is the tight node (57% cpu / 53% memory
+            // requested, against 7% / 15% here) and it has nothing this app
+            // needs.
+            nodeSelector: nodeHostname(args.serving.base.nodes.AetfArchHomelab),
         });
 
         const deployment = new kx.Deployment(name, {
@@ -306,6 +314,12 @@ export class Splitpro extends pulumi.ComponentResource<SplitproArgs> {
                 storage: {
                     storageClass: storageClass,
                     size: '2Gi',
+                },
+                // Same reasoning as the app pod: node-local storage with a
+                // Retain policy, so it has to be pinned, and the homelab is the
+                // node with room.
+                affinity: {
+                    nodeSelector: nodeHostname(serving.base.nodes.AetfArchHomelab),
                 },
                 imageName: versions.image.splitproDb,
                 postgresql: {
