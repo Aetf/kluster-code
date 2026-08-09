@@ -327,7 +327,6 @@ function setup() {
         host: 'split.unlimited-code.works',
         domain: 'unlimited-code.works',
         authSubdomain: 'auth',
-        smtp: mailer.smtpService,
         dbStorageClass: cluster.localStableStorageClass.metadata.name,
         uploadStorageClass: cluster.localStableStorageClass.metadata.name,
         authSecret: splitproSecret,

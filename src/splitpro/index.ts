@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import { NamespaceProbe, Node, SealedSecret, Service, serviceFromDeployment } from "#src/utils";
+import { NamespaceProbe, Node, SealedSecret, serviceFromDeployment } from "#src/utils";
 import { Serving } from "#src/serving";
 import * as crds from "#src/crds";
 import { versions } from "#src/config";
@@ -44,8 +44,6 @@ interface SplitproArgs {
     domain: pulumi.Input<string>,
     authSubdomain: pulumi.Input<string>,
 
-    /** In-cluster relay, for magic links and invite mail. */
-    smtp: pulumi.Input<Service>,
     dbStorageClass: pulumi.Input<string>,
     uploadStorageClass: pulumi.Input<string>,
     /**
@@ -135,26 +133,31 @@ export class Splitpro extends pulumi.ComponentResource<SplitproArgs> {
                     'OIDC_CLIENT_SECRET': args.authSecret.asEnvValue('oidc_client_secret'),
                     'OIDC_WELL_KNOWN_URL': pulumi.interpolate`https://${args.authSubdomain}.${args.domain}/.well-known/openid-configuration`,
 
-                    // Closed instance: Authelia is the only way in. Its
-                    // `splitpro` authorization policy defaults to deny and only
-                    // admits three named groups, so account creation is already
-                    // gated before NextAuth ever sees the user.
+                    // Authelia is the only way in, and deliberately the *only*
+                    // way: no EMAIL_SERVER_HOST means NextAuth never registers
+                    // the magic-link provider, so it neither appears on the
+                    // sign-in page nor exists as a second, weaker path. That
+                    // matters because DISABLE_EMAIL_SIGNUP only blocks *new*
+                    // accounts -- an existing user could otherwise sign in by
+                    // email and skip Authelia's policy and group checks
+                    // entirely.
                     //
-                    // DISABLE_EMAIL_SIGNUP only covers the magic-link path
-                    // (it checks `email?.verificationRequest`), which is what
-                    // closes self-signup.
+                    // Invites go off with it: they email a signup link, which
+                    // is useless here since the recipient still cannot get past
+                    // Authelia until they are added to a group there. Leaving
+                    // them enabled would just put a button in the UI whose
+                    // backend has no mail server to talk to.
+                    //
+                    // DISABLE_EMAIL_SIGNUP is kept as a backstop in case SMTP
+                    // is ever wired back up for invites.
                     //
                     // INVITE_ONLY is deliberately NOT set. Upstream's adapter
                     // throws unconditionally on createUser when it is on, with
                     // no exception for the first account -- so on an empty
-                    // database nobody can ever log in, and invites can only be
-                    // sent by a user who exists. It would also mean a restore
-                    // into a fresh database comes back up locked out.
+                    // database nobody can ever log in, and a restore into a
+                    // fresh database would come back up locked out.
                     'DISABLE_EMAIL_SIGNUP': 'true',
-                    'ENABLE_SENDING_INVITES': 'true',
-                    'FROM_EMAIL': pulumi.interpolate`splitpro@${args.domain}`,
-                    'EMAIL_SERVER_HOST': pulumi.output(args.smtp).apply(s => s.internalEndpoint()),
-                    'EMAIL_SERVER_PORT': pulumi.output(args.smtp).apply(s => s.port("smtp")).apply(p => `${p}`),
+                    'ENABLE_SENDING_INVITES': 'false',
 
                     // The default `/home` is a marketing blog page.
                     'DEFAULT_HOMEPAGE': '/balances',
