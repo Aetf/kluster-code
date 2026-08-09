@@ -329,7 +329,7 @@ function setup() {
         authSubdomain: 'auth',
         smtp: mailer.smtpService,
         dbStorageClass: cluster.localStableStorageClass.metadata.name,
-        uploadStorageClass: cluster.jfsStorageClass.metadata.name,
+        uploadStorageClass: cluster.localStableStorageClass.metadata.name,
         authSecret: splitproSecret,
         // webPush / plaid / goCardless / openExchangeRates are opt-in, see
         // src/splitpro/index.ts
