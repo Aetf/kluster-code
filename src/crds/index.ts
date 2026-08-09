@@ -13,6 +13,7 @@ utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 
 // Export sub-modules:
 import * as acme from "./acme";
+import * as barmancloud from "./barmancloud";
 import * as bitnami from "./bitnami";
 import * as cert_manager from "./cert_manager";
 import * as deviceplugin from "./deviceplugin";
@@ -29,6 +30,7 @@ import * as types from "./types";
 
 export {
     acme,
+    barmancloud,
     bitnami,
     cert_manager,
     deviceplugin,

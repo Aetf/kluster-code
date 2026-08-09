@@ -6467,6 +6467,1237 @@ export namespace autoscaling {
     }
 }
 
+export namespace barmancloud {
+    export namespace v1 {
+        /**
+         * ObjectStore is the Schema for the objectstores API.
+         */
+        export interface ObjectStore {
+            /**
+             * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+             */
+            apiVersion: "barmancloud.cnpg.io/v1";
+            /**
+             * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind: "ObjectStore";
+            /**
+             * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+             */
+            metadata: outputs.meta.v1.ObjectMeta;
+            spec: outputs.barmancloud.v1.ObjectStoreSpec;
+            status: outputs.barmancloud.v1.ObjectStoreStatus;
+        }
+
+        /**
+         * Specification of the desired behavior of the ObjectStore.
+         * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ObjectStoreSpec {
+            configuration: outputs.barmancloud.v1.ObjectStoreSpecConfiguration;
+            instanceSidecarConfiguration: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfiguration;
+            /**
+             * RetentionPolicy is the retention policy to be used for backups
+             * and WALs (i.e. '60d'). The retention policy is expressed in the form
+             * of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` -
+             * days, weeks, months.
+             */
+            retentionPolicy: string;
+        }
+
+        /**
+         * The configuration for the barman-cloud tool suite
+         */
+        export interface ObjectStoreSpecConfiguration {
+            azureCredentials: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentials;
+            data: outputs.barmancloud.v1.ObjectStoreSpecConfigurationData;
+            /**
+             * The path where to store the backup (i.e. s3://bucket/path/to/folder)
+             * this path, with different destination folders, will be used for WALs
+             * and for data
+             */
+            destinationPath: string;
+            endpointCA: outputs.barmancloud.v1.ObjectStoreSpecConfigurationEndpointCA;
+            /**
+             * Endpoint to be used to upload data to the cloud,
+             * overriding the automatic endpoint discovery
+             */
+            endpointURL: string;
+            googleCredentials: outputs.barmancloud.v1.ObjectStoreSpecConfigurationGoogleCredentials;
+            /**
+             * HistoryTags is a list of key value pairs that will be passed to the
+             * Barman --history-tags option.
+             */
+            historyTags: {[key: string]: string};
+            s3Credentials: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3Credentials;
+            /**
+             * The server name on S3, the cluster name is used if this
+             * parameter is omitted
+             */
+            serverName: string;
+            /**
+             * Tags is a list of key value pairs that will be passed to the
+             * Barman --tags option.
+             */
+            tags: {[key: string]: string};
+            wal: outputs.barmancloud.v1.ObjectStoreSpecConfigurationWal;
+        }
+
+        /**
+         * The credentials to use to upload data to Azure Blob Storage
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentials {
+            connectionString: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsConnectionString;
+            /**
+             * Use the Azure AD based authentication without providing explicitly the keys.
+             */
+            inheritFromAzureAD: boolean;
+            storageAccount: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageAccount;
+            storageKey: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageKey;
+            storageSasToken: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageSasToken;
+            /**
+             * Use the default Azure authentication flow, which includes DefaultAzureCredential.
+             * This allows authentication using environment variables and managed identities.
+             */
+            useDefaultAzureCredentials: boolean;
+        }
+
+        /**
+         * The connection string to be used
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsConnectionString {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The connection string to be used
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsConnectionStringPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The credentials to use to upload data to Azure Blob Storage
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsPatch {
+            connectionString: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsConnectionStringPatch;
+            /**
+             * Use the Azure AD based authentication without providing explicitly the keys.
+             */
+            inheritFromAzureAD: boolean;
+            storageAccount: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageAccountPatch;
+            storageKey: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageKeyPatch;
+            storageSasToken: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageSasTokenPatch;
+            /**
+             * Use the default Azure authentication flow, which includes DefaultAzureCredential.
+             * This allows authentication using environment variables and managed identities.
+             */
+            useDefaultAzureCredentials: boolean;
+        }
+
+        /**
+         * The storage account where to upload data
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageAccount {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The storage account where to upload data
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageAccountPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The storage account key to be used in conjunction
+         * with the storage account name
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageKey {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The storage account key to be used in conjunction
+         * with the storage account name
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageKeyPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * A shared-access-signature to be used in conjunction with
+         * the storage account name
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageSasToken {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * A shared-access-signature to be used in conjunction with
+         * the storage account name
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageSasTokenPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The configuration to be used to backup the data files
+         * When not defined, base backups files will be stored uncompressed and may
+         * be unencrypted in the object store, according to the bucket default
+         * policy.
+         */
+        export interface ObjectStoreSpecConfigurationData {
+            /**
+             * AdditionalCommandArgs represents additional arguments that can be appended
+             * to the 'barman-cloud-backup' command-line invocation. These arguments
+             * provide flexibility to customize the backup process further according to
+             * specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-backup' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            additionalCommandArgs: string[];
+            /**
+             * Compress a backup file (a tar file per tablespace) while streaming it
+             * to the object store. Available options are empty string (no
+             * compression, default), `gzip`, `bzip2`, `lz4`, and `snappy`.
+             */
+            compression: string;
+            /**
+             * Whenever to force the encryption of files (if the bucket is
+             * not already configured for that).
+             * Allowed options are empty string (use the bucket policy, default),
+             * `AES256` and `aws:kms`
+             */
+            encryption: string;
+            /**
+             * Control whether the I/O workload for the backup initial checkpoint will
+             * be limited, according to the `checkpoint_completion_target` setting on
+             * the PostgreSQL server. If set to true, an immediate checkpoint will be
+             * used, meaning PostgreSQL will complete the checkpoint as soon as
+             * possible. `false` by default.
+             */
+            immediateCheckpoint: boolean;
+            /**
+             * The number of parallel jobs to be used to upload the backup, defaults
+             * to 2
+             */
+            jobs: number;
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-restore'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the data restore process further, according to specific requirements or
+             * configurations.
+             *
+             * Example:
+             * In a scenario where specialized restore options are required, such as setting
+             * a specific read timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-restore' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            restoreAdditionalCommandArgs: string[];
+        }
+
+        /**
+         * The configuration to be used to backup the data files
+         * When not defined, base backups files will be stored uncompressed and may
+         * be unencrypted in the object store, according to the bucket default
+         * policy.
+         */
+        export interface ObjectStoreSpecConfigurationDataPatch {
+            /**
+             * AdditionalCommandArgs represents additional arguments that can be appended
+             * to the 'barman-cloud-backup' command-line invocation. These arguments
+             * provide flexibility to customize the backup process further according to
+             * specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-backup' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            additionalCommandArgs: string[];
+            /**
+             * Compress a backup file (a tar file per tablespace) while streaming it
+             * to the object store. Available options are empty string (no
+             * compression, default), `gzip`, `bzip2`, `lz4`, and `snappy`.
+             */
+            compression: string;
+            /**
+             * Whenever to force the encryption of files (if the bucket is
+             * not already configured for that).
+             * Allowed options are empty string (use the bucket policy, default),
+             * `AES256` and `aws:kms`
+             */
+            encryption: string;
+            /**
+             * Control whether the I/O workload for the backup initial checkpoint will
+             * be limited, according to the `checkpoint_completion_target` setting on
+             * the PostgreSQL server. If set to true, an immediate checkpoint will be
+             * used, meaning PostgreSQL will complete the checkpoint as soon as
+             * possible. `false` by default.
+             */
+            immediateCheckpoint: boolean;
+            /**
+             * The number of parallel jobs to be used to upload the backup, defaults
+             * to 2
+             */
+            jobs: number;
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-restore'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the data restore process further, according to specific requirements or
+             * configurations.
+             *
+             * Example:
+             * In a scenario where specialized restore options are required, such as setting
+             * a specific read timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-restore' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            restoreAdditionalCommandArgs: string[];
+        }
+
+        /**
+         * EndpointCA store the CA bundle of the barman endpoint.
+         * Useful when using self-signed certificates to avoid
+         * errors with certificate issuer and barman-cloud-wal-archive
+         */
+        export interface ObjectStoreSpecConfigurationEndpointCA {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * EndpointCA store the CA bundle of the barman endpoint.
+         * Useful when using self-signed certificates to avoid
+         * errors with certificate issuer and barman-cloud-wal-archive
+         */
+        export interface ObjectStoreSpecConfigurationEndpointCAPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The credentials to use to upload data to Google Cloud Storage
+         */
+        export interface ObjectStoreSpecConfigurationGoogleCredentials {
+            applicationCredentials: outputs.barmancloud.v1.ObjectStoreSpecConfigurationGoogleCredentialsApplicationCredentials;
+            /**
+             * If set to true, will presume that it's running inside a GKE environment,
+             * default to false.
+             */
+            gkeEnvironment: boolean;
+        }
+
+        /**
+         * The secret containing the Google Cloud Storage JSON file with the credentials
+         */
+        export interface ObjectStoreSpecConfigurationGoogleCredentialsApplicationCredentials {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The secret containing the Google Cloud Storage JSON file with the credentials
+         */
+        export interface ObjectStoreSpecConfigurationGoogleCredentialsApplicationCredentialsPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The credentials to use to upload data to Google Cloud Storage
+         */
+        export interface ObjectStoreSpecConfigurationGoogleCredentialsPatch {
+            applicationCredentials: outputs.barmancloud.v1.ObjectStoreSpecConfigurationGoogleCredentialsApplicationCredentialsPatch;
+            /**
+             * If set to true, will presume that it's running inside a GKE environment,
+             * default to false.
+             */
+            gkeEnvironment: boolean;
+        }
+
+        /**
+         * The configuration for the barman-cloud tool suite
+         */
+        export interface ObjectStoreSpecConfigurationPatch {
+            azureCredentials: outputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsPatch;
+            data: outputs.barmancloud.v1.ObjectStoreSpecConfigurationDataPatch;
+            /**
+             * The path where to store the backup (i.e. s3://bucket/path/to/folder)
+             * this path, with different destination folders, will be used for WALs
+             * and for data
+             */
+            destinationPath: string;
+            endpointCA: outputs.barmancloud.v1.ObjectStoreSpecConfigurationEndpointCAPatch;
+            /**
+             * Endpoint to be used to upload data to the cloud,
+             * overriding the automatic endpoint discovery
+             */
+            endpointURL: string;
+            googleCredentials: outputs.barmancloud.v1.ObjectStoreSpecConfigurationGoogleCredentialsPatch;
+            /**
+             * HistoryTags is a list of key value pairs that will be passed to the
+             * Barman --history-tags option.
+             */
+            historyTags: {[key: string]: string};
+            s3Credentials: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsPatch;
+            /**
+             * The server name on S3, the cluster name is used if this
+             * parameter is omitted
+             */
+            serverName: string;
+            /**
+             * Tags is a list of key value pairs that will be passed to the
+             * Barman --tags option.
+             */
+            tags: {[key: string]: string};
+            wal: outputs.barmancloud.v1.ObjectStoreSpecConfigurationWalPatch;
+        }
+
+        /**
+         * The credentials to use to upload data to S3
+         */
+        export interface ObjectStoreSpecConfigurationS3Credentials {
+            accessKeyId: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsAccessKeyId;
+            /**
+             * Use the role based authentication without providing explicitly the keys.
+             */
+            inheritFromIAMRole: boolean;
+            region: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsRegion;
+            secretAccessKey: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsSecretAccessKey;
+            sessionToken: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsSessionToken;
+        }
+
+        /**
+         * The reference to the access key id
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsAccessKeyId {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the access key id
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsAccessKeyIdPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The credentials to use to upload data to S3
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsPatch {
+            accessKeyId: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsAccessKeyIdPatch;
+            /**
+             * Use the role based authentication without providing explicitly the keys.
+             */
+            inheritFromIAMRole: boolean;
+            region: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsRegionPatch;
+            secretAccessKey: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsSecretAccessKeyPatch;
+            sessionToken: outputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsSessionTokenPatch;
+        }
+
+        /**
+         * The reference to the secret containing the region name
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsRegion {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the secret containing the region name
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsRegionPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the secret access key
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsSecretAccessKey {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The reference to the secret access key
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsSecretAccessKeyPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The references to the session key
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsSessionToken {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The references to the session key
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsSessionTokenPatch {
+            /**
+             * The key to select
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             */
+            name: string;
+        }
+
+        /**
+         * The configuration for the backup of the WAL stream.
+         * When not defined, WAL files will be stored uncompressed and may be
+         * unencrypted in the object store, according to the bucket default policy.
+         */
+        export interface ObjectStoreSpecConfigurationWal {
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-wal-archive'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the WAL archive process further, according to specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-wal-archive' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            archiveAdditionalCommandArgs: string[];
+            /**
+             * Compress a WAL file before sending it to the object store. Available
+             * options are empty string (no compression, default), `gzip`, `bzip2`,
+             * `lz4`, `snappy`, `xz`, and `zstd`.
+             */
+            compression: string;
+            /**
+             * Whenever to force the encryption of files (if the bucket is
+             * not already configured for that).
+             * Allowed options are empty string (use the bucket policy, default),
+             * `AES256` and `aws:kms`
+             */
+            encryption: string;
+            /**
+             * Number of WAL files to be either archived in parallel (when the
+             * PostgreSQL instance is archiving to a backup object store) or
+             * restored in parallel (when a PostgreSQL standby is fetching WAL
+             * files from a recovery object store). If not specified, WAL files
+             * will be processed one at a time. It accepts a positive integer as a
+             * value - with 1 being the minimum accepted value.
+             */
+            maxParallel: number;
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-wal-restore'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the WAL restore process further, according to specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-wal-restore' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            restoreAdditionalCommandArgs: string[];
+        }
+
+        /**
+         * The configuration for the backup of the WAL stream.
+         * When not defined, WAL files will be stored uncompressed and may be
+         * unencrypted in the object store, according to the bucket default policy.
+         */
+        export interface ObjectStoreSpecConfigurationWalPatch {
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-wal-archive'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the WAL archive process further, according to specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-wal-archive' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            archiveAdditionalCommandArgs: string[];
+            /**
+             * Compress a WAL file before sending it to the object store. Available
+             * options are empty string (no compression, default), `gzip`, `bzip2`,
+             * `lz4`, `snappy`, `xz`, and `zstd`.
+             */
+            compression: string;
+            /**
+             * Whenever to force the encryption of files (if the bucket is
+             * not already configured for that).
+             * Allowed options are empty string (use the bucket policy, default),
+             * `AES256` and `aws:kms`
+             */
+            encryption: string;
+            /**
+             * Number of WAL files to be either archived in parallel (when the
+             * PostgreSQL instance is archiving to a backup object store) or
+             * restored in parallel (when a PostgreSQL standby is fetching WAL
+             * files from a recovery object store). If not specified, WAL files
+             * will be processed one at a time. It accepts a positive integer as a
+             * value - with 1 being the minimum accepted value.
+             */
+            maxParallel: number;
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-wal-restore'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the WAL restore process further, according to specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-wal-restore' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            restoreAdditionalCommandArgs: string[];
+        }
+
+        /**
+         * The configuration for the sidecar that runs in the instance pods
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfiguration {
+            /**
+             * AdditionalContainerArgs is an optional list of command-line arguments
+             * to be passed to the sidecar container when it starts.
+             * The provided arguments are appended to the container’s default arguments.
+             */
+            additionalContainerArgs: string[];
+            /**
+             * The environment to be explicitly passed to the sidecar
+             */
+            env: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnv[];
+            /**
+             * The log level for PostgreSQL instances. Valid values are: `error`, `warning`, `info` (default), `debug`, `trace`
+             */
+            logLevel: string;
+            resources: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationResources;
+            /**
+             * The retentionCheckInterval defines the frequency at which the
+             * system checks and enforces retention policies.
+             */
+            retentionPolicyIntervalSeconds: number;
+        }
+
+        /**
+         * EnvVar represents an environment variable present in a Container.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnv {
+            /**
+             * Name of the environment variable.
+             * May consist of any printable ASCII characters except '='.
+             */
+            name: string;
+            /**
+             * Variable references $(VAR_NAME) are expanded
+             * using the previously defined environment variables in the container and
+             * any service environment variables. If a variable cannot be resolved,
+             * the reference in the input string will be unchanged. Double $$ are reduced
+             * to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+             * "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+             * Escaped references will never be expanded, regardless of whether the variable
+             * exists or not.
+             * Defaults to "".
+             */
+            value: string;
+            valueFrom: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFrom;
+        }
+
+        /**
+         * EnvVar represents an environment variable present in a Container.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvPatch {
+            /**
+             * Name of the environment variable.
+             * May consist of any printable ASCII characters except '='.
+             */
+            name: string;
+            /**
+             * Variable references $(VAR_NAME) are expanded
+             * using the previously defined environment variables in the container and
+             * any service environment variables. If a variable cannot be resolved,
+             * the reference in the input string will be unchanged. Double $$ are reduced
+             * to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+             * "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+             * Escaped references will never be expanded, regardless of whether the variable
+             * exists or not.
+             * Defaults to "".
+             */
+            value: string;
+            valueFrom: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromPatch;
+        }
+
+        /**
+         * Source for the environment variable's value. Cannot be used if value is not empty.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFrom {
+            configMapKeyRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromConfigMapKeyRef;
+            fieldRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFieldRef;
+            fileKeyRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFileKeyRef;
+            resourceFieldRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromResourceFieldRef;
+            secretKeyRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromSecretKeyRef;
+        }
+
+        /**
+         * Selects a key of a ConfigMap.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromConfigMapKeyRef {
+            /**
+             * The key to select.
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             * This field is effectively required, but due to backwards compatibility is
+             * allowed to be empty. Instances of this type with an empty value here are
+             * almost certainly wrong.
+             * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name: string;
+            /**
+             * Specify whether the ConfigMap or its key must be defined
+             */
+            optional: boolean;
+        }
+
+        /**
+         * Selects a key of a ConfigMap.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromConfigMapKeyRefPatch {
+            /**
+             * The key to select.
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             * This field is effectively required, but due to backwards compatibility is
+             * allowed to be empty. Instances of this type with an empty value here are
+             * almost certainly wrong.
+             * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name: string;
+            /**
+             * Specify whether the ConfigMap or its key must be defined
+             */
+            optional: boolean;
+        }
+
+        /**
+         * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+         * spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFieldRef {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion: string;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath: string;
+        }
+
+        /**
+         * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+         * spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFieldRefPatch {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion: string;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath: string;
+        }
+
+        /**
+         * FileKeyRef selects a key of the env file.
+         * Requires the EnvFiles feature gate to be enabled.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFileKeyRef {
+            /**
+             * The key within the env file. An invalid key will prevent the pod from starting.
+             * The keys defined within a source may consist of any printable ASCII characters except '='.
+             * During Alpha stage of the EnvFiles feature gate, the key size is limited to 128 characters.
+             */
+            key: string;
+            /**
+             * Specify whether the file or its key must be defined. If the file or key
+             * does not exist, then the env var is not published.
+             * If optional is set to true and the specified key does not exist,
+             * the environment variable will not be set in the Pod's containers.
+             *
+             * If optional is set to false and the specified key does not exist,
+             * an error will be returned during Pod creation.
+             */
+            optional: boolean;
+            /**
+             * The path within the volume from which to select the file.
+             * Must be relative and may not contain the '..' path or start with '..'.
+             */
+            path: string;
+            /**
+             * The name of the volume mount containing the env file.
+             */
+            volumeName: string;
+        }
+
+        /**
+         * FileKeyRef selects a key of the env file.
+         * Requires the EnvFiles feature gate to be enabled.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFileKeyRefPatch {
+            /**
+             * The key within the env file. An invalid key will prevent the pod from starting.
+             * The keys defined within a source may consist of any printable ASCII characters except '='.
+             * During Alpha stage of the EnvFiles feature gate, the key size is limited to 128 characters.
+             */
+            key: string;
+            /**
+             * Specify whether the file or its key must be defined. If the file or key
+             * does not exist, then the env var is not published.
+             * If optional is set to true and the specified key does not exist,
+             * the environment variable will not be set in the Pod's containers.
+             *
+             * If optional is set to false and the specified key does not exist,
+             * an error will be returned during Pod creation.
+             */
+            optional: boolean;
+            /**
+             * The path within the volume from which to select the file.
+             * Must be relative and may not contain the '..' path or start with '..'.
+             */
+            path: string;
+            /**
+             * The name of the volume mount containing the env file.
+             */
+            volumeName: string;
+        }
+
+        /**
+         * Source for the environment variable's value. Cannot be used if value is not empty.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromPatch {
+            configMapKeyRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromConfigMapKeyRefPatch;
+            fieldRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFieldRefPatch;
+            fileKeyRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFileKeyRefPatch;
+            resourceFieldRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromResourceFieldRefPatch;
+            secretKeyRef: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromSecretKeyRefPatch;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests
+         * (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromResourceFieldRef {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName: string;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor: number | string;
+            /**
+             * Required: resource to select
+             */
+            resource: string;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests
+         * (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromResourceFieldRefPatch {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName: string;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor: number | string;
+            /**
+             * Required: resource to select
+             */
+            resource: string;
+        }
+
+        /**
+         * Selects a key of a secret in the pod's namespace
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromSecretKeyRef {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             * This field is effectively required, but due to backwards compatibility is
+             * allowed to be empty. Instances of this type with an empty value here are
+             * almost certainly wrong.
+             * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional: boolean;
+        }
+
+        /**
+         * Selects a key of a secret in the pod's namespace
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromSecretKeyRefPatch {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key: string;
+            /**
+             * Name of the referent.
+             * This field is effectively required, but due to backwards compatibility is
+             * allowed to be empty. Instances of this type with an empty value here are
+             * almost certainly wrong.
+             * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name: string;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional: boolean;
+        }
+
+        /**
+         * The configuration for the sidecar that runs in the instance pods
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationPatch {
+            /**
+             * AdditionalContainerArgs is an optional list of command-line arguments
+             * to be passed to the sidecar container when it starts.
+             * The provided arguments are appended to the container’s default arguments.
+             */
+            additionalContainerArgs: string[];
+            /**
+             * The environment to be explicitly passed to the sidecar
+             */
+            env: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvPatch[];
+            /**
+             * The log level for PostgreSQL instances. Valid values are: `error`, `warning`, `info` (default), `debug`, `trace`
+             */
+            logLevel: string;
+            resources: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationResourcesPatch;
+            /**
+             * The retentionCheckInterval defines the frequency at which the
+             * system checks and enforces retention policies.
+             */
+            retentionPolicyIntervalSeconds: number;
+        }
+
+        /**
+         * Resources define cpu/memory requests and limits for the sidecar that runs in the instance pods.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationResources {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims,
+             * that are used by this container.
+             *
+             * This field depends on the
+             * DynamicResourceAllocation feature gate.
+             *
+             * This field is immutable. It can only be set for containers.
+             */
+            claims: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationResourcesClaims[];
+            /**
+             * Limits describes the maximum amount of compute resources allowed.
+             * More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits: {[key: string]: number | string};
+            /**
+             * Requests describes the minimum amount of compute resources required.
+             * If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+             * otherwise to an implementation-defined value. Requests cannot exceed Limits.
+             * More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests: {[key: string]: number | string};
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationResourcesClaims {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of
+             * the Pod where this field is used. It makes that resource available
+             * inside a container.
+             */
+            name: string;
+            /**
+             * Request is the name chosen for a request in the referenced claim.
+             * If empty, everything from the claim is made available, otherwise
+             * only the result of this request.
+             */
+            request: string;
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationResourcesClaimsPatch {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of
+             * the Pod where this field is used. It makes that resource available
+             * inside a container.
+             */
+            name: string;
+            /**
+             * Request is the name chosen for a request in the referenced claim.
+             * If empty, everything from the claim is made available, otherwise
+             * only the result of this request.
+             */
+            request: string;
+        }
+
+        /**
+         * Resources define cpu/memory requests and limits for the sidecar that runs in the instance pods.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationResourcesPatch {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims,
+             * that are used by this container.
+             *
+             * This field depends on the
+             * DynamicResourceAllocation feature gate.
+             *
+             * This field is immutable. It can only be set for containers.
+             */
+            claims: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationResourcesClaimsPatch[];
+            /**
+             * Limits describes the maximum amount of compute resources allowed.
+             * More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits: {[key: string]: number | string};
+            /**
+             * Requests describes the minimum amount of compute resources required.
+             * If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+             * otherwise to an implementation-defined value. Requests cannot exceed Limits.
+             * More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests: {[key: string]: number | string};
+        }
+
+        /**
+         * Specification of the desired behavior of the ObjectStore.
+         * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ObjectStoreSpecPatch {
+            configuration: outputs.barmancloud.v1.ObjectStoreSpecConfigurationPatch;
+            instanceSidecarConfiguration: outputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationPatch;
+            /**
+             * RetentionPolicy is the retention policy to be used for backups
+             * and WALs (i.e. '60d'). The retention policy is expressed in the form
+             * of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` -
+             * days, weeks, months.
+             */
+            retentionPolicy: string;
+        }
+
+        /**
+         * Most recently observed status of the ObjectStore. This data may not be up to
+         * date. Populated by the system. Read-only.
+         * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ObjectStoreStatus {
+            /**
+             * ServerRecoveryWindow maps each server to its recovery window
+             */
+            serverRecoveryWindow: {[key: string]: {[key: string]: string}};
+        }
+
+        /**
+         * Most recently observed status of the ObjectStore. This data may not be up to
+         * date. Populated by the system. Read-only.
+         * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ObjectStoreStatusPatch {
+            /**
+             * ServerRecoveryWindow maps each server to its recovery window
+             */
+            serverRecoveryWindow: {[key: string]: {[key: string]: string}};
+        }
+
+    }
+}
+
 export namespace bitnami {
     export namespace v1alpha1 {
         /**
@@ -60058,6 +61289,10 @@ export namespace hub {
              */
             isDefault: boolean;
             jwt: outputs.hub.v1alpha1.APIAuthSpecJwt;
+            /**
+             * Keyless configures keyless authentication.
+             */
+            keyless: {[key: string]: string};
             ldap: outputs.hub.v1alpha1.APIAuthSpecLdap;
         }
 
@@ -60434,6 +61669,10 @@ export namespace hub {
              */
             isDefault: boolean;
             jwt: outputs.hub.v1alpha1.APIAuthSpecJwtPatch;
+            /**
+             * Keyless configures keyless authentication.
+             */
+            keyless: {[key: string]: string};
             ldap: outputs.hub.v1alpha1.APIAuthSpecLdapPatch;
         }
 
@@ -61780,6 +63019,14 @@ export namespace hub {
              */
             lastname: string;
             /**
+             * OrganizationID is the JWT claim for the ID of the organization the user belongs to.
+             */
+            organizationId: string;
+            /**
+             * OrganizationName is the JWT claim for the name of the organization the user belongs to.
+             */
+            organizationName: string;
+            /**
              * UserID is the JWT claim for user ID mapping.
              */
             userId: string;
@@ -61809,6 +63056,14 @@ export namespace hub {
              * Lastname is the JWT claim for user last name.
              */
             lastname: string;
+            /**
+             * OrganizationID is the JWT claim for the ID of the organization the user belongs to.
+             */
+            organizationId: string;
+            /**
+             * OrganizationName is the JWT claim for the name of the organization the user belongs to.
+             */
+            organizationName: string;
             /**
              * UserID is the JWT claim for user ID mapping.
              */
@@ -64402,6 +65657,7 @@ export namespace hub {
              * Claims specifies an expression that validate claims in order to authorize the request.
              */
             claims: string;
+            managedApplicationSelector: outputs.hub.v1alpha1.ManagedSubscriptionSpecManagedApplicationSelector;
             /**
              * ManagedApplications references the ManagedApplications that will gain access to the specified APIs.
              * Multiple ManagedSubscriptions can select the same ManagedApplication.
@@ -64583,6 +65839,90 @@ export namespace hub {
         }
 
         /**
+         * ManagedApplicationSelector selects the ManagedApplications that will gain access to the specified APIs.
+         * Multiple ManagedSubscriptions can select the same ManagedApplication.
+         * This field is optional and follows standard label selector semantics.
+         * An empty ManagedApplicationSelector matches any ManagedApplication.
+         */
+        export interface ManagedSubscriptionSpecManagedApplicationSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions: outputs.hub.v1alpha1.ManagedSubscriptionSpecManagedApplicationSelectorMatchExpressions[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+             * map is equivalent to an element of matchExpressions, whose key field is "key", the
+             * operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels: {[key: string]: string};
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that
+         * relates the key and values.
+         */
+        export interface ManagedSubscriptionSpecManagedApplicationSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values.
+             * Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn,
+             * the values array must be non-empty. If the operator is Exists or DoesNotExist,
+             * the values array must be empty. This array is replaced during a strategic
+             * merge patch.
+             */
+            values: string[];
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that
+         * relates the key and values.
+         */
+        export interface ManagedSubscriptionSpecManagedApplicationSelectorMatchExpressionsPatch {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key: string;
+            /**
+             * operator represents a key's relationship to a set of values.
+             * Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator: string;
+            /**
+             * values is an array of string values. If the operator is In or NotIn,
+             * the values array must be non-empty. If the operator is Exists or DoesNotExist,
+             * the values array must be empty. This array is replaced during a strategic
+             * merge patch.
+             */
+            values: string[];
+        }
+
+        /**
+         * ManagedApplicationSelector selects the ManagedApplications that will gain access to the specified APIs.
+         * Multiple ManagedSubscriptions can select the same ManagedApplication.
+         * This field is optional and follows standard label selector semantics.
+         * An empty ManagedApplicationSelector matches any ManagedApplication.
+         */
+        export interface ManagedSubscriptionSpecManagedApplicationSelectorPatch {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions: outputs.hub.v1alpha1.ManagedSubscriptionSpecManagedApplicationSelectorMatchExpressionsPatch[];
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+             * map is equivalent to an element of matchExpressions, whose key field is "key", the
+             * operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels: {[key: string]: string};
+        }
+
+        /**
          * ManagedApplicationReference references a ManagedApplication.
          */
         export interface ManagedSubscriptionSpecManagedApplications {
@@ -64654,6 +65994,7 @@ export namespace hub {
              * Claims specifies an expression that validate claims in order to authorize the request.
              */
             claims: string;
+            managedApplicationSelector: outputs.hub.v1alpha1.ManagedSubscriptionSpecManagedApplicationSelectorPatch;
             /**
              * ManagedApplications references the ManagedApplications that will gain access to the specified APIs.
              * Multiple ManagedSubscriptions can select the same ManagedApplication.
@@ -64684,11 +66025,19 @@ export namespace hub {
              * ResolvedAPIs is the list of APIs that were successfully resolved.
              */
             resolvedApis: outputs.hub.v1alpha1.ManagedSubscriptionStatusResolvedApis[];
+            /**
+             * ResolvedManagedApplications is the list of ManagedApplications that were successfully resolved.
+             */
+            resolvedManagedApplications: outputs.hub.v1alpha1.ManagedSubscriptionStatusResolvedManagedApplications[];
             syncedAt: string;
             /**
              * UnresolvedAPIs is the list of APIs that could not be resolved.
              */
             unresolvedApis: outputs.hub.v1alpha1.ManagedSubscriptionStatusUnresolvedApis[];
+            /**
+             * UnresolvedManagedApplications is the list of ManagedApplications that could not be resolved.
+             */
+            unresolvedManagedApplications: outputs.hub.v1alpha1.ManagedSubscriptionStatusUnresolvedManagedApplications[];
             version: string;
         }
 
@@ -64784,11 +66133,19 @@ export namespace hub {
              * ResolvedAPIs is the list of APIs that were successfully resolved.
              */
             resolvedApis: outputs.hub.v1alpha1.ManagedSubscriptionStatusResolvedApisPatch[];
+            /**
+             * ResolvedManagedApplications is the list of ManagedApplications that were successfully resolved.
+             */
+            resolvedManagedApplications: outputs.hub.v1alpha1.ManagedSubscriptionStatusResolvedManagedApplicationsPatch[];
             syncedAt: string;
             /**
              * UnresolvedAPIs is the list of APIs that could not be resolved.
              */
             unresolvedApis: outputs.hub.v1alpha1.ManagedSubscriptionStatusUnresolvedApisPatch[];
+            /**
+             * UnresolvedManagedApplications is the list of ManagedApplications that could not be resolved.
+             */
+            unresolvedManagedApplications: outputs.hub.v1alpha1.ManagedSubscriptionStatusUnresolvedManagedApplicationsPatch[];
             version: string;
         }
 
@@ -64813,6 +66170,26 @@ export namespace hub {
         }
 
         /**
+         * ResolvedManagedApplicationReference references a resolved ManagedApplication.
+         */
+        export interface ManagedSubscriptionStatusResolvedManagedApplications {
+            /**
+             * Name of the ManagedApplication.
+             */
+            name: string;
+        }
+
+        /**
+         * ResolvedManagedApplicationReference references a resolved ManagedApplication.
+         */
+        export interface ManagedSubscriptionStatusResolvedManagedApplicationsPatch {
+            /**
+             * Name of the ManagedApplication.
+             */
+            name: string;
+        }
+
+        /**
          * ResolvedAPIReference references a resolved API.
          */
         export interface ManagedSubscriptionStatusUnresolvedApis {
@@ -64828,6 +66205,26 @@ export namespace hub {
         export interface ManagedSubscriptionStatusUnresolvedApisPatch {
             /**
              * Name of the API.
+             */
+            name: string;
+        }
+
+        /**
+         * ResolvedManagedApplicationReference references a resolved ManagedApplication.
+         */
+        export interface ManagedSubscriptionStatusUnresolvedManagedApplications {
+            /**
+             * Name of the ManagedApplication.
+             */
+            name: string;
+        }
+
+        /**
+         * ResolvedManagedApplicationReference references a resolved ManagedApplication.
+         */
+        export interface ManagedSubscriptionStatusUnresolvedManagedApplicationsPatch {
+            /**
+             * Name of the ManagedApplication.
              */
             name: string;
         }
@@ -228886,6 +230283,12 @@ export namespace traefik {
          */
         export interface MiddlewareSpecErrors {
             /**
+             * ErrorRequestHeaders defines the list of request headers forwarded to the error page service.
+             * When nil (not set), all original request headers are forwarded.
+             * Set to an empty list to forward no headers, or list specific headers to forward only those.
+             */
+            errorRequestHeaders: string[];
+            /**
              * Query defines the URL for the error page (hosted by service).
              * The {status} variable can be used in order to insert the status code in the URL.
              * The {originalStatus} variable can be used in order to insert the upstream status code in the URL.
@@ -228914,6 +230317,12 @@ export namespace traefik {
          * More info: https://doc.traefik.io/traefik/v3.7/reference/routing-configuration/http/middlewares/errorpages/
          */
         export interface MiddlewareSpecErrorsPatch {
+            /**
+             * ErrorRequestHeaders defines the list of request headers forwarded to the error page service.
+             * When nil (not set), all original request headers are forwarded.
+             * Set to an empty list to forward no headers, or list specific headers to forward only those.
+             */
+            errorRequestHeaders: string[];
             /**
              * Query defines the URL for the error page (hosted by service).
              * The {status} variable can be used in order to insert the status code in the URL.
