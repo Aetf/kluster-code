@@ -114,4 +114,16 @@ identity_providers:
             subject: 'group:users'
           - policy: 'two_factor'
             subject: 'group:grafana-users'
+      # SplitPro does its own authorization once a user is through the door, and
+      # expenses get shared with people who have no business in `users`, so it
+      # gets its own group. one_factor as requested.
+      splitpro:
+        default_policy: 'deny'
+        rules:
+          - policy: 'one_factor'
+            subject: 'group:admins'
+          - policy: 'one_factor'
+            subject: 'group:users'
+          - policy: 'one_factor'
+            subject: 'group:splitpro-users'
 
