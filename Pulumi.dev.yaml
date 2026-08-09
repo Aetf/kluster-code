@@ -42,3 +42,5 @@ config:
   image:ukulele: ghcr.io/freyacodes/ukulele:master
   image:rclone: docker.io/rclone/rclone:1.75.0
   image:spoolman: ghcr.io/donkie/spoolman:0.26.0
+  image:splitpro: ghcr.io/oss-apps/splitpro:v2.1.5
+  image:splitproDb: ghcr.io/aetf/pgcron-cnpg:17.10-standard-trixie-1

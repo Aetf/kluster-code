@@ -25,9 +25,10 @@ import { Dufs } from "./dav";
 import { CloudNativePg } from "./postgresql";
 import { Immich } from "./immich";
 import { Hath } from "./hath";
-import { Service } from "./utils";
+import { SealedSecret, Service } from "./utils";
 import { Spoolman } from "./spoolman";
 import { Haos } from "./haos";
+import { Splitpro } from "./splitpro";
 
 
 // All k8s providers connect using the ambient kubeconfig. We pass its *content*
@@ -308,6 +309,33 @@ function setup() {
         externalName: 'haos.zt.unlimited-code.works',
     }, { provider: namespaced('haos') });
 
+
+    const splitproProvider = namespaced("splitpro");
+    // Expense splitting. Unlike most apps here it is not behind the forward-auth
+    // middleware -- it has its own accounts and talks to Authelia over OIDC.
+    const splitproSecret = new SealedSecret("splitpro-auth", {
+        spec: {
+            encryptedData: {
+                nextauth_secret: "AgCxrza2/SyI6annNOkX8Otwsg7o6zOmD+NzSEveY+y9pEUkhVZlRlE6wWgSzdwrnAwa64GMPiVauOE4vFXZ9HFlyR0mm+7xBo3WlDgsGPGo3ZcDf4UUL/H2UPLjqRdYWtlgUaXfs+L3G9FnvFYWTud8b4fl1cKQZv7k+g0OMm11roD9yUwi1v9vCE3iZ5TNUBCUm2dW0q1flZakWu6lUiTn7xBGC10Yc+ERAb11p353qfvawyNghSu24IwHe1SaOGSpPRID8sKvckUn8kDAQS8bgtctZ79t59pkg2EsO51ltcGeAo+CzG4/TIGfSmOtkW+ORCRpX9wmEEeFExbQz5Z6RcyurUI5LOzP/ujzKdag4023NSkSQBzOsBW6NraJQFiHTXa+uLFScm1qK8RrjRsyJWTFqtFjVkprXcGdPjpQ6mGBKqFXfZviACP7kY+LpabGoE1gxHeIkvTP2XxONppxH+66ZJ4VxYSjzbkW/VoeliwaTmNLb5ifzFhFv3VlHH6s73KKUVJhCDNI541cgwcGO4io8cRO/m1bxfmWwg4asPVVwr6OaM/g4FdPHs8bi8X+CVboIr5yXayIBBqwl500KHd8ahJvgokde7g7xy/Y3qowrBdQpDCotfDb/fetCynCXLDYdnvA+NnfHeWrLfLideH2NU+dmTKXJJ3dK2M9x3nXngiEs7pwG5qUA8aZRCEXzDCcfIXEjHK0Syy98LORnQigCxkOcxELR5H6VyGOL/IRK3AHTL3MrfacYw==",
+                oidc_client_id: "AgCRdf4kBsL9nHi2WlRQJDRF6q6SZkJnGGxGoumP5oZisOixyNlaJ4XfdJdzljq9c5OR/qCwTkp/s4Z8Hq2VDUIDLmIv/YtNSvH1I8cmxS5UAWOtD+AVTy7FFGbKNq0v27n3Re3TrEenjQshZ32ssN7nN1oQ1wcQyF9k4Y5IvZtAl/6FBSA7mZH1OvEs0sDL1g4bHVJP0YnDGHM+mJnEamTPWtVgpw02Oir//U/c3dHVVoqWPubC2KtOGZ+B5qpG8MNflMAtynmIDTDfw8Spisswn5Ol39SwYhPwbdShxR0haoWaddM2Qws2+sv1Exf05hysJXfu05WCAT93Ps2yvBfwwlSZEq24/3HPq/dgmQOGI6QgkyI9RVDlQODc1j7gLuMbPcD+wkNubfxQzJOu2W15TMlwBbQCPLbOgeGcmMDmDu+d1MxvKrB1hKGk9VuFqLR6azRdkmuFKMSoY8P++8HTKg8o3BzfJ0qMtglaESOZlffAdFVxCYni/yfNe4G1+sek9YZ5dQA7b37Q8kEy33Hml0hR/+wPGBwcX2JCOCnJce4D+D+QlzqqwQYm4+Htu94Sol00wwNyrLK/6BO7E40TtgwwymcS8EKTBp3bnZebw7N5ieR4LGq5vBlAf8Tkf65QWWZku+VMQKY/Zub4JYW+64Rw7eMbd2hIWpMMVZcRJq8I/rxaDyYuq4ulJ6pzRGpil4pOL1tTJg==",
+                oidc_client_secret: "AgBoWJUR0tP5kMzLO8KhiVvj+FM69fyun18CTukSLPEyKhJnUfkfhTB/MW/YI6awFgma5DpGMZYDv/s5vMmfI8z6NcTI2TGRTfkIEWcQo3vkuHudLOIppESlPgKHPAvxeqxfEf2QPhmnCoZ7Dyil5beWaAAMvMgoPqxO4ARa/bSoPfVx4iHv0BsvcUMbsUvXhVBFFx4IdW3lR/vej1SKiI3q70fQ95Gzeu04eLfATseAsKlYijniGaYV++dcc+XK4bCakNUF8EWm1pjw7Wkaon1B85SeC9FOQeVPmOrg98ZKFuhJCBlIun19M/x3d41HctwY3VzHCuT+2JK/f5X1u5YaZApIy8CLIYX9KXBGCWfjLtdEzQ3f6qRmhtptmUHIDulxZUJtPFjW93XYDqODnaLkyFxIUn2O2Xea1EAYQjaoGsqUFUjQtF8sbd8y3L7ZcsWwEGIud3D9i4qdWGe0jD7AHilZibAawhUylOAF/WGm8ZH5/pWysACGQh7Sgi0g8Zf5XJTyMoVRIccN0t+IVtFvpLLQDAXkd9wyWMTCMyyN84Wcn2TNitJPR2T9mwS1xGc1dJ5mpa6t+lm/ViFWcYNfRLFd5oRPTK9yatuebzLlCxwdPdsOClXCGW8yVR6pgKXoJN72e//rfAyK51UU2wj45vPPr9UCQxA6MfHl+p83WAMnPG/sFXXUXmdUX1yCT61aYEIsN4k95RTccrXejGjgIU0mHWTuw9um59AX/D6YZ2204FwOThoPFm6ECwBZJxFt/8R3nxb53GkwR2ywM35+zNy2Ibz5H80=",
+            }
+        }
+    }, { provider: splitproProvider });
+    const splitpro = new Splitpro("splitpro", {
+        serving,
+        host: 'split.unlimited-code.works',
+        domain: 'unlimited-code.works',
+        authSubdomain: 'auth',
+        smtp: mailer.smtpService,
+        dbStorageClass: cluster.localStableStorageClass.metadata.name,
+        uploadStorageClass: cluster.jfsStorageClass.metadata.name,
+        authSecret: splitproSecret,
+        // webPush / plaid / goCardless / openExchangeRates are opt-in, see
+        // src/splitpro/index.ts
+    }, {
+        provider: splitproProvider
+    });
 
     const spoolman = new Spoolman("spoolman", {
         serving,
