@@ -6318,6 +6318,1225 @@ export namespace autoscaling {
     }
 }
 
+export namespace barmancloud {
+    export namespace v1 {
+        /**
+         * ObjectStore is the Schema for the objectstores API.
+         */
+        export interface ObjectStore {
+            /**
+             * APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+             */
+            apiVersion?: pulumi.Input<"barmancloud.cnpg.io/v1" | undefined>;
+            /**
+             * Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+             */
+            kind?: pulumi.Input<"ObjectStore" | undefined>;
+            /**
+             * Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+             */
+            metadata?: pulumi.Input<inputs.meta.v1.ObjectMeta | undefined>;
+            spec?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpec | undefined>;
+            status?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreStatus | undefined>;
+        }
+
+        /**
+         * Specification of the desired behavior of the ObjectStore.
+         * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ObjectStoreSpec {
+            configuration?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfiguration | undefined>;
+            instanceSidecarConfiguration?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfiguration | undefined>;
+            /**
+             * RetentionPolicy is the retention policy to be used for backups
+             * and WALs (i.e. '60d'). The retention policy is expressed in the form
+             * of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` -
+             * days, weeks, months.
+             */
+            retentionPolicy?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The configuration for the barman-cloud tool suite
+         */
+        export interface ObjectStoreSpecConfiguration {
+            azureCredentials?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentials | undefined>;
+            data?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationData | undefined>;
+            /**
+             * The path where to store the backup (i.e. s3://bucket/path/to/folder)
+             * this path, with different destination folders, will be used for WALs
+             * and for data
+             */
+            destinationPath?: pulumi.Input<string | undefined>;
+            endpointCA?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationEndpointCA | undefined>;
+            /**
+             * Endpoint to be used to upload data to the cloud,
+             * overriding the automatic endpoint discovery
+             */
+            endpointURL?: pulumi.Input<string | undefined>;
+            googleCredentials?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationGoogleCredentials | undefined>;
+            /**
+             * HistoryTags is a list of key value pairs that will be passed to the
+             * Barman --history-tags option.
+             */
+            historyTags?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+            s3Credentials?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3Credentials | undefined>;
+            /**
+             * The server name on S3, the cluster name is used if this
+             * parameter is omitted
+             */
+            serverName?: pulumi.Input<string | undefined>;
+            /**
+             * Tags is a list of key value pairs that will be passed to the
+             * Barman --tags option.
+             */
+            tags?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+            wal?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationWal | undefined>;
+        }
+
+        /**
+         * The credentials to use to upload data to Azure Blob Storage
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentials {
+            connectionString?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsConnectionString | undefined>;
+            /**
+             * Use the Azure AD based authentication without providing explicitly the keys.
+             */
+            inheritFromAzureAD?: pulumi.Input<boolean | undefined>;
+            storageAccount?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageAccount | undefined>;
+            storageKey?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageKey | undefined>;
+            storageSasToken?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageSasToken | undefined>;
+            /**
+             * Use the default Azure authentication flow, which includes DefaultAzureCredential.
+             * This allows authentication using environment variables and managed identities.
+             */
+            useDefaultAzureCredentials?: pulumi.Input<boolean | undefined>;
+        }
+
+        /**
+         * The connection string to be used
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsConnectionString {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The connection string to be used
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsConnectionStringPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The credentials to use to upload data to Azure Blob Storage
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsPatch {
+            connectionString?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsConnectionStringPatch | undefined>;
+            /**
+             * Use the Azure AD based authentication without providing explicitly the keys.
+             */
+            inheritFromAzureAD?: pulumi.Input<boolean | undefined>;
+            storageAccount?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageAccountPatch | undefined>;
+            storageKey?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageKeyPatch | undefined>;
+            storageSasToken?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsStorageSasTokenPatch | undefined>;
+            /**
+             * Use the default Azure authentication flow, which includes DefaultAzureCredential.
+             * This allows authentication using environment variables and managed identities.
+             */
+            useDefaultAzureCredentials?: pulumi.Input<boolean | undefined>;
+        }
+
+        /**
+         * The storage account where to upload data
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageAccount {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The storage account where to upload data
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageAccountPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The storage account key to be used in conjunction
+         * with the storage account name
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageKey {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The storage account key to be used in conjunction
+         * with the storage account name
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageKeyPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * A shared-access-signature to be used in conjunction with
+         * the storage account name
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageSasToken {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * A shared-access-signature to be used in conjunction with
+         * the storage account name
+         */
+        export interface ObjectStoreSpecConfigurationAzureCredentialsStorageSasTokenPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The configuration to be used to backup the data files
+         * When not defined, base backups files will be stored uncompressed and may
+         * be unencrypted in the object store, according to the bucket default
+         * policy.
+         */
+        export interface ObjectStoreSpecConfigurationData {
+            /**
+             * AdditionalCommandArgs represents additional arguments that can be appended
+             * to the 'barman-cloud-backup' command-line invocation. These arguments
+             * provide flexibility to customize the backup process further according to
+             * specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-backup' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            additionalCommandArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+            /**
+             * Compress a backup file (a tar file per tablespace) while streaming it
+             * to the object store. Available options are empty string (no
+             * compression, default), `gzip`, `bzip2`, `lz4`, and `snappy`.
+             */
+            compression?: pulumi.Input<string | undefined>;
+            /**
+             * Whenever to force the encryption of files (if the bucket is
+             * not already configured for that).
+             * Allowed options are empty string (use the bucket policy, default),
+             * `AES256` and `aws:kms`
+             */
+            encryption?: pulumi.Input<string | undefined>;
+            /**
+             * Control whether the I/O workload for the backup initial checkpoint will
+             * be limited, according to the `checkpoint_completion_target` setting on
+             * the PostgreSQL server. If set to true, an immediate checkpoint will be
+             * used, meaning PostgreSQL will complete the checkpoint as soon as
+             * possible. `false` by default.
+             */
+            immediateCheckpoint?: pulumi.Input<boolean | undefined>;
+            /**
+             * The number of parallel jobs to be used to upload the backup, defaults
+             * to 2
+             */
+            jobs?: pulumi.Input<number | undefined>;
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-restore'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the data restore process further, according to specific requirements or
+             * configurations.
+             *
+             * Example:
+             * In a scenario where specialized restore options are required, such as setting
+             * a specific read timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-restore' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            restoreAdditionalCommandArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+        }
+
+        /**
+         * The configuration to be used to backup the data files
+         * When not defined, base backups files will be stored uncompressed and may
+         * be unencrypted in the object store, according to the bucket default
+         * policy.
+         */
+        export interface ObjectStoreSpecConfigurationDataPatch {
+            /**
+             * AdditionalCommandArgs represents additional arguments that can be appended
+             * to the 'barman-cloud-backup' command-line invocation. These arguments
+             * provide flexibility to customize the backup process further according to
+             * specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-backup' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            additionalCommandArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+            /**
+             * Compress a backup file (a tar file per tablespace) while streaming it
+             * to the object store. Available options are empty string (no
+             * compression, default), `gzip`, `bzip2`, `lz4`, and `snappy`.
+             */
+            compression?: pulumi.Input<string | undefined>;
+            /**
+             * Whenever to force the encryption of files (if the bucket is
+             * not already configured for that).
+             * Allowed options are empty string (use the bucket policy, default),
+             * `AES256` and `aws:kms`
+             */
+            encryption?: pulumi.Input<string | undefined>;
+            /**
+             * Control whether the I/O workload for the backup initial checkpoint will
+             * be limited, according to the `checkpoint_completion_target` setting on
+             * the PostgreSQL server. If set to true, an immediate checkpoint will be
+             * used, meaning PostgreSQL will complete the checkpoint as soon as
+             * possible. `false` by default.
+             */
+            immediateCheckpoint?: pulumi.Input<boolean | undefined>;
+            /**
+             * The number of parallel jobs to be used to upload the backup, defaults
+             * to 2
+             */
+            jobs?: pulumi.Input<number | undefined>;
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-restore'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the data restore process further, according to specific requirements or
+             * configurations.
+             *
+             * Example:
+             * In a scenario where specialized restore options are required, such as setting
+             * a specific read timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-restore' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            restoreAdditionalCommandArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+        }
+
+        /**
+         * EndpointCA store the CA bundle of the barman endpoint.
+         * Useful when using self-signed certificates to avoid
+         * errors with certificate issuer and barman-cloud-wal-archive
+         */
+        export interface ObjectStoreSpecConfigurationEndpointCA {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * EndpointCA store the CA bundle of the barman endpoint.
+         * Useful when using self-signed certificates to avoid
+         * errors with certificate issuer and barman-cloud-wal-archive
+         */
+        export interface ObjectStoreSpecConfigurationEndpointCAPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The credentials to use to upload data to Google Cloud Storage
+         */
+        export interface ObjectStoreSpecConfigurationGoogleCredentials {
+            applicationCredentials?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationGoogleCredentialsApplicationCredentials | undefined>;
+            /**
+             * If set to true, will presume that it's running inside a GKE environment,
+             * default to false.
+             */
+            gkeEnvironment?: pulumi.Input<boolean | undefined>;
+        }
+
+        /**
+         * The secret containing the Google Cloud Storage JSON file with the credentials
+         */
+        export interface ObjectStoreSpecConfigurationGoogleCredentialsApplicationCredentials {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The secret containing the Google Cloud Storage JSON file with the credentials
+         */
+        export interface ObjectStoreSpecConfigurationGoogleCredentialsApplicationCredentialsPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The credentials to use to upload data to Google Cloud Storage
+         */
+        export interface ObjectStoreSpecConfigurationGoogleCredentialsPatch {
+            applicationCredentials?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationGoogleCredentialsApplicationCredentialsPatch | undefined>;
+            /**
+             * If set to true, will presume that it's running inside a GKE environment,
+             * default to false.
+             */
+            gkeEnvironment?: pulumi.Input<boolean | undefined>;
+        }
+
+        /**
+         * The configuration for the barman-cloud tool suite
+         */
+        export interface ObjectStoreSpecConfigurationPatch {
+            azureCredentials?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationAzureCredentialsPatch | undefined>;
+            data?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationDataPatch | undefined>;
+            /**
+             * The path where to store the backup (i.e. s3://bucket/path/to/folder)
+             * this path, with different destination folders, will be used for WALs
+             * and for data
+             */
+            destinationPath?: pulumi.Input<string | undefined>;
+            endpointCA?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationEndpointCAPatch | undefined>;
+            /**
+             * Endpoint to be used to upload data to the cloud,
+             * overriding the automatic endpoint discovery
+             */
+            endpointURL?: pulumi.Input<string | undefined>;
+            googleCredentials?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationGoogleCredentialsPatch | undefined>;
+            /**
+             * HistoryTags is a list of key value pairs that will be passed to the
+             * Barman --history-tags option.
+             */
+            historyTags?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+            s3Credentials?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsPatch | undefined>;
+            /**
+             * The server name on S3, the cluster name is used if this
+             * parameter is omitted
+             */
+            serverName?: pulumi.Input<string | undefined>;
+            /**
+             * Tags is a list of key value pairs that will be passed to the
+             * Barman --tags option.
+             */
+            tags?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+            wal?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationWalPatch | undefined>;
+        }
+
+        /**
+         * The credentials to use to upload data to S3
+         */
+        export interface ObjectStoreSpecConfigurationS3Credentials {
+            accessKeyId?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsAccessKeyId | undefined>;
+            /**
+             * Use the role based authentication without providing explicitly the keys.
+             */
+            inheritFromIAMRole?: pulumi.Input<boolean | undefined>;
+            region?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsRegion | undefined>;
+            secretAccessKey?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsSecretAccessKey | undefined>;
+            sessionToken?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsSessionToken | undefined>;
+        }
+
+        /**
+         * The reference to the access key id
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsAccessKeyId {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The reference to the access key id
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsAccessKeyIdPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The credentials to use to upload data to S3
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsPatch {
+            accessKeyId?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsAccessKeyIdPatch | undefined>;
+            /**
+             * Use the role based authentication without providing explicitly the keys.
+             */
+            inheritFromIAMRole?: pulumi.Input<boolean | undefined>;
+            region?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsRegionPatch | undefined>;
+            secretAccessKey?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsSecretAccessKeyPatch | undefined>;
+            sessionToken?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationS3CredentialsSessionTokenPatch | undefined>;
+        }
+
+        /**
+         * The reference to the secret containing the region name
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsRegion {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The reference to the secret containing the region name
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsRegionPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The reference to the secret access key
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsSecretAccessKey {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The reference to the secret access key
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsSecretAccessKeyPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The references to the session key
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsSessionToken {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The references to the session key
+         */
+        export interface ObjectStoreSpecConfigurationS3CredentialsSessionTokenPatch {
+            /**
+             * The key to select
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * The configuration for the backup of the WAL stream.
+         * When not defined, WAL files will be stored uncompressed and may be
+         * unencrypted in the object store, according to the bucket default policy.
+         */
+        export interface ObjectStoreSpecConfigurationWal {
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-wal-archive'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the WAL archive process further, according to specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-wal-archive' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            archiveAdditionalCommandArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+            /**
+             * Compress a WAL file before sending it to the object store. Available
+             * options are empty string (no compression, default), `gzip`, `bzip2`,
+             * `lz4`, `snappy`, `xz`, and `zstd`.
+             */
+            compression?: pulumi.Input<string | undefined>;
+            /**
+             * Whenever to force the encryption of files (if the bucket is
+             * not already configured for that).
+             * Allowed options are empty string (use the bucket policy, default),
+             * `AES256` and `aws:kms`
+             */
+            encryption?: pulumi.Input<string | undefined>;
+            /**
+             * Number of WAL files to be either archived in parallel (when the
+             * PostgreSQL instance is archiving to a backup object store) or
+             * restored in parallel (when a PostgreSQL standby is fetching WAL
+             * files from a recovery object store). If not specified, WAL files
+             * will be processed one at a time. It accepts a positive integer as a
+             * value - with 1 being the minimum accepted value.
+             */
+            maxParallel?: pulumi.Input<number | undefined>;
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-wal-restore'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the WAL restore process further, according to specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-wal-restore' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            restoreAdditionalCommandArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+        }
+
+        /**
+         * The configuration for the backup of the WAL stream.
+         * When not defined, WAL files will be stored uncompressed and may be
+         * unencrypted in the object store, according to the bucket default policy.
+         */
+        export interface ObjectStoreSpecConfigurationWalPatch {
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-wal-archive'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the WAL archive process further, according to specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-wal-archive' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            archiveAdditionalCommandArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+            /**
+             * Compress a WAL file before sending it to the object store. Available
+             * options are empty string (no compression, default), `gzip`, `bzip2`,
+             * `lz4`, `snappy`, `xz`, and `zstd`.
+             */
+            compression?: pulumi.Input<string | undefined>;
+            /**
+             * Whenever to force the encryption of files (if the bucket is
+             * not already configured for that).
+             * Allowed options are empty string (use the bucket policy, default),
+             * `AES256` and `aws:kms`
+             */
+            encryption?: pulumi.Input<string | undefined>;
+            /**
+             * Number of WAL files to be either archived in parallel (when the
+             * PostgreSQL instance is archiving to a backup object store) or
+             * restored in parallel (when a PostgreSQL standby is fetching WAL
+             * files from a recovery object store). If not specified, WAL files
+             * will be processed one at a time. It accepts a positive integer as a
+             * value - with 1 being the minimum accepted value.
+             */
+            maxParallel?: pulumi.Input<number | undefined>;
+            /**
+             * Additional arguments that can be appended to the 'barman-cloud-wal-restore'
+             * command-line invocation. These arguments provide flexibility to customize
+             * the WAL restore process further, according to specific requirements or configurations.
+             *
+             * Example:
+             * In a scenario where specialized backup options are required, such as setting
+             * a specific timeout or defining custom behavior, users can use this field
+             * to specify additional command arguments.
+             *
+             * Note:
+             * It's essential to ensure that the provided arguments are valid and supported
+             * by the 'barman-cloud-wal-restore' command, to avoid potential errors or unintended
+             * behavior during execution.
+             */
+            restoreAdditionalCommandArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+        }
+
+        /**
+         * The configuration for the sidecar that runs in the instance pods
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfiguration {
+            /**
+             * AdditionalContainerArgs is an optional list of command-line arguments
+             * to be passed to the sidecar container when it starts.
+             * The provided arguments are appended to the container’s default arguments.
+             */
+            additionalContainerArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+            /**
+             * The environment to be explicitly passed to the sidecar
+             */
+            env?: pulumi.Input<pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnv>[] | undefined>;
+            /**
+             * The log level for PostgreSQL instances. Valid values are: `error`, `warning`, `info` (default), `debug`, `trace`
+             */
+            logLevel?: pulumi.Input<string | undefined>;
+            resources?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationResources | undefined>;
+            /**
+             * The retentionCheckInterval defines the frequency at which the
+             * system checks and enforces retention policies.
+             */
+            retentionPolicyIntervalSeconds?: pulumi.Input<number | undefined>;
+        }
+
+        /**
+         * EnvVar represents an environment variable present in a Container.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnv {
+            /**
+             * Name of the environment variable.
+             * May consist of any printable ASCII characters except '='.
+             */
+            name?: pulumi.Input<string | undefined>;
+            /**
+             * Variable references $(VAR_NAME) are expanded
+             * using the previously defined environment variables in the container and
+             * any service environment variables. If a variable cannot be resolved,
+             * the reference in the input string will be unchanged. Double $$ are reduced
+             * to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+             * "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+             * Escaped references will never be expanded, regardless of whether the variable
+             * exists or not.
+             * Defaults to "".
+             */
+            value?: pulumi.Input<string | undefined>;
+            valueFrom?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFrom | undefined>;
+        }
+
+        /**
+         * EnvVar represents an environment variable present in a Container.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvPatch {
+            /**
+             * Name of the environment variable.
+             * May consist of any printable ASCII characters except '='.
+             */
+            name?: pulumi.Input<string | undefined>;
+            /**
+             * Variable references $(VAR_NAME) are expanded
+             * using the previously defined environment variables in the container and
+             * any service environment variables. If a variable cannot be resolved,
+             * the reference in the input string will be unchanged. Double $$ are reduced
+             * to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+             * "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+             * Escaped references will never be expanded, regardless of whether the variable
+             * exists or not.
+             * Defaults to "".
+             */
+            value?: pulumi.Input<string | undefined>;
+            valueFrom?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromPatch | undefined>;
+        }
+
+        /**
+         * Source for the environment variable's value. Cannot be used if value is not empty.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFrom {
+            configMapKeyRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromConfigMapKeyRef | undefined>;
+            fieldRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFieldRef | undefined>;
+            fileKeyRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFileKeyRef | undefined>;
+            resourceFieldRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromResourceFieldRef | undefined>;
+            secretKeyRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromSecretKeyRef | undefined>;
+        }
+
+        /**
+         * Selects a key of a ConfigMap.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromConfigMapKeyRef {
+            /**
+             * The key to select.
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             * This field is effectively required, but due to backwards compatibility is
+             * allowed to be empty. Instances of this type with an empty value here are
+             * almost certainly wrong.
+             * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string | undefined>;
+            /**
+             * Specify whether the ConfigMap or its key must be defined
+             */
+            optional?: pulumi.Input<boolean | undefined>;
+        }
+
+        /**
+         * Selects a key of a ConfigMap.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromConfigMapKeyRefPatch {
+            /**
+             * The key to select.
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             * This field is effectively required, but due to backwards compatibility is
+             * allowed to be empty. Instances of this type with an empty value here are
+             * almost certainly wrong.
+             * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string | undefined>;
+            /**
+             * Specify whether the ConfigMap or its key must be defined
+             */
+            optional?: pulumi.Input<boolean | undefined>;
+        }
+
+        /**
+         * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+         * spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFieldRef {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion?: pulumi.Input<string | undefined>;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+         * spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFieldRefPatch {
+            /**
+             * Version of the schema the FieldPath is written in terms of, defaults to "v1".
+             */
+            apiVersion?: pulumi.Input<string | undefined>;
+            /**
+             * Path of the field to select in the specified API version.
+             */
+            fieldPath?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * FileKeyRef selects a key of the env file.
+         * Requires the EnvFiles feature gate to be enabled.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFileKeyRef {
+            /**
+             * The key within the env file. An invalid key will prevent the pod from starting.
+             * The keys defined within a source may consist of any printable ASCII characters except '='.
+             * During Alpha stage of the EnvFiles feature gate, the key size is limited to 128 characters.
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Specify whether the file or its key must be defined. If the file or key
+             * does not exist, then the env var is not published.
+             * If optional is set to true and the specified key does not exist,
+             * the environment variable will not be set in the Pod's containers.
+             *
+             * If optional is set to false and the specified key does not exist,
+             * an error will be returned during Pod creation.
+             */
+            optional?: pulumi.Input<boolean | undefined>;
+            /**
+             * The path within the volume from which to select the file.
+             * Must be relative and may not contain the '..' path or start with '..'.
+             */
+            path?: pulumi.Input<string | undefined>;
+            /**
+             * The name of the volume mount containing the env file.
+             */
+            volumeName?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * FileKeyRef selects a key of the env file.
+         * Requires the EnvFiles feature gate to be enabled.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFileKeyRefPatch {
+            /**
+             * The key within the env file. An invalid key will prevent the pod from starting.
+             * The keys defined within a source may consist of any printable ASCII characters except '='.
+             * During Alpha stage of the EnvFiles feature gate, the key size is limited to 128 characters.
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Specify whether the file or its key must be defined. If the file or key
+             * does not exist, then the env var is not published.
+             * If optional is set to true and the specified key does not exist,
+             * the environment variable will not be set in the Pod's containers.
+             *
+             * If optional is set to false and the specified key does not exist,
+             * an error will be returned during Pod creation.
+             */
+            optional?: pulumi.Input<boolean | undefined>;
+            /**
+             * The path within the volume from which to select the file.
+             * Must be relative and may not contain the '..' path or start with '..'.
+             */
+            path?: pulumi.Input<string | undefined>;
+            /**
+             * The name of the volume mount containing the env file.
+             */
+            volumeName?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * Source for the environment variable's value. Cannot be used if value is not empty.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromPatch {
+            configMapKeyRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromConfigMapKeyRefPatch | undefined>;
+            fieldRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFieldRefPatch | undefined>;
+            fileKeyRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromFileKeyRefPatch | undefined>;
+            resourceFieldRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromResourceFieldRefPatch | undefined>;
+            secretKeyRef?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromSecretKeyRefPatch | undefined>;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests
+         * (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromResourceFieldRef {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName?: pulumi.Input<string | undefined>;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor?: pulumi.Input<number | string | undefined>;
+            /**
+             * Required: resource to select
+             */
+            resource?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * Selects a resource of the container: only resources limits and requests
+         * (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromResourceFieldRefPatch {
+            /**
+             * Container name: required for volumes, optional for env vars
+             */
+            containerName?: pulumi.Input<string | undefined>;
+            /**
+             * Specifies the output format of the exposed resources, defaults to "1"
+             */
+            divisor?: pulumi.Input<number | string | undefined>;
+            /**
+             * Required: resource to select
+             */
+            resource?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * Selects a key of a secret in the pod's namespace
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromSecretKeyRef {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             * This field is effectively required, but due to backwards compatibility is
+             * allowed to be empty. Instances of this type with an empty value here are
+             * almost certainly wrong.
+             * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string | undefined>;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: pulumi.Input<boolean | undefined>;
+        }
+
+        /**
+         * Selects a key of a secret in the pod's namespace
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationEnvValueFromSecretKeyRefPatch {
+            /**
+             * The key of the secret to select from.  Must be a valid secret key.
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * Name of the referent.
+             * This field is effectively required, but due to backwards compatibility is
+             * allowed to be empty. Instances of this type with an empty value here are
+             * almost certainly wrong.
+             * More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+             */
+            name?: pulumi.Input<string | undefined>;
+            /**
+             * Specify whether the Secret or its key must be defined
+             */
+            optional?: pulumi.Input<boolean | undefined>;
+        }
+
+        /**
+         * The configuration for the sidecar that runs in the instance pods
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationPatch {
+            /**
+             * AdditionalContainerArgs is an optional list of command-line arguments
+             * to be passed to the sidecar container when it starts.
+             * The provided arguments are appended to the container’s default arguments.
+             */
+            additionalContainerArgs?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+            /**
+             * The environment to be explicitly passed to the sidecar
+             */
+            env?: pulumi.Input<pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationEnvPatch>[] | undefined>;
+            /**
+             * The log level for PostgreSQL instances. Valid values are: `error`, `warning`, `info` (default), `debug`, `trace`
+             */
+            logLevel?: pulumi.Input<string | undefined>;
+            resources?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationResourcesPatch | undefined>;
+            /**
+             * The retentionCheckInterval defines the frequency at which the
+             * system checks and enforces retention policies.
+             */
+            retentionPolicyIntervalSeconds?: pulumi.Input<number | undefined>;
+        }
+
+        /**
+         * Resources define cpu/memory requests and limits for the sidecar that runs in the instance pods.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationResources {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims,
+             * that are used by this container.
+             *
+             * This field depends on the
+             * DynamicResourceAllocation feature gate.
+             *
+             * This field is immutable. It can only be set for containers.
+             */
+            claims?: pulumi.Input<pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationResourcesClaims>[] | undefined>;
+            /**
+             * Limits describes the maximum amount of compute resources allowed.
+             * More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits?: pulumi.Input<{[key: string]: pulumi.Input<number | string>} | undefined>;
+            /**
+             * Requests describes the minimum amount of compute resources required.
+             * If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+             * otherwise to an implementation-defined value. Requests cannot exceed Limits.
+             * More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests?: pulumi.Input<{[key: string]: pulumi.Input<number | string>} | undefined>;
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationResourcesClaims {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of
+             * the Pod where this field is used. It makes that resource available
+             * inside a container.
+             */
+            name?: pulumi.Input<string | undefined>;
+            /**
+             * Request is the name chosen for a request in the referenced claim.
+             * If empty, everything from the claim is made available, otherwise
+             * only the result of this request.
+             */
+            request?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * ResourceClaim references one entry in PodSpec.ResourceClaims.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationResourcesClaimsPatch {
+            /**
+             * Name must match the name of one entry in pod.spec.resourceClaims of
+             * the Pod where this field is used. It makes that resource available
+             * inside a container.
+             */
+            name?: pulumi.Input<string | undefined>;
+            /**
+             * Request is the name chosen for a request in the referenced claim.
+             * If empty, everything from the claim is made available, otherwise
+             * only the result of this request.
+             */
+            request?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * Resources define cpu/memory requests and limits for the sidecar that runs in the instance pods.
+         */
+        export interface ObjectStoreSpecInstanceSidecarConfigurationResourcesPatch {
+            /**
+             * Claims lists the names of resources, defined in spec.resourceClaims,
+             * that are used by this container.
+             *
+             * This field depends on the
+             * DynamicResourceAllocation feature gate.
+             *
+             * This field is immutable. It can only be set for containers.
+             */
+            claims?: pulumi.Input<pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationResourcesClaimsPatch>[] | undefined>;
+            /**
+             * Limits describes the maximum amount of compute resources allowed.
+             * More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            limits?: pulumi.Input<{[key: string]: pulumi.Input<number | string>} | undefined>;
+            /**
+             * Requests describes the minimum amount of compute resources required.
+             * If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+             * otherwise to an implementation-defined value. Requests cannot exceed Limits.
+             * More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+             */
+            requests?: pulumi.Input<{[key: string]: pulumi.Input<number | string>} | undefined>;
+        }
+
+        /**
+         * Specification of the desired behavior of the ObjectStore.
+         * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ObjectStoreSpecPatch {
+            configuration?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecConfigurationPatch | undefined>;
+            instanceSidecarConfiguration?: pulumi.Input<inputs.barmancloud.v1.ObjectStoreSpecInstanceSidecarConfigurationPatch | undefined>;
+            /**
+             * RetentionPolicy is the retention policy to be used for backups
+             * and WALs (i.e. '60d'). The retention policy is expressed in the form
+             * of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` -
+             * days, weeks, months.
+             */
+            retentionPolicy?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * Most recently observed status of the ObjectStore. This data may not be up to
+         * date. Populated by the system. Read-only.
+         * More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+         */
+        export interface ObjectStoreStatus {
+            /**
+             * ServerRecoveryWindow maps each server to its recovery window
+             */
+            serverRecoveryWindow?: pulumi.Input<{[key: string]: pulumi.Input<{[key: string]: pulumi.Input<string>}>} | undefined>;
+        }
+
+    }
+}
+
 export namespace bitnami {
     export namespace v1alpha1 {
         /**
@@ -55605,6 +56824,10 @@ export namespace hub {
              */
             isDefault?: pulumi.Input<boolean | undefined>;
             jwt?: pulumi.Input<inputs.hub.v1alpha1.APIAuthSpecJwt | undefined>;
+            /**
+             * Keyless configures keyless authentication.
+             */
+            keyless?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
             ldap?: pulumi.Input<inputs.hub.v1alpha1.APIAuthSpecLdap | undefined>;
         }
 
@@ -55981,6 +57204,10 @@ export namespace hub {
              */
             isDefault?: pulumi.Input<boolean | undefined>;
             jwt?: pulumi.Input<inputs.hub.v1alpha1.APIAuthSpecJwtPatch | undefined>;
+            /**
+             * Keyless configures keyless authentication.
+             */
+            keyless?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
             ldap?: pulumi.Input<inputs.hub.v1alpha1.APIAuthSpecLdapPatch | undefined>;
         }
 
@@ -57061,6 +58288,14 @@ export namespace hub {
              */
             lastname?: pulumi.Input<string | undefined>;
             /**
+             * OrganizationID is the JWT claim for the ID of the organization the user belongs to.
+             */
+            organizationId?: pulumi.Input<string | undefined>;
+            /**
+             * OrganizationName is the JWT claim for the name of the organization the user belongs to.
+             */
+            organizationName?: pulumi.Input<string | undefined>;
+            /**
              * UserID is the JWT claim for user ID mapping.
              */
             userId?: pulumi.Input<string | undefined>;
@@ -57090,6 +58325,14 @@ export namespace hub {
              * Lastname is the JWT claim for user last name.
              */
             lastname?: pulumi.Input<string | undefined>;
+            /**
+             * OrganizationID is the JWT claim for the ID of the organization the user belongs to.
+             */
+            organizationId?: pulumi.Input<string | undefined>;
+            /**
+             * OrganizationName is the JWT claim for the name of the organization the user belongs to.
+             */
+            organizationName?: pulumi.Input<string | undefined>;
             /**
              * UserID is the JWT claim for user ID mapping.
              */
@@ -59300,6 +60543,7 @@ export namespace hub {
              * Claims specifies an expression that validate claims in order to authorize the request.
              */
             claims?: pulumi.Input<string | undefined>;
+            managedApplicationSelector?: pulumi.Input<inputs.hub.v1alpha1.ManagedSubscriptionSpecManagedApplicationSelector | undefined>;
             /**
              * ManagedApplications references the ManagedApplications that will gain access to the specified APIs.
              * Multiple ManagedSubscriptions can select the same ManagedApplication.
@@ -59481,6 +60725,90 @@ export namespace hub {
         }
 
         /**
+         * ManagedApplicationSelector selects the ManagedApplications that will gain access to the specified APIs.
+         * Multiple ManagedSubscriptions can select the same ManagedApplication.
+         * This field is optional and follows standard label selector semantics.
+         * An empty ManagedApplicationSelector matches any ManagedApplication.
+         */
+        export interface ManagedSubscriptionSpecManagedApplicationSelector {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.hub.v1alpha1.ManagedSubscriptionSpecManagedApplicationSelectorMatchExpressions>[] | undefined>;
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+             * map is equivalent to an element of matchExpressions, whose key field is "key", the
+             * operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that
+         * relates the key and values.
+         */
+        export interface ManagedSubscriptionSpecManagedApplicationSelectorMatchExpressions {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * operator represents a key's relationship to a set of values.
+             * Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator?: pulumi.Input<string | undefined>;
+            /**
+             * values is an array of string values. If the operator is In or NotIn,
+             * the values array must be non-empty. If the operator is Exists or DoesNotExist,
+             * the values array must be empty. This array is replaced during a strategic
+             * merge patch.
+             */
+            values?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+        }
+
+        /**
+         * A label selector requirement is a selector that contains values, a key, and an operator that
+         * relates the key and values.
+         */
+        export interface ManagedSubscriptionSpecManagedApplicationSelectorMatchExpressionsPatch {
+            /**
+             * key is the label key that the selector applies to.
+             */
+            key?: pulumi.Input<string | undefined>;
+            /**
+             * operator represents a key's relationship to a set of values.
+             * Valid operators are In, NotIn, Exists and DoesNotExist.
+             */
+            operator?: pulumi.Input<string | undefined>;
+            /**
+             * values is an array of string values. If the operator is In or NotIn,
+             * the values array must be non-empty. If the operator is Exists or DoesNotExist,
+             * the values array must be empty. This array is replaced during a strategic
+             * merge patch.
+             */
+            values?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+        }
+
+        /**
+         * ManagedApplicationSelector selects the ManagedApplications that will gain access to the specified APIs.
+         * Multiple ManagedSubscriptions can select the same ManagedApplication.
+         * This field is optional and follows standard label selector semantics.
+         * An empty ManagedApplicationSelector matches any ManagedApplication.
+         */
+        export interface ManagedSubscriptionSpecManagedApplicationSelectorPatch {
+            /**
+             * matchExpressions is a list of label selector requirements. The requirements are ANDed.
+             */
+            matchExpressions?: pulumi.Input<pulumi.Input<inputs.hub.v1alpha1.ManagedSubscriptionSpecManagedApplicationSelectorMatchExpressionsPatch>[] | undefined>;
+            /**
+             * matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+             * map is equivalent to an element of matchExpressions, whose key field is "key", the
+             * operator is "In", and the values array contains only "value". The requirements are ANDed.
+             */
+            matchLabels?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+        }
+
+        /**
          * ManagedApplicationReference references a ManagedApplication.
          */
         export interface ManagedSubscriptionSpecManagedApplications {
@@ -59552,6 +60880,7 @@ export namespace hub {
              * Claims specifies an expression that validate claims in order to authorize the request.
              */
             claims?: pulumi.Input<string | undefined>;
+            managedApplicationSelector?: pulumi.Input<inputs.hub.v1alpha1.ManagedSubscriptionSpecManagedApplicationSelectorPatch | undefined>;
             /**
              * ManagedApplications references the ManagedApplications that will gain access to the specified APIs.
              * Multiple ManagedSubscriptions can select the same ManagedApplication.
@@ -59582,11 +60911,19 @@ export namespace hub {
              * ResolvedAPIs is the list of APIs that were successfully resolved.
              */
             resolvedApis?: pulumi.Input<pulumi.Input<inputs.hub.v1alpha1.ManagedSubscriptionStatusResolvedApis>[] | undefined>;
+            /**
+             * ResolvedManagedApplications is the list of ManagedApplications that were successfully resolved.
+             */
+            resolvedManagedApplications?: pulumi.Input<pulumi.Input<inputs.hub.v1alpha1.ManagedSubscriptionStatusResolvedManagedApplications>[] | undefined>;
             syncedAt?: pulumi.Input<string | undefined>;
             /**
              * UnresolvedAPIs is the list of APIs that could not be resolved.
              */
             unresolvedApis?: pulumi.Input<pulumi.Input<inputs.hub.v1alpha1.ManagedSubscriptionStatusUnresolvedApis>[] | undefined>;
+            /**
+             * UnresolvedManagedApplications is the list of ManagedApplications that could not be resolved.
+             */
+            unresolvedManagedApplications?: pulumi.Input<pulumi.Input<inputs.hub.v1alpha1.ManagedSubscriptionStatusUnresolvedManagedApplications>[] | undefined>;
             version?: pulumi.Input<string | undefined>;
         }
 
@@ -59639,11 +60976,31 @@ export namespace hub {
         }
 
         /**
+         * ResolvedManagedApplicationReference references a resolved ManagedApplication.
+         */
+        export interface ManagedSubscriptionStatusResolvedManagedApplications {
+            /**
+             * Name of the ManagedApplication.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
          * ResolvedAPIReference references a resolved API.
          */
         export interface ManagedSubscriptionStatusUnresolvedApis {
             /**
              * Name of the API.
+             */
+            name?: pulumi.Input<string | undefined>;
+        }
+
+        /**
+         * ResolvedManagedApplicationReference references a resolved ManagedApplication.
+         */
+        export interface ManagedSubscriptionStatusUnresolvedManagedApplications {
+            /**
+             * Name of the ManagedApplication.
              */
             name?: pulumi.Input<string | undefined>;
         }
@@ -221734,6 +223091,12 @@ export namespace traefik {
          */
         export interface MiddlewareSpecErrors {
             /**
+             * ErrorRequestHeaders defines the list of request headers forwarded to the error page service.
+             * When nil (not set), all original request headers are forwarded.
+             * Set to an empty list to forward no headers, or list specific headers to forward only those.
+             */
+            errorRequestHeaders?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+            /**
              * Query defines the URL for the error page (hosted by service).
              * The {status} variable can be used in order to insert the status code in the URL.
              * The {originalStatus} variable can be used in order to insert the upstream status code in the URL.
@@ -221762,6 +223125,12 @@ export namespace traefik {
          * More info: https://doc.traefik.io/traefik/v3.7/reference/routing-configuration/http/middlewares/errorpages/
          */
         export interface MiddlewareSpecErrorsPatch {
+            /**
+             * ErrorRequestHeaders defines the list of request headers forwarded to the error page service.
+             * When nil (not set), all original request headers are forwarded.
+             * Set to an empty list to forward no headers, or list specific headers to forward only those.
+             */
+            errorRequestHeaders?: pulumi.Input<pulumi.Input<string>[] | undefined>;
             /**
              * Query defines the URL for the error page (hosted by service).
              * The {status} variable can be used in order to insert the status code in the URL.
