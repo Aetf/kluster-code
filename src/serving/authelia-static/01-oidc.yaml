@@ -59,8 +59,10 @@ identity_providers:
         client_secret: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_SPLITPRO_SECRET_FILE" | secret | mindent 8 "|" | msquote }}
         public: false
         authorization_policy: splitpro
-        require_pkce: true
-        pkce_challenge_method: 'S256'
+        # No PKCE, unlike the other clients here: SplitPro builds its NextAuth
+        # provider without `checks: ['pkce']` (src/server/auth.ts), and NextAuth
+        # v4 only does `state` by default, so it never sends a code_challenge.
+        # Requiring it would just break the flow.
         userinfo_signed_response_alg: 'none'
         token_endpoint_auth_method: 'client_secret_basic'
         scopes:
