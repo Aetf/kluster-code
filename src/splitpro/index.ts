@@ -135,11 +135,22 @@ export class Splitpro extends pulumi.ComponentResource<SplitproArgs> {
                     'OIDC_CLIENT_SECRET': args.authSecret.asEnvValue('oidc_client_secret'),
                     'OIDC_WELL_KNOWN_URL': pulumi.interpolate`https://${args.authSubdomain}.${args.domain}/.well-known/openid-configuration`,
 
-                    // Closed instance: Authelia is the only way in. Invites stay
-                    // on so existing members can pull in someone who already has
-                    // an Authelia account.
+                    // Closed instance: Authelia is the only way in. Its
+                    // `splitpro` authorization policy defaults to deny and only
+                    // admits three named groups, so account creation is already
+                    // gated before NextAuth ever sees the user.
+                    //
+                    // DISABLE_EMAIL_SIGNUP only covers the magic-link path
+                    // (it checks `email?.verificationRequest`), which is what
+                    // closes self-signup.
+                    //
+                    // INVITE_ONLY is deliberately NOT set. Upstream's adapter
+                    // throws unconditionally on createUser when it is on, with
+                    // no exception for the first account -- so on an empty
+                    // database nobody can ever log in, and invites can only be
+                    // sent by a user who exists. It would also mean a restore
+                    // into a fresh database comes back up locked out.
                     'DISABLE_EMAIL_SIGNUP': 'true',
-                    'INVITE_ONLY': 'true',
                     'ENABLE_SENDING_INVITES': 'true',
                     'FROM_EMAIL': pulumi.interpolate`splitpro@${args.domain}`,
                     'EMAIL_SERVER_HOST': pulumi.output(args.smtp).apply(s => s.internalEndpoint()),
