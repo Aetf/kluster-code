@@ -138,7 +138,13 @@ export class EgressGateway extends pulumi.ComponentResource<EgressGatewayArgs> {
                     "reloader.stakater.com/auto": "true"
                 }
             },
-            spec: pb.asDeploymentSpec(),
+            // Recreate, not the default RollingUpdate: the hostPort below can
+            // only be held by one pod per node, so a surge replica would sit
+            // Pending on "didn't have free ports" while the rollout waits for
+            // it to go Ready -- a deadlock. Take the old pod down first and
+            // accept a few seconds without a tunnel; WireGuard re-handshakes on
+            // its own and clients keep their routes across the gap.
+            spec: pb.asDeploymentSpec({ strategy: { type: 'Recreate' } }),
         }, { parent: this });
 
         this.registerOutputs({});
