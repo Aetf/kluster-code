@@ -16,6 +16,12 @@
 #   - underlay:     carries the WireGuard endpoint itself. Circular otherwise.
 set -eu
 
+# Re-runnable. A restarted init container comes back to a namespace it has
+# already configured, so drop the interface first -- which also takes the routes
+# hanging off it, leaving the lookup below to find the CNI's default route
+# rather than one of ours.
+ip link del wg0 2>/dev/null || true
+
 gw=$(ip -4 route show default | awk '{ print $3; exit }')
 uplink=$(ip -4 route show default | awk '{ print $5; exit }')
 [ -n "$gw" ] && [ -n "$uplink" ] || {
@@ -49,11 +55,11 @@ rm -f "$conf"
 ip address add {{{clientAddress}}}/{{{prefixLength}}} dev wg0
 ip link set wg0 mtu {{{mtu}}} up
 
-# Fail closed, in two senses. With `set -e` a pod that cannot get this far never
-# starts; and dropping the node-local default leaves nothing to silently fall
-# back to should wg0 ever disappear. Going out of the local node's address is
-# the exact bug being fixed here, so no route at all beats the wrong source
-# address -- and a stalled hath is much easier to notice than a quietly
-# mis-addressed one.
-ip route replace default dev wg0
-ip route del default via "$gw" dev "$uplink"
+# Two halves of the address space rather than a default route, the way wg-quick
+# does it. They beat the CNI's default by being more specific, without replacing
+# it -- and leaving it in place is what lets a re-run of this script rediscover
+# the uplink. (Replacing it does not work anyway: it carries the same metric, so
+# `ip route replace default dev wg0` substitutes it outright rather than adding
+# a second route.)
+ip route replace 0.0.0.0/1 dev wg0
+ip route replace 128.0.0.0/1 dev wg0

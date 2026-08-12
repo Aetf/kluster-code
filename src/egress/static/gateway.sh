@@ -8,6 +8,16 @@
 # neither this pod nor either host needs root or a host-level rule.
 set -eu
 
+# Re-runnable: a restarted container comes back to a namespace it has already
+# configured, and every step below would otherwise fail on its own leftovers.
+ip link del wg0 2>/dev/null || true
+ensure() {
+    table=$1 chain=$2
+    shift 2
+    iptables -t "$table" -C "$chain" "$@" 2>/dev/null \
+        || iptables -t "$table" -A "$chain" "$@"
+}
+
 uplink=$(ip -4 route show default | awk '{ print $5; exit }')
 [ -n "$uplink" ] || { echo "no default route to NAT out of" >&2; exit 1; }
 
@@ -30,10 +40,10 @@ rm -f "$conf"
 ip address add {{{gatewayAddress}}}/{{{prefixLength}}} dev wg0
 ip link set wg0 mtu {{{mtu}}} up
 
-iptables -t nat -A POSTROUTING -s {{{tunnelSubnet}}} -o "$uplink" -j MASQUERADE
-# The tunnel MTU is well under eth0's, but the leg past this pod is a plain
-# 1500 internet path. Clamp forwarded SYNs so we don't depend on PMTUD
+ensure nat POSTROUTING -s {{{tunnelSubnet}}} -o "$uplink" -j MASQUERADE
+# The tunnel MTU is well under the uplink's, but the leg past this pod is a
+# plain 1500 internet path. Clamp forwarded SYNs so we don't depend on PMTUD
 # surviving a peer that blackholes ICMP.
-iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+ensure mangle FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
 exec sleep infinity
