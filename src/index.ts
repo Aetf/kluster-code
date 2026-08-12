@@ -24,6 +24,7 @@ import { Shoko } from "./shoko";
 import { Dufs } from "./dav";
 import { CloudNativePg } from "./postgresql";
 import { Immich } from "./immich";
+import { EgressGateway } from "./egress";
 import { Hath } from "./hath";
 import { SealedSecret, Service } from "./utils";
 import { Spoolman } from "./spoolman";
@@ -296,11 +297,19 @@ function setup() {
         cacheStorageClass: cluster.localStorageClass.metadata.name,
     }, { provider: namespaced('immich') });
 
-    // Hath@Home
+    // Hath@Home. Its public identity is the vps IP its LoadBalancer sits on,
+    // so it egresses through the vps too -- which is what lets the pod be
+    // scheduled on homelab, next to a disk big enough for its cache.
+    const hathProvider = namespaced('hath');
+    const hathEgress = new EgressGateway('hath-egress', {
+        node: cluster.nodes.AetfArchVPS,
+        endpointHost: 'aetf-arch-vps.zt.unlimited-code.works',
+    }, { provider: hathProvider });
     const hath = new Hath('hath', {
         base: cluster,
         storageClassName: cluster.jfsStorageClass.metadata.name,
-    }, { provider: namespaced('hath') });
+        egress: hathEgress,
+    }, { provider: hathProvider });
 
     // HaOS
     const haos = new Haos("haos", {

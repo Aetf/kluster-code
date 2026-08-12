@@ -5,10 +5,19 @@ import { BaseCluster } from '#src/base-cluster';
 import { SealedSecret, serviceFromDeployment } from "#src/utils";
 import { versions } from "#src/config";
 import { juicefsColocationAffinity } from "#src/juicefs";
+import { EgressGateway } from "#src/egress";
 
 interface HathArgs {
     base: BaseCluster,
     storageClassName: pulumi.Input<string>,
+    /**
+     * Send outbound traffic through this gateway. H@H takes the source address
+     * of the client's outbound RPC as its public identity and then connect
+     * tests it, so egress has to come from the same IP the LoadBalancer is on
+     * -- otherwise the pod fails FAIL_CONNECT_TEST as soon as it is scheduled
+     * anywhere but the node holding that IP.
+     */
+    egress?: EgressGateway,
 }
 
 /**
@@ -48,6 +57,7 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
                 fsGroup: 1000,
                 fsGroupChangePolicy: 'OnRootMismatch',
             },
+            initContainers: args.egress ? [args.egress.clientInitContainer(`${name}-egress`)] : undefined,
             containers: [{
                 name,
                 image: versions.image.hath,
