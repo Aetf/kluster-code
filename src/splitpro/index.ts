@@ -2,15 +2,10 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
-import { NamespaceProbe, Node, SealedSecret, serviceFromDeployment } from "#src/utils";
+import { NamespaceProbe, SealedSecret, serviceFromDeployment } from "#src/utils";
 import { Serving } from "#src/serving";
 import * as crds from "#src/crds";
 import { versions } from "#src/config";
-
-/** nodeSelector pinning a pod to one specific node. */
-function nodeHostname(node: Node): Record<string, pulumi.Output<string>> {
-    return { 'kubernetes.io/hostname': pulumi.output(node.metadata).apply(md => md.name!) };
-}
 
 /**
  * Opt-in: S3-compatible object storage is *not* used -- SplitPro keeps receipts
@@ -200,7 +195,7 @@ export class Splitpro extends pulumi.ComponentResource<SplitproArgs> {
             // homelab: the VPS is the tight node (57% cpu / 53% memory
             // requested, against 7% / 15% here) and it has nothing this app
             // needs.
-            nodeSelector: nodeHostname(args.serving.base.nodes.AetfArchHomelab),
+            nodeSelector: args.serving.base.nodes.AetfArchHomelab.hostnameSelectorLabels,
         });
 
         const deployment = new kx.Deployment(name, {
@@ -333,7 +328,7 @@ export class Splitpro extends pulumi.ComponentResource<SplitproArgs> {
                 // Retain policy, so it has to be pinned, and the homelab is the
                 // node with room.
                 affinity: {
-                    nodeSelector: nodeHostname(serving.base.nodes.AetfArchHomelab),
+                    nodeSelector: serving.base.nodes.AetfArchHomelab.hostnameSelectorLabels,
                 },
                 imageName: versions.image.splitproDb,
                 postgresql: {
