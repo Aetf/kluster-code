@@ -296,23 +296,11 @@ function setup() {
         cacheStorageClass: cluster.localStorageClass.metadata.name,
     }, { provider: namespaced('immich') });
 
-    // Hath@Home. Was jfs-backed (S3), moved to a NAS-backed NodePV pinned to
-    // homelab: the jfs local block cache is shared/too small for hath's
-    // working set, so most serves missed cache and pulled straight from S3
-    // -- the dominant driver of the AWS bill. hath's own footprint
-    // (~50GiB) fits comfortably on the NAS instead.
-    const hathProvider = namespaced('hath');
-    const hathPv = new NodePV('hath-pv', {
-        path: "/mnt/nas/Hath",
-        node: cluster.nodes.AetfArchHomelab,
-        capacity: "60Gi",
-        accessModes: ["ReadWriteOnce"],
-    }, { provider: hathProvider });
+    // Hath@Home
     const hath = new Hath('hath', {
         base: cluster,
-        dataPvc: hathPv.pvc,
-        juicefsColocation: false, // pinned to homelab node by the PV instead
-    }, { provider: hathProvider });
+        storageClassName: cluster.jfsStorageClass.metadata.name,
+    }, { provider: namespaced('hath') });
 
     // HaOS
     const haos = new Haos("haos", {

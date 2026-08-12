@@ -8,15 +8,7 @@ import { juicefsColocationAffinity } from "#src/juicefs";
 
 interface HathArgs {
     base: BaseCluster,
-    // Storage. Provide exactly one of:
-    //  - storageClassName: dynamically provision the PVC
-    //  - dataPvc: reuse an existing PVC (e.g. a static NodePV on a host path)
-    storageClassName?: pulumi.Input<string>,
-    dataPvc?: kx.PersistentVolumeClaim,
-    // Co-locate with the juicefs-redis master for metadata perf. Only
-    // relevant for a jfs-backed instance; a NodePV-backed pod is already
-    // node-pinned by the PV's nodeAffinity.
-    juicefsColocation?: boolean,
+    storageClassName: pulumi.Input<string>,
 }
 
 /**
@@ -27,10 +19,6 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
     constructor(name: string, args: HathArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:Hath', name, args, opts);
 
-        if ((args.storageClassName === undefined) === (args.dataPvc === undefined)) {
-            throw new Error("Hath requires exactly one of storageClassName or dataPvc");
-        }
-
         const secrets = new SealedSecret(name, {
             spec: {
                 encryptedData: {
@@ -39,7 +27,7 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
             }
         }, { parent: this });
 
-        const pvc = args.dataPvc ?? args.base.createLocalStoragePVC(`${name}`, {
+        const pvc = args.base.createLocalStoragePVC(`${name}`, {
             storageClassName: args.storageClassName,
             resources: {
                 requests: {
@@ -54,9 +42,8 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
             restartPolicy: 'Always',
             // Hath need to time to shut down gracefully, give it 5min
             terminationGracePeriodSeconds: 300,
-            // Place it close to jfs metadata (jfs-backed instance only; a
-            // NodePV-backed pod is already node-pinned by the PV's nodeAffinity).
-            affinity: args.juicefsColocation ? juicefsColocationAffinity() : undefined,
+            // Place it close to jfs matadata
+            affinity: juicefsColocationAffinity(),
             securityContext: {
                 fsGroup: 1000,
                 fsGroupChangePolicy: 'OnRootMismatch',
