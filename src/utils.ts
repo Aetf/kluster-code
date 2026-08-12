@@ -430,11 +430,16 @@ declare module '@pulumi/kubernetes/core/v1/nodePatch' {
          * Selector to uniquely select this node
          */
         readonly hostnameSelector: k8s.types.input.core.v1.NodeSelectorTerm;
+        /**
+         * `nodeSelector` map pinning a pod to this node. The blunter sibling of
+         * `hostnameSelector`, for the places that take a plain label map.
+         */
+        readonly hostnameSelectorLabels: Record<string, pulumi.Output<string>>;
     }
 }
+const hostnamelabel = 'kubernetes.io/hostname';
 Object.defineProperty(NodePatch.prototype, 'hostnameSelector', {
     get: function(): k8s.types.input.core.v1.NodeSelectorTerm {
-        const hostnamelabel = 'kubernetes.io/hostname';
         return {
             matchExpressions: [{
                 key: hostnamelabel,
@@ -442,5 +447,11 @@ Object.defineProperty(NodePatch.prototype, 'hostnameSelector', {
                 values: [this.metadata.name],
             }],
         };
+    }
+});
+Object.defineProperty(NodePatch.prototype, 'hostnameSelectorLabels', {
+    get: function(this: NodePatch): Record<string, pulumi.Output<string>> {
+        const name: pulumi.Output<string> = this.metadata.apply(md => md.name!);
+        return { [hostnamelabel]: name };
     }
 });
