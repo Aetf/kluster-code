@@ -305,9 +305,20 @@ function setup() {
         node: cluster.nodes.AetfArchVPS,
         endpointHost: 'aetf-arch-vps.zt.unlimited-code.works',
     }, { provider: hathProvider });
+    // Storage was jfs-backed (S3) until the jfs local block cache, shared and
+    // far smaller than hath's ~50GiB working set, turned most image serves into
+    // an S3 GetObject -- the dominant driver of the AWS bill. Moved to a
+    // NAS-backed NodePV, following media-pv/sync-nas-pv.
+    const hathPv = new NodePV('hath-pv', {
+        path: "/mnt/nas/Hath",
+        node: cluster.nodes.AetfArchHomelab,
+        capacity: "60Gi",
+        accessModes: ["ReadWriteOnce"],
+    }, { provider: hathProvider });
     const hath = new Hath('hath', {
         base: cluster,
-        storageClassName: cluster.jfsStorageClass.metadata.name,
+        dataPvc: hathPv.pvc,
+        juicefsColocation: false, // pinned to homelab by the PV instead
         egress: hathEgress,
     }, { provider: hathProvider });
 

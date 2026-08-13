@@ -9,7 +9,15 @@ import { EgressGateway } from "#src/egress";
 
 interface HathArgs {
     base: BaseCluster,
-    storageClassName: pulumi.Input<string>,
+    // Storage. Provide exactly one of:
+    //  - storageClassName: dynamically provision the PVC
+    //  - dataPvc: reuse an existing PVC (e.g. a static NodePV on a host path)
+    storageClassName?: pulumi.Input<string>,
+    dataPvc?: kx.PersistentVolumeClaim,
+    // Co-locate with the juicefs-redis master for metadata perf. Only
+    // relevant for a jfs-backed instance; a NodePV-backed pod is already
+    // node-pinned by the PV's nodeAffinity.
+    juicefsColocation?: boolean,
     /**
      * Send outbound traffic through this gateway. H@H takes the source address
      * of the client's outbound RPC as its public identity and then connect
@@ -28,6 +36,10 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
     constructor(name: string, args: HathArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:Hath', name, args, opts);
 
+        if ((args.storageClassName === undefined) === (args.dataPvc === undefined)) {
+            throw new Error("Hath requires exactly one of storageClassName or dataPvc");
+        }
+
         const secrets = new SealedSecret(name, {
             spec: {
                 encryptedData: {
@@ -36,7 +48,7 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
             }
         }, { parent: this });
 
-        const pvc = args.base.createLocalStoragePVC(`${name}`, {
+        const pvc = args.dataPvc ?? args.base.createLocalStoragePVC(`${name}`, {
             storageClassName: args.storageClassName,
             resources: {
                 requests: {
@@ -51,8 +63,9 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
             restartPolicy: 'Always',
             // Hath need to time to shut down gracefully, give it 5min
             terminationGracePeriodSeconds: 300,
-            // Place it close to jfs matadata
-            affinity: juicefsColocationAffinity(),
+            // Place it close to jfs metadata (jfs-backed instance only; a
+            // NodePV-backed pod is already node-pinned by the PV's nodeAffinity).
+            affinity: args.juicefsColocation ? juicefsColocationAffinity() : undefined,
             securityContext: {
                 fsGroup: 1000,
                 fsGroupChangePolicy: 'OnRootMismatch',
@@ -110,7 +123,13 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
                     "reloader.stakater.com/auto": "true"
                 }
             },
-            spec: pb.asDeploymentSpec(),
+            // Recreate, not the default RollingUpdate. A surge replica would be
+            // a second H@H client live on the same client ID -- and when the
+            // storage moved off jfs it would also have been on the other node,
+            // serving a stale copy of the cache. Take the old pod down first;
+            // hath is a single instance either way, so a rolling update buys
+            // nothing.
+            spec: pb.asDeploymentSpec({ strategy: { type: 'Recreate' } }),
         }, { parent: this });
         const service = serviceFromDeployment(name, deployment, {
             metadata: {
