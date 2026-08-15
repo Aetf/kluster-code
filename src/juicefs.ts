@@ -137,12 +137,43 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                                     memory: '1Gi',
                                 }
                             },
+                            // Patch mountOptions replace, rather than add to, any
+                            // option of the same name coming from the PV, so these
+                            // three override what the StorageClass below hands out,
+                            // and they do so for already-provisioned volumes too.
                             mountOptions: [
-                                // cache-dir is a 49GiB disk but cache-size was never
-                                // set, so juicefs assumed its 100GiB default and ran
-                                // permanently against the free-space-ratio floor,
-                                // thrashing the cache into extra S3 GETs.
-                                'cache-size=30720', // MiB, i.e. 30GiB
+                                // The cache used to live on /mnt/storage, a 49GiB
+                                // block volume it shares with the local-path PVCs and
+                                // the webroot. The root disk has since been grown from
+                                // 56GiB to 156GiB and now has more free space than that
+                                // volume has in total, so the cache moves there and the
+                                // block volume gets its ~30GiB back.
+                                //
+                                // One directory, deliberately. cache-size is the total
+                                // across all cache dirs and juicefs splits it evenly
+                                // between them (dirCacheSize = CacheSize / len(dirs)),
+                                // so keeping /mnt/storage as a second directory would
+                                // have capped the whole cache at twice what the small
+                                // volume can hold - less than the root disk gives on
+                                // its own.
+                                'cache-dir=/var/lib/jfs-cache',
+                                // Close to the most this filesystem can give. juicefs
+                                // measures free space as statfs Bavail, which excludes
+                                // ext4's reserved blocks, so the 153.2GiB filesystem
+                                // offers 105.2GiB; a 70GiB cache leaves 23.0% free
+                                // against the 20% floor below. The ceiling at that
+                                // ratio is ~74.6GiB, and going past it would only put
+                                // juicefs permanently against the floor again, which
+                                // is the state #178 fixed. The previous 30GiB was
+                                // simply what the old volume could hold.
+                                'cache-size=71680', // MiB, i.e. 70GiB
+                                // The cache now shares a filesystem with the kubelet,
+                                // whose nodefs DiskPressure eviction threshold is 10%
+                                // free. Leaving juicefs' floor at the default 0.1 would
+                                // put the two at exactly the same point; 0.2 makes
+                                // juicefs stop growing the cache well before the
+                                // kubelet starts evicting pods.
+                                'free-space-ratio=0.2',
                             ],
                         }
                     ],
@@ -185,6 +216,13 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                     //"no-bgjob", // disable background jobs
 
                     "upload-delay=10s", // wait 10s before upload, such that small write and delete is completely served from local cache
+
+                    // Dead values, both overridden by the mountPodPatch above, which
+                    // is where the cache is actually configured. They are left here
+                    // rather than corrected because mountOptions are part of the
+                    // immutable StorageClass spec: editing them would replace the
+                    // StorageClass without reaching any volume already provisioned,
+                    // since a PV copies mountOptions from the class at creation.
                     "free-space-ratio=0.1",
                     "cache-dir=/mnt/storage/jfs-cache",
                 ]
