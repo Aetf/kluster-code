@@ -34,6 +34,64 @@ export class Dufs extends pulumi.ComponentResource<DufsArgs> {
             }
         }, { parent: this });
 
+        // Static PV pointing at the syncthing "Stuff" folder's subdirectory in
+        // the shared juicefs filesystem, so it can be exposed alongside dufs's
+        // own files without needing a second dufs instance or new domain/auth.
+        // PVCs are namespaced, so we can't just mount syncthing's own PVC
+        // object here (it lives in the "syncthing" namespace); instead this
+        // addresses the same underlying data by juicefs subPath. Mirrors the
+        // mount options set on the dynamic "juicefs" StorageClass, see
+        // src/juicefs.ts.
+        const syncStuffPv = new k8s.core.v1.PersistentVolume(`${name}-sync-stuff`, {
+            spec: {
+                capacity: {
+                    storage: "1Ti", // nominal only, juicefs doesn't enforce quota from this
+                },
+                accessModes: ["ReadWriteMany"],
+                persistentVolumeReclaimPolicy: "Retain",
+                storageClassName: "",
+                mountOptions: [
+                    "enable-xattr",
+                    "allow_other",
+                    "writeback_cache",
+                    "put-timeout=3600",
+                    "max-uploads=2",
+                    "upload-delay=10s",
+                    "free-space-ratio=0.1",
+                    "cache-dir=/mnt/storage/jfs-cache",
+                ],
+                csi: {
+                    driver: "csi.juicefs.com",
+                    fsType: "juicefs",
+                    volumeHandle: `${name}-sync-stuff`,
+                    nodePublishSecretRef: {
+                        name: "juicefs",
+                        namespace: "kube-system",
+                    },
+                    volumeAttributes: {
+                        // syncthing-data's PVC subPath in the shared juicefs
+                        // fs is "syncthing-syncthing-data" (namespace "syncthing",
+                        // pvc name "syncthing-data"); "Stuff" is the folder
+                        // synced by the primary syncthing instance.
+                        subPath: "syncthing-syncthing-data/Stuff",
+                    },
+                },
+            },
+        }, { parent: this });
+
+        const syncStuffPvc = new kx.PersistentVolumeClaim(`${name}-sync-stuff`, {
+            spec: {
+                accessModes: ["ReadWriteMany"],
+                resources: {
+                    requests: {
+                        storage: "1Ti"
+                    }
+                },
+                storageClassName: "",
+                volumeName: syncStuffPv.metadata.name,
+            },
+        }, { parent: this });
+
         const cert = args.serving.base.createBackendCertificate(name, {
             namespace: pulumi.output(webdavPV.metadata).apply(md => md.namespace!)
         }, { parent: this });
@@ -70,6 +128,11 @@ export class Dufs extends pulumi.ComponentResource<DufsArgs> {
                         mountPath: "/files",
                         mountPropagation: "HostToContainer",
                     },
+                    {
+                        name: syncStuffPvc.metadata.name,
+                        mountPath: "/files/stuff",
+                        mountPropagation: "HostToContainer",
+                    },
                 ],
             }],
             volumes: [
@@ -77,6 +140,12 @@ export class Dufs extends pulumi.ComponentResource<DufsArgs> {
                     name: webdavPV.metadata.name,
                     persistentVolumeClaim: {
                         claimName: webdavPV.metadata.name,
+                    },
+                },
+                {
+                    name: syncStuffPvc.metadata.name,
+                    persistentVolumeClaim: {
+                        claimName: syncStuffPvc.metadata.name,
                     },
                 },
             ],
