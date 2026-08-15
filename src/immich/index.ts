@@ -121,20 +121,40 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                                 main: {
                                     resources: {
                                         requests: { cpu: "1", memory: "1Gi" },
-                                        // ffmpeg tonemap transcoding pushes past 2Gi and gets OOMKilled
-                                        limits: { cpu: "1.5", memory: "3Gi" },
+                                        // ffmpeg tonemap transcoding pushes past 2Gi and gets OOMKilled.
+                                        // 3Gi was still not enough either: RSS peaked at 2.97Gi and the
+                                        // cgroup recorded oom_group_kill 12. At 1.5 cores the container
+                                        // was throttled on 89-94% of its CFS periods, which starves the
+                                        // node event loop and makes the liveness probe time out.
+                                        limits: { cpu: "2.5", memory: "4Gi" },
                                     },
+                                    // /api/server/ping answers in 0.09ms when idle and only times out
+                                    // while the job queue saturates the event loop, so liveness needs to
+                                    // tolerate a slow reply rather than restart the container. Readiness
+                                    // stays brisk on purpose: shedding traffic while overloaded is the
+                                    // correct response, and it does not restart anything.
                                     probes: {
                                         liveness: {
                                             spec: {
                                                 initialDelaySeconds: 60,
-                                                failureThreshold: 5,
+                                                periodSeconds: 30,
+                                                timeoutSeconds: 10,
+                                                failureThreshold: 6,
                                             },
                                         },
                                         readiness: {
                                             spec: {
                                                 initialDelaySeconds: 60,
-                                                failureThreshold: 5,
+                                                periodSeconds: 10,
+                                                timeoutSeconds: 5,
+                                                failureThreshold: 3,
+                                            },
+                                        },
+                                        startup: {
+                                            spec: {
+                                                periodSeconds: 10,
+                                                timeoutSeconds: 10,
+                                                failureThreshold: 30,
                                             },
                                         },
                                     },
