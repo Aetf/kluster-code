@@ -43,8 +43,14 @@ export class Dufs extends pulumi.ComponentResource<DufsArgs> {
                 name,
                 image: versions.image.dufs,
                 resources: {
-                    requests: { cpu: "10m", memory: "8Mi" },
-                    limits: { cpu: "10m", memory: "8Mi" },
+                    // dufs terminates TLS itself, and a handshake needs far more
+                    // than the 1ms/100ms slice a 10m cap allows: with cpu limit ==
+                    // request the container sat at 100% throttled periods and even
+                    // the TLS handshake took ~8s, blowing past the gateway timeout.
+                    // Page cache from serving files counts against the memory limit
+                    // too, so 8Mi left no headroom.
+                    requests: { cpu: "10m", memory: "32Mi" },
+                    limits: { cpu: "500m", memory: "128Mi" },
                 },
                 ports: {
                     https: this.port,
