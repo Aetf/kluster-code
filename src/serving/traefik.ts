@@ -58,9 +58,22 @@ export class Traefik extends pulumi.ComponentResource<TraefikArgs> {
             namespace,
             chart: "traefik",
             values: {
+                // The public LoadBalancer only ever lands on the VPS (its
+                // service carries lbpool=internet, and that label is only on
+                // AetfArchVPS), so every request from the internet enters
+                // there. Leaving traefik unpinned let the scheduler park it on
+                // the homelab, which made all of that traffic take an extra
+                // ~84ms hop across the inter-node link just to reach the proxy
+                // -- before it even started talking to a backend. Pin it to the
+                // node the traffic already arrives on.
+                nodeSelector: args.base.nodes.AetfArchVPS.hostnameSelectorLabels,
                 resources: {
                     requests: { cpu: "10m", memory: "128Mi" },
-                    limits: { cpu: "50m", memory: "256Mi" }
+                    // 50m was enough to already show ~2% CFS throttling while
+                    // idle on the roomy homelab node; the VPS is the busier box
+                    // and traefik terminates TLS for every site, so give it
+                    // headroom to burst rather than getting parked mid-handshake.
+                    limits: { cpu: "500m", memory: "256Mi" }
                 },
                 providers: {
                     kubernetesGateway: {
