@@ -2,6 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
+import * as crds from "#src/crds";
 import { HelmChart, SealedSecret, removeHelmTestAnnotation } from "./utils";
 import { Redis } from "#src/redis";
 
@@ -67,6 +68,8 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
         const secret = this.setupSecret(name)
 
         this.setupRedis(name, args.namespace, args.metadataStorageClass, secret);
+
+        this.setupMountPodMonitor(name, args.namespace);
 
         this.chart = new HelmChart(name, {
             namespace: args.namespace,
@@ -216,6 +219,57 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
         }, {
             parent: this
         });
+    }
+
+    /**
+     * Scrape the juicefs_* metrics the mount pods expose on their `metrics` port
+     * (9567, mount option `metrics=0.0.0.0:9567`, set by the CSI driver itself).
+     * Nothing else surfaces the client side of the filesystem: cache hit ratio,
+     * evictions and object storage GETs only exist here, and they are what says
+     * whether the local cache is doing its job or we are paying S3 for it.
+     *
+     * The mount pods are created by the CSI node plugin, not by us, so this
+     * selects them by the label the driver puts on them rather than by owner.
+     */
+    private setupMountPodMonitor(name: string, namespace: pulumi.Input<string>) {
+        return new crds.monitoring.v1.PodMonitor(`${name}-mount`, {
+            metadata: {
+                namespace,
+                labels: {
+                    // kube-prometheus-stack points its podMonitorSelector at its
+                    // own release label, so a PodMonitor without this is simply
+                    // ignored, silently.
+                    release: "prometheus",
+                },
+            },
+            spec: {
+                selector: {
+                    matchLabels: {
+                        'app.kubernetes.io/name': 'juicefs-mount',
+                    },
+                },
+                podMetricsEndpoints: [{
+                    port: 'metrics',
+                    relabelings: [
+                        // A mount pod's name carries a random suffix and changes
+                        // on every recreation, so identify the target by the
+                        // volume it serves instead. juicefs also exports its own
+                        // `instance` label (the PV name), which prometheus keeps
+                        // out of the way as `exported_instance`.
+                        {
+                            action: 'replace',
+                            sourceLabels: ['__meta_kubernetes_pod_label_volume_id'],
+                            targetLabel: 'volume_id',
+                        },
+                        {
+                            action: 'replace',
+                            sourceLabels: ['__meta_kubernetes_pod_node_name'],
+                            targetLabel: 'node',
+                        },
+                    ],
+                }],
+            },
+        }, { parent: this });
     }
 
     // create a redis instance, and then create an ExternalName service, so it has a stable url to refer to in the
