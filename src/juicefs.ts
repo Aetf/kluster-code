@@ -105,7 +105,43 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                     // Use a new Priorityclass for Mount Pod to not preempt other pods.
                     // See: https://juicefs.com/docs/csi/guide/resource-optimization#set-non-preempting-priorityclass-for-mount-pod
                     mountPodNonPreempting: true,
-                }
+                },
+                // Mount pod tuning has to go through the CSI global config rather than
+                // the StorageClass below: StorageClass parameters are immutable, and
+                // existing PVs freeze the juicefs/mount-* parameters into their
+                // spec.csi.volumeAttributes at provision time, so editing the
+                // StorageClass never reaches volumes that are already provisioned.
+                // See: https://juicefs.com/docs/csi/guide/configurations
+                globalConfig: {
+                    mountPodPatch: [
+                        {
+                            // 512Mi sits below juicefs' own footprint: the default
+                            // --buffer-size alone is 300MiB, before the Go heap and
+                            // metadata cache. All four mount pods peaked at 437-522Mi
+                            // and immich's got OOM killed 25 times over 35h. It never
+                            // showed up as OOMKilled because the kernel reaps the
+                            // juicefs child rather than the mount.juicefs watchdog,
+                            // which then exits 2, so the container reports Error.
+                            resources: {
+                                requests: {
+                                    cpu: '100m',
+                                    memory: '256Mi',
+                                },
+                                limits: {
+                                    cpu: '1',
+                                    memory: '1Gi',
+                                }
+                            },
+                            mountOptions: [
+                                // cache-dir is a 49GiB disk but cache-size was never
+                                // set, so juicefs assumed its 100GiB default and ran
+                                // permanently against the free-space-ratio floor,
+                                // thrashing the cache into extra S3 GETs.
+                                'cache-size=30720', // MiB, i.e. 30GiB
+                            ],
+                        }
+                    ],
+                },
             }
         }, opts);
 
