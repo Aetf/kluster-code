@@ -3,7 +3,7 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import * as crds from "#src/crds";
-import { HelmChart, SealedSecret, removeHelmTestAnnotation } from "./utils";
+import { ConfigMap, HelmChart, SealedSecret, removeHelmTestAnnotation } from "./utils";
 import { Redis } from "#src/redis";
 
 export interface JuiceFsArgs {
@@ -70,6 +70,7 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
         this.setupRedis(name, args.namespace, args.metadataStorageClass, secret);
 
         this.setupMountPodMonitor(name, args.namespace);
+        this.setupMountDashboard(name, args.namespace);
 
         this.chart = new HelmChart(name, {
             namespace: args.namespace,
@@ -269,6 +270,33 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                     ],
                 }],
             },
+        }, { parent: this });
+    }
+
+    /**
+     * Grafana dashboard for what the PodMonitor above collects. Picked up by the
+     * kube-prometheus-stack grafana sidecar, which watches every namespace for
+     * config maps carrying the `grafana_dashboard` label.
+     *
+     * The one thing worth knowing before reading the dashboard, and the reason
+     * the queries are not uniform: `storageClassShareMount` is false, so each PVC
+     * gets its own mount pod, but they all mount the same juicefs volume through
+     * the same cache-dir. Every pod therefore reports the entire shared cache as
+     * its own — the cache size gauges have to be aggregated with max(), while the
+     * hit/miss/object-request counters are genuinely per-mount and are summed.
+     */
+    private setupMountDashboard(name: string, namespace: pulumi.Input<string>) {
+        return new ConfigMap(`${name}-mount-dashboard`, {
+            metadata: {
+                namespace,
+                labels: {
+                    // what the grafana sidecar selects on (LABEL/LABEL_VALUE)
+                    grafana_dashboard: "1",
+                },
+            },
+            ref_file: __filename,
+            data: 'juicefs-static/*.json',
+            stripComponents: 1,
         }, { parent: this });
     }
 
