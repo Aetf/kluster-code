@@ -71,6 +71,7 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
 
         this.setupMountPodMonitor(name, args.namespace);
         this.setupMountDashboard(name, args.namespace);
+        this.setupMountAlerts(name, args.namespace);
 
         this.chart = new HelmChart(name, {
             namespace: args.namespace,
@@ -297,6 +298,88 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
             ref_file: __filename,
             data: 'juicefs-static/*.json',
             stripComponents: 1,
+        }, { parent: this });
+    }
+
+    /**
+     * Alerts on the mount side of the filesystem.
+     *
+     * All of them are rate()/increase() based rather than raw counters: a mount
+     * process restart resets every juicefs_* counter to zero, and restarts are
+     * routine here (any change to the CSI global config recreates all the mount
+     * pods).
+     */
+    private setupMountAlerts(name: string, namespace: pulumi.Input<string>) {
+        // Prometheus derives the job name from the PodMonitor as
+        // `<namespace>/<name>`, and the name is pulumi auto-named with a random
+        // suffix, so match it rather than spelling it out.
+        const mountJob = '.+/juicefs-mount-.+';
+        const sel = `{job=~"${mountJob}"}`;
+
+        return new crds.monitoring.v1.PrometheusRule(`${name}-mount`, {
+            metadata: {
+                namespace,
+                // same story as the PodMonitor: kube-prometheus-stack scopes its
+                // ruleSelector to its own release label
+                labels: { release: "prometheus" },
+            },
+            spec: {
+                groups: [{
+                    name: "juicefs-mount",
+                    rules: [{
+                        alert: "JuicefsMountDown",
+                        expr: `up${sel} == 0`,
+                        // long enough to sit through a mount pod recreation, which
+                        // makes the target disappear rather than go down anyway
+                        for: "15m",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "JuiceFS mount pod for {{ $labels.volume_id }} is not scrapable",
+                            description: "The mount serving {{ $labels.volume_id }} on {{ $labels.node }} has not answered on its metrics port for 15m. Its container may be wedged even while the pod reads Running.",
+                        },
+                    }, {
+                        alert: "JuicefsObjectStorageErrors",
+                        expr: `sum by (volume_id, node, method) (rate(juicefs_object_request_errors${sel}[15m])) > 0`,
+                        for: "15m",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "JuiceFS is failing {{ $labels.method }} requests to S3",
+                            description: "The mount serving {{ $labels.volume_id }} has been getting errors back from object storage for 15m. Reads fail outright; writes pile up in the staging dir while they retry.",
+                        },
+                    }, {
+                        alert: "JuicefsMountCrashLooping",
+                        // uptime is monotonic within a mount process, so a reset is
+                        // a restart. One restart is a redeploy; three in an hour is
+                        // the OOM loop that ran for 38h before the limit was raised.
+                        expr: `sum by (volume_id, node) (resets(juicefs_uptime${sel}[1h])) >= 3`,
+                        for: "5m",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "JuiceFS mount for {{ $labels.volume_id }} keeps restarting",
+                            description: "The mount serving {{ $labels.volume_id }} restarted at least 3 times in the last hour. An OOM kill reaps the juicefs child rather than the watchdog, so this shows up as container Error, not OOMKilled.",
+                        },
+                    }, {
+                        alert: "JuicefsCacheHitRatioLow",
+                        // The whole point of the local cache is to keep reads off
+                        // S3, where they are billed per request and per byte. The
+                        // second clause keeps this quiet when nothing is reading:
+                        // a ratio over a handful of blocks means nothing.
+                        expr: [
+                            `sum(rate(juicefs_blockcache_miss_bytes${sel}[1h]))`,
+                            `/`,
+                            `(sum(rate(juicefs_blockcache_hit_bytes${sel}[1h])) + sum(rate(juicefs_blockcache_miss_bytes${sel}[1h])))`,
+                            `> 0.5`,
+                            `and sum(rate(juicefs_blockcache_miss_bytes${sel}[1h])) > 2e6`,
+                        ].join(' '),
+                        for: "2h",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "JuiceFS is reading more than half its bytes from S3",
+                            description: "Over 2h, more than half of the bytes read through juicefs came from object storage at over 2MB/s. Expected while something walks the whole library (an immich scan, a restore); otherwise the working set has outgrown the cache and it is going on the AWS bill.",
+                        },
+                    }],
+                }],
+            },
         }, { parent: this });
     }
 
