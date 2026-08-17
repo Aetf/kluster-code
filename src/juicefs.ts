@@ -120,13 +120,24 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                 globalConfig: {
                     mountPodPatch: [
                         {
-                            // 512Mi sits below juicefs' own footprint: the default
+                            // 512Mi sat below juicefs' own footprint: the default
                             // --buffer-size alone is 300MiB, before the Go heap and
                             // metadata cache. All four mount pods peaked at 437-522Mi
                             // and immich's got OOM killed 25 times over 35h. It never
                             // showed up as OOMKilled because the kernel reaps the
                             // juicefs child rather than the mount.juicefs watchdog,
                             // which then exits 2, so the container reports Error.
+                            //
+                            // 1Gi turned out not to be enough either: immich's mount
+                            // pod took another 6 OOM kills in the following day, peaking
+                            // at 1037Mi. The limit deliberately stays at 1Gi anyway -
+                            // see the env and buffer-size below. The vps has 7.7Gi of
+                            // RAM and dipped to 0.74Gi available at its worst point in
+                            // that same day, with immich-server (2912Mi peak),
+                            // immich-db (1025Mi) and this pod all peaking together, so
+                            // raising the ceiling would spend memory the node does not
+                            // have and trade a mount pod restart for a node-level OOM
+                            // that picks its victim at random.
                             resources: {
                                 requests: {
                                     cpu: '100m',
@@ -137,10 +148,27 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                                     memory: '1Gi',
                                 }
                             },
+                            // juicefs is a Go program and nothing told the runtime about
+                            // the cgroup limit above, so the heap grew on the default
+                            // GOGC=100 schedule until the kernel killed it. GOMEMLIMIT
+                            // is the fix for that: the GC treats it as a soft ceiling
+                            // and collects harder as it approaches, which costs CPU
+                            // rather than the process. 800MiB leaves ~220MiB of the
+                            // limit for what the Go runtime does not account for.
+                            env: [
+                                {
+                                    name: 'GOMEMLIMIT',
+                                    value: '800MiB',
+                                },
+                            ],
                             // Patch mountOptions replace, rather than add to, any
-                            // option of the same name coming from the PV, so these
-                            // three override what the StorageClass below hands out,
-                            // and they do so for already-provisioned volumes too.
+                            // option of the same name coming from the PV, so the ones
+                            // that collide override what the StorageClass below hands
+                            // out, for already-provisioned volumes too. Note this list
+                            // is also replaced wholesale by any later patch entry that
+                            // sets mountOptions - MountPodPatch.merge() assigns rather
+                            // than appends - so a second, pvcSelector-scoped entry would
+                            // have to repeat all of this, not just its own additions.
                             mountOptions: [
                                 // The cache used to live on /mnt/storage, a 49GiB
                                 // block volume it shares with the local-path PVCs and
@@ -174,6 +202,14 @@ export class JuiceFs extends pulumi.ComponentResource<JuiceFs> {
                                 // juicefs stop growing the cache well before the
                                 // kubelet starts evicting pods.
                                 'free-space-ratio=0.2',
+                                // The single largest allocation juicefs makes, and the
+                                // one thing that can be given back without buying node
+                                // memory. Read/write buffering, 300MiB by default; the
+                                // four quiet volumes never come close to using it and
+                                // immich is bounded by S3 bandwidth rather than by this
+                                // pool. Bare numbers are MiB here, same as cache-size
+                                // above - both go through utils.ParseBytes(_, _, 'M').
+                                'buffer-size=200',
                             ],
                         }
                     ],
