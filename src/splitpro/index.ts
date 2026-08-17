@@ -127,6 +127,21 @@ export class Splitpro extends pulumi.ComponentResource<SplitproArgs> {
                     'OIDC_CLIENT_ID': args.authSecret.asEnvValue('oidc_client_id'),
                     'OIDC_CLIENT_SECRET': args.authSecret.asEnvValue('oidc_client_secret'),
                     'OIDC_WELL_KNOWN_URL': pulumi.interpolate`https://${args.authSubdomain}.${args.domain}/.well-known/openid-configuration`,
+                    // Adding someone by email creates a placeholder user row for
+                    // them, and that is the *only* way to reach a person you
+                    // have no shared expenses with -- there is no user search.
+                    // Without email linking, that person's first OIDC login
+                    // fails with OAuthAccountNotLinked instead of taking over
+                    // the placeholder, so they would need a second account to
+                    // get in and would still be invisible to whoever invited
+                    // them. It is "dangerous" only when the identity provider
+                    // lets users pick unverified emails; Authelia is the sole
+                    // provider here and its addresses come from users.yaml.
+                    //
+                    // Note the value is never parsed: env.ts does
+                    // `Boolean(process.env.…)`, so 'false' would enable it too.
+                    // Unset the variable to turn it off.
+                    'OIDC_ALLOW_DANGEROUS_EMAIL_LINKING': 'true',
 
                     // Authelia is the only way in, and deliberately the *only*
                     // way: no EMAIL_SERVER_HOST means NextAuth never registers
