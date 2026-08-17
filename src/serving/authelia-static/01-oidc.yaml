@@ -1,5 +1,20 @@
 identity_providers:
   oidc:
+    claims_policies:
+      # Authelia only puts the standard claims in the ID token; everything the
+      # `email`/`profile` scopes grant is served from the userinfo endpoint
+      # instead. That is fine for clients that call it, but SplitPro's NextAuth
+      # provider sets `idToken: true`, and NextAuth v4 then builds the profile
+      # purely out of the ID token claims and never calls userinfo -- so its
+      # users end up with a null email, which is the only key it has for
+      # matching people to each other.
+      splitpro:
+        id_token:
+          - email
+          - email_verified
+          # SplitPro seeds the display name from this; without it new users are
+          # named after the local part of their email address.
+          - name
     clients:
       - client_name: Immich OAuth Connection
         client_id: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_IMMICH_ID_FILE" | secret | mindent 8 "|" | msquote }}
@@ -59,6 +74,7 @@ identity_providers:
         client_secret: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_SPLITPRO_SECRET_FILE" | secret | mindent 8 "|" | msquote }}
         public: false
         authorization_policy: splitpro
+        claims_policy: 'splitpro'
         # No PKCE, unlike the other clients here: SplitPro builds its NextAuth
         # provider without `checks: ['pkce']` (src/server/auth.ts), and NextAuth
         # v4 only does `state` by default, so it never sends a code_challenge.
