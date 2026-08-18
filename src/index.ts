@@ -282,14 +282,29 @@ function setup() {
         pvc: mediaPv.pvc,
     }, { provider: mediaProvider });
 
-    // Photo service using Immich
+    // Photo service using Immich.
+    // The library was jfs-backed (S3), but the shared 30GiB jfs block cache is
+    // far smaller than the ~490GiB library, so cold reads went straight to S3
+    // (same story as hath-pv below). Moved to a NAS-backed NodePV on the
+    // homelab, following media-pv/sync-nas-pv/hath-pv. storageClass is still
+    // passed so the old jfs PVC stays in the program (idle) as a cheap
+    // rollback during the observation window; drop it to retire the PVC.
+    const immichProvider = namespaced('immich');
+    const immichPv = new NodePV('immich-pv', {
+        path: "/mnt/nas/Immich",
+        node: cluster.nodes.AetfArchHomelab,
+        capacity: "5Ti",
+        accessModes: ["ReadWriteOnce"],
+    }, { provider: immichProvider });
     const immich = new Immich("immich", {
         serving,
         host: 'photos.unlimited-code.works',
         storageClass: cluster.jfsStorageClass.metadata.name,
+        libraryPvc: immichPv.pvc,
+        juicefsColocation: false, // pinned to homelab by the PV instead
         dbStorageClass: cluster.localStableStorageClass.metadata.name,
         cacheStorageClass: cluster.localStorageClass.metadata.name,
-    }, { provider: namespaced('immich') });
+    }, { provider: immichProvider });
 
     // Hath@Home. Its public identity is the vps IP its LoadBalancer sits on,
     // so it egresses through the vps too -- which is what lets the pod be

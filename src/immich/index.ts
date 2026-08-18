@@ -13,7 +13,18 @@ import { juicefsColocationAffinity } from "#src/juicefs";
 interface ImmichArgs {
     serving: Serving,
     host: pulumi.Input<string>,
-    storageClass: pulumi.Input<string>,
+    // Library storage. Provide at least one of:
+    //  - storageClass: dynamically provision the (jfs) PVC
+    //  - libraryPvc: reuse an existing PVC (e.g. a static NodePV on a host path)
+    // When both are given, libraryPvc is what gets mounted; the storageClass
+    // PVC resource is still kept in the program (idle) so its state and data
+    // survive for a cheap rollback during a migration observation window.
+    storageClass?: pulumi.Input<string>,
+    libraryPvc?: kx.PersistentVolumeClaim,
+    // Co-locate with the juicefs-redis master for metadata perf. Only
+    // relevant for a jfs-backed library; a NodePV-backed pod is already
+    // node-pinned by the PV's nodeAffinity.
+    juicefsColocation?: boolean,
     dbStorageClass: pulumi.Input<string>,
     cacheStorageClass: pulumi.Input<string>,
 }
@@ -31,14 +42,19 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
 
         this.namespace = new NamespaceProbe(`${name}-probe`, { parent: this }).namespace;
 
-        this.libraryPVC = args.serving.base.createLocalStoragePVC(`${name}`, {
-            storageClassName: args.storageClass,
-            resources: {
-                requests: {
-                    storage: "50Ti"
+        if (args.storageClass === undefined && args.libraryPvc === undefined) {
+            throw new Error("Immich requires at least one of storageClass or libraryPvc");
+        }
+        const legacyPvc = args.storageClass === undefined ? undefined
+            : args.serving.base.createLocalStoragePVC(`${name}`, {
+                storageClassName: args.storageClass,
+                resources: {
+                    requests: {
+                        storage: "50Ti"
+                    }
                 }
-            }
-        }, { parent: this, retainOnDelete: true });
+            }, { parent: this, retainOnDelete: true });
+        this.libraryPVC = args.libraryPvc ?? legacyPvc!;
 
         this.dbname = 'app';
         this.database = this.setupDatabase(name, this.dbname, args.serving, args.dbStorageClass);
@@ -115,7 +131,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     controllers: {
                         main: {
                             pod: {
-                                affinity: juicefsColocationAffinity(),
+                                affinity: args.juicefsColocation ? juicefsColocationAffinity() : undefined,
                             },
                             containers: {
                                 main: {
@@ -163,13 +179,17 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                         },
                     },
                     persistence: {
-                        data: {
-                            globalMounts: [
-                                {
-                                    mountPropagation: "HostToContainer",
-                                }
-                            ]
-                        },
+                        // The jfs FUSE mount needs propagation so a mount-pod
+                        // restart reaches the container; pointless for a NodePV.
+                        ...(args.libraryPvc ? {} : {
+                            data: {
+                                globalMounts: [
+                                    {
+                                        mountPropagation: "HostToContainer",
+                                    }
+                                ]
+                            },
+                        }),
                         secrets: {
                             enabled: true,
                             type: 'secret',
@@ -186,22 +206,14 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     controllers: {
                         main: {
                             pod: {
-                                affinity: juicefsColocationAffinity(),
+                                affinity: args.juicefsColocation ? juicefsColocationAffinity() : undefined,
                             },
                             containers: {
                                 main: {
-                                    // To make all running on vps for minimum juicefs access latency and stability
-                                    resources: {
-                                        requests: { cpu: "10m", memory: "384Mi" },
-                                        limits: { cpu: "1", memory: "384Mi"  },
-                                    },
-                                    /*
-                                    // Large requirements for running on homelab
                                     resources: {
                                         requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
                                         limits: { cpu: "2", memory: "2Gi", 'gpu.intel.com/i915': '1' },
                                     },
-                                    */
                                 },
                             },
                         },
