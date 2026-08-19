@@ -52,7 +52,9 @@ job:
     concurrency: 1
 
 ffmpeg:
-  # QSV on the iGPU that machine-learning also claims via gpu.intel.com/i915
+  # QSV on the iGPU. The server only has a /dev/dri to point ffmpeg at because
+  # its pod requests gpu.intel.com/i915; machine-learning and jellyfin hold
+  # shares of the same card.
   accel: qsv
   targetResolution: "2160"
   targetVideoCodec: vp9
