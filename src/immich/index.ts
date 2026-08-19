@@ -136,14 +136,18 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                             containers: {
                                 main: {
                                     resources: {
-                                        requests: { cpu: "2", memory: "4Gi" },
+                                        requests: { cpu: "4", memory: "4Gi" },
                                         // ffmpeg tonemap transcoding and concurrent media jobs are
                                         // memory-hungry: 4Gi was OOMKilled 4 times in a row right
                                         // after the NAS migration, when fast local storage let the
                                         // job backlog run at full concurrency. The homelab node has
                                         // 24C/32Gi, so size for the job queue instead of squeezing
-                                        // it: leaves room to raise job concurrency later.
-                                        limits: { cpu: "8", memory: "12Gi" },
+                                        // it: leaves room to raise job concurrency later. The CPU
+                                        // limit is an anti-runaway backstop, not a budget --
+                                        // requests-based CFS weight already protects the
+                                        // neighbours. Memory stays capped at 12Gi: pushing it
+                                        // higher memory-throttled the whole node (2026-08-19).
+                                        limits: { cpu: "20", memory: "12Gi" },
                                     },
                                     // /api/server/ping answers in 0.09ms when idle and only times out
                                     // while the job queue saturates the event loop, so liveness needs to
