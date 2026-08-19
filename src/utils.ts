@@ -13,6 +13,14 @@ import * as kx from "@pulumi/kubernetesx";
 import * as crds from "#src/crds";
 import { versions } from "#src/config";
 
+// `{{{{raw}}}}...{{{{/raw}}}}` emits its body verbatim, nested `{{ }}` and all.
+// Needed wherever a static file is templated more than once -- e.g. the immich
+// config, which handlebars renders here and the sealed-secrets controller then
+// renders again as a Go template, on top of immich's own `{{y}}` placeholders.
+Handlebars.registerHelper('raw', function (this: unknown, options: Handlebars.HelperOptions) {
+    return options.fn(this);
+});
+
 export function rsplit(str: string, sep: string, maxsplit?: number) {
     const split = str.split(sep);
     maxsplit = maxsplit ?? -1;
@@ -166,7 +174,7 @@ export class HelmChart extends k8s.helm.v3.Chart {
     }
 }
 
-export type ConfigMapArgs = Omit<k8s.types.input.core.v1.ConfigMap, 'data'> & {
+export type StaticFilesArgs = {
     /**
      * reference file to start searching for files. The parent directory of
      * ref_file is used as cwd to search.
@@ -183,47 +191,59 @@ export type ConfigMapArgs = Omit<k8s.types.input.core.v1.ConfigMap, 'data'> & {
     tplVariables?: pulumi.Inputs,
 };
 
+/**
+ * Load static files next to `ref_file` into a `filename -> content` map,
+ * optionally rendering each one as a handlebars template.
+ *
+ * Used by `ConfigMap` below, but also directly by anything else that needs the
+ * same "config lives in a static file next to the component" convention --
+ * e.g. a `SealedSecret`'s `spec.template.data`.
+ */
+export function renderStaticFiles(name: string, args: StaticFilesArgs): pulumi.Output<Record<string, string>> {
+    return pulumi.output(args).apply(async args => {
+        const data = await globFiles(args.data, args);
+        if (args.tplVariables === undefined) {
+            return data;
+        } else {
+            // render data with template
+            try {
+                return _.mapValues(data, (content: string) => {
+                    const template = Handlebars.compile(content);
+                    return template(args.tplVariables || {});
+                });
+            } catch (err) {
+                console.log('Error rendering static files', name, args);
+                throw err;
+            }
+        }
+    });
+}
+
+async function globFiles(glob: string | string[], args: pulumi.UnwrappedObject<StaticFilesArgs>): Promise<Record<string, string>> {
+    let base = args.ref_file;
+    if (args.ref_file.startsWith('/')) {
+        // already a path
+        base = pathFn.dirname(args.ref_file);
+    } else {
+        base = fileURLToPath(new URL('.', args.ref_file));
+    }
+    const paths = await fg(glob, {
+        cwd: base,
+        onlyFiles: true,
+    });
+    const contents = await Promise.all(paths.map(path => fs.readFile(pathFn.join(base, path), 'utf-8')));
+    const stripped = paths.map(p => pathStripComponents(p, args.stripComponents ?? 1));
+    return _.zipToObject(stripped, contents);
+}
+
+export type ConfigMapArgs = Omit<k8s.types.input.core.v1.ConfigMap, 'data'> & StaticFilesArgs;
+
 export class ConfigMap extends kx.ConfigMap {
     constructor(name: string, args: ConfigMapArgs, opts?: pulumi.CustomResourceOptions) {
-        const renderedData = pulumi.output(args).apply(async args => {
-            const data = await this.globFiles(args.data, args);
-            if (args.tplVariables === undefined) {
-                return data;
-            } else {
-                // render data with template
-                try {
-                    return _.mapValues(data, (content: string) => {
-                        const template = Handlebars.compile(content);
-                        return template(args.tplVariables || {});
-                    });
-                } catch (err) {
-                    console.log('Error rendering config map', name, args);
-                    throw err;
-                }
-            }
-        });
-
         super(name, {
             ...args,
-            data: renderedData,
+            data: renderStaticFiles(name, args),
         }, opts);
-    }
-
-    private async globFiles(glob: string | string[], args: pulumi.UnwrappedObject<ConfigMapArgs>): Promise<Record<string, string>> {
-        let base = args.ref_file;
-        if (args.ref_file.startsWith('/')) {
-            // already a path
-            base = pathFn.dirname(args.ref_file);
-        } else {
-            base = fileURLToPath(new URL('.', args.ref_file));
-        }
-        const paths = await fg(glob, {
-            cwd: base,
-            onlyFiles: true,
-        });
-        const contents = await Promise.all(paths.map(path => fs.readFile(pathFn.join(base, path), 'utf-8')));
-        const stripped = paths.map(p => pathStripComponents(p, args.stripComponents ?? 1));
-        return _.zipToObject(stripped, contents);
     }
 }
 

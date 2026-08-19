@@ -1,0 +1,96 @@
+# Immich's system settings, which would otherwise only live in the database and
+# only be editable through the admin UI. Setting IMMICH_CONFIG_FILE makes this
+# file authoritative and the UI read-only, so every settings change is a PR.
+#
+# Only keys that deviate from immich's defaults belong here; anything omitted
+# follows upstream. See https://docs.immich.app/install/config-file/.
+#
+# This file is rendered TWICE before immich ever sees it:
+#   1. handlebars, at deploy time, substituting the variables passed from
+#      src/immich/index.ts
+#   2. the sealed-secrets controller, in-cluster, as a Go/sprig template with
+#      the decrypted encryptedData as its context -- that is how the one
+#      genuinely secret value gets spliced in without sealing the whole file
+#
+# Both passes parse the whole file, comments included, so never write live
+# template syntax in prose. A value that must reach immich with literal
+# handlebars-style braces (the storage template) has to survive both: sit in a
+# raw block, which handlebars emits verbatim, and go through sprig's toJson,
+# which makes the Go pass quote it rather than evaluate it.
+
+server:
+  externalDomain: {{ externalDomain }}
+
+notifications:
+  smtp:
+    enabled: true
+    from: immich@unlimited-code.works
+    transport:
+      # the in-cluster exim relay, which needs no credentials but serves a cert
+      # from the private CA
+      host: {{ smtpHost }}
+      port: {{ smtpPort }}
+      secure: true
+      ignoreCert: true
+
+# Job concurrency, tuned for the homelab node the server is pinned to.
+job:
+  # cheap, and the backlog after the NAS migration was long
+  migration:
+    concurrency: 10
+  thumbnailGeneration:
+    concurrency: 5
+  ocr:
+    concurrency: 2
+  sidecar:
+    concurrency: 2
+  # each one is a full ffmpeg transcode
+  videoConversion:
+    concurrency: 2
+  # the NAS-backed library scan is IO bound, not CPU bound
+  library:
+    concurrency: 1
+
+ffmpeg:
+  # QSV on the iGPU that machine-learning also claims via gpu.intel.com/i915
+  accel: qsv
+  targetResolution: "2160"
+  targetVideoCodec: vp9
+  # leave h264 originals alone, only transcode what neither codec covers
+  acceptedVideoCodecs:
+    - h264
+    - vp9
+
+image:
+  preview:
+    format: webp
+  extractEmbedded: true
+
+machineLearning:
+  clip:
+    modelName: XLM-Roberta-Large-Vit-B-16Plus
+
+backup:
+  database:
+    # immich's own dumps are a convenience copy; the real backups are CNPG's
+    # barman object store, with a quarterly restore drill (docs/cnpg-restore-drill.md)
+    keepLastAmount: 5
+
+{{{{raw}}}}
+storageTemplate:
+  enabled: true
+  template: {{ toJson "{{y}}/{{y}}-{{MM}}/{{filename}}" }}
+{{{{/raw}}}}
+
+oauth:
+  enabled: true
+  issuerUrl: {{ issuerUrl }}
+  buttonText: Login with UnlimitedCodeWorks
+  # accounts are provisioned by hand; authelia's immich policy gates who may
+  # even reach the callback
+  autoRegister: false
+  # not a secret -- the browser sees it in the authorize URL
+  clientId: sJ5K_PnRwwN9KxZAcWvVcvz3C4BqiL_1E4DNiTKpo2YMdO3q2U7IhcXI1QcVlbAiZyHWQxfP
+{{{{raw}}}}
+  clientSecret: {{ toJson .oauth_client_secret }}
+{{{{/raw}}}}
