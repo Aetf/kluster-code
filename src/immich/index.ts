@@ -231,9 +231,23 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                             },
                             containers: {
                                 main: {
+                                    image: {
+                                        // The default image is CPU-only -- its ONNX
+                                        // Runtime is built without the OpenVINO
+                                        // execution provider, so the i915 device below
+                                        // was allocated and then never touched.
+                                        repository: versions.image.immichMl.split(':', 2)[0],
+                                        tag: versions.image.immichMl.split(':', 2)[1],
+                                    },
                                     resources: {
                                         requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
-                                        limits: { cpu: "4", memory: "4Gi", 'gpu.intel.com/i915': '1' },
+                                        // OpenVINO costs more host memory than the CPU
+                                        // path (upstream says so, and on an iGPU the
+                                        // models live in system RAM anyway). The CPU
+                                        // limit still governs whatever stays on the CPU
+                                        // provider -- 4 cores ran pinned at the limit
+                                        // for the whole OCR backlog.
+                                        limits: { cpu: "8", memory: "6Gi", 'gpu.intel.com/i915': '1' },
                                     },
                                 },
                             },
