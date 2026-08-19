@@ -136,13 +136,14 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                             containers: {
                                 main: {
                                     resources: {
-                                        requests: { cpu: "1", memory: "1Gi" },
-                                        // ffmpeg tonemap transcoding pushes past 2Gi and gets OOMKilled.
-                                        // 3Gi was still not enough either: RSS peaked at 2.97Gi and the
-                                        // cgroup recorded oom_group_kill 12. At 1.5 cores the container
-                                        // was throttled on 89-94% of its CFS periods, which starves the
-                                        // node event loop and makes the liveness probe time out.
-                                        limits: { cpu: "2.5", memory: "4Gi" },
+                                        requests: { cpu: "2", memory: "4Gi" },
+                                        // ffmpeg tonemap transcoding and concurrent media jobs are
+                                        // memory-hungry: 4Gi was OOMKilled 4 times in a row right
+                                        // after the NAS migration, when fast local storage let the
+                                        // job backlog run at full concurrency. The homelab node has
+                                        // 24C/32Gi, so size for the job queue instead of squeezing
+                                        // it: leaves room to raise job concurrency later.
+                                        limits: { cpu: "8", memory: "12Gi" },
                                     },
                                     // /api/server/ping answers in 0.09ms when idle and only times out
                                     // while the job queue saturates the event loop, so liveness needs to
@@ -212,7 +213,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                                 main: {
                                     resources: {
                                         requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
-                                        limits: { cpu: "2", memory: "2Gi", 'gpu.intel.com/i915': '1' },
+                                        limits: { cpu: "4", memory: "4Gi", 'gpu.intel.com/i915': '1' },
                                     },
                                 },
                             },
@@ -292,14 +293,17 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             spec: {
                 description: "Database for Immich",
                 instances: 2,
+                // Media job concurrency lands on the DB (exif upserts, search
+                // vectors); sized up together with the server after the NAS
+                // migration. Changing this rolls the cluster instances.
                 resources: {
                     requests: {
-                        memory: "1Gi",
-                        cpu: "500m",
+                        memory: "2Gi",
+                        cpu: "1",
                     },
                     limits: {
-                        memory: "1Gi",
-                        cpu: "800m",
+                        memory: "4Gi",
+                        cpu: "2",
                     },
                 },
                 storage: {
@@ -502,9 +506,11 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             persistentStorageClass: metadataStorageClass,
             password: secret.asSecretKeyRef('redis_pass'),
             size: "8Gi",
+            // The 50m CPU limit throttled redis into readiness-probe timeouts
+            // whenever the immich job queue got busy.
             resources: {
-                requests: { cpu: "50m", memory: "48Mi" },
-                limits: { cpu: "50m", memory: "64Mi" },
+                requests: { cpu: "100m", memory: "128Mi" },
+                limits: { cpu: "1", memory: "256Mi" },
             },
         }, { parent: this });
     }
