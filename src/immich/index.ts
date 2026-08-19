@@ -163,7 +163,15 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                                         // requests-based CFS weight already protects the
                                         // neighbours. Memory stays capped at 12Gi: pushing it
                                         // higher memory-throttled the whole node (2026-08-19).
-                                        limits: { cpu: "20", memory: "12Gi" },
+                                        // ffmpeg only reaches the iGPU through a device
+                                        // plugin allocation: without one the container has
+                                        // no /dev/dri at all, and the `accel: qsv` in
+                                        // immich-config.yaml quietly degraded to software
+                                        // encoding. The plugin hands out 5 shares of the
+                                        // single card, so a rolling update briefly holding
+                                        // two of them still fits alongside
+                                        // machine-learning and jellyfin.
+                                        limits: { cpu: "20", memory: "12Gi", 'gpu.intel.com/i915': '1' },
                                     },
                                     // /api/server/ping answers in 0.09ms when idle and only times out
                                     // while the job queue saturates the event loop, so liveness needs to
