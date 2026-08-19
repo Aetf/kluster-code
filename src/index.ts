@@ -286,9 +286,7 @@ function setup() {
     // The library was jfs-backed (S3), but the shared 30GiB jfs block cache is
     // far smaller than the ~490GiB library, so cold reads went straight to S3
     // (same story as hath-pv below). Moved to a NAS-backed NodePV on the
-    // homelab, following media-pv/sync-nas-pv/hath-pv. storageClass is still
-    // passed so the old jfs PVC stays in the program (idle) as a cheap
-    // rollback during the observation window; drop it to retire the PVC.
+    // homelab, following media-pv/sync-nas-pv/hath-pv.
     const immichProvider = namespaced('immich');
     const immichPv = new NodePV('immich-pv', {
         path: "/mnt/nas/Immich",
@@ -299,7 +297,6 @@ function setup() {
     const immich = new Immich("immich", {
         serving,
         host: 'photos.unlimited-code.works',
-        storageClass: cluster.jfsStorageClass.metadata.name,
         libraryPvc: immichPv.pvc,
         juicefsColocation: false, // pinned to homelab by the PV instead
         dbStorageClass: cluster.localStableStorageClass.metadata.name,
