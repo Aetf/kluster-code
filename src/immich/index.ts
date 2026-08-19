@@ -3,7 +3,7 @@ import * as k8s from "@pulumi/kubernetes";
 import * as crds from "#src/crds";
 import * as kx from "@pulumi/kubernetesx";
 
-import { NamespaceProbe, HelmChart, SealedSecret, ConfigMap } from "#src/utils";
+import { NamespaceProbe, HelmChart, SealedSecret, ConfigMap, Service, renderStaticFiles } from "#src/utils";
 import { BaseCluster } from '#src/base-cluster';
 import { Redis } from '#src/redis';
 import { Serving } from '#src/serving';
@@ -13,6 +13,11 @@ import { juicefsColocationAffinity } from "#src/juicefs";
 interface ImmichArgs {
     serving: Serving,
     host: pulumi.Input<string>,
+    // The in-cluster smtp relay, and the pieces of the authelia URL immich
+    // needs as its OIDC issuer. Both end up in the config file.
+    smtp: pulumi.Input<Service>,
+    authSubdomain: pulumi.Input<string>,
+    domain: pulumi.Input<string>,
     // Library storage. Provide at least one of:
     //  - storageClass: dynamically provision the (jfs) PVC
     //  - libraryPvc: reuse an existing PVC (e.g. a static NodePV on a host path)
@@ -71,6 +76,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             parent: this
         });
         const redis = this.setupRedis(name, args.cacheStorageClass, secret);
+        const configSecret = this.setupConfig(name, args);
 
         // Now the real immich chart
         this.chart = new HelmChart(name, {
@@ -78,6 +84,10 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             chart: "immich",
             values: {
                 immich: {
+                    // Take the settings from the file, not the database. The
+                    // chart mounts it and points IMMICH_CONFIG_FILE at it.
+                    configurationKind: 'Secret',
+                    existingConfiguration: configSecret.metadata.name,
                     metrics: {
                         enabled: false,
                     },
@@ -130,6 +140,12 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                 server: {
                     controllers: {
                         main: {
+                            // Editing the config edits the secret in place, so
+                            // nothing in the pod spec moves; reloader is what
+                            // rolls the deployment onto the new settings.
+                            annotations: {
+                                "reloader.stakater.com/auto": "true",
+                            },
                             pod: {
                                 affinity: args.juicefsColocation ? juicefsColocationAffinity() : undefined,
                             },
@@ -498,6 +514,42 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                         },
                     }],
                 }],
+            },
+        }, { parent: this });
+    }
+
+    // Immich's own settings would otherwise live only in the database and be
+    // editable only through the admin UI. Pointing IMMICH_CONFIG_FILE at a file
+    // makes them reviewable code instead -- at the cost of the UI going
+    // read-only, which is the whole point.
+    //
+    // The one secret in there is the OIDC client secret, and immich refuses to
+    // source individual values from anywhere else (immich-app/immich#14815 was
+    // rejected outright). Sealing the entire file would make it unreadable and
+    // unreviewable in git, so instead the plaintext file rides along as the
+    // sealed secret's `template.data`: the controller renders it as a Go/sprig
+    // template with the decrypted `encryptedData` as context and splices in
+    // just that one value. See static/immich-config.yaml.
+    private setupConfig(name: string, args: ImmichArgs): SealedSecret {
+        return new SealedSecret(`${name}-config`, {
+            spec: {
+                encryptedData: {
+                    oauth_client_secret: "AgBqhxjglfahkZHWTlJQIuJMYdjegiCQIg4p0XQ7yjayHaH+tDpOVoE6Jc5dzJR0GBSocVN42dLzYtF+Claj8xlhUTW/O50w+I51QGhhgAbCRB+4fJuYIF2UO9sONnlCF7Yv/Q4Sj4EMZ6qOzHoaEBADuCUcn/zk0kGgxoHlvvTsPyMRZ7fXgdfTu3X0PJ2tNdKFop8txL7kNfIQedRK/bzQ/xdIWYG3y7Mf8VzyaZpQ7k9qkNCh637DEnK5nInidWnjIlMKkfi/XPT2NC8MOazQP89sSyGmpuMUB9bAB3WA+JEIKDaoSO7G8/RhUmw82GXDElpACdwdaIeekO/qL55+raYqF7tiFKVQIOExJ1n5XDc4+HGurpYSJpjc0HXdjP32JclE+lVXXJ43btvLa8voTJXSS0GPz0+hczUO2piIiynQ9MokD3koU/K5LCod8mVRP6CD9bVxYJsIRmkEV9hxTdOLHR1Xt+d9eiCrzCHnDJnjUitKulInSwqexyvBzEKGvJCxZPe37KFCfcrJDWmTOY/bXn4S6+T+5rHETp6wviAnn63QKOM7iUgq6up/6QY1RyjolNLt2W6uqidRPXY8MSJJnUr4T+kkn0HSN7LQKqqHIh54PZ5ErUxDwQa7C3Scxop8ft3+iQLOcmoXPu/o0ZYq4cp7hlAzla5RNlbzA9sAPOCCRnZhVogbN/BOF/jhht5pRlxD+OiRskhd4ILxRsV0A6V+0jqp5yqTsco2zxqeAwOSHaqMmt8FmZcu2357lkZQ0FPetmnDbi6LSK2pOj6819tlh60=",
+                },
+                template: {
+                    data: renderStaticFiles(`${name}-config`, {
+                        ref_file: __filename,
+                        data: 'static/immich-config.yaml',
+                        tplVariables: {
+                            externalDomain: pulumi.interpolate`https://${args.host}`,
+                            issuerUrl: pulumi.interpolate`https://${args.authSubdomain}.${args.domain}`,
+                            // immich wants the host and the port as separate
+                            // keys, so this is Service.asUrl taken apart.
+                            smtpHost: pulumi.output(args.smtp).apply(s => s.internalEndpoint()),
+                            smtpPort: pulumi.output(args.smtp).apply(s => s.port('smtp')),
+                        },
+                    }),
+                },
             },
         }, { parent: this });
     }

@@ -297,6 +297,9 @@ function setup() {
     const immich = new Immich("immich", {
         serving,
         host: 'photos.unlimited-code.works',
+        smtp: mailer.smtpService,
+        authSubdomain: 'auth',
+        domain: 'unlimited-code.works',
         libraryPvc: immichPv.pvc,
         juicefsColocation: false, // pinned to homelab by the PV instead
         dbStorageClass: cluster.localStableStorageClass.metadata.name,
