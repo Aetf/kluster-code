@@ -33,8 +33,10 @@ config:
   # Same release as image:immich, in the OpenVINO flavour -- keep the two
   # versions in lockstep, the chart deploys them as one immich.
   image:immichMl: ghcr.io/immich-app/immich-machine-learning:v3.1.0-openvino
-  # Wraps intel_gpu_top; the image bundles it, so this tag pins both.
-  image:intelGpuExporter: ghcr.io/clambin/intel-gpu-exporter:v0.7.2
+  # Wraps intel_gpu_top; the image bundles it, so this tag pins both. Note the
+  # published image tags lag the repo's git tags and drop the `v` -- v0.7.2 is a
+  # release with no image behind it.
+  image:intelGpuExporter: ghcr.io/clambin/intel-gpu-exporter:0.6.1
   image:jellyfin: ghcr.io/jellyfin/jellyfin:10.11.4
   image:kubectl: docker.io/alpine/k8s:1.36.2
   image:localpath: rancher/local-path-provisioner:v0.0.22
