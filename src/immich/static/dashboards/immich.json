@@ -138,7 +138,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase({__name__=~\"immich_jobs_.+_success_total\"}[$__range]))",
+          "expr": "sum(increase(label_replace({__name__=~\"immich_jobs_(.+)_success_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_success_total\")[$__range:]))",
           "range": false,
           "instant": true,
           "refId": "A"
@@ -200,7 +200,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase({__name__=~\"immich_jobs_.+_skipped_total\"}[$__range]))",
+          "expr": "sum(increase(label_replace({__name__=~\"immich_jobs_(.+)_skipped_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_skipped_total\")[$__range:]))",
           "range": false,
           "instant": true,
           "refId": "B"
@@ -266,7 +266,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase({__name__=~\"immich_jobs_.+_failed_total\"}[$__range]))",
+          "expr": "sum(increase(label_replace({__name__=~\"immich_jobs_(.+)_failed_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_failed_total\")[$__range:]))",
           "range": false,
           "instant": true,
           "refId": "C"
@@ -390,7 +390,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase({__name__=~\"immich_queues_.+_started_total\"}[$__range]))",
+          "expr": "sum(increase(label_replace({__name__=~\"immich_queues_(.+)_started_total\"}, \"queue\", \"$1\", \"__name__\", \"immich_queues_(.+)_started_total\")[$__range:]))",
           "range": false,
           "instant": true,
           "refId": "E"
@@ -460,7 +460,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase({__name__=~\"immich_jobs_.+_failed_total\"}[$__range])) / clamp_min(sum(increase({__name__=~\"immich_jobs_.+_(success|failed)_total\"}[$__range])), 1)",
+          "expr": "sum(increase(label_replace({__name__=~\"immich_jobs_(.+)_failed_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_failed_total\")[$__range:])) / clamp_min(sum(increase(label_replace({__name__=~\"immich_jobs_(.+_(?:success|failed))_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+_(?:success|failed))_total\")[$__range:])), 1)",
           "range": false,
           "instant": true,
           "refId": "F"
@@ -525,7 +525,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "label_replace(sum by (__name__) (rate({__name__=~\"immich_jobs_.+_success_total\"}[$__rate_interval])), \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_success_total\")",
+          "expr": "sum by (immich_job) (rate(label_replace({__name__=~\"immich_jobs_(.+)_success_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_success_total\")[$__rate_interval:]))",
           "range": true,
           "instant": false,
           "refId": "G",
@@ -587,7 +587,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "label_replace({__name__=~\"immich_queues_.+_active\"}, \"queue\", \"$1\", \"__name__\", \"immich_queues_(.+)_active\")",
+          "expr": "label_replace({__name__=~\"immich_queues_(.+)_active\"}, \"queue\", \"$1\", \"__name__\", \"immich_queues_(.+)_active\")",
           "range": true,
           "instant": false,
           "refId": "H",
@@ -648,7 +648,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "label_replace(sum by (__name__) (increase({__name__=~\"immich_jobs_.+_success_total\"}[$__range])), \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_success_total\")",
+          "expr": "sum by (immich_job) (increase(label_replace({__name__=~\"immich_jobs_(.+)_success_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_success_total\")[$__range:]))",
           "range": false,
           "instant": true,
           "refId": "I",
@@ -709,7 +709,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "label_replace(sum by (__name__) (rate({__name__=~\"immich_jobs_.+_failed_total\"}[$__rate_interval])), \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_failed_total\")",
+          "expr": "sum by (immich_job) (rate(label_replace({__name__=~\"immich_jobs_(.+)_failed_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_failed_total\")[$__rate_interval:]))",
           "range": true,
           "instant": false,
           "refId": "J",
@@ -721,7 +721,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "label_replace(sum by (__name__) (rate({__name__=~\"immich_jobs_.+_skipped_total\"}[$__rate_interval])), \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_skipped_total\")",
+          "expr": "sum by (immich_job) (rate(label_replace({__name__=~\"immich_jobs_(.+)_skipped_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_skipped_total\")[$__rate_interval:]))",
           "range": true,
           "instant": false,
           "refId": "K",
