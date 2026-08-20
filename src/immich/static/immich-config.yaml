@@ -66,12 +66,31 @@ ffmpeg:
   # the expensive half; the encoder still runs on the GPU. Worth retrying once
   # the discrete card lands (Aetf/kluster-code#196).
   accelDecode: false
-  targetResolution: "2160"
-  targetVideoCodec: vp9
-  # leave h264 originals alone, only transcode what neither codec covers
+  # A 1080p h264 streaming copy, not a second master. Measured on one 11.4s
+  # 4K60 HEVC original (54MB), same encoder settings, SSIM against the source
+  # over the first two seconds:
+  #
+  #   vp9  2160p  130MB  0.9896   <- what this used to produce
+  #   h264 2160p   35MB  0.9871
+  #   h264 1080p   12MB
+  #
+  # The iGPU's low-power VP9 encoder spends an order of magnitude more bitrate
+  # for a quarter of a percent of SSIM, which is how encoded-video grew to
+  # 189GB against a 262GB library. h264 also plays everywhere, which vp9 in an
+  # mp4 container does not. maxBitrate is not an alternative: on this QSV path
+  # -maxrate is ignored outright (byte-identical output with and without it).
+  #
+  # 1080p is a real tradeoff, not a default: the playback endpoint is
+  # `asset.encodedVideoPath || asset.originalPath`, so once a transcode exists
+  # it is the only thing clients can stream -- immich has no "play the
+  # original" option (immich-app/immich#22727). 4K stays available by
+  # downloading the original.
+  targetResolution: "1080"
+  targetVideoCodec: h264
+  # Only h264 originals are left alone; nothing in the library is vp9, so
+  # keeping it here would only be decoration.
   acceptedVideoCodecs:
     - h264
-    - vp9
 
 image:
   preview:
