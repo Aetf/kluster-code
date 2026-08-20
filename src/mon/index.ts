@@ -157,6 +157,18 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         limits: { cpu: "200m", memory: "4Gi" },
                     },
                     prometheusSpec: {
+                        // The chart default is 10d, too short to see a job
+                        // backlog or a storage trend in hindsight. Note the
+                        // volumeClaimTemplate below is deliberately left at
+                        // 4Gi: local-path has no allowVolumeExpansion and a
+                        // StatefulSet's volumeClaimTemplate is immutable, so
+                        // growing it only wedges the operator on a resize it
+                        // cannot finish -- and the hostPath enforces no quota
+                        // anyway (the 4Gi claim already holds 4.6G). The real
+                        // guard rail is retentionSize, sized to leave the
+                        // homelab's nvme room to spare.
+                        retention: "90d",
+                        retentionSize: "30GB",
                         storageSpec: {
                             volumeClaimTemplate: {
                                 spec: {
