@@ -56,6 +56,16 @@ ffmpeg:
   # its pod requests gpu.intel.com/i915; machine-learning and jellyfin hold
   # shares of the same card.
   accel: qsv
+  # ...but software decode. The iGPU's HEVC decoder hangs the video engine on
+  # 4K60 HEVC from Android phones (yuvj420p, ~40Mbit): the kernel logs
+  # `GPU HANG: ecode 12:4, in dec0:0:hevc_qsv` and `Resetting vcs1 for
+  # preemption time out`, ffmpeg never recovers from the reset and spins on one
+  # core forever. Two such files wedged both videoConversion workers for 2.5
+  # hours on 2026-08-19 and stalled the whole queue. Software decode of the
+  # same file finishes in 19s wall for 11.4s of 4K60, so the decoder was never
+  # the expensive half; the encoder still runs on the GPU. Worth retrying once
+  # the discrete card lands (Aetf/kluster-code#196).
+  accelDecode: false
   targetResolution: "2160"
   targetVideoCodec: vp9
   # leave h264 originals alone, only transcode what neither codec covers
