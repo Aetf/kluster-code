@@ -10,6 +10,10 @@ export interface RedisArgs {
     password: pulumi.Input<Omit<k8s.types.input.core.v1.SecretKeySelector, 'optional'>>,
     size?: pulumi.Input<string | undefined>,
     resources?: k8s.types.input.core.v1.ResourceRequirements,
+    // Run the bitnami redis_exporter sidecar and let kube-prometheus-stack
+    // scrape it. Off by default: most users of this component are small
+    // session stores nobody needs a dashboard for.
+    metrics?: boolean,
 }
 
 export class Redis extends HelmChart {
@@ -30,6 +34,19 @@ export class Redis extends HelmChart {
                     usePasswordFiles: true,
                     existingSecret: authPassword.name,
                     existingSecretPasswordKey: authPassword.key,
+                },
+                metrics: {
+                    enabled: args.metrics ?? false,
+                    serviceMonitor: {
+                        enabled: args.metrics ?? false,
+                        // kube-prometheus-stack's serviceMonitorSelector only
+                        // matches its own release label.
+                        additionalLabels: { release: "prometheus" },
+                    },
+                    resources: {
+                        requests: { memory: "32Mi", cpu: "10m" },
+                        limits: { memory: "64Mi", cpu: "50m" },
+                    },
                 },
                 master: {
                     persistence: {

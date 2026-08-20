@@ -88,8 +88,16 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     // chart mounts it and points IMMICH_CONFIG_FILE at it.
                     configurationKind: 'Secret',
                     existingConfiguration: configSecret.metadata.name,
+                    // Turns on IMMICH_TELEMETRY_INCLUDE=all plus the two
+                    // metrics ports the chart wires up: 8081 is the api
+                    // worker (http, host, io, repo groups) and 8082 the
+                    // microservices worker, which is where the per-job
+                    // counters (immich_jobs_<job>_{success,skipped,failed})
+                    // and the immich_queues_<queue>_active gauges live. The
+                    // admin UI only ever shows the instantaneous value of the
+                    // latter; prometheus is what gives them history.
                     metrics: {
-                        enabled: false,
+                        enabled: true,
                     },
                     persistence: {
                         library: {
@@ -138,6 +146,15 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                     },
                 },
                 server: {
+                    // The chart already creates the ServiceMonitor for the two
+                    // metrics ports above, but kube-prometheus-stack scopes its
+                    // serviceMonitorSelector to its own release label, so one
+                    // without this is simply ignored, silently.
+                    serviceMonitor: {
+                        main: {
+                            labels: { release: "prometheus" },
+                        },
+                    },
                     controllers: {
                         main: {
                             // Editing the config edits the secret in place, so
@@ -411,7 +428,47 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         }, { parent: this });
 
         this.setupRestoreDrill(name, db, catalog, gcsSecret, storageClass);
+        this.setupDatabaseMonitor(name, db);
         return db;
+    }
+
+    /**
+     * Scrape the cnpg_* metrics the instance pods already expose on their
+     * `metrics` port (9187).
+     *
+     * `monitoring.enablePodMonitor` on the Cluster above would make cnpg emit
+     * one of these itself, but without kube-prometheus-stack's release label,
+     * which its podMonitorSelector matches on -- so it would be created and
+     * then silently ignored. Ours carries the label.
+     */
+    private setupDatabaseMonitor(name: string, db: crds.postgresql.v1.Cluster) {
+        return new crds.monitoring.v1.PodMonitor(`${name}-db`, {
+            metadata: {
+                namespace: this.namespace,
+                labels: { release: "prometheus" },
+            },
+            spec: {
+                selector: {
+                    matchLabels: {
+                        // cnpg puts this on every instance pod of the cluster;
+                        // the cluster name itself is pulumi auto-named.
+                        'cnpg.io/cluster': db.metadata.name.apply(n => n!),
+                    },
+                },
+                podMetricsEndpoints: [{
+                    port: 'metrics',
+                    relabelings: [
+                        // primary vs replica is the label that makes a
+                        // replication-lag or connection panel readable.
+                        {
+                            action: 'replace',
+                            sourceLabels: ['__meta_kubernetes_pod_label_cnpg_io_instanceRole'],
+                            targetLabel: 'role',
+                        },
+                    ],
+                }],
+            },
+        }, { parent: this });
     }
 
     // A monthly "restore drill": recover the database from the barman object
@@ -584,6 +641,8 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             persistentStorageClass: metadataStorageClass,
             password: secret.asSecretKeyRef('redis_pass'),
             size: "8Gi",
+            // This one is worth watching: it is the job queue.
+            metrics: true,
             // The 50m CPU limit throttled redis into readiness-probe timeouts
             // whenever the immich job queue got busy.
             resources: {
