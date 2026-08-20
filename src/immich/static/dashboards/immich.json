@@ -1171,8 +1171,8 @@
     {
       "type": "timeseries",
       "id": 20,
-      "title": "Frequency and power",
-      "description": "",
+      "title": "Power and clients",
+      "description": "The exporter image (0.6.1) exposes power and a client count but no frequency -- gpumon_frequency only exists in newer upstream code that has no image published yet. `pkg` is the whole CPU package, `gpu` the card's own rail.",
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
@@ -1222,11 +1222,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "gpumon_frequency",
+          "expr": "gpumon_power",
           "range": true,
           "instant": false,
           "refId": "A",
-          "legendFormat": "freq {{type}} (MHz)"
+          "legendFormat": "power {{type}} (W)"
         },
         {
           "datasource": {
@@ -1234,11 +1234,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "gpumon_power",
+          "expr": "sum(gpumon_clients_count)",
           "range": true,
           "instant": false,
           "refId": "B",
-          "legendFormat": "power {{type}} (W)"
+          "legendFormat": "clients"
         }
       ]
     },
