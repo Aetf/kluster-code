@@ -37,6 +37,17 @@ export class Redis extends HelmChart {
                 },
                 metrics: {
                     enabled: args.metrics ?? false,
+                    // bitnami delisted their old images from docker.io/bitnami
+                    // (the chart's default tag 404s there); the archived copies
+                    // live under bitnamilegacy. The main redis image the chart
+                    // pulls is in the same state and only still runs because
+                    // the node has it cached -- see the note in
+                    // Pulumi.dev.yaml.
+                    image: {
+                        registry: 'docker.io',
+                        repository: 'bitnamilegacy/redis-exporter',
+                        tag: '1.66.0-debian-12-r2',
+                    },
                     serviceMonitor: {
                         enabled: args.metrics ?? false,
                         // kube-prometheus-stack's serviceMonitorSelector only
