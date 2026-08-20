@@ -203,7 +203,7 @@
           "expr": "sum(increase(label_replace({__name__=~\"immich_jobs_(.+)_skipped_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_skipped_total\")[$__range:]))",
           "range": false,
           "instant": true,
-          "refId": "B"
+          "refId": "A"
         }
       ]
     },
@@ -269,7 +269,7 @@
           "expr": "sum(increase(label_replace({__name__=~\"immich_jobs_(.+)_failed_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_failed_total\")[$__range:]))",
           "range": false,
           "instant": true,
-          "refId": "C"
+          "refId": "A"
         }
       ]
     },
@@ -331,7 +331,7 @@
           "expr": "sum({__name__=~\"immich_queues_.+_active\"})",
           "range": false,
           "instant": true,
-          "refId": "D"
+          "refId": "A"
         }
       ]
     },
@@ -393,7 +393,7 @@
           "expr": "sum(increase(label_replace({__name__=~\"immich_queues_(.+)_started_total\"}, \"queue\", \"$1\", \"__name__\", \"immich_queues_(.+)_started_total\")[$__range:]))",
           "range": false,
           "instant": true,
-          "refId": "E"
+          "refId": "A"
         }
       ]
     },
@@ -463,7 +463,7 @@
           "expr": "sum(increase(label_replace({__name__=~\"immich_jobs_(.+)_failed_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_failed_total\")[$__range:])) / clamp_min(sum(increase(label_replace({__name__=~\"immich_jobs_(.+_(?:success|failed))_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+_(?:success|failed))_total\")[$__range:])), 1)",
           "range": false,
           "instant": true,
-          "refId": "F"
+          "refId": "A"
         }
       ]
     },
@@ -528,7 +528,7 @@
           "expr": "sum by (immich_job) (rate(label_replace({__name__=~\"immich_jobs_(.+)_success_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_success_total\")[$__rate_interval:]))",
           "range": true,
           "instant": false,
-          "refId": "G",
+          "refId": "A",
           "legendFormat": "{{immich_job}}"
         }
       ]
@@ -590,7 +590,7 @@
           "expr": "label_replace({__name__=~\"immich_queues_(.+)_active\"}, \"queue\", \"$1\", \"__name__\", \"immich_queues_(.+)_active\")",
           "range": true,
           "instant": false,
-          "refId": "H",
+          "refId": "A",
           "legendFormat": "{{queue}}"
         }
       ]
@@ -651,7 +651,7 @@
           "expr": "sum by (immich_job) (increase(label_replace({__name__=~\"immich_jobs_(.+)_success_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_success_total\")[$__range:]))",
           "range": false,
           "instant": true,
-          "refId": "I",
+          "refId": "A",
           "legendFormat": "{{immich_job}}"
         }
       ]
@@ -712,7 +712,7 @@
           "expr": "sum by (immich_job) (rate(label_replace({__name__=~\"immich_jobs_(.+)_failed_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_failed_total\")[$__rate_interval:]))",
           "range": true,
           "instant": false,
-          "refId": "J",
+          "refId": "A",
           "legendFormat": "failed: {{immich_job}}"
         },
         {
@@ -724,7 +724,7 @@
           "expr": "sum by (immich_job) (rate(label_replace({__name__=~\"immich_jobs_(.+)_skipped_total\"}, \"immich_job\", \"$1\", \"__name__\", \"immich_jobs_(.+)_skipped_total\")[$__rate_interval:]))",
           "range": true,
           "instant": false,
-          "refId": "K",
+          "refId": "B",
           "legendFormat": "skipped: {{immich_job}}"
         }
       ]
@@ -800,7 +800,7 @@
           "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"immich\", container!=\"\", pod=~\"$pod\"}[$__rate_interval]))",
           "range": true,
           "instant": false,
-          "refId": "L",
+          "refId": "A",
           "legendFormat": "{{pod}}"
         },
         {
@@ -812,7 +812,7 @@
           "expr": "sum by (pod) (kube_pod_container_resource_limits{namespace=\"immich\", resource=\"cpu\", pod=~\"$pod\"})",
           "range": true,
           "instant": false,
-          "refId": "M",
+          "refId": "B",
           "legendFormat": "limit: {{pod}}"
         }
       ]
@@ -874,7 +874,7 @@
           "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"immich\", container!=\"\", pod=~\"$pod\"})",
           "range": true,
           "instant": false,
-          "refId": "N",
+          "refId": "A",
           "legendFormat": "{{pod}}"
         },
         {
@@ -886,7 +886,7 @@
           "expr": "sum by (pod) (kube_pod_container_resource_limits{namespace=\"immich\", resource=\"memory\", pod=~\"$pod\"})",
           "range": true,
           "instant": false,
-          "refId": "O",
+          "refId": "B",
           "legendFormat": "limit: {{pod}}"
         }
       ]
@@ -945,7 +945,7 @@
           "expr": "sum by (pod) (rate(container_network_receive_bytes_total{namespace=\"immich\", pod=~\"$pod\"}[$__rate_interval]))",
           "range": true,
           "instant": false,
-          "refId": "P",
+          "refId": "A",
           "legendFormat": "rx: {{pod}}"
         },
         {
@@ -957,7 +957,7 @@
           "expr": "sum by (pod) (rate(container_network_transmit_bytes_total{namespace=\"immich\", pod=~\"$pod\"}[$__rate_interval]))",
           "range": true,
           "instant": false,
-          "refId": "Q",
+          "refId": "B",
           "legendFormat": "tx: {{pod}}"
         }
       ]
@@ -1016,7 +1016,7 @@
           "expr": "sum by (pod) (rate(container_fs_reads_bytes_total{namespace=\"immich\", pod=~\"$pod\"}[$__rate_interval]))",
           "range": true,
           "instant": false,
-          "refId": "R",
+          "refId": "A",
           "legendFormat": "read: {{pod}}"
         },
         {
@@ -1028,7 +1028,7 @@
           "expr": "sum by (pod) (rate(container_fs_writes_bytes_total{namespace=\"immich\", pod=~\"$pod\"}[$__rate_interval]))",
           "range": true,
           "instant": false,
-          "refId": "S",
+          "refId": "B",
           "legendFormat": "write: {{pod}}"
         }
       ]
@@ -1087,7 +1087,7 @@
           "expr": "sum by (pod) (increase(kube_pod_container_status_restarts_total{namespace=\"immich\", pod=~\"$pod\"}[$__rate_interval]))",
           "range": true,
           "instant": false,
-          "refId": "T",
+          "refId": "A",
           "legendFormat": "{{pod}}"
         }
       ]
@@ -1163,7 +1163,7 @@
           "expr": "gpumon_engine_usage{attrib=\"busy\"}",
           "range": true,
           "instant": false,
-          "refId": "U",
+          "refId": "A",
           "legendFormat": "{{engine}}"
         }
       ]
@@ -1225,7 +1225,7 @@
           "expr": "gpumon_frequency",
           "range": true,
           "instant": false,
-          "refId": "V",
+          "refId": "A",
           "legendFormat": "freq {{type}} (MHz)"
         },
         {
@@ -1237,7 +1237,7 @@
           "expr": "gpumon_power",
           "range": true,
           "instant": false,
-          "refId": "W",
+          "refId": "B",
           "legendFormat": "power {{type}} (W)"
         }
       ]
@@ -1313,7 +1313,7 @@
           "expr": "sum by (pod) (cnpg_backends_total{namespace=\"immich\"})",
           "range": true,
           "instant": false,
-          "refId": "X",
+          "refId": "A",
           "legendFormat": "{{pod}}"
         }
       ]
@@ -1374,7 +1374,7 @@
           "expr": "sum by (pod) (rate(cnpg_pg_stat_database_xact_commit{namespace=\"immich\"}[$__rate_interval]))",
           "range": true,
           "instant": false,
-          "refId": "Y",
+          "refId": "A",
           "legendFormat": "commit: {{pod}}"
         },
         {
@@ -1386,7 +1386,7 @@
           "expr": "sum by (pod) (rate(cnpg_pg_stat_database_xact_rollback{namespace=\"immich\"}[$__rate_interval]))",
           "range": true,
           "instant": false,
-          "refId": "Z",
+          "refId": "B",
           "legendFormat": "rollback: {{pod}}"
         }
       ]
@@ -1447,7 +1447,7 @@
           "expr": "cnpg_pg_replication_lag{namespace=\"immich\"}",
           "range": true,
           "instant": false,
-          "refId": "[",
+          "refId": "A",
           "legendFormat": "{{pod}}"
         }
       ]
@@ -1509,7 +1509,7 @@
           "expr": "redis_memory_used_bytes{namespace=\"immich\"}",
           "range": true,
           "instant": false,
-          "refId": "\\",
+          "refId": "A",
           "legendFormat": "used"
         },
         {
@@ -1521,7 +1521,7 @@
           "expr": "redis_memory_max_bytes{namespace=\"immich\"}",
           "range": true,
           "instant": false,
-          "refId": "]",
+          "refId": "B",
           "legendFormat": "max"
         }
       ]
@@ -1582,7 +1582,7 @@
           "expr": "rate(redis_commands_processed_total{namespace=\"immich\"}[$__rate_interval])",
           "range": true,
           "instant": false,
-          "refId": "^",
+          "refId": "A",
           "legendFormat": "commands"
         }
       ]
@@ -1644,7 +1644,7 @@
           "expr": "sum by (db) (redis_db_keys{namespace=\"immich\"})",
           "range": true,
           "instant": false,
-          "refId": "_",
+          "refId": "A",
           "legendFormat": "{{db}}"
         }
       ]
