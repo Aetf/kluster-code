@@ -106,3 +106,16 @@ oauth:
 {{{{raw}}}}
   clientSecret: {{ toJson .oauth_client_secret }}
 {{{{/raw}}}}
+
+# Every account is linked to an authelia identity, so the local password is
+# dead weight, and a second, weaker way in. This leaves the OIDC button as the
+# only door.
+#
+# Recovery, if authelia is down or a login breaks: `immich-admin
+# enable-password-login` does NOT work here. It writes the database copy of the
+# system config, which buildConfig ignores entirely whenever IMMICH_CONFIG_FILE
+# is set. Flip this back to true and redeploy -- or, faster, edit the rendered
+# secret in the cluster and restart the server -- then `immich-admin
+# reset-admin-password`.
+passwordLogin:
+  enabled: false
