@@ -294,6 +294,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         }, { parent: this });
 
         this.setupFrontendService(name, args.serving, args.host);
+        this.setupDashboard(name);
     }
 
     private setupDatabase(name: string, dbname: string, serving: Serving, storageClass: pulumi.Input<string>): crds.postgresql.v1.Cluster {
@@ -649,6 +650,30 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                 requests: { cpu: "100m", memory: "128Mi" },
                 limits: { cpu: "1", memory: "256Mi" },
             },
+        }, { parent: this });
+    }
+
+    /**
+     * Grafana dashboard for everything the monitors above collect, picked up by
+     * the kube-prometheus-stack grafana sidecar (it watches every namespace for
+     * config maps carrying the `grafana_dashboard` label).
+     *
+     * Note the dashboard json is NOT handlebars-rendered -- `renderStaticFiles`
+     * only templates when given `tplVariables` -- which is what keeps grafana's
+     * own `{{label}}` legend syntax intact.
+     */
+    private setupDashboard(name: string) {
+        return new ConfigMap(`${name}-dashboard`, {
+            metadata: {
+                namespace: this.namespace,
+                labels: {
+                    // what the grafana sidecar selects on (LABEL/LABEL_VALUE)
+                    grafana_dashboard: "1",
+                },
+            },
+            ref_file: __filename,
+            data: 'static/dashboards/*.json',
+            stripComponents: 2,
         }, { parent: this });
     }
 
