@@ -1,0 +1,49 @@
+# Build (PRs) and publish (pushes to main) the self-maintained images in
+# docker/. Only emailproxy is wired up: version bumps arrive as renovate PRs
+# on docker/emailproxy.conf (comment-driven regex manager in renovate.json5),
+# noop-automerge merges them once the pulumi preview proves a zero diff, this
+# workflow publishes the new ghcr tag, and renovate's Pulumi.dev.yaml image
+# manager then opens the deploy PR for human eyes. The cnpg images keep their
+# manual `just docker-*` flow (heavy builds, composite tags).
+name: Images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docker/emailproxy.*'
+      - '.github/workflows/images.yml'
+  pull_request:
+    paths:
+      - 'docker/emailproxy.*'
+      - '.github/workflows/images.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+# Renovate rebases push in quick succession; don't stack stale runs.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  emailproxy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          set -a; source docker/emailproxy.conf; set +a
+          tag="ghcr.io/aetf/emailproxy:${EMAILPROXY_VERSION}"
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+          buildah bud -f docker/emailproxy.Containerfile \
+            --build-arg-file docker/emailproxy.conf \
+            --annotation org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }} \
+            -t "$tag"
+      - name: Publish
+        if: github.event_name != 'pull_request'
+        run: |
+          buildah login -u '${{ github.actor }}' -p '${{ secrets.GITHUB_TOKEN }}' ghcr.io
+          buildah push "$TAG"

@@ -92,6 +92,20 @@
   ],
   customManagers: [
     {
+      // Version pins in docker/*.conf, marked by a `# renovate:` hint comment
+      // on the preceding line. Only emailproxy.conf carries hints; the cnpg
+      // confs are unmarked on purpose -- those images are built manually with
+      // `just docker-*` (heavy builds, composite tags), while marked pins are
+      // rebuilt and published automatically by images.yml after merge.
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^docker/.+\\.conf$/',
+      ],
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>[a-z-]+) depName=(?<depName>\\S+)\\n[A-Z_]+=(?<currentValue>[\\w.-]+)',
+      ],
+    },
+    {
       customType: 'regex',
       managerFilePatterns: [
         '/^Pulumi\\..+\\.ya?ml$/',
