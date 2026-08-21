@@ -28,6 +28,7 @@ import { EgressGateway } from "./egress";
 import { Hath } from "./hath";
 import { SealedSecret, Service } from "./utils";
 import { Spoolman } from "./spoolman";
+import { EmailProxy } from "./emailproxy";
 import { Haos } from "./haos";
 import { Splitpro } from "./splitpro";
 
@@ -370,6 +371,13 @@ function setup() {
         host: 'spool.unlimited-code.works',
     }, {
         provider: namespaced("spool")
+    });
+
+    // Gmail XOAUTH2 bridge for Home Assistant's imap integration; LAN-only.
+    const emailproxy = new EmailProxy("emailproxy", {
+        base: cluster,
+    }, {
+        provider: namespaced("emailproxy")
     });
 }
 

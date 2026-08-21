@@ -49,6 +49,8 @@ config:
   image:ukulele: ghcr.io/freyacodes/ukulele:master
   image:rclone: docker.io/rclone/rclone:1.75.0
   image:spoolman: ghcr.io/donkie/spoolman:0.26.0
+  # Gmail XOAUTH2 bridge (built by `just docker-emailproxy` from docker/emailproxy.conf)
+  image:emailproxy: ghcr.io/aetf/emailproxy:2026.7.3
   image:splitpro: ghcr.io/oss-apps/splitpro:v2.1.5
   image:splitproDb: ghcr.io/aetf/pgcron-cnpg:17.10-standard-trixie-1
   image:wireguard: ghcr.io/linuxserver/wireguard:1.0.20260223-r0-ls120

@@ -28,3 +28,15 @@ docker-pgcron:
 
 updatecrd:
     npm run crds
+
+# email-oauth2-proxy, the Gmail XOAUTH2 bridge for Home Assistant's imap integration
+docker-emailproxy:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    set -a; source docker/emailproxy.conf; set +a
+    tag="ghcr.io/aetf/emailproxy:${EMAILPROXY_VERSION}"
+    buildah bud -f docker/emailproxy.Containerfile \
+      --build-arg-file docker/emailproxy.conf \
+      --annotation org.opencontainers.image.source=https://github.com/Aetf/kluster-code \
+      -t "$tag"
+    buildah push "$tag"
