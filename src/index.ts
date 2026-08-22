@@ -31,6 +31,7 @@ import { Spoolman } from "./spoolman";
 import { EmailProxy } from "./emailproxy";
 import { Haos } from "./haos";
 import { Splitpro } from "./splitpro";
+import { Matrix } from "./matrix";
 
 
 // All k8s providers connect using the ambient kubeconfig. We pass its *content*
@@ -161,7 +162,22 @@ function setup() {
                 "unlimitedcodeworks.xyz",
                 "www.unlimitedcodeworks.xyz",
             ],
-            extraConfig: `error_page 404 /404.html;`
+            extraConfig: `error_page 404 /404.html;
+                # Matrix delegation: the server_name is this apex, the
+                # homeserver lives on matrix.<domain> (src/matrix/index.ts).
+                # Federation reads /server (and so rides the normal 443
+                # frontend, no port 8448); clients read /client, which needs
+                # CORS for web clients like app.element.io.
+                location = /.well-known/matrix/server {
+                    default_type application/json;
+                    add_header Access-Control-Allow-Origin *;
+                    return 200 '{"m.server": "matrix.unlimited-code.works:443"}';
+                }
+                location = /.well-known/matrix/client {
+                    default_type application/json;
+                    add_header Access-Control-Allow-Origin *;
+                    return 200 '{"m.homeserver": {"base_url": "https://matrix.unlimited-code.works"}}';
+                }`
         }, {
             root: "door-jiahui",
             hostNames: ["jiahui.love"]
@@ -364,6 +380,17 @@ function setup() {
         // src/splitpro/index.ts
     }, {
         provider: splitproProvider
+    });
+
+    // Matrix homeserver. Like SplitPro it talks to Authelia over OIDC itself
+    // and must not sit behind forward-auth. The server_name is the apex; see
+    // the /.well-known/matrix locations on the blog static site above.
+    const matrix = new Matrix("matrix", {
+        serving,
+        host: 'matrix.unlimited-code.works',
+        storageClass: cluster.localStableStorageClass.metadata.name,
+    }, {
+        provider: namespaced("matrix"),
     });
 
     const spoolman = new Spoolman("spoolman", {
