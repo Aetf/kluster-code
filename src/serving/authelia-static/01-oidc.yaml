@@ -15,6 +15,15 @@ identity_providers:
           # SplitPro seeds the display name from this; without it new users are
           # named after the local part of their email address.
           - name
+      # continuwuity reads claims exclusively from the ID token (upstream
+      # src/service/oidc/mod.rs) and never calls userinfo, so everything it
+      # needs has to be pushed in here: preferred_username becomes the Matrix
+      # localpart, name the display name, email the account email.
+      matrix:
+        id_token:
+          - preferred_username
+          - name
+          - email
     clients:
       - client_name: Immich OAuth Connection
         client_id: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_IMMICH_ID_FILE" | secret | mindent 8 "|" | msquote }}
@@ -94,12 +103,12 @@ identity_providers:
         client_secret: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_MATRIX_SECRET_FILE" | secret | mindent 8 "|" | msquote }}
         public: false
         authorization_policy: matrix
+        claims_policy: 'matrix'
         userinfo_signed_response_alg: 'none'
         token_endpoint_auth_method: 'client_secret_basic'
         # continuwuity always asks for openid and is configured
-        # (src/matrix/static/continuwuity.toml) to add profile+email: the
-        # localpart comes from preferred_username, the display name from name,
-        # both served off the userinfo endpoint.
+        # (src/matrix/static/continuwuity.toml) to add profile+email; the
+        # claims those scopes grant reach it via the claims_policy above.
         scopes:
           - openid
           - profile
