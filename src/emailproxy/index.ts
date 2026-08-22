@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as kx from "@pulumi/kubernetesx";
 
 import { BaseCluster } from "#src/base-cluster";
-import { SealedSecret } from "#src/utils";
+import { SealedSecret, renderStaticFiles } from "#src/utils";
 import { versions } from "#src/config";
 
 interface EmailProxyArgs {
@@ -39,20 +39,15 @@ export class EmailProxy extends pulumi.ComponentResource<EmailProxyArgs> {
                     client_secret: "AgBqwiJFrWanLgGHb+hFvD8CbqnlegJxlBl1UIa2xzQdE8EBpr1Ycz/H7aOjTsHJUeEg8ZVUgUzAFCTZLNYLaPjO2HjYVMWyNQ/cBIzsfjZJzMlU3V1taus9QKBQ+MssggAhOf6YRkz9r52AHPj21LLNLJkjUYfixe4Jua25sXnyw9np+dCvha9KXvWS8ki1o5OEsWlBYXHIL+37nkxO//2IbszdUgm63E+Su/+LBy8Af9uENRjJOlyvHwzwJi9Lj+YkWwGzlSVMUewWZuydqs19cbREYTtySFl147vhxs11C3HVbTUELN5S4NNjhcbt6EpvMpiH/Kv1iFUBTHBweLFB0VSMW9wJu8Pw546Gcg9A9lZUs0z2qgVCV0GAxVLwad8IDe4gOTM1WE8rjEStXW70h9I+QclvSB8z32B59F0cc/Yui6LoTLLoKpt9F09szKZqMUXVtZpENwTOiSu0G07gdB3g3gHUAcMgKhloug0A6YOKkJfvGsPzuGx91VI85aRGkmOwPabh4dgfxIsdrVRGbAiIcQTvktlEBW/aXL8FeCRE7vamk2Y9IFdlKmo/ZVbNYMe1ZYZ4GiXSHjzD1yEsnEdxNmGM801shmeAb0y3XeZbGtJnncOy8jLxWWiR8FB1C6KTjNXmhh9jaKrdWHUJUMnCeXHGcRcbvYUa+Uln7/lch1xcYw5nCEOwRBAT66pY6j32C0DlQFBRjrWPn8sdL1z8ItCcZXxX/r4jVjeLdH6RNw==",
                 },
                 template: {
-                    data: {
-                        'emailproxy.config': `[IMAP-1993]
-server_address = imap.gmail.com
-server_port = 993
-
-[{{ index . "account" }}]
-permission_url = https://accounts.google.com/o/oauth2/auth
-token_url = https://oauth2.googleapis.com/token
-oauth2_scope = https://mail.google.com/
-redirect_uri = http://localhost:8080
-client_id = {{ index . "client_id" }}
-client_secret = {{ index . "client_secret" }}
-`,
-                    },
+                    // The plaintext config stays reviewable in git; the
+                    // controller renders it as a Go/sprig template with the
+                    // decrypted encryptedData as context. No tplVariables
+                    // here on purpose: that skips the Handlebars pass, so
+                    // the Go-template braces reach the controller untouched.
+                    data: renderStaticFiles(name, {
+                        ref_file: __filename,
+                        data: 'static/*',
+                    }),
                 },
             },
         }, { parent: this });
