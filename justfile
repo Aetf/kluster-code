@@ -29,6 +29,18 @@ docker-pgcron:
 updatecrd:
     npm run crds
 
+# kellegous/go, the go/<name> shortlink service
+docker-golinks:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    set -a; source docker/golinks.conf; set +a
+    tag="ghcr.io/aetf/golinks:${GOLINKS_VERSION}"
+    buildah bud -f docker/golinks.Containerfile \
+      --build-arg-file docker/golinks.conf \
+      --annotation org.opencontainers.image.source=https://github.com/Aetf/kluster-code \
+      -t "$tag"
+    buildah push "$tag"
+
 # email-oauth2-proxy, the Gmail XOAUTH2 bridge for Home Assistant's imap integration
 docker-emailproxy:
     #!/usr/bin/env bash

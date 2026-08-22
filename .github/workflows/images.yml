@@ -1,10 +1,13 @@
 # Build (PRs) and publish (pushes to main) the self-maintained images in
-# docker/. Only emailproxy is wired up: version bumps arrive as renovate PRs
-# on docker/emailproxy.conf (comment-driven regex manager in renovate.json5),
-# noop-automerge merges them once the pulumi preview proves a zero diff, this
-# workflow publishes the new ghcr tag, and renovate's Pulumi.dev.yaml image
-# manager then opens the deploy PR for human eyes. The cnpg images keep their
-# manual `just docker-*` flow (heavy builds, composite tags).
+# docker/. Only emailproxy and golinks are wired up. emailproxy version bumps
+# arrive as renovate PRs on docker/emailproxy.conf (comment-driven regex
+# manager in renovate.json5), noop-automerge merges them once the pulumi
+# preview proves a zero diff, this workflow publishes the new ghcr tag, and
+# renovate's Pulumi.dev.yaml image manager then opens the deploy PR for human
+# eyes. golinks pins an upstream commit (no releases to track), so its bumps
+# are hand-edited PRs on docker/golinks.conf that then follow the same
+# publish->deploy path. The cnpg images keep their manual `just docker-*`
+# flow (heavy builds, composite tags).
 name: Images
 
 on:
@@ -12,10 +15,12 @@ on:
     branches: [main]
     paths:
       - 'docker/emailproxy.*'
+      - 'docker/golinks.*'
       - '.github/workflows/images.yml'
   pull_request:
     paths:
       - 'docker/emailproxy.*'
+      - 'docker/golinks.*'
       - '.github/workflows/images.yml'
   workflow_dispatch:
 
@@ -40,6 +45,25 @@ jobs:
           echo "TAG=$tag" >> "$GITHUB_ENV"
           buildah bud -f docker/emailproxy.Containerfile \
             --build-arg-file docker/emailproxy.conf \
+            --annotation org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }} \
+            -t "$tag"
+      - name: Publish
+        if: github.event_name != 'pull_request'
+        run: |
+          buildah login -u '${{ github.actor }}' -p '${{ secrets.GITHUB_TOKEN }}' ghcr.io
+          buildah push "$TAG"
+
+  golinks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          set -a; source docker/golinks.conf; set +a
+          tag="ghcr.io/aetf/golinks:${GOLINKS_VERSION}"
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+          buildah bud -f docker/golinks.Containerfile \
+            --build-arg-file docker/golinks.conf \
             --annotation org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }} \
             -t "$tag"
       - name: Publish
