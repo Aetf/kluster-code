@@ -14,7 +14,8 @@ interface EmailProxyArgs {
  * support (Home Assistant's imap integration) can watch Gmail label folders
  * without an app password (Aetf/meta#10).
  *
- * Clients connect with plain IMAP on the LAN LoadBalancer (port 1993); the
+ * Clients connect over TLS on the LAN LoadBalancer (port 1993; HA's imap
+ * integration is IMAP4_SSL-only so plaintext is not an option); the
  * proxy speaks IMAPS+XOAUTH2 towards imap.gmail.com. The OAuth client is the
  * same GCP desktop client gmailctl uses. Tokens are cached on a small stable
  * PVC, encrypted with the IMAP password the client presents.
@@ -52,6 +53,10 @@ export class EmailProxy extends pulumi.ComponentResource<EmailProxyArgs> {
             },
         }, { parent: this });
 
+        const cert = args.base.createBackendCertificate(name, {
+            namespace: pulumi.output(secret.metadata).apply(md => md.namespace!),
+        }, { parent: this });
+
         const dataPv = args.base.createLocalStoragePVC(name, {
             storageClassName: args.base.localStableStorageClass.metadata.name,
             resources: {
@@ -81,6 +86,7 @@ export class EmailProxy extends pulumi.ComponentResource<EmailProxyArgs> {
                         name: dataPv.metadata.name,
                         mountPath: '/data',
                     },
+                    cert.mount('/tls'),
                 ],
             }],
             volumes: [
