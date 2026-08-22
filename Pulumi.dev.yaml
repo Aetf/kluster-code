@@ -18,7 +18,7 @@ config:
   chart:immich: https://immich-app.github.io/immich-charts:0.12.0
   chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.26.3
   chart:kube-prometheus-stack: https://prometheus-community.github.io/helm-charts:72.9.1
-  chart:traefik: https://helm.traefik.io/traefik:41.2.0
+  chart:traefik: https://helm.traefik.io/traefik:41.3.0
   chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.32.0
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.29.0
   chart:redis: https://charts.bitnami.com/bitnami:20.3.0
@@ -36,7 +36,7 @@ config:
   # Wraps intel_gpu_top; the image bundles it, so this tag pins both. Note the
   # published image tags lag the repo's git tags and drop the `v` -- v0.7.2 is a
   # release with no image behind it.
-  image:intelGpuExporter: ghcr.io/clambin/intel-gpu-exporter:0.6.1
+  image:intelGpuExporter: ghcr.io/clambin/intel-gpu-exporter:0.7.3
   image:jellyfin: ghcr.io/jellyfin/jellyfin:10.11.4
   image:kubectl: docker.io/alpine/k8s:1.36.2
   image:localpath: rancher/local-path-provisioner:v0.0.22
