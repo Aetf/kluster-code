@@ -88,3 +88,22 @@ identity_providers:
         redirect_uris:
           # NextAuth derives this path from the lowercased OIDC_NAME env var.
           - https://split.{{ env "CONFIG_EXTRA_DOMAIN" }}/api/auth/callback/authelia
+
+      - client_name: Matrix
+        client_id: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_MATRIX_ID_FILE" | secret | mindent 8 "|" | msquote }}
+        client_secret: {{ env "CONFIG_EXTRA_OIDC_CLIENTS_MATRIX_SECRET_FILE" | secret | mindent 8 "|" | msquote }}
+        public: false
+        authorization_policy: matrix
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_basic'
+        # continuwuity always asks for openid and is configured
+        # (src/matrix/static/continuwuity.toml) to add profile+email: the
+        # localpart comes from preferred_username, the display name from name,
+        # both served off the userinfo endpoint.
+        scopes:
+          - openid
+          - profile
+          - email
+        redirect_uris:
+          # Fixed path, see https://continuwuity.org/guides/oidc.html
+          - https://matrix.{{ env "CONFIG_EXTRA_DOMAIN" }}/_continuwuity/oidc/complete

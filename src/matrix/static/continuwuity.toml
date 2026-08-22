@@ -1,0 +1,51 @@
+# continuwuity config. The plaintext stays reviewable in git: it rides along as
+# the sealed secret's `template.data`, and the sealed-secrets controller renders
+# it as a Go/sprig template with the decrypted `encryptedData` as context,
+# splicing in the OIDC client id/secret.
+
+[global]
+# The domain in user IDs (@user:unlimited-code.works). Federation and clients
+# hit this apex and get delegated to matrix.unlimited-code.works by the
+# /.well-known/matrix/{server,client} locations the blog nginx serves
+# (src/index.ts). Immutable once federated.
+server_name = "unlimited-code.works"
+
+address = "0.0.0.0"
+port = 8008
+
+# RocksDB and media both live under here, on the stable local PVC.
+database_path = "/data"
+
+# Accounts only come into being through the Authelia OIDC flow below, gated
+# by Authelia's `matrix` authorization policy. OIDC provisioning creates
+# shadow accounts directly (src/service/oidc/mod.rs upstream) and never
+# consults allow_registration -- that switch only guards the legacy
+# /register endpoint, which therefore stays off.
+allow_registration = false
+
+admins_list = ["@aetf:unlimited-code.works"]
+
+# The default suffix is the trans pride flag; display names come from
+# Authelia's `name` claim and need no decoration.
+new_user_displayname_suffix = ""
+
+[global.well_known]
+# The authoritative copies sit on the apex; these keep what continuwuity
+# itself answers under /.well-known consistent with them.
+client = "https://matrix.unlimited-code.works"
+server = "matrix.unlimited-code.works:443"
+
+[global.oauth.oidc]
+# Authelia. /.well-known/openid-configuration is appended automatically.
+discovery_url = "https://auth.unlimited-code.works"
+client_id = "{{ index . "oidc_client_id" }}"
+client_secret = "{{ index . "oidc_client_secret" }}"
+# `openid` is always requested; these two carry preferred_username/name and
+# email, served from Authelia's userinfo endpoint.
+additional_scopes = ["profile", "email"]
+# Localparts come from Authelia usernames instead of a free-form prompt, so
+# @aetf here is the aetf Authelia knows.
+prompt_for_localpart = false
+preferred_username_claim = "preferred_username"
+email_claim = "email"
+profile_key_map = { displayname = "name" }

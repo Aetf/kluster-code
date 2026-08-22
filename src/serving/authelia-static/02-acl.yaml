@@ -126,4 +126,17 @@ identity_providers:
             subject: 'group:users'
           - policy: 'one_factor'
             subject: 'group:splitpro-users'
+      # This is the only gate on who gets a Matrix account: continuwuity
+      # provisions an account for whoever Authelia lets through (OAuth-only,
+      # no password path). one_factor because Matrix clients hit this flow on
+      # every new device login.
+      matrix:
+        default_policy: 'deny'
+        rules:
+          - policy: 'one_factor'
+            subject: 'group:admins'
+          - policy: 'one_factor'
+            subject: 'group:users'
+          - policy: 'one_factor'
+            subject: 'group:matrix-users'
 
