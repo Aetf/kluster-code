@@ -32,6 +32,7 @@ import { EmailProxy } from "./emailproxy";
 import { Haos } from "./haos";
 import { Splitpro } from "./splitpro";
 import { Matrix } from "./matrix";
+import { GoLinks } from "./golinks";
 
 
 // All k8s providers connect using the ambient kubeconfig. We pass its *content*
@@ -405,6 +406,14 @@ function setup() {
         base: cluster,
     }, {
         provider: namespaced("emailproxy")
+    });
+
+    // go/<name> shortlinks with a web UI; LAN-only via the UDM caddy.
+    const golinks = new GoLinks("golinks", {
+        base: cluster,
+        node: cluster.nodes.AetfArchHomelab,
+    }, {
+        provider: namespaced("golinks")
     });
 }
 

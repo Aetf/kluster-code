@@ -51,6 +51,9 @@ config:
   image:spoolman: ghcr.io/donkie/spoolman:0.26.0
   # Gmail XOAUTH2 bridge (built by `just docker-emailproxy` from docker/emailproxy.conf)
   image:emailproxy: ghcr.io/aetf/emailproxy:2026.7.3
+  # kellegous/go shortlinks (built by `just docker-golinks` from docker/golinks.conf;
+  # upstream has no releases, tag is <commit date>-<short sha>)
+  image:golinks: ghcr.io/aetf/golinks:20260821-df12751
   # ghcr is an automatically synced mirror of the primary registry at
   # forgejo.ellis.link/continuwuation/continuwuity; both renovate and the
   # cluster nodes have an easier time with ghcr.
