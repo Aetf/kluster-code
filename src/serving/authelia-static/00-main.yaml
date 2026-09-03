@@ -56,6 +56,11 @@ storage:
       {{ env "CONFIG_EXTRA_STORAGEPATH" }}/db.sqlite3
 
 notifier:
+  # Authelia sends a test mail before it binds its listener. The mail relay is
+  # not part of the auth path, so letting a slow or down relay block startup
+  # only turns a mail outage into an SSO outage -- and the resulting restart
+  # loop piles more connections onto the relay that is already struggling.
+  disable_startup_check: true
   smtp:
     address: {{ env "CONFIG_EXTRA_SMTPADDR" | mindent 6 "|" | msquote }}
     ## HELO/EHLO Identifier. Identifies the mail client

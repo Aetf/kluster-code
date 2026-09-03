@@ -203,10 +203,11 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                 "kube-state-metrics": {
                     resources: {
                         requests: { cpu: "10m", memory: "32Mi" },
-                        // was 10m, throttled the container so hard its own
-                        // liveness/readiness probes timed out, causing a
-                        // permanent CrashLoopBackOff
-                        limits: { cpu: "100m", memory: "64Mi" },
+                        // Building the store for every resource kind in the
+                        // cluster is bursty. Anything below this throttles the
+                        // container hard enough that its own liveness probe
+                        // times out, causing a permanent CrashLoopBackOff.
+                        limits: { cpu: "500m", memory: "64Mi" },
                     },
                 },
                 "prometheus-node-exporter": {
