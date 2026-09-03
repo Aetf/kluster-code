@@ -56,8 +56,15 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
                 name,
                 image: versions.image.exim,
                 resources: {
-                    requests: { cpu: "1m", memory: "8Mi" },
-                    limits: { cpu: "1m", memory: "8Mi" },
+                    // exim forks a process per connection, and page cache from
+                    // the spool counts against the memory limit too, so 8Mi hit
+                    // the cgroup limit with a handful of concurrent deliveries.
+                    // A 1m cpu cap (100us per 100ms slice) throttled it so hard
+                    // the SMTP greeting took over 20s, which is longer than a
+                    // client's connect timeout -- Authelia's notifier startup
+                    // check blocked on it and never bound its listener.
+                    requests: { cpu: "5m", memory: "32Mi" },
+                    limits: { cpu: "500m", memory: "64Mi" },
                 },
                 ports: {
                     smtp: 8025,
