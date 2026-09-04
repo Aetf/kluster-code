@@ -18,12 +18,12 @@ config:
   chart:immich: https://immich-app.github.io/immich-charts:0.12.0
   chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.26.3
   chart:kube-prometheus-stack: https://prometheus-community.github.io/helm-charts:72.9.1
-  chart:traefik: https://helm.traefik.io/traefik:41.2.0
+  chart:traefik: https://helm.traefik.io/traefik:41.4.0
   chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.32.0
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.29.0
   chart:redis: https://charts.bitnami.com/bitnami:20.3.0
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.19.0
-  chart:plugin-barman-cloud: https://cloudnative-pg.github.io/charts:0.7.1
+  chart:plugin-barman-cloud: https://cloudnative-pg.github.io/charts:0.8.0
   image:transmission: docker.io/haugene/transmission-openvpn:5.5.0
   image:nginx: docker.io/bitnami/nginx:1.28.0-debian-12-r3
   image:dufs: docker.io/sigoden/dufs:v0.46.0
@@ -36,9 +36,9 @@ config:
   # Wraps intel_gpu_top; the image bundles it, so this tag pins both. Note the
   # published image tags lag the repo's git tags and drop the `v` -- v0.7.2 is a
   # release with no image behind it.
-  image:intelGpuExporter: ghcr.io/clambin/intel-gpu-exporter:0.6.1
+  image:intelGpuExporter: ghcr.io/clambin/intel-gpu-exporter:0.7.4
   image:jellyfin: ghcr.io/jellyfin/jellyfin:10.11.4
-  image:kubectl: docker.io/alpine/k8s:1.36.2
+  image:kubectl: docker.io/alpine/k8s:1.37.0
   image:localpath: rancher/local-path-provisioner:v0.0.22
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
   image:authelia: ghcr.io/authelia/authelia:4.39.4
@@ -57,7 +57,7 @@ config:
   # ghcr is an automatically synced mirror of the primary registry at
   # forgejo.ellis.link/continuwuation/continuwuity; both renovate and the
   # cluster nodes have an easier time with ghcr.
-  image:continuwuity: ghcr.io/continuwuity/continuwuity:v26.7.3
+  image:continuwuity: ghcr.io/continuwuity/continuwuity:v26.8.1
   image:splitpro: ghcr.io/oss-apps/splitpro:v2.1.5
   image:splitproDb: ghcr.io/aetf/pgcron-cnpg:17.10-standard-trixie-1
   image:wireguard: ghcr.io/linuxserver/wireguard:1.0.20260223-r0-ls120
