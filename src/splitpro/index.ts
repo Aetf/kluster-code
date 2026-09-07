@@ -219,13 +219,14 @@ export class Splitpro extends pulumi.ComponentResource<SplitproArgs> {
                     "reloader.stakater.com/search": "true"
                 }
             },
-            spec: {
-                ...pb.asDeploymentSpec(),
+            // Pass the overrides through asDeploymentSpec: it returns a
+            // pulumi.Output, so spreading it here would drop these siblings.
+            spec: pb.asDeploymentSpec({
                 replicas: 1,
                 // Both the in-process migration runner and the RWO uploads volume
                 // break if a second pod overlaps with the old one.
                 strategy: { type: 'Recreate' },
-            },
+            }),
         }, { parent: this });
 
         const service = serviceFromDeployment(name, deployment, {
