@@ -137,13 +137,14 @@ export class Matrix extends pulumi.ComponentResource<MatrixArgs> {
                     "reloader.stakater.com/search": "true"
                 }
             },
-            spec: {
-                ...pb.asDeploymentSpec(),
+            // Pass the overrides through asDeploymentSpec: it returns a
+            // pulumi.Output, so spreading it here would drop these siblings.
+            spec: pb.asDeploymentSpec({
                 replicas: 1,
                 // No horizontal scaling, and the RWO data volume breaks if a
                 // second pod overlaps with the old one.
                 strategy: { type: 'Recreate' },
-            },
+            }),
         }, { parent: this });
 
         const service = serviceFromDeployment(name, deployment, {
