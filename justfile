@@ -52,3 +52,14 @@ docker-emailproxy:
       --annotation org.opencontainers.image.source=https://github.com/Aetf/kluster-code \
       -t "$tag"
     buildah push "$tag"
+
+docker-gha-runner:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    set -a; source docker/gha-runner.conf; set +a
+    tag="ghcr.io/aetf/gha-runner:${GHA_RUNNER_VERSION}"
+    buildah bud -f docker/gha-runner.Containerfile \
+      --build-arg-file docker/gha-runner.conf \
+      --annotation org.opencontainers.image.source=https://github.com/Aetf/kluster-code \
+      -t "$tag"
+    buildah push "$tag"

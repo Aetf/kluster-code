@@ -5,3 +5,4 @@ mise.local.toml
 .pulumi.backend
 /deploy/state-backend/.env
 /deploy/state-backend/certs/
+.claude/worktrees
