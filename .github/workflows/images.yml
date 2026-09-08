@@ -1,13 +1,15 @@
 # Build (PRs) and publish (pushes to main) the self-maintained images in
-# docker/. Only emailproxy and golinks are wired up. emailproxy version bumps
-# arrive as renovate PRs on docker/emailproxy.conf (comment-driven regex
-# manager in renovate.json5), noop-automerge merges them once the pulumi
-# preview proves a zero diff, this workflow publishes the new ghcr tag, and
-# renovate's Pulumi.dev.yaml image manager then opens the deploy PR for human
-# eyes. golinks pins an upstream commit (no releases to track), so its bumps
-# are hand-edited PRs on docker/golinks.conf that then follow the same
-# publish->deploy path. The cnpg images keep their manual `just docker-*`
-# flow (heavy builds, composite tags).
+# docker/. Each image is a `docker/<name>.{conf,Containerfile}` pair: the conf
+# is fed to the build wholesale as --build-arg-file, and its <NAME>_VERSION
+# entry is the published ghcr tag.
+#
+# Version bumps arrive as PRs on the conf: renovate raises them for pins
+# carrying a `# renovate:` hint (the regex manager in renovate.json5), the
+# rest are hand-edited. noop-automerge merges them once the pulumi preview
+# proves a zero diff, this workflow publishes the new ghcr tag, and renovate's
+# Pulumi.dev.yaml image manager then opens the deploy PR for human eyes. The
+# cnpg images keep their manual `just docker-*` flow (heavy builds, composite
+# tags).
 name: Images
 
 on:
@@ -36,59 +38,41 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  emailproxy:
+  image:
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        name: [emailproxy, golinks, gha-runner]
     steps:
       - uses: actions/checkout@v4
-      - name: Build
+      - name: Read version
         run: |
-          set -a; source docker/emailproxy.conf; set +a
-          tag="ghcr.io/aetf/emailproxy:${EMAILPROXY_VERSION}"
-          echo "TAG=$tag" >> "$GITHUB_ENV"
-          buildah bud -f docker/emailproxy.Containerfile \
-            --build-arg-file docker/emailproxy.conf \
-            --annotation org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }} \
-            -t "$tag"
+          set -a; source 'docker/${{ matrix.name }}.conf'; set +a
+          var="$(echo '${{ matrix.name }}' | tr 'a-z-' 'A-Z_')_VERSION"
+          echo "VERSION=${!var:?no version in docker/${{ matrix.name }}.conf}" >> "$GITHUB_ENV"
+      - name: Build
+        uses: redhat-actions/buildah-build@v3
+        with:
+          # The runner's own buildah is too old for Containerfile heredocs.
+          # The action runs this image against the host podman's storage, so
+          # the publish step below still finds the result.
+          buildah-image: quay.io/buildah/stable
+          image: ${{ matrix.name }}
+          tags: ${{ env.VERSION }}
+          containerfiles: docker/${{ matrix.name }}.Containerfile
+          extra-args: --build-arg-file=docker/${{ matrix.name }}.conf
+          # ghcr only reads the source annotation off OCI manifests; a docker
+          # manifest drops it and the package loses its repository link.
+          oci: true
+          annotations: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
       - name: Publish
         if: github.event_name != 'pull_request'
-        run: |
-          buildah login -u '${{ github.actor }}' -p '${{ secrets.GITHUB_TOKEN }}' ghcr.io
-          buildah push "$TAG"
-
-  golinks:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build
-        run: |
-          set -a; source docker/golinks.conf; set +a
-          tag="ghcr.io/aetf/golinks:${GOLINKS_VERSION}"
-          echo "TAG=$tag" >> "$GITHUB_ENV"
-          buildah bud -f docker/golinks.Containerfile \
-            --build-arg-file docker/golinks.conf \
-            --annotation org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }} \
-            -t "$tag"
-      - name: Publish
-        if: github.event_name != 'pull_request'
-        run: |
-          buildah login -u '${{ github.actor }}' -p '${{ secrets.GITHUB_TOKEN }}' ghcr.io
-          buildah push "$TAG"
-
-  gha-runner:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build
-        run: |
-          set -a; source docker/gha-runner.conf; set +a
-          tag="ghcr.io/aetf/gha-runner:${GHA_RUNNER_VERSION}"
-          echo "TAG=$tag" >> "$GITHUB_ENV"
-          buildah bud -f docker/gha-runner.Containerfile \
-            --build-arg-file docker/gha-runner.conf \
-            --annotation org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }} \
-            -t "$tag"
-      - name: Publish
-        if: github.event_name != 'pull_request'
-        run: |
-          buildah login -u '${{ github.actor }}' -p '${{ secrets.GITHUB_TOKEN }}' ghcr.io
-          buildah push "$TAG"
+        uses: redhat-actions/push-to-registry@v3
+        with:
+          image: ${{ matrix.name }}
+          tags: ${{ env.VERSION }}
+          registry: ghcr.io/aetf
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
