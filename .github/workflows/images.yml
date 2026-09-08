@@ -16,11 +16,13 @@ on:
     paths:
       - 'docker/emailproxy.*'
       - 'docker/golinks.*'
+      - 'docker/gha-runner.*'
       - '.github/workflows/images.yml'
   pull_request:
     paths:
       - 'docker/emailproxy.*'
       - 'docker/golinks.*'
+      - 'docker/gha-runner.*'
       - '.github/workflows/images.yml'
   workflow_dispatch:
 
@@ -64,6 +66,25 @@ jobs:
           echo "TAG=$tag" >> "$GITHUB_ENV"
           buildah bud -f docker/golinks.Containerfile \
             --build-arg-file docker/golinks.conf \
+            --annotation org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }} \
+            -t "$tag"
+      - name: Publish
+        if: github.event_name != 'pull_request'
+        run: |
+          buildah login -u '${{ github.actor }}' -p '${{ secrets.GITHUB_TOKEN }}' ghcr.io
+          buildah push "$TAG"
+
+  gha-runner:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          set -a; source docker/gha-runner.conf; set +a
+          tag="ghcr.io/aetf/gha-runner:${GHA_RUNNER_VERSION}"
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+          buildah bud -f docker/gha-runner.Containerfile \
+            --build-arg-file docker/gha-runner.conf \
             --annotation org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }} \
             -t "$tag"
       - name: Publish
