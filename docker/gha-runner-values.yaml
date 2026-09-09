@@ -1,0 +1,71 @@
+# Helm values for the teahouse self-hosted runner scale set (ARC
+# gha-runner-scale-set chart), installed as release `kluster-runner-set` in
+# namespace `arc-runners`:
+#
+#   helm upgrade --install kluster-runner-set -n arc-runners \
+#     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set \
+#     --version 0.14.2 -f docker/gha-runner-values.yaml
+#
+# The runner image is built from gha-runner.Containerfile.
+githubConfigUrl: https://github.com/Aetf/teahouse
+githubConfigSecret: pre-defined-secret
+
+# The cluster's only capable node is the control-plane box (24 cores, 31 GB) and
+# it also runs etcd. Unbounded runners starve etcd hard enough that
+# kube-controller-manager loses its lease and k3s exits, taking the API server
+# with it. Concurrency plus per-pod limits are what keep the control plane
+# alive; cargo's job count is capped to match the CPU limit so a build does not
+# thrash inside its own cgroup.
+maxRunners: 2
+
+template:
+  spec:
+    # The other node is a small VPS that cannot carry a rust build; without a
+    # selector a runner occasionally lands there and the job just crawls.
+    nodeSelector:
+      kubernetes.io/hostname: aetf-arch-homelab
+    # A user namespace of the pod's own is what lets podman run at all without
+    # a privileged pod: it makes `procMount: Unmasked` admissible (the API
+    # server rejects Unmasked when hostUsers is true), and Unmasked is required
+    # because containerd's masked /proc paths are locked mounts, which make the
+    # kernel refuse the nested procfs mount every podman container needs.
+    # Container uid 0 below maps to an unprivileged host uid, so the caps this
+    # pod holds are confined to that namespace.
+    hostUsers: false
+    containers:
+      - name: runner
+        image: ghcr.io/aetf/gha-runner:2.337.0
+        imagePullPolicy: Always
+        command: ["/home/runner/run.sh"]
+        env:
+          - name: CARGO_BUILD_JOBS
+            value: "6"
+          # ARC registers runners through run.sh --jitconfig, which has no root
+          # check, but config.sh does; set this so a fallback to that path does
+          # not fail on the uid.
+          - name: RUNNER_ALLOW_RUNASROOT
+            value: "1"
+        resources:
+          requests:
+            cpu: "2"
+            memory: 2Gi
+          limits:
+            cpu: "6"
+            memory: 8Gi
+        securityContext:
+          # Rootful podman inside the pod's user namespace. SYS_ADMIN is for
+          # the mount and namespace work podman does per container; the network
+          # caps are for CNI's bridge and portmap plugins.
+          runAsUser: 0
+          procMount: Unmasked
+          capabilities:
+            add: ["SYS_ADMIN", "NET_ADMIN", "NET_RAW", "MKNOD", "SYS_CHROOT"]
+        volumeMounts:
+          # podman's overlay driver refuses to stack on the container's own
+          # overlayfs rootfs; a volume lands on the node filesystem instead.
+          - mountPath: /var/lib/containers
+            name: podman-storage
+    volumes:
+      - name: podman-storage
+        emptyDir:
+          sizeLimit: 20Gi
