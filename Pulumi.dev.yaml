@@ -10,7 +10,7 @@ config:
   kluster-code:enableBt: false
   kluster-code:servingExternalIPs:
     - "45.77.144.92"
-  chart:sealed-secrets: https://bitnami.github.io/sealed-secrets:2.19.1
+  chart:sealed-secrets: https://bitnami.github.io/sealed-secrets:2.20.0
   chart:cert-manager: https://charts.jetstack.io:v1.21.0
   chart:reloader: https://stakater.github.io/stakater-charts:2.2.11
   chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.36.0
@@ -29,10 +29,10 @@ config:
   image:dufs: docker.io/sigoden/dufs:v0.46.0
   image:genshinhelper: docker.io/yindan/genshinhelper:2.1.3
   image:hath: docker.io/frosty5689/hath:1.6.5
-  image:immich: ghcr.io/immich-app/immich-server:v3.1.0
+  image:immich: ghcr.io/immich-app/immich-server:v3.2.0
   # Same release as image:immich, in the OpenVINO flavour -- keep the two
   # versions in lockstep, the chart deploys them as one immich.
-  image:immichMl: ghcr.io/immich-app/immich-machine-learning:v3.1.0-openvino
+  image:immichMl: ghcr.io/immich-app/immich-machine-learning:v3.2.0-openvino
   # Wraps intel_gpu_top; the image bundles it, so this tag pins both. Note the
   # published image tags lag the repo's git tags and drop the `v` -- v0.7.2 is a
   # release with no image behind it.
