@@ -7,6 +7,16 @@ import { versions } from "#src/config";
 
 interface LocalPathProvisionerArgs {
     storageClass: string,
+    // Node directory behind `storageClass` and its `-stable` twin.
+    path: string,
+    // A third class whose volumes may be written to without limit: its
+    // directory sits on a disk that carries nothing latency-sensitive, so a
+    // tenant filling it (CI runners building images and cargo targets) cannot
+    // starve etcd on the root nvme. local-path enforces no size at all -- the
+    // PVC request is a declaration -- so the directory is expected to be a
+    // dataset with its own quota.
+    scratchStorageClass: string,
+    scratchPath: string,
 }
 
 export default class LocalPathProvisioner extends pulumi.ComponentResource<LocalPathProvisionerArgs> {
@@ -14,6 +24,7 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
     public readonly deployment: kx.Deployment;
     public readonly storageClass: k8s.storage.v1.StorageClass;
     public readonly storageClassStable: k8s.storage.v1.StorageClass;
+    public readonly storageClassScratch: k8s.storage.v1.StorageClass;
 
     public readonly provisionerName!: pulumi.Output<string>;
     public readonly storageClassName!: pulumi.Output<string>;
@@ -35,7 +46,17 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
             reclaimPolicy: "Retain",
         }, { parent: this });
 
-        this.deployment = this.setupDeployment(name);
+        // Named explicitly, unlike its siblings: the consumers are helm
+        // releases outside pulumi (docker/gha-runner-values.yaml) that must
+        // spell the class name.
+        this.storageClassScratch = new k8s.storage.v1.StorageClass(args.scratchStorageClass, {
+            metadata: { name: args.scratchStorageClass },
+            provisioner: pulumi.interpolate`cluster.local/${this.service_account.metadata.name}`,
+            volumeBindingMode: "WaitForFirstConsumer",
+            reclaimPolicy: "Delete",
+        }, { parent: this });
+
+        this.deployment = this.setupDeployment(name, args);
 
         setAndRegisterOutputs(this, {
             storageClassName: this.storageClass.metadata.name,
@@ -52,7 +73,9 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
         const cluster_role = new k8s.rbac.v1.ClusterRole(name, {
             rules: [{
                 apiGroups: [""],
-                resources: ["nodes", "persistentvolumeclaims", "configmaps"],
+                // pods/log: the provisioner surfaces the helper pod's output
+                // when setup/teardown fails.
+                resources: ["nodes", "persistentvolumeclaims", "configmaps", "pods/log"],
                 verbs: ["get", "list", "watch"],
             }, {
                 apiGroups: [""],
@@ -85,11 +108,23 @@ export default class LocalPathProvisioner extends pulumi.ComponentResource<Local
         return service_account;
     }
 
-    private setupDeployment(name: string): kx.Deployment {
+    private setupDeployment(name: string, args: LocalPathProvisionerArgs): kx.Deployment {
+        // Paths are keyed per StorageClass (storageClassConfigs) rather than
+        // listed together under nodePathMap: with several paths there the
+        // provisioner picks one at random for any class that does not pin
+        // itself with a `nodePath` parameter, and parameters are immutable on
+        // the two classes that already exist.
         const cm = new ConfigMap(name, {
             ref_file: __filename,
             data: 'static/*',
             stripComponents: 1,
+            tplVariables: {
+                storageClass: this.storageClass.metadata.name,
+                storageClassStable: this.storageClassStable.metadata.name,
+                storageClassScratch: this.storageClassScratch.metadata.name,
+                path: args.path,
+                scratchPath: args.scratchPath,
+            },
         }, { parent: this });
 
         const pb = new kx.PodBuilder({

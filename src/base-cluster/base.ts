@@ -37,6 +37,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
 
     public readonly localStorageClass!: k8s.storage.v1.StorageClass;
     public readonly localStableStorageClass!: k8s.storage.v1.StorageClass;
+    public readonly localScratchStorageClass!: k8s.storage.v1.StorageClass;
     public readonly jfsStorageClass!: pulumi.Output<k8s.storage.v1.StorageClass>;
 
     constructor(name: string, args: BaseClusterArgs, opts?: pulumi.ComponentResourceOptions) {
@@ -72,9 +73,17 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
             }
         }, { parent: this });
 
-        const lpp = new LocalPathProvisioner("local-path-provisioner", { storageClass: "local-path" }, { parent: this });
+        const lpp = new LocalPathProvisioner("local-path-provisioner", {
+            storageClass: "local-path",
+            path: "/mnt/storage/k8s-storage",
+            // A zfs dataset on the HDD pool (nas/scratch, quota-bounded), kept
+            // off the root nvme that etcd lives on.
+            scratchStorageClass: "local-path-scratch",
+            scratchPath: "/var/lib/scratch",
+        }, { parent: this });
         this.localStorageClass = lpp.storageClass;
         this.localStableStorageClass = lpp.storageClassStable;
+        this.localScratchStorageClass = lpp.storageClassScratch;
 
         const jfs = new JuiceFs("juicefs", {
             namespace,
