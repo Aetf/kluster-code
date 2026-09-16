@@ -13,9 +13,12 @@ githubConfigSecret: pre-defined-secret
 # The cluster's only capable node is the control-plane box (24 cores, 31 GB) and
 # it also runs etcd. Unbounded runners starve etcd hard enough that
 # kube-controller-manager loses its lease and k3s exits, taking the API server
-# with it. Concurrency plus per-pod limits are what keep the control plane
-# alive; cargo's job count is capped to match the CPU limit so a build does not
-# thrash inside its own cgroup.
+# with it. Three things together keep the control plane alive: concurrency,
+# per-pod cpu/memory limits (cargo's job count is capped to match the CPU
+# limit so a build does not thrash inside its own cgroup), and keeping the
+# runner's disk writes off the root nvme -- see the `work` volume below. The
+# first two alone were not enough: two runners writing ~100 MB/s of image
+# layers and cargo targets to the nvme pushed etcd fdatasync into the seconds.
 maxRunners: 2
 
 template:
@@ -61,11 +64,30 @@ template:
           capabilities:
             add: ["SYS_ADMIN", "NET_ADMIN", "NET_RAW", "MKNOD", "SYS_CHROOT"]
         volumeMounts:
-          # podman's overlay driver refuses to stack on the container's own
-          # overlayfs rootfs; a volume lands on the node filesystem instead.
+          # Both places a job writes in bulk go to the scratch volume: the
+          # checkout with its cargo target, and podman's image store (its
+          # overlay driver refuses to stack on the container's own overlayfs
+          # rootfs anyway). ARC mounts a `work` emptyDir at _work unless the
+          # template names a volume `work` itself, which is why the volume
+          # carries that name.
+          - mountPath: /home/runner/_work
+            name: work
+            subPath: work
           - mountPath: /var/lib/containers
-            name: podman-storage
+            name: work
+            subPath: containers
     volumes:
-      - name: podman-storage
-        emptyDir:
-          sizeLimit: 20Gi
+      # A per-pod PV on the local-path-scratch class (kluster-code
+      # src/local-path), a zfs dataset on the HDD pool rather than the nvme
+      # that etcd lives on. Created and torn down with the pod. local-path
+      # enforces no size: the request is what one job is expected to need and
+      # the dataset's quota is the actual bound.
+      - name: work
+        ephemeral:
+          volumeClaimTemplate:
+            spec:
+              accessModes: [ReadWriteOnce]
+              storageClassName: local-path-scratch
+              resources:
+                requests:
+                  storage: 20Gi
