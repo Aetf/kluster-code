@@ -294,6 +294,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         }, { parent: this });
 
         this.setupFrontendService(name, args.serving, args.host);
+        this.setupLanService(name);
         this.setupDashboard(name);
     }
 
@@ -675,6 +676,42 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             data: 'static/dashboards/*.json',
             stripComponents: 2,
         }, { parent: this });
+    }
+
+    /**
+     * Plain HTTP entry point on the homelan pool IP, for clients on the home
+     * network.
+     *
+     * `photos.unlimited-code.works` resolves to the vps, so LAN clients reach
+     * immich over the internet and back through the WireGuard tunnel: measured
+     * at ~316 KB/s, which is not merely slow but fatal for large uploads (the
+     * immich-go default 20min client timeout expires mid-file). The fast path
+     * is the in-cluster ClusterIP, but 10.43.0.0/16 has no route on the UDM, so
+     * every LAN client would need its own static route. A LoadBalancer on the
+     * homelan pool removes that requirement: http://<homelan ip>:2283 works from
+     * any device at home with no client-side setup.
+     *
+     * No TLS and no Authelia in front of it: immich authenticates by itself and
+     * this address is only reachable from the home network.
+     */
+    private setupLanService(name: string) {
+        new kx.Service(`${name}-lan`, {
+            metadata: {
+                name: `${name}-lan`,
+                labels: {
+                    'svccontroller.k3s.cattle.io/lbpool': 'homelan',
+                },
+            },
+            spec: {
+                type: 'LoadBalancer',
+                allocateLoadBalancerNodePorts: false,
+                ports: [
+                    { name: 'http', port: 2283, targetPort: 'http' },
+                ],
+                // Same pods the chart's own server Service selects.
+                selector: this.chart!.service(/server/).apply(s => s.spec.selector),
+            },
+        }, { parent: this, deleteBeforeReplace: true });
     }
 
     private setupFrontendService(name: string, serving: Serving, host: pulumi.Input<string>) {
