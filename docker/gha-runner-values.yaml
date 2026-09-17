@@ -64,18 +64,32 @@ template:
           capabilities:
             add: ["SYS_ADMIN", "NET_ADMIN", "NET_RAW", "MKNOD", "SYS_CHROOT"]
         volumeMounts:
-          # Both places a job writes in bulk go to the scratch volume: the
-          # checkout with its cargo target, and podman's image store (its
-          # overlay driver refuses to stack on the container's own overlayfs
-          # rootfs anyway). ARC mounts a `work` emptyDir at _work unless the
-          # template names a volume `work` itself, which is why the volume
-          # carries that name.
+          # Every place a job writes in bulk goes to the scratch volume, so
+          # that nothing lands in the container rootfs on the node's root
+          # disk: the checkout with its cargo target; podman's image store
+          # (its overlay driver refuses to stack on the container's own
+          # overlayfs rootfs anyway); /var/tmp, where buildah keeps
+          # `--mount=type=cache` directories (the image build's cargo target
+          # lives there, not in the store); /tmp for the rest of podman's
+          # scratch; and root's home, where each job installs its toolchain
+          # (~2 GB of rustup and mise per run). ARC mounts a `work` emptyDir
+          # at _work unless the template names a volume `work` itself, which
+          # is why the volume carries that name.
           - mountPath: /home/runner/_work
             name: work
             subPath: work
           - mountPath: /var/lib/containers
             name: work
             subPath: containers
+          - mountPath: /var/tmp
+            name: work
+            subPath: var-tmp
+          - mountPath: /tmp
+            name: work
+            subPath: tmp
+          - mountPath: /root
+            name: work
+            subPath: home
     volumes:
       # A per-pod PV on the local-path-scratch class (kluster-code
       # src/local-path), a zfs dataset on the HDD pool rather than the nvme
