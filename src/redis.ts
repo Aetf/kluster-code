@@ -3,6 +3,15 @@ import * as k8s from "@pulumi/kubernetes";
 import * as kx from "@pulumi/kubernetesx";
 
 import { Service, HelmChart } from "./utils";
+import { versions } from "#src/config";
+
+// Split a `registry/repository:tag` reference into the three fields bitnami
+// charts take instead of a single image string.
+function bitnamiImage(ref: string): { registry: string, repository: string, tag: string } {
+    const [name, tag] = ref.split(':');
+    const [registry, ...repository] = name.split('/');
+    return { registry, repository: repository.join('/'), tag };
+}
 
 export interface RedisArgs {
     persistentStorageClass: pulumi.Input<string>,
@@ -35,19 +44,12 @@ export class Redis extends HelmChart {
                     existingSecret: authPassword.name,
                     existingSecretPasswordKey: authPassword.key,
                 },
+                // The chart's default tags 404 on docker.io/bitnami; both
+                // images are pinned in Pulumi.dev.yaml (see the note there).
+                image: bitnamiImage(versions.image.redis),
                 metrics: {
                     enabled: args.metrics ?? false,
-                    // bitnami delisted their old images from docker.io/bitnami
-                    // (the chart's default tag 404s there); the archived copies
-                    // live under bitnamilegacy. The main redis image the chart
-                    // pulls is in the same state and only still runs because
-                    // the node has it cached -- see the note in
-                    // Pulumi.dev.yaml.
-                    image: {
-                        registry: 'docker.io',
-                        repository: 'bitnamilegacy/redis-exporter',
-                        tag: '1.66.0-debian-12-r2',
-                    },
+                    image: bitnamiImage(versions.image.redisExporter),
                     serviceMonitor: {
                         enabled: args.metrics ?? false,
                         // kube-prometheus-stack's serviceMonitorSelector only
