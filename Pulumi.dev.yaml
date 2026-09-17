@@ -25,6 +25,11 @@ config:
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.19.0
   chart:plugin-barman-cloud: https://cloudnative-pg.github.io/charts:0.8.0
   image:transmission: docker.io/haugene/transmission-openvpn:5.5.0
+  # bitnami delisted its pre-2025-08 tags from docker.io/bitnami; the frozen
+  # copies live under bitnamilegacy and never get new versions, so renovate
+  # cannot bump these two. Moving off them means moving off chart:redis too.
+  image:redis: docker.io/bitnamilegacy/redis:7.4.1-debian-12-r2
+  image:redisExporter: docker.io/bitnamilegacy/redis-exporter:1.66.0-debian-12-r2
   image:nginx: docker.io/bitnami/nginx:1.28.0-debian-12-r3
   image:dufs: docker.io/sigoden/dufs:v0.46.0
   image:genshinhelper: docker.io/yindan/genshinhelper:2.1.3
