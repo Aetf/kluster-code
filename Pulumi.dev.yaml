@@ -10,7 +10,7 @@ config:
   kluster-code:enableBt: false
   kluster-code:servingExternalIPs:
     - "45.77.144.92"
-  chart:sealed-secrets: https://bitnami.github.io/sealed-secrets:2.19.1
+  chart:sealed-secrets: https://bitnami.github.io/sealed-secrets:2.20.0
   chart:cert-manager: https://charts.jetstack.io:v1.21.0
   chart:reloader: https://stakater.github.io/stakater-charts:2.2.11
   chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.36.0
@@ -18,8 +18,8 @@ config:
   chart:immich: https://immich-app.github.io/immich-charts:0.12.0
   chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.26.3
   chart:kube-prometheus-stack: https://prometheus-community.github.io/helm-charts:72.9.1
-  chart:traefik: https://helm.traefik.io/traefik:41.5.0
-  chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.32.0
+  chart:traefik: https://helm.traefik.io/traefik:41.6.0
+  chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.33.0
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.29.0
   chart:redis: https://charts.bitnami.com/bitnami:20.3.0
   chart:node-feature-discovery: https://kubernetes-sigs.github.io/node-feature-discovery/charts:0.19.0
@@ -29,15 +29,15 @@ config:
   # copies live under bitnamilegacy and never get new versions, so renovate
   # cannot bump these two. Moving off them means moving off chart:redis too.
   image:redis: docker.io/bitnamilegacy/redis:7.4.1-debian-12-r2
-  image:redisExporter: docker.io/bitnamilegacy/redis-exporter:1.66.0-debian-12-r2
+  image:redisExporter: docker.io/bitnamilegacy/redis-exporter:1.75.0-debian-12-r2
   image:nginx: docker.io/bitnami/nginx:1.28.0-debian-12-r3
   image:dufs: docker.io/sigoden/dufs:v0.46.0
   image:genshinhelper: docker.io/yindan/genshinhelper:2.1.3
   image:hath: docker.io/frosty5689/hath:1.6.5
-  image:immich: ghcr.io/immich-app/immich-server:v3.1.0
+  image:immich: ghcr.io/immich-app/immich-server:v3.2.2
   # Same release as image:immich, in the OpenVINO flavour -- keep the two
   # versions in lockstep, the chart deploys them as one immich.
-  image:immichMl: ghcr.io/immich-app/immich-machine-learning:v3.1.0-openvino
+  image:immichMl: ghcr.io/immich-app/immich-machine-learning:v3.2.2-openvino
   # Wraps intel_gpu_top; the image bundles it, so this tag pins both. Note the
   # published image tags lag the repo's git tags and drop the `v` -- v0.7.2 is a
   # release with no image behind it.
@@ -62,7 +62,7 @@ config:
   # ghcr is an automatically synced mirror of the primary registry at
   # forgejo.ellis.link/continuwuation/continuwuity; both renovate and the
   # cluster nodes have an easier time with ghcr.
-  image:continuwuity: ghcr.io/continuwuity/continuwuity:v26.8.1
+  image:continuwuity: ghcr.io/continuwuity/continuwuity:v26.9.0
   image:splitpro: ghcr.io/oss-apps/splitpro:v2.1.5
   image:splitproDb: ghcr.io/aetf/pgcron-cnpg:17.10-standard-trixie-1
   image:wireguard: ghcr.io/linuxserver/wireguard:1.0.20260223-r0-ls120
