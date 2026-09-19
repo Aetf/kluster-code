@@ -16,10 +16,26 @@ githubConfigSecret: pre-defined-secret
 # with it. Three things together keep the control plane alive: concurrency,
 # per-pod cpu/memory limits (cargo's job count is capped to match the CPU
 # limit so a build does not thrash inside its own cgroup), and keeping the
-# runner's disk writes off the root nvme -- see the `work` volume below. The
-# first two alone were not enough: two runners writing ~100 MB/s of image
-# layers and cargo targets to the nvme pushed etcd fdatasync into the seconds.
-maxRunners: 2
+# runner's disk writes off the root nvme -- see the `work` volume below.
+#
+# Disk is the guard that carries the most weight: two runners writing ~100 MB/s
+# of image layers and cargo targets to the nvme pushed etcd fdatasync into the
+# seconds, and the concurrency and cpu limits alone did not stop it. Every bulk
+# write a job makes now lands on the scratch dataset instead, so the runner
+# count is free to buy throughput against a cheaper risk -- which it has to,
+# because two runners left teahouse's CI at 74% utilisation, where queueing
+# dominates: a job waited a median of 8-12 minutes for a slot it then held for
+# 1-8 minutes.
+#
+# Four runners at 4 cores each put the aggregate cpu ceiling at 16 of 24 cores,
+# up from 12, and leave 8 for k3s and everything else. That headroom is the
+# guard which replaces the smaller runner count, and it is not symmetric with
+# the cgroup weights: kubepods.slice carries cpu.weight 938 against
+# system.slice's 100, so pods outweigh k3s 9:1 whenever the box is contended.
+# The ceiling, not the weight, is what keeps etcd scheduled -- raising either
+# number again without first measuring etcd's fsync duration under load is how
+# the control plane goes down.
+maxRunners: 4
 
 template:
   spec:
@@ -42,7 +58,7 @@ template:
         command: ["/home/runner/run.sh"]
         env:
           - name: CARGO_BUILD_JOBS
-            value: "6"
+            value: "4"
           # ARC registers runners through run.sh --jitconfig, which has no root
           # check, but config.sh does; set this so a fallback to that path does
           # not fail on the uid.
@@ -53,8 +69,8 @@ template:
             cpu: "2"
             memory: 2Gi
           limits:
-            cpu: "6"
-            memory: 8Gi
+            cpu: "4"
+            memory: 6Gi
         securityContext:
           # Rootful podman inside the pod's user namespace. SYS_ADMIN is for
           # the mount and namespace work podman does per container; the network
