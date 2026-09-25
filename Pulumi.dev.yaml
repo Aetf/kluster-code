@@ -13,8 +13,8 @@ config:
   chart:sealed-secrets: https://bitnami.github.io/sealed-secrets:2.20.0
   chart:cert-manager: https://charts.jetstack.io:v1.21.0
   chart:reloader: https://stakater.github.io/stakater-charts:2.2.11
-  chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.36.0
-  chart:intel-device-plugins-gpu: https://intel.github.io/helm-charts:0.36.0
+  chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.37.0
+  chart:intel-device-plugins-gpu: https://intel.github.io/helm-charts:0.37.0
   chart:immich: https://immich-app.github.io/immich-charts:0.12.0
   chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.26.3
   chart:kube-prometheus-stack: https://prometheus-community.github.io/helm-charts:72.9.1
@@ -53,7 +53,7 @@ config:
   image:stdiscosrv: docker.io/syncthing/discosrv:2.1.2
   image:ukulele: ghcr.io/freyacodes/ukulele:master
   image:rclone: docker.io/rclone/rclone:1.75.0
-  image:spoolman: ghcr.io/donkie/spoolman:0.26.0
+  image:spoolman: ghcr.io/donkie/spoolman:0.27.0
   # Gmail XOAUTH2 bridge (built by `just docker-emailproxy` from docker/emailproxy.conf)
   image:emailproxy: ghcr.io/aetf/emailproxy:2026.7.3
   # kellegous/go shortlinks (built by `just docker-golinks` from docker/golinks.conf;
