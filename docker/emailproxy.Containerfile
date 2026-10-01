@@ -8,7 +8,7 @@
 # the client presents. --local-server-auth is always on: first-time account
 # authorisation happens through `kubectl port-forward ... 8080:8080` (Google
 # only allows loopback redirect URIs for desktop clients).
-FROM docker.io/library/python:3.13-slim
+FROM docker.io/library/python:3.14-slim
 
 ARG EMAILPROXY_VERSION
 RUN pip install --no-cache-dir emailproxy==${EMAILPROXY_VERSION}
