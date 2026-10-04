@@ -24,7 +24,8 @@ server:
 notifications:
   smtp:
     enabled: true
-    from: immich@unlimited-code.works
+    # a send-as alias of the relay's Gmail account, see src/mail
+    from: '"kluster immich" <kluster@unlimited-code.works>'
     transport:
       # the in-cluster exim relay, which needs no credentials but serves a cert
       # from the private CA

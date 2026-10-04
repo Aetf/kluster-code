@@ -136,7 +136,9 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         smtp: {
                             enabled: true,
                             host: pulumi.output(args.smtp).apply(ss => ss.asUrl("smtp", "")),
-                            from_address: pulumi.interpolate`grafana@${args.domain}`,
+                            // a send-as alias of the relay's Gmail account, see src/mail
+                            from_address: pulumi.interpolate`kluster@${args.domain}`,
+                            from_name: "kluster Grafana",
                             skip_verify: true,
                         },
                         analytics: {
@@ -172,7 +174,8 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                     config: {
                         global: {
                             smtp_smarthost: pulumi.output(args.smtp).apply(ss => ss.asUrl("smtp", "")),
-                            smtp_from: pulumi.interpolate`alertmanager@${args.domain}`,
+                            // a send-as alias of the relay's Gmail account, see src/mail
+                            smtp_from: pulumi.interpolate`"kluster Alertmanager" <kluster@${args.domain}>`,
                             // the relay is cluster-internal and plaintext
                             smtp_require_tls: false,
                         },
