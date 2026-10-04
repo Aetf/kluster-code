@@ -13,6 +13,10 @@ interface PrometheusArgs {
     authSubdomain: pulumi.Input<string>,
 
     smtp: pulumi.Input<Service>,
+    // where warning and critical alerts are mailed to
+    alertEmail: pulumi.Input<string>,
+    // HAOS, which turns critical alert webhooks into phone pushes
+    haos: pulumi.Input<Service>,
 }
 
 export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
@@ -48,6 +52,29 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                 }
             }
         }, { parent: this });
+
+        // The HA automation's webhook id is the only secret in the URL, so
+        // only it is sealed; the controller renders the full URL from the
+        // template. Mounted into alertmanager at
+        // /etc/alertmanager/secrets/<name>/url.
+        const haWebhook = new SealedSecret(`${name}-alertmanager-ha-webhook`, {
+            spec: {
+                encryptedData: {
+                    webhook_id: "AgCPResNLBOk3DrUAPnxfdcQmbuWYeo39odd8PzbaKc6bCZcsDyhnJG+UHX1XIp7EHX9q4rGfxieiEQwCuKDEVTD1JL7a34Jqarpj5qULVxSAcpbg5G67g6Szbiymv0BlFbs6gN8g5EyM/84LdKVyfUKi5MQTfzot02AdJtkzvIe+LOZe4NaN1gKzgAqThO+NFJOLecxRRSRRVizsVpoE3zGrgA16LCCl80axbcMr54J13RI5AlQdXBIJHs0f2eb/Nh+MvGEeabUC0jT+I7wfASsyIMdMC7bY+HM2i9l+ZMUMkMGtbJePwUAXd2LVB+/CTVl0ZN2a0tAqzUfwfrodIqZIhOCVeU/zr5bjz44/anhH1uVzr5+er8h5RX4EhW5ci55IMHtihlONgX8Rcos7xQdnOtrTXETP3Um3+dZ0F6FqZvvPgmsIF1KPcyWb0ov+/8Z+spoCwKdhyWk5QwABRVbOtS5NG23PP4HKcAfd0hMsi4lZOkrB4QkaM7P2d1K6koRz7VdXXTFW3uCirH9CuT+0QJqb+PhF/XWL4IH5rPBc7IlfSUF2X70V1gaOOFwJjlnYBEawbxk+rzG25YgYNHC63A/TWQAWOqF+v/NM49BZRn+iIDJsTRvuGIlqVrdphJNhjP3lr5VzJa+rxoEt1L1W/Sw/R8mgzbGPa5e31OAK2FQcB1GETSjyit48l5O6YhhLn7IUQqVlYBlIEbzeHKjrK2pQ4LKwdUzJ73TFZqKVQwTKxdczQKbskLWJR9Qhw==",
+                },
+                template: {
+                    data: {
+                        url: pulumi.output(args.haos).apply(svc => svc.asUrl("http"))
+                            .apply(base => `${base}/api/webhook/{{ .webhook_id }}`),
+                    },
+                },
+            },
+        }, { parent: this });
+
+        const email = {
+            to: args.alertEmail,
+            send_resolved: true,
+        };
 
         const grafanaHost = pulumi.interpolate`${args.subdomain}.${args.domain}`;
 
@@ -135,7 +162,47 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         requests: { cpu: "5m", memory: "64Mi" },
                         limits: { cpu: "5m", memory: "128Mi" },
                     },
+                    // The chart routes everything to a 'null' receiver.
+                    // warning goes out by mail through the in-cluster exim
+                    // relay; critical additionally becomes a phone push
+                    // through the HA webhook; info stays on the dashboards.
+                    // The chart's inhibit_rules and route timings are kept:
+                    // helm merges these maps, but replaces the lists (routes,
+                    // receivers) wholesale.
+                    config: {
+                        global: {
+                            smtp_smarthost: pulumi.output(args.smtp).apply(ss => ss.asUrl("smtp", "")),
+                            smtp_from: pulumi.interpolate`alertmanager@${args.domain}`,
+                            // the relay is cluster-internal and plaintext
+                            smtp_require_tls: false,
+                        },
+                        route: {
+                            routes: [{
+                                receiver: "email-and-push",
+                                matchers: ['severity = "critical"'],
+                            }, {
+                                receiver: "email",
+                                matchers: ['severity = "warning"'],
+                            }],
+                        },
+                        receivers: [
+                            { name: "null" },
+                            {
+                                name: "email",
+                                email_configs: [email],
+                            },
+                            {
+                                name: "email-and-push",
+                                email_configs: [email],
+                                webhook_configs: [{
+                                    url_file: pulumi.interpolate`/etc/alertmanager/secrets/${haWebhook.metadata.name}/url`,
+                                    send_resolved: true,
+                                }],
+                            },
+                        ],
+                    },
                     alertmanagerSpec: {
+                        secrets: [haWebhook.metadata.name],
                         storage: {
                             volumeClaimTemplate: {
                                 spec: {
@@ -149,6 +216,24 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                                 }
                             },
                         },
+                    },
+                },
+                // k3s runs the scheduler, controller-manager and kube-proxy
+                // inside its own process and exposes no metrics endpoint for
+                // them, so their scrape targets never exist and the matching
+                // *Down alerts fire permanently. Disabling a component here
+                // also drops its alert rules.
+                kubeScheduler: { enabled: false },
+                kubeControllerManager: { enabled: false },
+                kubeProxy: { enabled: false },
+                defaultRules: {
+                    disabled: {
+                        // Both fire when the requests would not fit after
+                        // losing the largest node. The homelab node holds
+                        // most of the cluster's capacity, so that is never
+                        // true here and the alerts fire permanently.
+                        KubeCPUOvercommit: true,
+                        KubeMemoryOvercommit: true,
                     },
                 },
                 prometheus: {
