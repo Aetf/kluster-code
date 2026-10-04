@@ -15,6 +15,9 @@ export interface HaosArgs {
  * Homeassistant setups
  */
 export class Haos extends pulumi.ComponentResource {
+    // in-cluster path to HAOS, e.g. for webhooks posted from the cluster
+    public readonly service: Service;
+
     constructor(name: string, args: HaosArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:haos', name, args, opts);
 
@@ -31,7 +34,7 @@ export class Haos extends pulumi.ComponentResource {
             }
         });
 
-        const haosService = new Service(name, {
+        const haosService = this.service = new Service(name, {
             metadata: {
                 name,
                 annotations: {

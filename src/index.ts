@@ -125,6 +125,13 @@ function setup() {
         }],
     }, { provider: namespaced('serving-system') });
 
+    // HaOS
+    const haos = new Haos("haos", {
+        serving,
+        host: 'haos.unlimited-code.works',
+        externalName: 'haos.zt.unlimited-code.works',
+    }, { provider: namespaced('haos') });
+
     // monitoring
     const prometheus = new Prometheus("prometheus", {
         serving,
@@ -133,6 +140,8 @@ function setup() {
         authSubdomain: 'auth',
 
         smtp: mailer.smtpService,
+        alertEmail: 'aetf@unlimited-code.works',
+        haos: haos.service,
     }, {
         provider: namespaced("mon"),
     });
@@ -348,14 +357,6 @@ function setup() {
         juicefsColocation: false, // pinned to homelab by the PV instead
         egress: hathEgress,
     }, { provider: hathProvider });
-
-    // HaOS
-    const haos = new Haos("haos", {
-        serving,
-        host: 'haos.unlimited-code.works',
-        externalName: 'haos.zt.unlimited-code.works',
-    }, { provider: namespaced('haos') });
-
 
     const splitproProvider = namespaced("splitpro");
     // Expense splitting. Unlike most apps here it is not behind the forward-auth

@@ -296,6 +296,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         this.setupFrontendService(name, args.serving, args.host);
         this.setupLanService(name);
         this.setupDashboard(name);
+        this.setupJobQueueAlerts(name);
     }
 
     private setupDatabase(name: string, dbname: string, serving: Serving, storageClass: pulumi.Input<string>): crds.postgresql.v1.Cluster {
@@ -675,6 +676,46 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             ref_file: __filename,
             data: 'static/dashboards/*.json',
             stripComponents: 2,
+        }, { parent: this });
+    }
+
+    /**
+     * Alert on job queues whose in-flight count never returns to zero.
+     *
+     * The microservices worker can leak job slots: a handler never settles and
+     * its slot stays occupied in-process until the pod restarts (the server log
+     * then repeats BullMQ's "could not renew lock" for some of those jobs).
+     * Leaked slots accumulate one by one until a queue stops moving, while the
+     * web UI and API stay healthy. The only metric that shows it is
+     * `immich_queues_<queue>_active`, the worker's own in-flight gauge: a queue
+     * doing real work drains to zero between batches, a leaked slot never does.
+     *
+     * Each queue is its own metric name with no labels, so the queue name is
+     * lifted out of `__name__` into a label.
+     */
+    private setupJobQueueAlerts(name: string) {
+        new crds.monitoring.v1.PrometheusRule(`${name}-job-queues`, {
+            metadata: {
+                namespace: this.namespace,
+                labels: { release: "prometheus" },
+            },
+            spec: {
+                groups: [{
+                    name: "immich-job-queues",
+                    rules: [{
+                        alert: "ImmichJobQueueStuck",
+                        expr: 'label_replace({__name__=~"immich_queues_.+_active", namespace="immich"}, "queue", "$1", "__name__", "immich_queues_(.+)_active") > 0',
+                        // longer than any legitimate continuous run, short of
+                        // a bulk import keeping a heavy queue busy for a day
+                        for: "24h",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "Immich job queue {{ $labels.queue }} has not drained in 24h",
+                            description: "{{ $labels.pod }} has had {{ $value }} {{ $labels.queue }} job(s) in flight continuously for 24h. Unless a bulk import is running, jobs are stuck in the worker; restarting the immich-server pod releases them.",
+                        },
+                    }],
+                }],
+            },
         }, { parent: this });
     }
 
