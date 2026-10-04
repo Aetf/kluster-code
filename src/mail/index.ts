@@ -30,6 +30,15 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
             }
         }, { parent: this });
 
+        // Only the private key of this certificate is used: exim signs
+        // outgoing mail with it (DKIM selector `k8s`), and the matching public
+        // key is published by hand at k8s._domainkey.<host>. The key must
+        // therefore survive renewals; cert-manager >= 1.18 regenerates it on
+        // every re-issuance by default, which silently breaks DKIM.
+        //
+        // Gmail, the smarthost, rewrites a From it does not recognise as the
+        // account or one of its send-as aliases, and From is a signed header:
+        // apps must send as such an address or their signature fails anyway.
         const dkimCert = new ClusterCertificate(`cert-dkim-${name}`, {
             spec: {
                 commonName: 'dkim-k8s',
@@ -37,6 +46,7 @@ export class Exim extends pulumi.ComponentResource<EximArgs> {
                 privateKey: {
                     algorithm: "RSA",
                     size: 2048,
+                    rotationPolicy: "Never",
                 },
             }
         }, { parent: this });
