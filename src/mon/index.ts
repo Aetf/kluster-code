@@ -1,6 +1,8 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as k8s from "@pulumi/kubernetes";
 
+import * as crds from "#src/crds";
+
 import { BackendCertificate } from '#src/base-cluster';
 import { NamespaceProbe, HelmChart, SealedSecret, Service } from "#src/utils";
 import { Serving } from "#src/serving";
@@ -237,6 +239,12 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         // true here and the alerts fire permanently.
                         KubeCPUOvercommit: true,
                         KubeMemoryOvercommit: true,
+                        // Counts every major fault on the node, which here is
+                        // dominated by CI runners cold-reading build outputs
+                        // from the HDD-backed scratch pool -- page-cache
+                        // misses, not memory pressure. NodeMemoryPressure
+                        // below measures the stall directly.
+                        NodeMemoryMajorPagesFaults: true,
                     },
                 },
                 prometheus: {
@@ -295,13 +303,18 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         // cluster is bursty. Anything below this throttles the
                         // container hard enough that its own liveness probe
                         // times out, causing a permanent CrashLoopBackOff.
-                        limits: { cpu: "500m", memory: "64Mi" },
+                        // Its steady working set sits just under 64Mi.
+                        limits: { cpu: "500m", memory: "128Mi" },
                     },
                 },
                 "prometheus-node-exporter": {
                     resources: {
                         requests: { cpu: "20m", memory: "32Mi" },
-                        limits: { cpu: "100m", memory: "32Mi" },
+                        // A scrape of the homelab node (many cgroups, disks
+                        // and zfs stats) needs a burst well above 100m;
+                        // throttled, it runs into the scrape timeout and the
+                        // node's series go missing.
+                        limits: { cpu: "250m", memory: "32Mi" },
                     },
                     prometheus: {
                         monitor: {
@@ -314,6 +327,54 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                         },
                     },
                 },
+            },
+        }, { parent: this });
+
+        new crds.monitoring.v1.PrometheusRule(`${name}-node-health`, {
+            metadata: {
+                namespace,
+                labels: { release: "prometheus" },
+            },
+            spec: {
+                groups: [{
+                    name: "node-health",
+                    rules: [{
+                        alert: "NodeMemoryPressure",
+                        // "full" PSI: share of time every non-idle task on the
+                        // node was stalled waiting for memory
+                        expr: 'rate(node_pressure_memory_stalled_seconds_total{job="node-exporter"}[5m]) > 0.1',
+                        for: "15m",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "Node {{ $labels.node }} is stalled on memory",
+                            description: "All non-idle tasks on {{ $labels.node }} have been stalled on memory (reclaim or swap-in) {{ $value | humanizePercentage }} of the time for 15 minutes.",
+                        },
+                    }, {
+                        alert: "NodeDiskWriteLatencyHigh",
+                        // etcd's fdatasync on the control-plane NVMe is what
+                        // keeps k3s's leader leases renewed: above ~20ms
+                        // average write latency the leases start to lapse and
+                        // k3s exits. Limited to NVMe because HDD latency
+                        // norms are an order of magnitude higher.
+                        expr: 'rate(node_disk_write_time_seconds_total{job="node-exporter", device=~"nvme.+"}[1h]) / rate(node_disk_writes_completed_total{job="node-exporter", device=~"nvme.+"}[1h]) > 0.02',
+                        for: "30m",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "NVMe {{ $labels.device }} on {{ $labels.node }} is slow to write",
+                            description: "Average write latency on {{ $labels.device }} has been {{ $value | humanizeDuration }} over the last hour. etcd on this disk misses lease renewals at this latency. Look for heavy writers (build output on the root filesystem) and check SMART wear.",
+                        },
+                    }, {
+                        alert: "K3sRestarting",
+                        // k3s runs the apiserver in its own process, so the
+                        // apiserver's start time changes on every k3s restart
+                        expr: 'changes(process_start_time_seconds{job="apiserver"}[6h]) > 2',
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "k3s on {{ $labels.instance }} has restarted {{ $value }} times in 6h",
+                            description: "The k3s server keeps exiting; every controller with a leader lease restarts with it. `journalctl -u k3s` shows the fatal line, usually `leaderelection lost` after slow etcd fdatasync.",
+                        },
+                    }],
+                }],
             },
         }, { parent: this });
 
