@@ -29,6 +29,7 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
     private readonly certManager!: HelmChart;
     private readonly reloader!: HelmChart;
     private readonly nfd!: HelmChart;
+    private readonly descheduler!: HelmChart;
 
     public readonly nodes: Nodes;
     public readonly rootIssuer!: crds.cert_manager.v1.ClusterIssuer;
@@ -113,6 +114,59 @@ export class BaseCluster extends pulumi.ComponentResource<BaseClusterArgs> {
                     certManager: true,
                 }
             }
+        }, { parent: this });
+
+        // Deletes pods that an eviction or a failed device allocation left in
+        // phase Failed. Kubernetes keeps them until the cluster holds 12500
+        // terminated pods, so their controller has long replaced them while
+        // they keep KubePodNotReady firing. The run interval stays under that
+        // alert's 15m `for`, so a leftover pod is gone before it alerts; the
+        // eviction itself alerts through KubeNodeEviction / KubeNodePressure.
+        this.descheduler = new HelmChart("descheduler", {
+            namespace,
+            chart: "descheduler",
+            values: {
+                kind: "CronJob",
+                schedule: "*/10 * * * *",
+                successfulJobsHistoryLimit: 1,
+                failedJobsHistoryLimit: 1,
+                activeDeadlineSeconds: 300,
+                resources: {
+                    requests: { cpu: "10m", memory: "64Mi" },
+                    limits: { cpu: "200m", memory: "256Mi" },
+                },
+                // Replaces the chart's default profile wholesale: that one
+                // rebalances and evicts running pods, which is not wanted here.
+                deschedulerPolicy: {
+                    profiles: [{
+                        name: "remove-failed",
+                        pluginConfig: [{
+                            name: "DefaultEvictor",
+                            args: {
+                                podProtections: {
+                                    // The only pods this profile touches have
+                                    // already failed, so the protections that
+                                    // guard running pods from disruption (local
+                                    // storage, system-critical priority) would
+                                    // only stop the cleanup.
+                                    defaultDisabled: ["PodsWithLocalStorage", "SystemCriticalPods"],
+                                },
+                            },
+                        }, {
+                            name: "RemoveFailedPods",
+                            args: {
+                                reasons: ["Evicted", "UnexpectedAdmissionError"],
+                                // a failed Job pod is the record of why the
+                                // Job failed; Jobs prune their own history
+                                excludeOwnerKinds: ["Job"],
+                            },
+                        }],
+                        plugins: {
+                            deschedule: { enabled: ["RemoveFailedPods"] },
+                        },
+                    }],
+                },
+            },
         }, { parent: this });
     }
 
