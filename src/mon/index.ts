@@ -231,6 +231,13 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                 kubeScheduler: { enabled: false },
                 kubeControllerManager: { enabled: false },
                 kubeProxy: { enabled: false },
+                // Both default to info, which is not routed anywhere. They are
+                // the signal for an eviction now that the descheduler deletes
+                // evicted pods before KubePodNotReady can fire for them.
+                customRules: {
+                    KubeNodePressure: { severity: "warning" },
+                    KubeNodeEviction: { severity: "warning" },
+                },
                 defaultRules: {
                     disabled: {
                         // Both fire when the requests would not fit after
