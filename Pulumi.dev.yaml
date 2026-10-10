@@ -13,12 +13,12 @@ config:
   chart:sealed-secrets: https://bitnami.github.io/sealed-secrets:2.20.0
   chart:cert-manager: https://charts.jetstack.io:v1.21.0
   chart:reloader: https://stakater.github.io/stakater-charts:2.2.11
-  chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.36.0
-  chart:intel-device-plugins-gpu: https://intel.github.io/helm-charts:0.36.0
+  chart:intel-device-plugins-operator: https://intel.github.io/helm-charts:0.37.1
+  chart:intel-device-plugins-gpu: https://intel.github.io/helm-charts:0.37.1
   chart:immich: https://immich-app.github.io/immich-charts:0.12.0
   chart:minecraft: https://itzg.github.io/minecraft-server-charts:4.26.3
   chart:kube-prometheus-stack: https://prometheus-community.github.io/helm-charts:72.9.1
-  chart:traefik: https://helm.traefik.io/traefik:41.6.0
+  chart:traefik: https://helm.traefik.io/traefik:41.7.1
   chart:juicefs-csi-driver: https://juicedata.github.io/charts:0.33.0
   chart:cloudnative-pg: https://cloudnative-pg.github.io/charts:0.29.0
   chart:redis: https://charts.bitnami.com/bitnami:20.3.0
@@ -35,10 +35,10 @@ config:
   image:dufs: docker.io/sigoden/dufs:v0.46.0
   image:genshinhelper: docker.io/yindan/genshinhelper:2.1.3
   image:hath: docker.io/frosty5689/hath:1.6.5
-  image:immich: ghcr.io/immich-app/immich-server:v3.2.2
+  image:immich: ghcr.io/immich-app/immich-server:v3.3.1
   # Same release as image:immich, in the OpenVINO flavour -- keep the two
   # versions in lockstep, the chart deploys them as one immich.
-  image:immichMl: ghcr.io/immich-app/immich-machine-learning:v3.2.2-openvino
+  image:immichMl: ghcr.io/immich-app/immich-machine-learning:v3.3.1-openvino
   # Wraps intel_gpu_top; the image bundles it, so this tag pins both. Note the
   # published image tags lag the repo's git tags and drop the `v` -- v0.7.2 is a
   # release with no image behind it.
@@ -49,12 +49,12 @@ config:
   image:exim: docker.io/devture/exim-relay:4.94.2-r0-2
   image:authelia: ghcr.io/authelia/authelia:4.39.4
   image:shoko: docker.io/shokoanime/server:v5.3.0
-  image:yq: docker.io/mikefarah/yq:4.53.2
+  image:yq: docker.io/mikefarah/yq:4.54.1
   image:syncthing: docker.io/syncthing/syncthing:2.1.2
   image:stdiscosrv: docker.io/syncthing/discosrv:2.1.2
   image:ukulele: ghcr.io/freyacodes/ukulele:master
   image:rclone: docker.io/rclone/rclone:1.75.0
-  image:spoolman: ghcr.io/donkie/spoolman:0.26.0
+  image:spoolman: ghcr.io/donkie/spoolman:0.27.0
   # Gmail XOAUTH2 bridge (built by `just docker-emailproxy` from docker/emailproxy.conf)
   image:emailproxy: ghcr.io/aetf/emailproxy:2026.7.3
   # kellegous/go shortlinks (built by `just docker-golinks` from docker/golinks.conf;
