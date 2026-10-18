@@ -484,7 +484,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         }, { parent: this });
     }
 
-    // A monthly "restore drill": recover the database from the barman object
+    // A quarterly "restore drill": recover the database from the barman object
     // store into a throwaway cluster and verify the recovered data, proving the
     // backups are actually restorable (WAL archiving alone doesn't prove that).
     // See docs/cnpg-restore-drill.md.
@@ -562,6 +562,9 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         });
         new k8s.batch.v1.CronJob(`${name}-restore-drill`, {
             spec: {
+                // Quarterly: each drill pulls a full base backup out of GCS,
+                // which is billed egress. ImmichDbRestoreDrillStale below is
+                // sized to this schedule's longest gap (92 days).
                 schedule: "0 4 1 */3 *",
                 concurrencyPolicy: 'Forbid',
                 failedJobsHistoryLimit: 1,
@@ -593,16 +596,16 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                         labels: { severity: "warning" },
                         annotations: {
                             summary: "Immich DB restore drill failed",
-                            description: "The monthly CNPG restore drill job {{ $labels.job_name }} failed; backups may not be restorable. Check the Job logs.",
+                            description: "The CNPG restore drill job {{ $labels.job_name }} failed; backups may not be restorable. Check the Job logs.",
                         },
                     }, {
                         alert: "ImmichDbRestoreDrillStale",
-                        expr: 'time() - max(kube_job_status_completion_time{namespace="immich", job_name=~"immich-restore-drill.*"}) > 3888000',
+                        expr: 'time() - max(kube_job_status_completion_time{namespace="immich", job_name=~"immich-restore-drill.*"}) > 8640000',
                         for: "1h",
                         labels: { severity: "warning" },
                         annotations: {
-                            summary: "Immich DB restore drill has not succeeded in 45d",
-                            description: "No successful CNPG restore drill completed in the last 45 days.",
+                            summary: "Immich DB restore drill has not succeeded in 100d",
+                            description: "No successful CNPG restore drill completed in the last 100 days; the quarterly run was missed or failed.",
                         },
                     }],
                 }],
