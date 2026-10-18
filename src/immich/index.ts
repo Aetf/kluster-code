@@ -32,6 +32,10 @@ interface ImmichArgs {
     juicefsColocation?: boolean,
     dbStorageClass: pulumi.Input<string>,
     cacheStorageClass: pulumi.Input<string>,
+    // For the restore drill's throwaway cluster. Must reclaim on delete: the
+    // drill deletes its PVCs when done, and under a Retain class every run
+    // would leave a Released PV and its data directory behind.
+    drillStorageClass: pulumi.Input<string>,
 }
 
 export class Immich extends pulumi.ComponentResource<ImmichArgs> {
@@ -62,7 +66,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         this.libraryPVC = args.libraryPvc ?? legacyPvc!;
 
         this.dbname = 'app';
-        this.database = this.setupDatabase(name, this.dbname, args.serving, args.dbStorageClass);
+        this.database = this.setupDatabase(name, this.dbname, args.serving, args.dbStorageClass, args.drillStorageClass);
         const dbhost = pulumi.interpolate`${this.database.metadata.name}-rw`;
         const dbpassSecret = pulumi.interpolate`${this.database.metadata.name}-${this.dbname}`
 
@@ -299,7 +303,13 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         this.setupJobQueueAlerts(name);
     }
 
-    private setupDatabase(name: string, dbname: string, serving: Serving, storageClass: pulumi.Input<string>): crds.postgresql.v1.Cluster {
+    private setupDatabase(
+        name: string,
+        dbname: string,
+        serving: Serving,
+        storageClass: pulumi.Input<string>,
+        drillStorageClass: pulumi.Input<string>,
+    ): crds.postgresql.v1.Cluster {
         const gcsSecret = new SealedSecret(`${name}-db`, {
             spec: {
                 encryptedData: {
@@ -430,7 +440,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
             }
         }, { parent: this });
 
-        this.setupRestoreDrill(name, db, catalog, gcsSecret, storageClass);
+        this.setupRestoreDrill(name, db, catalog, gcsSecret, drillStorageClass);
         this.setupDatabaseMonitor(name, db);
         return db;
     }

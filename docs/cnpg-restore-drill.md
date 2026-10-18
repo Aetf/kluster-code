@@ -34,6 +34,11 @@ pointing at the source's barman `serverName`, **no `.spec.backup`**) → waits u
 `pg_is_in_recovery()=f`, `select count(*) from asset > 0`, and the `vchord`/`vector`
 extensions present → always tears down the cluster + PVCs via an `EXIT` trap.
 
+The recovery cluster's storage class (`drillStorageClass`, the plain
+`local-path` class) reclaims on delete, so deleting a drill PVC also removes
+its PV and the data directory on the node. A Retain class here would leave one
+Released PV and its directory behind per run.
+
 ## Run it manually
 
 ```sh

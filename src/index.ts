@@ -331,6 +331,7 @@ function setup() {
         juicefsColocation: false, // pinned to homelab by the PV instead
         dbStorageClass: cluster.localStableStorageClass.metadata.name,
         cacheStorageClass: cluster.localStorageClass.metadata.name,
+        drillStorageClass: cluster.localStorageClass.metadata.name,
     }, { provider: immichProvider });
 
     // Hath@Home. Its public identity is the vps IP its LoadBalancer sits on,
