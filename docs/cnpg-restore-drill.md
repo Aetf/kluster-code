@@ -17,14 +17,15 @@ throwaway cluster, verifies the data, and tears it down.
 
 Defined in `src/immich/index.ts` → `setupRestoreDrill()`:
 
-- **CronJob** `immich-db-restore-drill` — monthly (`0 4 1 * *`, 1st @ 04:00). Runs
+- **CronJob** `immich-db-restore-drill` — quarterly (`0 4 1 */3 *`, Jan/Apr/Jul/Oct 1st @ 04:00; each run is billed
+  GCS egress for a full base backup). Runs
   `src/immich/static/restore-drill/drill.sh` in an `alpine/k8s` (kubectl) container.
 - **ConfigMap** `immich-restore-drill` — holds the rendered recovery `Cluster`
   manifest (`cluster.yaml`) and `drill.sh`.
 - **ServiceAccount/Role/RoleBinding** `immich-restore-drill` — lets the Job
   create/delete `clusters.postgresql.cnpg.io` + PVCs and `exec` psql into the pod.
 - **PrometheusRule** `immich-restore-drill` — alerts `ImmichDbRestoreDrillFailed`
-  (a drill Job failed) and `ImmichDbRestoreDrillStale` (no success in 45d), via the
+  (a drill Job failed) and `ImmichDbRestoreDrillStale` (no success in 100d: the 92-day longest gap between runs plus margin), via the
   existing Alertmanager.
 
 The drill script: pre-cleans any leftover → `kubectl apply` the recovery cluster
@@ -72,7 +73,7 @@ A passing run ends with `>>> RESTORE DRILL PASSED (recovered N assets)` and Job
 - **Never** give the recovery cluster a `.spec.backup` — it would archive WAL under
   the same `serverName` and corrupt the real backups.
 
-## When to run beyond the monthly schedule
+## When to run beyond the quarterly schedule
 
 Run an extra manual drill before and after any major change to the DB image
 (Postgres major version, vchord/vector version bump) or backup configuration.

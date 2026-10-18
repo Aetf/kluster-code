@@ -1,4 +1,4 @@
-# Throwaway cluster used by the monthly restore drill. Recovers the immich
+# Throwaway cluster used by the quarterly restore drill. Recovers the immich
 # database from the GCS barman object store into a fresh single-instance
 # cluster so we can prove the backups are actually restorable.
 #
