@@ -20,8 +20,14 @@ export class CloudNativePg extends pulumi.ComponentResource<CloudNativePgArgs> {
             chart: "cloudnative-pg",
             values: {
                 resources: {
-                    requests: { cpu: "5m", memory: "128Mi" },
-                    limits: { cpu: "20m", memory: "128Mi" },
+                    requests: { cpu: "10m", memory: "128Mi" },
+                    // Startup (cache sync, webhook TLS) is bursty. At a 20m
+                    // cap the container was throttled hard enough that the
+                    // 1s probe on its HTTPS /readyz timed out, so the startup
+                    // probe killed it before it was up: a CrashLoopBackOff
+                    // that fed itself, since every restart is another startup.
+                    // Working set peaks near 115Mi, too close to 128Mi.
+                    limits: { cpu: "500m", memory: "256Mi" },
                 },
 
             }
