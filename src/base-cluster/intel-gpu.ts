@@ -9,6 +9,10 @@ import { HelmChart, NamespaceProbe } from "#src/utils";
 interface IntelDevicePluginsArgs {
 }
 
+// PCI device id of the Arc A380 (DG2) on the homelab node, the one card the
+// GPU plugin registers and the exporter watches.
+const A380_DEVICE_ID = '0x56a5';
+
 function deleteUnusedService(obj: any, opts: pulumi.CustomResourceOptions) {
     // This service has wrong targetport spec, and causes pulumi to always
     // waiting for it.
@@ -74,10 +78,60 @@ export class IntelDevicePlugins extends pulumi.ComponentResource<IntelDevicePlug
             chart: "intel-device-plugins-gpu",
             values: {
                 sharedDevNum: 5,
+                // Only the Arc A380. The homelab node also has a UHD 770 iGPU
+                // on i915, and the plugin names its resource after the driver,
+                // so both cards would land in one gpu.intel.com/i915 pool and
+                // a pod would get whichever the plugin picked. The iGPU stays
+                // out of Kubernetes; it idles in RC6 at ~0W, so it costs
+                // nothing to leave enabled.
+                //
+                // Keep the iGPU as the BIOS primary display, too. With the
+                // firmware console on the A380, simpledrm leaves a dangling
+                // /dev/dri/by-path/pci-0000:03:00.0-platform-simple-framebuffer.0-card
+                // link behind once i915 takes over; the plugin maps it into
+                // every container it hands the card to, and containerd fails
+                // them with CreateContainerError.
+                allowIDs: A380_DEVICE_ID,
             },
         }, { parent: this });
 
+        this.setupAlerts(`${name}-alerts`, namespace);
+
         this.setupExporter(`${name}-exporter`, namespace);
+    }
+
+    /**
+     * The plugin's i915 gRPC server does not always re-register after kubelet
+     * drops its socket (a k3s restart can do it) while the monitoring one
+     * does, so the pod stays Running while the node's i915 capacity reads 0.
+     * Pods already holding the card keep working; the next one to schedule
+     * sits Pending on Insufficient gpu.intel.com/i915. Deleting the plugin
+     * pod restores registration without disturbing the running consumers.
+     */
+    private setupAlerts(name: string, namespace: pulumi.Output<string>) {
+        return new crds.monitoring.v1.PrometheusRule(name, {
+            metadata: {
+                namespace,
+                labels: { release: "prometheus" },
+            },
+            spec: {
+                groups: [{
+                    name: "intel-gpu",
+                    rules: [{
+                        alert: "IntelGpuNotAllocatable",
+                        // A lost registration reads as 0, not as a missing series.
+                        expr: 'sum(kube_node_status_allocatable{resource="gpu_intel_com_i915"}) == 0'
+                            + ' or absent(kube_node_status_allocatable{resource="gpu_intel_com_i915"})',
+                        for: "15m",
+                        labels: { severity: "warning" },
+                        annotations: {
+                            summary: "No node advertises gpu.intel.com/i915",
+                            description: "The GPU plugin has stopped advertising the card, so the next immich or jellyfin pod will stay Pending. If `ls /dev/dri` on the host still shows the card, the plugin lost its i915 registration: `kubectl delete pod -n intel-gpu -l app=intel-gpu-plugin`.",
+                        },
+                    }],
+                }],
+            },
+        }, { parent: this });
     }
 
     /**
@@ -108,7 +162,10 @@ export class IntelDevicePlugins extends pulumi.ComponentResource<IntelDevicePlug
                         containers: [{
                             name: 'exporter',
                             image: versions.image.intelGpuExporter,
-                            args: ['--interval=5s', '--device=drm:/dev/dri/card0'],
+                            // Select the card by PCI id, passed through to
+                            // `intel_gpu_top -d`: cardN numbering follows probe
+                            // order and the iGPU is card0 today.
+                            args: ['--interval=5s', `--device=pci:vendor=8086,device=${A380_DEVICE_ID.replace(/^0x/, '')}`],
                             ports: [{ name: 'metrics', containerPort: 9100 }],
                             securityContext: { privileged: true },
                             volumeMounts: [{ name: 'dev-dri', mountPath: '/dev/dri' }],

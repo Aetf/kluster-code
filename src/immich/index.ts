@@ -184,7 +184,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                                         // requests-based CFS weight already protects the
                                         // neighbours. Memory stays capped at 12Gi: pushing it
                                         // higher memory-throttled the whole node (2026-08-19).
-                                        // ffmpeg only reaches the iGPU through a device
+                                        // ffmpeg only reaches the GPU through a device
                                         // plugin allocation: without one the container has
                                         // no /dev/dri at all, and the `accel: qsv` in
                                         // immich-config.yaml quietly degraded to software
@@ -271,8 +271,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                                     resources: {
                                         requests: { cpu: "1", memory: "1Gi", 'gpu.intel.com/i915': '1' },
                                         // OpenVINO costs more host memory than the CPU
-                                        // path (upstream says so, and on an iGPU the
-                                        // models live in system RAM anyway). The CPU
+                                        // path (upstream says so). The CPU
                                         // limit still governs whatever stays on the CPU
                                         // provider -- 4 cores ran pinned at the limit
                                         // for the whole OCR backlog.
