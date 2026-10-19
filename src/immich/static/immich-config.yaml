@@ -53,9 +53,9 @@ job:
     concurrency: 1
 
 ffmpeg:
-  # QSV on the iGPU. The server only has a /dev/dri to point ffmpeg at because
-  # its pod requests gpu.intel.com/i915; machine-learning and jellyfin hold
-  # shares of the same card.
+  # QSV on the Arc A380. The server only has a /dev/dri to point ffmpeg at
+  # because its pod requests gpu.intel.com/i915; machine-learning and jellyfin
+  # hold shares of the same card.
   accel: qsv
   # ...but software decode. The iGPU's HEVC decoder hangs the video engine on
   # 4K60 HEVC from Android phones (yuvj420p, ~40Mbit): the kernel logs
@@ -64,8 +64,8 @@ ffmpeg:
   # core forever. Two such files wedged both videoConversion workers for 2.5
   # hours on 2026-08-19 and stalled the whole queue. Software decode of the
   # same file finishes in 19s wall for 11.4s of 4K60, so the decoder was never
-  # the expensive half; the encoder still runs on the GPU. Worth retrying once
-  # the discrete card lands (Aetf/kluster-code#196).
+  # the expensive half; the encoder still runs on the GPU. Not yet retried on
+  # the A380, whose media engine is a newer generation (Aetf/kluster-code#196).
   accelDecode: false
   # A 1080p h264 streaming copy, not a second master. Measured on one 11.4s
   # 4K60 HEVC original (54MB), same encoder settings, SSIM against the source
