@@ -340,7 +340,6 @@ function setup() {
     const hathProvider = namespaced('hath');
     const hathEgress = new EgressGateway('hath-egress', {
         node: cluster.nodes.AetfArchVPS,
-        endpointHost: 'aetf-arch-vps.zt.unlimited-code.works',
     }, { provider: hathProvider });
     // Storage was jfs-backed (S3) until the jfs local block cache, shared and
     // far smaller than hath's ~50GiB working set, turned most image serves into

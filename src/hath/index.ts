@@ -59,6 +59,7 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
 
         const port = 60011;
         const hathPrefix = '/hath';
+        const egress = args.egress?.clientContainers(`${name}-egress`);
         const pb = new kx.PodBuilder({
             restartPolicy: 'Always',
             // Hath need to time to shut down gracefully, give it 5min
@@ -70,7 +71,7 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
                 fsGroup: 1000,
                 fsGroupChangePolicy: 'OnRootMismatch',
             },
-            initContainers: args.egress ? [args.egress.clientInitContainer(`${name}-egress`)] : undefined,
+            initContainers: egress ? [egress.init] : undefined,
             containers: [{
                 name,
                 image: versions.image.hath,
@@ -106,7 +107,7 @@ export class Hath extends pulumi.ComponentResource<HathArgs> {
                     // mounted secret file is respected. Nests on the data subPath.
                     secrets.mount(`${hathPrefix}/data/client_login`, 'client_login'),
                 ],
-            }],
+            }, ...(egress ? [egress.sidecar] : [])],
             volumes: [
                 {
                     name: pvc.metadata.name,

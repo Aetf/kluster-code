@@ -3,7 +3,9 @@
 # leaves from the gateway node's public IP instead of its own node's.
 #
 # Runs as an init container: kernel WireGuard needs no daemon, so once the link
-# is configured it lives as long as the pod's network namespace does.
+# is configured it lives as long as the pod's network namespace does. The peer's
+# endpoint is not set here but by endpoint.sh, which this script hands over to
+# at the end and which keeps running as a sidecar.
 #
 # Only the default route moves. These three keep going out eth0, and getting
 # them wrong is how this breaks:
@@ -13,7 +15,8 @@
 #   - service CIDR: cluster DNS and every ClusterIP. The CNI installs only the
 #                   pod CIDR plus a default route, so without this line the
 #                   tunnel swallows DNS.
-#   - underlay:     carries the WireGuard endpoint itself. Circular otherwise.
+#   - underlay:     the ZeroTier network between the nodes, which carries the
+#                   WireGuard packets themselves. Circular otherwise.
 set -eu
 
 # Re-runnable. A restarted init container comes back to a namespace it has
@@ -43,11 +46,7 @@ PrivateKey = $(cat {{{clientKeyPath}}})
 
 [Peer]
 PublicKey = {{{gatewayPublicKey}}}
-Endpoint = {{{endpoint}}}
 AllowedIPs = 0.0.0.0/0
-# Keeps the conntrack entry for our outbound handshake alive, so the gateway
-# can still reach us after it has been restarted or rescheduled.
-PersistentKeepalive = 25
 EOF
 wg setconf wg0 "$conf"
 rm -f "$conf"
@@ -63,3 +62,8 @@ ip link set wg0 mtu {{{mtu}}} up
 # a second route.)
 ip route replace 0.0.0.0/1 dev wg0
 ip route replace 128.0.0.0/1 dev wg0
+
+# Until the peer has an endpoint, these routes drop the pod's outbound traffic
+# rather than letting it out of this node's address. Block here until the
+# tunnel is up, so the app container starts with working egress.
+exec /bin/sh "$(dirname "$0")/endpoint.sh" --wait
