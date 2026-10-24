@@ -1,15 +1,14 @@
-import * as dns from "dns";
 import * as pulumi from "@pulumi/pulumi";
 import * as kx from "@pulumi/kubernetesx";
 
-import { ConfigMap, Node, SealedSecret } from "#src/utils";
+import { ConfigMap, Node, SealedSecret, Service, serviceFromDeployment } from "#src/utils";
 import { versions } from "#src/config";
 
 // k3s defaults, as configured on this cluster.
 const podCidr = '10.42.0.0/16';
 const serviceCidr = '10.43.0.0/16';
 // The ZeroTier network the two nodes are joined over. k3s uses those addresses
-// as the nodes' InternalIP, so it is also what the endpoint host resolves to.
+// as the nodes' InternalIP, so pod traffic between nodes rides on it.
 const underlayCidr = '10.144.0.0/16';
 
 // A /30 that exists only inside the tunnel.
@@ -34,8 +33,6 @@ const clientPublicKey = 'tRjfWciQaPwJ3oi3cOPBiWnQzEc/OhEq2msqbq4lPWU=';
 export interface EgressGatewayArgs {
     /** Node whose public IP outbound traffic should appear to come from. */
     node: Node,
-    /** Name resolving to `node`'s address on the underlay network. */
-    endpointHost: pulumi.Input<string>,
 }
 
 /**
@@ -52,24 +49,21 @@ export interface EgressGatewayArgs {
  * falls out of where the gateway pod is scheduled, with no host-level rule and
  * no root on either machine.
  *
- * Clients opt in with `clientInitContainer()`, which rewrites the default route
+ * Clients opt in with `clientContainers()`, which rewrites the default route
  * in their own network namespace. That is what keeps this per-pod: a route or
- * policy on the host would apply to every pod on the node.
+ * policy on the host would apply to every pod on the node. They reach the
+ * gateway through a ClusterIP Service, by DNS name, so nothing about the
+ * gateway's node or pod address is baked into them.
  *
  * Clients must be in the same namespace, as they mount the key material here.
  */
 export class EgressGateway extends pulumi.ComponentResource<EgressGatewayArgs> {
     private readonly secret: SealedSecret;
     private readonly scripts: ConfigMap;
+    public readonly service: Service;
 
     constructor(name: string, args: EgressGatewayArgs, opts?: pulumi.ComponentResourceOptions) {
         super('kluster:EgressGateway', name, args, opts);
-
-        // Resolved at eval time, the same way haos reaches across the tunnel.
-        const endpointIP = pulumi.output(args.endpointHost).apply(async host => {
-            const result = await dns.promises.lookup(host);
-            return result.address;
-        });
 
         this.secret = new SealedSecret(name, {
             spec: {
@@ -90,7 +84,8 @@ export class EgressGateway extends pulumi.ComponentResource<EgressGatewayArgs> {
                 port, mtu,
                 gatewayKeyPath, clientKeyPath,
                 gatewayPublicKey, clientPublicKey,
-                endpoint: pulumi.interpolate`${endpointIP}:${port}`,
+                // The Service created below, by its fixed name.
+                endpoint: pulumi.interpolate`${name}.${this.secret.metadata.namespace}.svc.cluster.local:${port}`,
             }
         }, { parent: this });
 
@@ -115,10 +110,6 @@ export class EgressGateway extends pulumi.ComponentResource<EgressGatewayArgs> {
                     name: 'wireguard',
                     protocol: 'UDP',
                     containerPort: port,
-                    hostPort: port,
-                    // Bind to the underlay only, so the endpoint isn't also
-                    // listening on the node's public address.
-                    hostIP: endpointIP,
                 }],
                 securityContext: {
                     capabilities: {
@@ -132,46 +123,72 @@ export class EgressGateway extends pulumi.ComponentResource<EgressGatewayArgs> {
             }],
         });
 
-        new kx.Deployment(name, {
+        const deployment = new kx.Deployment(name, {
             metadata: {
                 annotations: {
                     "reloader.stakater.com/auto": "true"
                 }
             },
-            // Recreate, not the default RollingUpdate: the hostPort below can
-            // only be held by one pod per node, so a surge replica would sit
-            // Pending on "didn't have free ports" while the rollout waits for
-            // it to go Ready -- a deadlock. Take the old pod down first and
-            // accept a few seconds without a tunnel; WireGuard re-handshakes on
-            // its own and clients keep their routes across the gap.
+            // Recreate, not the default RollingUpdate: clients hold a single
+            // peer, and a surge replica behind the same Service would be a
+            // second terminator for the same keys. Take the old pod down first
+            // and accept a short gap: WireGuard re-handshakes on its own once
+            // the new pod answers, and the client sidecar re-sets the endpoint
+            // if the session stays dead.
             spec: pb.asDeploymentSpec({ strategy: { type: 'Recreate' } }),
         }, { parent: this });
+
+        this.service = serviceFromDeployment(name, deployment, {
+            metadata: { name },
+            spec: {
+                ports: [{ name: 'wireguard', protocol: 'UDP', port, targetPort: port }],
+            },
+        });
 
         this.registerOutputs({});
     }
 
     /**
-     * Init container replacing the enclosing pod's default route with this
-     * gateway. Needs NET_ADMIN; the app container itself needs nothing.
+     * Containers that send the enclosing pod's outbound traffic through this
+     * gateway. Both need NET_ADMIN; the app container itself needs nothing.
      *
-     * Deliberately an init container and not a sidecar: kernel WireGuard is
-     * state in the network namespace, not a process, so there is nothing left
-     * to keep running once it is set up.
+     * - `init`: creates the tunnel and the routes, and returns once the tunnel
+     *   has a handshake, so the app starts with working egress.
+     * - `sidecar`: keeps the tunnel pointed at the gateway Service for the life
+     *   of the pod, re-resolving it whenever the handshake goes stale. Kernel
+     *   WireGuard is state in the network namespace and needs no process, but
+     *   it resolves the endpoint name only when it is set.
      */
-    public clientInitContainer(name: string): pulumi.Input<kx.types.Container> {
+    public clientContainers(name: string): { init: pulumi.Input<kx.types.Container>, sidecar: pulumi.Input<kx.types.Container> } {
+        const securityContext = {
+            capabilities: {
+                add: ['NET_ADMIN'],
+            }
+        };
         return {
-            name,
-            image: versions.image.wireguard,
-            command: ['/bin/sh', `${scriptPath}/client.sh`],
-            securityContext: {
-                capabilities: {
-                    add: ['NET_ADMIN'],
-                }
+            init: {
+                name,
+                image: versions.image.wireguard,
+                command: ['/bin/sh', `${scriptPath}/client.sh`],
+                securityContext,
+                volumeMounts: [
+                    this.scripts.mount(scriptPath),
+                    this.secret.mount(clientKeyPath, 'client_privkey'),
+                ],
             },
-            volumeMounts: [
-                this.scripts.mount(scriptPath),
-                this.secret.mount(clientKeyPath, 'client_privkey'),
-            ],
+            sidecar: {
+                name: `${name}-endpoint`,
+                image: versions.image.wireguard,
+                command: ['/bin/sh', `${scriptPath}/endpoint.sh`],
+                resources: {
+                    requests: { cpu: "5m", memory: "16Mi" },
+                    limits: { cpu: "100m", memory: "64Mi" },
+                },
+                securityContext,
+                volumeMounts: [
+                    this.scripts.mount(scriptPath),
+                ],
+            },
         };
     }
 
