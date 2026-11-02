@@ -9,6 +9,7 @@ import { Redis } from '#src/redis';
 import { Serving } from '#src/serving';
 import { versions } from "#src/config";
 import { juicefsColocationAffinity } from "#src/juicefs";
+import * as jobSlotWatchdog from "./job-slot-watchdog";
 
 interface ImmichArgs {
     serving: Serving,
@@ -172,6 +173,7 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
                             },
                             containers: {
                                 main: {
+                                    env: jobSlotWatchdog.serverEnv,
                                     resources: {
                                         requests: { cpu: "4", memory: "4Gi" },
                                         // ffmpeg tonemap transcoding and concurrent media jobs are
@@ -300,6 +302,11 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
         this.setupLanService(name);
         this.setupDashboard(name);
         this.setupJobQueueAlerts(name);
+        new jobSlotWatchdog.ImmichJobSlotWatchdog(`${name}-job-slot-watchdog`, {
+            release: name,
+            redis,
+            secret,
+        }, { parent: this });
     }
 
     private setupDatabase(
@@ -701,6 +708,10 @@ export class Immich extends pulumi.ComponentResource<ImmichArgs> {
      * web UI and API stay healthy. The only metric that shows it is
      * `immich_queues_<queue>_active`, the worker's own in-flight gauge: a queue
      * doing real work drains to zero between batches, a leaked slot never does.
+     *
+     * The cause is upstream, and job-slot-watchdog.ts restarts the server long
+     * before this fires; this alert is what reports a leak that the watchdog
+     * did not or no longer handles.
      *
      * Each queue is its own metric name with no labels, so the queue name is
      * lifted out of `__name__` into a label.
