@@ -5,7 +5,7 @@ import * as kx from "@pulumi/kubernetesx";
 import { Node } from "#src/utils";
 
 export { BaseCluster } from "./base";
-export { FrontendCertificate, BackendCertificate, ClusterCertificate } from "./certs";
+export { FrontendCertificate, BackendCertificate, ClusterCertificate, labelBackendCertificates } from "./certs";
 
 interface NodePVArgs {
     path: pulumi.Input<string>,

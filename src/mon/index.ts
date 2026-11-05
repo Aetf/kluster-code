@@ -3,7 +3,7 @@ import * as k8s from "@pulumi/kubernetes";
 
 import * as crds from "#src/crds";
 
-import { BackendCertificate } from '#src/base-cluster';
+import { BackendCertificate, labelBackendCertificates } from '#src/base-cluster';
 import { NamespaceProbe, HelmChart, SealedSecret, Service } from "#src/utils";
 import { Serving } from "#src/serving";
 
@@ -335,6 +335,9 @@ export class Prometheus extends pulumi.ComponentResource<PrometheusArgs> {
                     },
                 },
             },
+            // the admission webhook certificate is issued by the root issuer
+            // via prometheusOperator.admissionWebhooks.certManager.issuerRef
+            transformations: [labelBackendCertificates],
         }, { parent: this });
 
         new crds.monitoring.v1.PrometheusRule(`${name}-node-health`, {

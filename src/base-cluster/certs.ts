@@ -76,6 +76,26 @@ export interface BackendCertificateArgs {
     pkcs12?: pulumi.Input<crds.types.input.cert_manager.v1.CertificateSpecKeystoresPkcs12>;
 }
 
+/**
+ * Marks certificates issued by the internal root CA. Rotating that CA does not
+ * reissue its leaves, whose `ca.crt` keeps the old CA until they are renewed by
+ * this label (see README).
+ */
+const BACKEND_CERT_LABELS = {
+    'unlimited-code.works/cert-type': 'backend',
+};
+
+/**
+ * Helm chart transformation that labels every cert-manager Certificate the
+ * chart renders as a backend certificate. Use it on charts whose certificates
+ * are issued by the root issuer through chart values.
+ */
+export function labelBackendCertificates(obj: any, _opts: pulumi.CustomResourceOptions) {
+    if (obj.apiVersion?.startsWith('cert-manager.io/') && obj.kind === 'Certificate') {
+        obj.metadata.labels = { ...obj.metadata.labels, ...BACKEND_CERT_LABELS };
+    }
+}
+
 export class BackendCertificate extends ClusterCertificate {
     constructor(name: string, args: Omit<BackendCertificateArgs, 'base'> & { base: BaseCluster }, opts?: pulumi.CustomResourceOptions) {
         const certName = `cert-svc-${name}`;
@@ -84,9 +104,7 @@ export class BackendCertificate extends ClusterCertificate {
         }
         super(certName, {
             metadata: {
-                labels: {
-                    'unlimited-code.works/cert-type': 'backend',
-                }
+                labels: BACKEND_CERT_LABELS,
             },
             spec: {
                 dnsNames: [pulumi.interpolate`${name}.${args.namespace}`],
