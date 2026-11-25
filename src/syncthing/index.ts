@@ -198,9 +198,15 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
             containers: [{
                 name,
                 image: versions.image.syncthing,
+                // Idle syncthing needs almost nothing, but a full index
+                // exchange (a new device, a folder reset) is CPU-bound and
+                // pushes RSS past 200MiB. Under a 300m/256Mi cap that burst
+                // pinned the CPU at the limit while the GC thrashed near the
+                // memory ceiling, starving /rest/noauth/health until the
+                // liveness probe killed the pod mid-sync.
                 resources: {
                     requests: { cpu: "10m", memory: "96Mi" },
-                    limits: { cpu: "300m", memory: "256Mi" },
+                    limits: { cpu: "1", memory: "512Mi" },
                 },
                 ports,
                 args: [
@@ -214,6 +220,10 @@ export class Syncthing extends pulumi.ComponentResource<SyncthingArgs> {
                     // Only pinned when the gdrive sidecar needs to share it;
                     // otherwise syncthing generates a random GUI API key.
                     ...(guiApiKey ? { STGUIAPIKEY: guiApiKey.asEnvValue('apikey') } : {}),
+                    // Tell the Go GC about the cgroup limit so it collects
+                    // harder as the heap nears it instead of growing into the
+                    // kernel's OOM kill; leaves headroom for non-heap memory.
+                    GOMEMLIMIT: '400MiB',
                 },
                 volumeMounts: [
                     {
